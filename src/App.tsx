@@ -1,24 +1,26 @@
-import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
-import Post from './pages/Post';
+import About from './pages/About';
+import PostDetails from './pages/PostDetails';
 
-const App: React.FC = () => {
+function App() {
   return (
-    <div>
-      <nav className="bg-gray-100 p-4">
-        <Link to="/" className="text-xl font-bold">
-          我的博客
-        </Link>
-      </nav>
-      <div className="p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<Post />} />
-        </Routes>
+    <Router>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/posts/:id" element={<PostDetails />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
-    </div>
+    </Router>
   );
-};
+}
 
 export default App;
