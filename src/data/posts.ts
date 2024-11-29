@@ -1,3 +1,4 @@
+// src/data/posts.ts
 import { Post } from '@/types';
 
 export const posts: Post[] = [
@@ -17,5 +18,5 @@ export const posts: Post[] = [
     content: '这是完整的文章内容。这篇文章深入介绍了 TypeScript 的特性和用法。',
     author: '李四',
   },
-  // 更多文章...
+  // 可以添加更多文章
 ];

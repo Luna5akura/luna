@@ -1,15 +1,14 @@
-
+// src/index.tsx
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'; // 引入 BrowserRouter
-import './index.css';
-import App from './App';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import '@/index.css';
+import App from '@/App';
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter basename="/luna"> {/* 设置 basename */}
+    <BrowserRouter basename="/luna/">
       <App />
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
