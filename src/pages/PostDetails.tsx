@@ -1,11 +1,12 @@
+// src/pages/PostDetails.tsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { posts } from '../data/posts';
-import { Post } from '../types';
+import { posts } from '@/data/posts';
+import { Post } from '@/types';
 
 const PostDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const post: Post | undefined = posts.find(p => p.id === Number(id));
+  const post: Post | undefined = posts.find((p) => p.id === Number(id));
 
   if (!post) {
     return (
@@ -21,9 +22,7 @@ const PostDetails: React.FC = () => {
       <div className="text-sm text-gray-500 mb-4">
         {post.date} • {post.author}
       </div>
-      <div className="text-gray-700 leading-7">
-        {post.content}
-      </div>
+      <div className="text-gray-700 leading-7">{post.content}</div>
     </div>
   );
 };
