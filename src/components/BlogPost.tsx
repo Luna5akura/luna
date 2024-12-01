@@ -10,14 +10,14 @@ interface BlogPostProps {
 
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
   return (
-    <div className="bg-white rounded-lg shadow p-6 mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800">{post.title}</h2>
-      <div className="text-sm text-gray-500 mb-4">
+    <div className="bg-sky-100 rounded-lg shadow p-6 mb-6 mx-80">
+      <h2 className="text-2xl font-semibold text-sky-950">{post.title}</h2>
+      <div className="text-sm text-sky-950 mb-4">
         {post.date} • {post.author}
       </div>
-      <p className="text-gray-700 mb-4">{post.excerpt}</p>
+      <p className="text-sky-950 mb-4">{post.excerpt}</p>
       <Link to={`/posts/${post.id}`}>
-        <Button variant="default">阅读更多</Button>
+        <Button variant="default" className="font-semibold bg-sky-950 text-sky-100 hover:bg-sky-600">Detail</Button>
       </Link>
     </div>
   );

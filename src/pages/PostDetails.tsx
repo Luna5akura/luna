@@ -11,7 +11,7 @@ const PostDetails: React.FC = () => {
   if (!post) {
     return (
       <div className="container mx-auto mt-10">
-        <h2 className="text-2xl font-bold">文章未找到</h2>
+        <h2 className="text-2xl font-bold">404 NOT FOUND</h2>
       </div>
     );
   }

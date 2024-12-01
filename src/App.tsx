@@ -8,7 +8,7 @@ import PostDetails from '@/pages/PostDetails';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col w-screen min-h-screen bg-sky-600">
       <Navbar />
       <main className="flex-grow">
         <Routes>

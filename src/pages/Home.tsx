@@ -5,7 +5,7 @@ import BlogList from '@/components/BlogList';
 const Home: React.FC = () => {
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-4xl font-bold mb-8 text-center">欢迎来到我的博客</h1>
+      <h1 className="text-6xl font-bold mb-8 text-center text-sky-100">This is Luna's world</h1>
       <BlogList />
     </div>
   );
