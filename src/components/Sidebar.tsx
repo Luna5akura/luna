@@ -23,13 +23,15 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
   };
 
   return (
-    <div className="fixed top-auto left-4 h-auto w-48  p-4 bg-sky-100 rounded-lg shadow">
-      <h2 className="text-xl font-semibold text-sky-950 mb-4">Categories</h2>
+    <div className="fixed top-auto left-4 h-auto w-48 p-4 bg-sky-100 rounded-lg shadow">
+      <h2 className="text-xl font-semibold text-sky-900 mb-4">Categories</h2>
       <ul>
         <li className="mb-2">
           <Button
-            variant={selectedCategory === null ? 'default' : 'outline'}
-            className="w-full justify-start"
+            className={`w-full justify-start font-semibold hover:bg-sky-600 focus:outline-none
+            ${selectedCategory === null 
+              ? 'bg-sky-900 text-sky-100' 
+              : 'bg-sky-100 text-sky-900'}`}
             onClick={() => handleCategoryClick('All')}
           >
             All
@@ -38,8 +40,10 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         {categories.map((category) => (
           <li key={category} className="mb-2">
             <Button
-              variant={selectedCategory === category ? 'default' : 'outline'}
-              className="w-full justify-start"
+              className={`w-full justify-start font-semibold hover:bg-sky-600 focus:outline-none
+              ${selectedCategory === category 
+                ? 'bg-sky-900 text-sky-100' 
+                : 'bg-sky-100 text-sky-900'}`}
               onClick={() => handleCategoryClick(category)}
             >
               {category}
