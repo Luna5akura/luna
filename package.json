@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://luna5akura.github.io/luna/",
+  "homepage": "https://luna5akura.github.io",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
