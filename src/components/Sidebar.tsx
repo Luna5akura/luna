@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
   };
 
   return (
-    <div className="fixed top-auto left-4 h-auto w-48 p-4 bg-sky-100 rounded-lg shadow">
+    <div className="fixed top-auto left-4 h-auto w-min p-4 bg-sky-100 rounded-lg shadow">
       <h2 className="text-xl font-semibold text-sky-900 mb-4">Categories</h2>
       <ul>
         <li className="mb-2">
