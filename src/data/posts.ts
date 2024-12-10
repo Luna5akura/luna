@@ -9,6 +9,7 @@ export const posts: Post[] = [
     excerpt: 'Test Post 1',
     content: 'Test Post 1',
     author: 'Tester',
+    category: 'test',
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ export const posts: Post[] = [
     excerpt: 'Test Post 2',
     content: 'Test Post 2',
     author: 'Tester',
+    category: 'test'
   },
   {
     id: 3,
@@ -25,5 +27,6 @@ export const posts: Post[] = [
     excerpt: 'Test Post 3',
     content: 'Test Post 3',
     author: 'Tester',
+    category: 'test'
   },
 ];

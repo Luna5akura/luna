@@ -6,4 +6,5 @@ export interface Post {
   excerpt: string;
   content: string;
   author: string;
+  category: string;
 }
