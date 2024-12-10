@@ -1,10 +1,13 @@
 // src/components/BlogList.tsx
 import React from 'react';
-import { posts } from '@/data/posts';
 import { Post } from '@/types';
 import BlogPost from '@/components/BlogPost';
 
-const BlogList: React.FC = () => {
+interface BlogListProps {
+  posts: Post[];
+}
+
+const BlogList: React.FC<BlogListProps> = ({ posts }) => {
   return (
     <div>
       {posts.map((post: Post) => (

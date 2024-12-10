@@ -10,7 +10,7 @@ interface BlogPostProps {
 
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
   return (
-    <div className="bg-sky-100 rounded-lg shadow p-6 mb-6 mx-80">
+    <div className="bg-sky-100 rounded-lg shadow p-6 mb-6 mx-16">
       <h2 className="text-2xl font-semibold text-sky-950">{post.title}</h2>
       <div className="text-sm text-sky-950 mb-4">
         {post.date} • {post.author}
