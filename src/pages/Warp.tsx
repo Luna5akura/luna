@@ -7,7 +7,11 @@ const Warp: React.FC = () => {
       <div className="mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow">
         <a
           href="https://www.cameudis.com/"
-          className="text-3xl font-bold mb-4 text-sky-900"
+          className="font-bold mb-0.5 text-sky-900
+            text-xl
+            sm:text-xl
+            lg:text-3xl
+            "
         >Cameudis</a>
         {/*<p className="text-sky-900 leading-7">*/}
         {/*  Love is murderous utopia.*/}
@@ -15,7 +19,11 @@ const Warp: React.FC = () => {
       </div>
       <div className="mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow">
         <div className="flex items-center">
-          <div className="w-16 h-16 mr-6 rounded-full overflow-hidden">
+          <div className=" rounded-full overflow-hidden
+          w-8 h-8 mr-3
+          sm:w-8 sm:h-8 sm:mr-3
+          lg:w-16 lg:h-16 lg:mr-6
+          ">
             <a href="https://icelava.top">
               <img
                 src="https://icelava.top/FkLog/@icon/icelava.jpg"
@@ -26,12 +34,20 @@ const Warp: React.FC = () => {
           </div>
           <a
             href="https://icelava.top"
-            className="text-3xl font-bold mb-0.5 text-sky-900"
+            className="font-bold mb-0.5 text-sky-900
+            text-xl
+            sm:text-xl
+            lg:text-3xl
+            "
           >
             IceLava Top
           </a>
         </div>
-        <p className="mt-4 mx-1 text-sky-900 leading-7">
+        <p className="mt-4 mx-1 text-sky-900 leading-7
+        text-sm
+        sm:text-sm
+        lg:text-base
+        ">
           No Code No Life
         </p>
       </div>
