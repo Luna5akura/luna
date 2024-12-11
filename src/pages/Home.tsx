@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       ">This is Luna's world</h1>
       <div className="flex row-auto">
         <div className="w-1/6 m-6 h-screen">
-          <Sidebar categories={allCategories}/>
+          <Sidebar key={selectedCategory} categories={allCategories}/>
         </div>
         <div className="w-5/6">
           {hasPosts ? (
