@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
   	extend: {
+	    fontFamily: {
+        default: ['sans-serif', 'sans-serif'],
+        alternate: ['PixelFont', 'sans-serif'],
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

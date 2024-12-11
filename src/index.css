@@ -17,6 +17,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  font-family: sans-serif, sans-serif;
+}
+
+.alt-font {
+  font-family: PixelFont, sans-serif;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -56,6 +64,43 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+@font-face {
+  font-family: 'PixelFont';
+  src: url('/font/pixelFont12.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll-left {
+  animation: scrollLeft var(--animation-duration) linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scrollRight var(--animation-duration) linear infinite;
+}
+
+img {
+  flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: light) {
