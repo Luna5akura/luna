@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import PostDetails from '@/pages/PostDetails';
+import Warp from "@/pages/Warp";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Navbar />
       <main className="flex-grow">
         <Routes>
+          <Route path="/warp" element={<Warp />} />
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/posts/:id" element={<PostDetails />} />
