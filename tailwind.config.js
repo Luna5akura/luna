@@ -14,7 +14,7 @@ module.exports = {
   		},
   		colors: {
 		    sky: {
-				600: "#5a94d8"
+				600: "#5a94e8"
 			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
