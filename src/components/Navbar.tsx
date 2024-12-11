@@ -10,6 +10,9 @@ const Navbar: React.FC = () => {
           Luna
         </Link>
         <div>
+          <Link to="/warp" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
+            Warp
+          </Link>
           <Link to="/" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
             Home
           </Link>
