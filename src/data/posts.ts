@@ -9,7 +9,7 @@ export const posts: Post[] = [
     excerpt: 'Test LATEX',
     contentKey: 'post1',
     author: 'Tester',
-    category: 'test',
+    category: 'Test',
   },
   {
     id:4,
@@ -28,5 +28,14 @@ export const posts: Post[] = [
     contentKey: 'QC_2',
     author: 'Me',
     category: 'Quantum Computation',
+  },
+  {
+    id:6,
+    title: '[CD] Day 1 - Japanese sentence structure',
+    date: '2024-12-11',
+    excerpt: 'CD Day 1 - Japanese sentence structure, yoroshiku',
+    contentKey: 'CD_1',
+    author: '私',
+    category: 'Cure Dolly',
   },
 ];
