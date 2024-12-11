@@ -77,7 +77,7 @@ Error generating stack: `+l.message+`
       text-5xl
       sm:text-5xl
       lg:text-6xl
-      `,children:"This is Luna's world"}),Y.jsxs("div",{className:"flex row-auto",children:[Y.jsx("div",{className:"w-1/6 m-6 h-screen",children:Y.jsx(Wg,{categories:r})}),Y.jsx("div",{className:"w-5/6",children:l?Y.jsx(Vg,{posts:i}):Y.jsx("p",{className:"text-sky-100",children:"No posts found in this category."})})]})]})},Xg=()=>Y.jsxs("div",{className:"mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow",children:[Y.jsx("h1",{className:"text-3xl font-bold mb-4 text-sky-900",children:"About"}),Y.jsx("p",{className:"text-sky-900 leading-7",children:"Love is murderous utopia."})]}),Yg=`# Quick review
+      `,children:"This is Luna's world"}),Y.jsxs("div",{className:"flex row-auto",children:[Y.jsx("div",{className:"w-1/6 m-6 h-screen",children:Y.jsx(Wg,{categories:r},n)}),Y.jsx("div",{className:"w-5/6",children:l?Y.jsx(Vg,{posts:i}):Y.jsx("p",{className:"text-sky-100",children:"No posts found in this category."})})]})]})},Xg=()=>Y.jsxs("div",{className:"mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow",children:[Y.jsx("h1",{className:"text-3xl font-bold mb-4 text-sky-900",children:"About"}),Y.jsx("p",{className:"text-sky-900 leading-7",children:"Love is murderous utopia."})]}),Yg=`# Quick review
 
 が is the heart of the Japanese, every sentence has a が.
 
