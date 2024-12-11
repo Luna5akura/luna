@@ -18,7 +18,11 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-6xl font-bold mb-8 text-center text-sky-100">This is Luna's world</h1>
+      <h1 className="font-bold mb-8 text-center text-sky-100
+      text-5xl
+      sm:text-5xl
+      lg:text-6xl
+      ">This is Luna's world</h1>
       <div className="flex row-auto">
         <div className="w-1/6 m-6 h-screen">
           <Sidebar categories={allCategories}/>
