@@ -1,6 +1,6 @@
 # い and な adjectives
 
-## Fact 1: Na adjectives are nouns
+## Fact 1: na adjectives are nouns
 
 ## Fact 2: i adjectives are close cousins to verbs
 
