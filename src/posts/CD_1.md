@@ -42,7 +42,7 @@ Actually: lower yourself and raise the person whom you are talking.
 
 ## a-stem
 
-五段動詞 u -> i (exception: かう -> かわ)
+五段動詞 u -> a (exception: かう -> かわ)
 
 ＋ない not
 
@@ -55,6 +55,10 @@ Actually: lower yourself and raise the person whom you are talking.
 五段動詞 u -> e
 
 ＋る( られる for ichidan ) potential (可能形) e.g. can hear, can speak
+
+くる -> こられる
+
+する -> できる
 
 ## o-stem
 
