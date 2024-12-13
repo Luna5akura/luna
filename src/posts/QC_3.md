@@ -88,7 +88,7 @@ $$
 p(m) &= \langle\Psi|U^\dagger P_mU|\Psi\rangle\\
 &= \sum_{i, j}\langle\psi|M_i^\dagger \langle m_i|P_m M_j|\psi\rangle| m_j\rangle\\
 &=\sum_{i,j}\langle\psi|M_i^\dagger M_j|\psi\rangle \langle m_i|m\rangle\langle m|m_j\rangle \\
-&=\langle\psi |M^\dagger_m M_m|\psi\rangle \text{ (notice only m_i = m and m_j = m it's not zero)}
+&=\langle\psi |M^\dagger_m M_m|\psi\rangle \text{ ((notice only mi = m and mj = m it's not zero))}
 \end{aligned}
 $$
 
@@ -97,7 +97,7 @@ the state:
 $$
 \begin{aligned}
 \dfrac{P_m U |\Psi\rangle}{\sqrt{p(m)} } &= \frac{\sum_i M_i|\psi\rangle|m_i\rangle\langle m_i|m\rangle}{\sqrt{p(m)}}\\
-&=\dfrac{M_m|\psi\rangle|m\rangle}{\sqrt{\langle\psi|M^\dagger _m M_m|\psi\rangle}} \text{ (notice only m_i = m it's not zero)}
+&=\dfrac{M_m|\psi\rangle|m\rangle}{\sqrt{\langle\psi|M^\dagger _m M_m|\psi\rangle}} \text{ (notice only mi = m it's not zero)}\\
 \end{aligned}
 $$
 
