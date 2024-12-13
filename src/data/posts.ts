@@ -56,4 +56,13 @@ export const posts: Post[] = [
     author: '私',
     category: 'Cure Dolly',
   },
+  {
+    id:9,
+    title: '[QC] Day 3 - POVM, superdense coding, density operator',
+    date: '2024-12-13',
+    excerpt: 'QC Day 3 - POVM, some thoughts about it, superdense coding, density operator',
+    contentKey: 'QC_3',
+    author: 'Me',
+    category: 'Quantum Computation',
+  },
 ];
