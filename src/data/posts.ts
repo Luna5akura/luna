@@ -51,7 +51,7 @@ export const posts: Post[] = [
     id:8,
     title: '[CD] Day 3 - mo',
     date: '2024-12-12',
-    excerpt: 'CD Day 2 - mo, negative, adjective conjugation, transitive/intransitive',
+    excerpt: 'CD Day 3 - mo, negative, adjective conjugation, transitive/intransitive',
     contentKey: 'CD_3',
     author: '私',
     category: 'Cure Dolly',
@@ -64,5 +64,14 @@ export const posts: Post[] = [
     contentKey: 'QC_3',
     author: 'Me',
     category: 'Quantum Computation',
+  },
+  {
+    id:10,
+    title: '[CD] Day 4 - te-miru',
+    date: '2024-12-12',
+    excerpt: 'CD Day 4 - te-miru, masu, causative/receptive, place',
+    contentKey: 'CD_3',
+    author: '私',
+    category: 'Cure Dolly',
   },
 ];
