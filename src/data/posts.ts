@@ -74,4 +74,13 @@ export const posts: Post[] = [
     author: '私',
     category: 'Cure Dolly',
   },
+  {
+    id:11,
+    title: '[QC] Day 4 - more density operator',
+    date: '2024-12-16',
+    excerpt: 'QC Day 4 - more density operator',
+    contentKey: 'QC_3',
+    author: 'Me',
+    category: 'Quantum Computation',
+  },
 ];
