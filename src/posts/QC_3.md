@@ -168,25 +168,3 @@ $\rho \rightarrow U\rho U^\dagger$
 $\rho_m = \dfrac{M_m\rho M_m^\dagger}{tr(M^\dagger_m M_m \rho)}$
 
 $\rho = \sum_i p_i \rho_i =\sum_m M_m \rho M_m ^\dagger$
-
-
-
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
