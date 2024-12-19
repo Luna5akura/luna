@@ -719,7 +719,46 @@ $\\rho = |\\psi\\rangle\\langle\\psi| \\Rightarrow \\rho^2 = \\rho \\Rightarrow 
 
 # Same density matrices:
 
-$|\\tilde \\psi_i\\rangle = \\sum_j u_{ij}|\\tilde \\phi_j\\rangle$`,A8=`# Understanding React Hooks
+$|\\tilde \\psi_i\\rangle = \\sum_j u_{ij}|\\tilde \\phi_j\\rangle$
+
+---
+
+# Exercise 2.72
+
+(Bloch sphere for mixed states) 
+
+The Bloch sphere picture for pure states of a single qubit was introduced in Section 1.2. 
+
+This description has an important generalization to mixed states as follows.
+
+(1) Show that an arbitrary density matrix for a mixed state qubit may be written as
+
+$\\rho=\\frac{I+\\vec{r} \\cdot \\vec{\\sigma}}{2}$
+
+where  $\\vec{r}$  is a real three-dimensional vector such that  $\\|\\vec{r}\\| \\leq 1 $. 
+
+This vector is known as the Bloch vector for the state  $\\rho $.
+
+
+(2) What is the Bloch vector representation for the state  $\\rho=I / 2 $ ?
+
+(3) Show that a state  $\\rho$  is pure if and only if  $\\|\\vec{r}\\|=1 $.
+
+(4) Show that for pure states the description of the Bloch vector we have given coincides with that in Section 1.2.
+
+---
+
+## (1)
+
+Exercise 2.60
+
+## (2)
+
+$\\vec r = (0, 0, 0)$
+
+## (3)
+
+)`,A8=`# Understanding React Hooks
 
 React Hooks are functions that let you use state and other React features without writing a class.
 
