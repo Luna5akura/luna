@@ -83,4 +83,13 @@ export const posts: Post[] = [
     author: 'Me',
     category: 'Quantum Computation',
   },
+  {
+    id:12,
+    title: '[A0] Day 1 - Chapter 1',
+    date: '2024-12-19',
+    excerpt: 'QC Day 1 - Chapter 1 exercise',
+    contentKey: "A0_1",
+    author: 'Me',
+    category: 'Algebra Chapter 0',
+  },
 ];
