@@ -92,4 +92,13 @@ export const posts: Post[] = [
     author: 'Me',
     category: 'Algebra Chapter 0',
   },
+  {
+    id:13,
+    title: '[A0] Day 2 - Chapter 1, function between sets',
+    date: '2024-12-21',
+    excerpt: 'QC Day 1 - function between sets',
+    contentKey: "A0_2",
+    author: 'Me',
+    category: 'Algebra Chapter 0',
+  },
 ];
