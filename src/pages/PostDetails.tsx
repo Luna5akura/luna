@@ -10,7 +10,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 // import '@/styles/markdown.css';
 
-const markdownFiles = import.meta.glob('../posts/*.md', { as: 'raw', eager: true });
+const markdownFiles = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true });
 
 const PostDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
