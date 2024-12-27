@@ -19,7 +19,7 @@ $t\in\mathbb{N}$: new customerm arrive time
 $u_t = \theta_t + \zeta_t + Q - p\quad (1)$: **material utility** of customer $t$
 
 - $\theta_t$: ex ante type of the customer
-    - independently continuous $F_\theta$
+  - independently continuous $F_\theta$
 - $\zeta_t$: ex post idiosyncratic preference term
   - independently continuous $F_\zeta$
   - sometimes combined $F_{\theta, \zeta}$
@@ -57,7 +57,7 @@ Procedure:
 
 ### Review decision
 
-$\lambda_{-\underline K }\le \dots\le \lambda_{-1}\le \lambda_1\le\dots\le\lambda_\overline K \in \mathbb R$: threshold
+$\lambda_{-\underline K }\le \dots\le \lambda_{-1}\le \lambda_1\le\dots\le\lambda_{\overline K} \in \mathbb R$: threshold
 
 $$
 r_{t}=\left\{\begin{array}{ll}
@@ -75,10 +75,11 @@ $$
 
 $\theta, \zeta$, random variable, drawn from $\left[\underline \theta, \overline\theta\right], \left[\underline \zeta, \overline\zeta\right]$, so that
 
-- $\overline\zeta + \overline\theta - p > \lambda_\overline K, $
+- $\overline\zeta + \overline\theta - p > \lambda\_{\overline K}, $
 - $\underline\zeta+\overline\theta - p + 1 < \lambda_{-\underline K}$
 
 why $\overline\theta$ ?
+
 - lower may not purchase
 - $Q = 0$ for most favorable review, $Q = 1$ for least favorable review , these are not fully revealing ablout the quality
 
@@ -99,6 +100,7 @@ $q_t = \mathbb P _{\{(\theta_S, \zeta_S\}_{S=1}^{t-1}}\left[Q=1\mid h_t\right]$
 $l_t = \dfrac{q_t}{1-q_t} = \dfrac{\mathbb P_{\{(\theta_S,\zeta_S)\}_{S=1}^{t-1}}[Q=1\mid h_t]}{\mathbb P_{\{(\theta_S,\zeta_S)\}^{t-1}_{S=1}}[Q=0\mid h_t]}$ <p id = "4">(4)</p> : associated likelihood ratio
 
 $\pi(a;F_{\theta,\zeta},Q,q)$: probability of action $a\in \mathcal A$,
+
 - given joint distribution of $\theta, \zeta$
 - price $p$
 - thesholds when true quality is $Q$, belief is $q$
@@ -152,7 +154,7 @@ If $\overline\theta + \mathbb E [\zeta] - p \ge 0, q_1 \in(0, 1)$, then $q_t\rig
 
 Proof
 
-$Z(a_t | l_t ) = \dfrac{\pi (a_t ; F_{\theta, \zeta}, Q = 1, q = q_t ) }{ \pi ( a_t ; F_{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
+$Z(a*t | l_t ) = \dfrac{\pi (a_t ; F*{\theta, \zeta}, Q = 1, q = q*t ) }{ \pi ( a_t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
 : likelihood ratio
 
 $$
@@ -164,7 +166,6 @@ $$
 & =1 .
 \end{aligned}
 $$
-
 
 $$
 \begin{aligned}
@@ -183,7 +184,7 @@ $l_t = \dfrac{q_t}{1-q_t} < \infty, l_t \ge 0$
 
 **Statement:**
 
-$\{X_n\}_{n=1}^\infty$ is a submartingale (or martingale, or supermartingale) with respect to a filtration $\{\mathcal{F}_n\}$. 
+$\{X_n\}_{n=1}^\infty$ is a submartingale (or martingale, or supermartingale) with respect to a filtration $\{\mathcal{F}_n\}$.
 
 Suppose one of the following conditions holds:
 
@@ -193,7 +194,7 @@ Suppose one of the following conditions holds:
 
 3. $\{X_n\}$ is a non-negative supermartingale, i.e., $X_n \geq 0$ almost surely for all $n$.
 
-Then, $\{X_n\}$ converges almost surely (a.s.) to a limit $X_\infty$ as $n \to \infty$. 
+Then, $\{X_n\}$ converges almost surely (a.s.) to a limit $X_\infty$ as $n \to \infty$.
 
 If, in addition, $\{X_n\}$ is uniformly integrable, then $X_\infty$ is integrable, and
 $
@@ -232,20 +233,19 @@ for detailed (b), we have:
 
 $$
 \begin{aligned}
-&p+\lambda_\overline K - \theta - 1 \\
-&\le p + \lambda_\overline K - \overline \theta + \Delta_1 - 1\\
-&\le p + \lambda_\overline K - \overline \theta < \overline \zeta\\
+&p+\lambda_{\overline K} - \theta - 1 \\
+&\le p + \lambda_{\overline K} - \overline \theta + \Delta_1 - 1\\
+&\le p + \lambda_{\overline K} - \overline \theta < \overline \zeta\\
 \\
-&p+\lambda_\overline K - \theta - 1 \\
+&p+\lambda_{\overline K} - \theta - 1 \\
 &\ge p + \lambda _{-\underline K} - \overline \theta - 1 \\
 &> \underline \zeta
 \end{aligned}
 $$
+
 (refer to [Assumption 1](#assumption-1---richness))
 
 $Z(a = \overline K \mid l) - 1 \ge \epsilon > 0$
-
-
 
 placeholder
 
