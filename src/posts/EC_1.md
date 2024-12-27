@@ -144,7 +144,7 @@ $\mathbb P [a_s \mid Q ] = \pi (a_s; F_{\theta,\zeta}, Q, q_s)$ with this we get
 
 $l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; F_{\theta, \zeta}, Q = 0, q_t )}$
 
-$l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; F_{\theta, \zeta}, Q = 0, q_t )}, \quad \text{w.p.} \pi(a_t; F_{\theta,\zeta}, Q, q_t), a\in \mathcal A \text { for} t \ge 1$
+$l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; F_{\theta, \zeta}, Q = 0, q_t )}, \quad \text{w.p. } \pi(a_t; F_{\theta,\zeta}, Q, q_t), a\in \mathcal A \text { for } t \ge 1$
 
 ## Complete learning
 
@@ -154,7 +154,7 @@ If $\overline\theta + \mathbb E [\zeta] - p \ge 0, q_1 \in(0, 1)$, then $q_t\rig
 
 Proof
 
-$Z(a*t | l_t ) = \dfrac{\pi (a_t ; F*{\theta, \zeta}, Q = 1, q = q*t ) }{ \pi ( a_t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
+$Z(a*t | l_t ) = \dfrac{\pi (a_t ; F*{\theta, \zeta}, Q = 1, q = q\*t ) }{ \pi ( a*t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
 : likelihood ratio
 
 $$
@@ -245,7 +245,34 @@ $$
 
 (refer to [Assumption 1](#assumption-1---richness))
 
-$Z(a = \overline K \mid l) - 1 \ge \epsilon > 0$
+$\min_l Z(a = \overline K \mid l) - 1 \ge \epsilon > 0$
+
+$$
+\begin{aligned}
+&\mathbb P _{a\sim \mathbf \pi (F_{\theta,\zeta}, Q = 0, q = q_t)}[|Z(a\mid l_t )- 1 | \ge \epsilon \mid l_t]\\
+&\ge \pi ( a = \overline K; F_{\theta, \zeta}, Q = 0, q = q_t)\\
+&\ge \mathbb P_{\theta, \zeta}[q_t + \theta + \mathbb E[\zeta] - p \ge 0, \theta + \zeta - p \ge \lambda_{\underline K }]\\
+&\ge \mathbb P_{\theta, \zeta } [\theta + \mathbb [\zeta] - p \ge 0 , \theta + \zeta - p \ge \lambda_{\overline K }]\\
+&\ge \mathbb P_{\theta, \zeta } \left[\theta\ge\overline\theta - \dfrac{\Delta _2}{2}, \zeta\ge \overline\zeta - \dfrac{\Delta_2}{2}\right]\\
+&> 0
+\end{aligned}
+$$
+
+where $\Delta_2 = \min\{\overline\theta + \mathbb E [\zeta] - p,\overline\theta + \overline\zeta - p - \lambda_{\overline K }\} > 0$
+
+<p id = "(A-3)">(A-3)</p>
+
+$$
+\begin{aligned}
+&\mathbb P_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[|l_{t+1} - l_t|\ge\delta\epsilon]\\
+&\text{with } l_{t+1} = l_t\cdot Z(\cdot \mid l_t)\\
+& = \mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[\mathbf 1\{|l_t(Z(\cdot\mid l_t ) - 1)|\ge \delta\epsilon\}] \\
+&\ge  \mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[\mathbf 1\{l_t\ge\delta\}\mathbf 1 \{|(Z(\cdot\mid l_t ) - 1)|\ge \epsilon\}] \\
+&=  \mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[\mathbf 1\{l_t\ge\delta\}\mathbb P_{\theta, \zeta } [\mathbf |(Z(\cdot\mid l_t ) - 1)|\ge \epsilon \mid l_t ]] \\
+&\ge\eta\mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}} [ \mathbf 1 \{ l_t\ge\delta\}] \\
+&= \eta\mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}} [l_t> \delta]\\
+\end{aligned}
+$$
 
 placeholder
 
