@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-sky-100 shadow">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="" className="text-xl font-bold text-sky-900 hover:text-sky-600">
+        <Link to="/" className="text-xl font-bold text-sky-900 hover:text-sky-600">
           Luna
         </Link>
         <div className="my-auto flex items-center justify-between">
@@ -28,13 +28,13 @@ const Navbar: React.FC = () => {
             checked={fontToggle}
             onCheckedChange={setFontToggle}
           />
-          <Link to="warp" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
+          <Link to="/warp" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
             Warp
           </Link>
-          <Link to="show" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
+          <Link to="/show" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
             World
           </Link>
-          <Link to="about" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
+          <Link to="/about" className="font-semibold text-sky-900 hover:text-sky-600 mx-4">
             About
           </Link>
         </div>
