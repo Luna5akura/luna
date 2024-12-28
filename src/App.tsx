@@ -17,11 +17,11 @@ function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/warp" element={<Warp />} />
-              <Route path="/show" element={<Show />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/posts/:id" element={<PostDetails />} />
+              <Route path="" element={<Home />} />
+              <Route path="warp" element={<Warp />} />
+              <Route path="show" element={<Show />} />
+              <Route path="about" element={<About />} />
+              <Route path="posts/:id" element={<PostDetails />} />
             </Routes>
           </main>
           <Footer />
