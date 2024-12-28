@@ -16,9 +16,9 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
 
   const handleCategoryClick = (category: string) => {
     if (category === 'All') {
-      navigate('/');
+      navigate('');
     } else {
-      navigate(`/?category=${category}`);
+      navigate(`?category=${category}`);
     }
   };
 
