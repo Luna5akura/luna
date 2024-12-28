@@ -51,6 +51,19 @@ const Warp: React.FC = () => {
           No Code No Life
         </p>
       </div>
+      <div className="mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow">
+        <a
+          href="https://blog.iin0.cn/"
+          className="font-bold mb-0.5 text-sky-900
+            text-xl
+            sm:text-xl
+            lg:text-3xl
+            "
+        >暮色音铃</a>
+        {/*<p className="text-sky-900 leading-7">*/}
+        {/*  Love is murderous utopia.*/}
+        {/*</p>*/}
+      </div>
     </div>
   );
 };
