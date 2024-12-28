@@ -1,5 +1,5 @@
 // src/App.tsx
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
@@ -12,7 +12,6 @@ import { FontToggleProvider } from "@/context/FontToggleContext";
 function App() {
   return (
       <FontToggleProvider>
-        <HashRouter>
           <div className="flex flex-col w-screen min-h-screen bg-sky-600">
             <Navbar />
             <main className="flex-grow">
@@ -26,7 +25,6 @@ function App() {
             </main>
             <Footer />
           </div>
-        </HashRouter>
       </FontToggleProvider>
   );
 }
