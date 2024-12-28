@@ -12,7 +12,7 @@ import { FontToggleProvider } from "@/context/FontToggleContext";
 function App() {
   return (
     <FontToggleProvider>
-      <HashRouter basename={process.env.PUBLIC_URL}>
+      {/*<HashRouter basename={process.env.PUBLIC_URL}>*/}
         <div className="flex flex-col w-screen min-h-screen bg-sky-600">
           <Navbar />
           <main className="flex-grow">
@@ -26,7 +26,7 @@ function App() {
           </main>
           <Footer />
         </div>
-      </HashRouter>
+      {/*</HashRouter>*/}
     </FontToggleProvider>
   );
 }
