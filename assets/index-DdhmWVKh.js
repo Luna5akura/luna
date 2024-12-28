@@ -1542,7 +1542,11 @@ l0,-`+(n+144)+`c-2,-159.3,-10,-310.7,-24,-454c-53.3,-528,-210,-949.7,
         text-sm
         sm:text-sm
         lg:text-base
-        `,children:"No Code No Life"})]})]}),Wk=()=>{const{fontToggle:e}=d4(),t=["xd.png","fl.png","pr.png","vs.png","blender.png","rd.png","bp.png","sai.png","au.png","pc.png","ps.png","ds.png","unity.png","vsc.png","rr.png","ae.png","mma.png","cl.png"],n=3,r=Math.ceil(t.length/n),i=Array.from({length:n},(l,o)=>t.slice(o*r,(o+1)*r)),a=e?"/ico/pixel":"/ico/common";return O.jsx("div",{children:O.jsx("div",{className:"overflow-hidden",children:i.map((l,o)=>O.jsx("div",{className:`flex whitespace-nowrap my-4 ${o%2===0?"animate-scroll-left":"animate-scroll-right"}`,style:{"--animation-duration":`${300+o*5}s`},children:[...l,...l,...l,...l,...l,...l,...l,...l].map((s,u)=>O.jsx("img",{src:`${a}/${s}`,alt:s,className:"w-40 h-40 object-cover mx-2"},u))},o))})})},Qk=()=>O.jsxs("div",{className:"container mx-auto mt-10",children:[O.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
+        `,children:"No Code No Life"})]}),O.jsx("div",{className:"mx-auto w-1/2 mt-10 p-6 bg-sky-100 rounded-lg shadow",children:O.jsx("a",{href:"https://blog.iin0.cn/",className:`font-bold mb-0.5 text-sky-900
+            text-xl
+            sm:text-xl
+            lg:text-3xl
+            `,children:"暮色音铃"})})]}),Wk=()=>{const{fontToggle:e}=d4(),t=["xd.png","fl.png","pr.png","vs.png","blender.png","rd.png","bp.png","sai.png","au.png","pc.png","ps.png","ds.png","unity.png","vsc.png","rr.png","ae.png","mma.png","cl.png"],n=3,r=Math.ceil(t.length/n),i=Array.from({length:n},(l,o)=>t.slice(o*r,(o+1)*r)),a=e?"/ico/pixel":"/ico/common";return O.jsx("div",{children:O.jsx("div",{className:"overflow-hidden",children:i.map((l,o)=>O.jsx("div",{className:`flex whitespace-nowrap my-4 ${o%2===0?"animate-scroll-left":"animate-scroll-right"}`,style:{"--animation-duration":`${300+o*5}s`},children:[...l,...l,...l,...l,...l,...l,...l,...l].map((s,u)=>O.jsx("img",{src:`${a}/${s}`,alt:s,className:"w-40 h-40 object-cover mx-2"},u))},o))})})},Qk=()=>O.jsxs("div",{className:"container mx-auto mt-10",children:[O.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
       text-5xl
       sm:text-5xl
       lg:text-6xl
