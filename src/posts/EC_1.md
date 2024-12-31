@@ -148,14 +148,16 @@ $l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; 
 
 ## Complete learning
 
-Theorem 1:
+### Theorem 1:
 
 If $\overline\theta + \mathbb E [\zeta] - p \ge 0, q_1 \in(0, 1)$, then $q_t\rightarrow Q$ almost surely
 
 Proof
 
-$Z(a*t | l_t ) = \dfrac{\pi (a_t ; F*{\theta, \zeta}, Q = 1, q = q\*t ) }{ \pi ( a*t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
+$Z(a_t | l_t ) = \dfrac{\pi (a_t ; F_{\theta, \zeta}, Q = 1, q = q_t ) }{ \pi ( a*t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
 : likelihood ratio
+
+#### Part 1 : when $\overline \theta + \mathbb E [\zeta] - p > 0$
 
 $$
 \begin{aligned}
@@ -229,6 +231,8 @@ $$
 \end{array}
 $$
 
+<p id = "(A-2)">(A-2)</p>
+
 for detailed (b), we have:
 
 $$
@@ -262,6 +266,7 @@ where $\Delta_2 = \min\{\overline\theta + \mathbb E [\zeta] - p,\overline\theta 
 
 <p id = "(A-3)">(A-3)</p>
 
+with [(A-2)](#(A-2)), [(A-3)](#(A-3)):
 $$
 \begin{aligned}
 &\mathbb P_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[|l_{t+1} - l_t|\ge\delta\epsilon]\\
@@ -273,6 +278,32 @@ $$
 &= \eta\mathbb E_{\{(\theta_s,\zeta_s)\}^t_{s = 1}} [l_t> \delta]\\
 \end{aligned}
 $$
+
+$l_t\rightarrow l_\infty$ almost surely ( martingale convergence theorem ) $\Rightarrow P_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[|l_{t+1} - l_t|\ge\delta\epsilon]\rightarrow 0 $
+
+$\Rightarrow P_{\{(\theta_s,\zeta_s)\}^t_{s = 1}}[|l_{t} > \delta ]\rightarrow 0$
+
+$\Rightarrow  l_t\rightarrow 0 $ in probability
+
+with $l_t\rightarrow l_\infty$ almost surely
+
+$\Rightarrow \mathbb P[l_\infty = 0] = 1$
+
+notice $l_t = \dfrac{q_t}{1 - q_t} \Rightarrow q_t \rightarrow 0$ almost surely $\square$
+
+this ends the part 1 proof
+
+[return to part 1](#part-1--when-overline-theta--mathbb-e-zeta---p--0)
+
+#### Part 2: when $\overline\theta + \mathbb E[\zeta] - p < 0$
+
+Let $\Delta = -(\overline\theta + \mathbb E [\zeta] - p) > 0$
+
+notice $\Delta > 1 \Leftrightarrow \overline + \mathbb E[\zeta] - p + q \le -\Delta + 1 < 0$, no purchase happen
+
+$\forall q \ge \Delta$, with [Assumption 1](#assumption-1---richness) and similar to [(A-2)](#(A-2))
+
+
 
 placeholder
 
