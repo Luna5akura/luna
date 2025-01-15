@@ -1006,9 +1006,21 @@ $\\Rightarrow c((z,w),(\\hat z, \\hat w)) - h\\cdot w \\cdot l (\\beta,z) - \\al
 
 $\\mathcal  Z\\times\\mathcal W$ is compact
 
-$\\Rightarrow the function is bounded below$
+$\\Rightarrow $ the function is bounded below
 
-$\\Rightarrow \\liminf_{n\\rightarrow +\\infty}L(\\pi_n;h,\\alpha )\\geL(\\pi;h,\\alpha )$
+$\\Rightarrow \\liminf_{n\\rightarrow +\\infty}L(\\pi_n;h,\\alpha )\\ge L(\\pi;h,\\alpha )$
+
+$\\Rightarrow L(\\pi;h,\\alpha )$ is lower semicontinuous in $\\pi$ under the weak topology
+
+###### Prove continuous in $(h,\\alpha)$ under the uniform topology in $\\mathbb{R}_+ \\times \\mathbb R$
+
+Suppose:
+
+$\\lim_{n\\to+\\infty}h_n = h$ in Euclidean topology, $\\lim_{n\\to\\infty}|\\alpha _n|<\\bar\\alpha $ in Euclidean topology
+
+Exists:
+
+$\\bar h\\in\\mathbb R_+, \\bar\\alpha \\in\\mathbb R $, with $\\sum_{n\\to\\infty}|h_n|\\le\\bar h, \\sup_{n\\to\\infty }|\\alpha _n|<\\bar\\alpha $, for all $n\\ge 1$
 
 ##### End Proof for Functino D
 
