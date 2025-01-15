@@ -110,4 +110,13 @@ export const posts: Post[] = [
     author: 'Me',
     category: 'Economy paper',
   },
+  {
+    id:15,
+    title: '[EC] Day 2 -  The Good, The Bad and The Picky: Reference Dependence and the Reversal of Product Ratings',
+    date: '2024-12-29',
+    excerpt: 'EC Day 2 - The Good, The Bad and The Picky: Reference Dependence and the Reversal of Product Ratings',
+    contentKey: "EC_2",
+    author: 'Me',
+    category: 'Economy paper',
+  },
 ];
