@@ -32,7 +32,7 @@ $f_\beta$ : given learning model, trained on the distribution:
 
 $\mathbb P_0 \in \mathcal P (\mathcal  Z)$, we have:
 
-#### (P)
+#### Problem P
 $$
 \mathfrak{R}(\beta, r)=\left\{\begin{array}{cl}
 \inf _{\mathbb{Q} \in \mathcal{P}(\mathcal{Z} \times \mathcal{W})} & \mathrm{M}_{c}(\mathbb{Q}, \hat{\mathbb{P}}) \\
@@ -50,7 +50,102 @@ example c:
 
 $c((z,w), (\hat z, \hat w )) = \theta _1 \cdot w \cdot d(z, \hat z) +\theta _2 \cdot (\phi  (w) - \phi (\hat{w}))_+$
 
-- $d(z,\hat z) = \| x - \hat x \|^2_2 + \infty \cdot | y - \hat y|$: cost with $z, \hat z$
+- $d(z,\hat z) = \| x - \hat x \|^2_2 + \infty \cdot | y - \hat y|$: cost with different $z, \hat z$
+
+- $(\phi(w) - \phi (\hat w))_+$ : cost related to differences in probability mass.
+
+  - $\phi : \mathbb  R_+ \rightarrow  \mathbb  R_+$ : convex function, where:
+  - $\phi(1) = 0$
+- $\theta _1, \theta _2 \ge 0$ : hyperparameters, where:
+  - $\dfrac{1}{\theta _1} + \dfrac{1}{\theta _2}=C $ for some constant $C$
+
+## Dual reformulation and its interpretation
+
+### Theorem 1 (Strong duality for problem for problem [(P)](#problem-p))
+
+Suppose:
+
+- $\mathcal Z \times \mathcal  W$ is compact.
+
+- $l(\beta ,\cdot )$ is upper semicontinuous for all $\beta $ 
+
+- $c:(\mathcal Z\times\mathcal W)^2\rightarrow \mathbb R_+$ is continuous
+- $r<\bar r := \max_{z\in\mathcal Z}l(\beta ,z)$
+
+Then:
+
+
+#### Function D
+$\mathfrak{R}(\beta, r)=\sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} h r+\alpha+\mathbb{E}_{\hat{\mathbb{P}}}\left[\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{Z}, \hat{W}))\right]$
+
+- $\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{Z}, \hat{W}))$ : surrogate function
+  - it equals to : $\min_{(z,w)\in\mathcal Z\times\mathcal W}c((z,w),(\hat z,\hat w)) + \alpha w - h\cdot w \cdot l(\beta ,z)$, for all $\hat z \in \mathcal Z, \hat w \in \mathcal W$.
+
+[Skip the proof](#end-proof-for-functino-d)
+
+##### Proof for Function D
+
+Reformulate Problem [(P)](#problem-p) into a infinite-dimension linear program:
+
+###### Formula Primal
+$$
+\begin{array}{cl}
+\inf _{\pi} & \mathbb{E}_{\pi}[c((Z, W),(\hat{Z}, \hat{W}))] \\
+\text { s.t. } & \pi \in \mathcal{P}\left((\mathcal{Z} \times \mathcal{W})^{2}\right) \\
+& r-\mathbb{E}_{\pi}[W \cdot \ell(\beta, Z)] \leq 0 \\
+& \mathbb{E}_{\pi}[W]=1 \\
+& \pi_{(\hat{Z}, \hat{W})}=\hat{\mathbb{P}} .
+\end{array}
+$$
+
+We get the Lagrangian function
+
+$L(\pi ; h, \alpha)=h r+\alpha+\mathbb{E}_{\pi}[c((Z, W),(\hat{Z}, \hat{W}))-h \cdot W \cdot \ell(\beta, Z)-\alpha \cdot W]$,
+
+where $h\in\mathbb R_+,\alpha \in\mathbb R,\pi$ belongs to :
+- $\Pi_{\hat {\mathbb P}} = \left\{  \pi\in\mathcal P((\mathcal Z\times\mathcal W)^2) : \pi_{(\hat{Z},\hat W)} = \hat{\mathbb P}\right\}$
+
+$\mathcal Z\times W$ is compact 
+
+$\Rightarrow \mathcal P(\mathcal  Z\times\mathcal W) $ is tight.
+
+$\Rightarrow \Pi_{\hat{\mathbb P }}$ is tight
+
+$\Rightarrow  \Pi_{\hat{\mathbb P }}$ has a compact closure (Prokhorov's theorem)
+
+$\Pi_{\hat{\mathbb P }}$ is weakly closed
+
+$\Rightarrow \Pi_{\hat{\mathbb P }} is compact$ (tight + close)
+
+$\Pi_{\hat{\mathbb P }}$ is convex
+
+###### Prove $L(\pi; h ,\alpha)$ is lower semicontinuous in $\pi $ under the weak topology
+
+Suppose:
+
+$\pi_n$ converges weakly to $\pi $
+
+$\Rightarrow \liminf_{n\rightarrow +\infty}\int g\mathrm d \pi_n \ge \int g\mathrm d  \pi$, for any lower semicontinuous function $g$ that is bounded below (Portmanteau theorem)
+
+$l(\beta,\cdot)$ is upper semicontinuous for all $\beta $, 
+
+and $w,h\ge 0 $,
+
+$\Rightarrow  h\cdot w \cdot l(\beta ,z)$ is upper semicontinuous, w.r.t $(z,w)$
+
+$c((z,w),(\hat z, \hat w))$ is lower semicontinuous
+
+$\Rightarrow c((z,w),(\hat z, \hat w)) - h\cdot w \cdot l (\beta,z) - \alpha\cdot w $ is lower semicontinuous w.r.t $(z,w)$ for any $(\hat z,\hat w) \in \mathcal  Z\times \mathcal W$
+
+$\mathcal  Z\times\mathcal W$ is compact
+
+$\Rightarrow the function is bounded below$
+
+$\Rightarrow \liminf_{n\rightarrow +\infty}L(\pi_n;h,\alpha )\geL(\pi;h,\alpha )$
+
+##### End Proof for Functino D
+
+
 placeholder
 
 placeholder
