@@ -119,4 +119,13 @@ export const posts: Post[] = [
     author: 'Me',
     category: 'Economy paper',
   },
+  {
+    id:16,
+    title: '[EC] Day 3 - Stability Evaluation through Distributional Perturbation Analysis',
+    date: '2025-1-15',
+    excerpt: '[EC] Day 3 - Stability Evaluation through Distributional Perturbation Analysis',
+    contentKey: "EC_3",
+    author: "Me",
+    category: 'Economy paper'
+  },
 ];
