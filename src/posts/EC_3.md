@@ -177,12 +177,12 @@ $\mathbb Q_0 = \delta _{(z^*,1)}$
 
 Then:
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 &\inf _{\pi \in \Pi_{\mathbb{P}}} \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L(\pi ; h, \alpha) \\
 & \leq \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L\left(\mathbb{Q}_{0} \otimes \hat{\mathbb{P}} ; h, \alpha\right) \\
 & =\mathbb{E}_{\mathbb{Q}_{0} \otimes \hat{\mathbb{P}}}[c((Z, W),(\hat{Z}, \hat{W}))]+\sup _{h \in \mathbb{R}_{+}} h(r-\bar{r}) \\
-
-&<+\infty
+& <+\infty
 \end{aligned}
 $$
 
