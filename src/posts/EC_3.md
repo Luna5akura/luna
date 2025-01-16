@@ -264,9 +264,34 @@ $$
 \end{aligned}
 $$
 
+- $\mathbb I_{\mathcal W }(w) = \begin{cases}
+0& \text{if } w\in \mathcal W\\
++\infty &\text{if }w\notin \mathcal W
+\end{cases}
+$
+
+- Convex conjugate: $\min_x\{-(x,y) + f(x)\} = -f^* (y)$
+
+(i) When $\mathcal W = \mathbb R_+, \phi (t) = t\log t -t + 1$:
+
+$(\phi + \mathbb I_{\mathbb R_+})^*(y) = \exp(\cdot) - 1$
+
+- $$
+\begin{cases}
+&(\phi + \mathbb I_{\mathbb R_+})^*(y) \\
+&= \sup_{x\ge0}\{xy - (x\log x-x+1)\}\\
+&(Derive) = y - \log x - 1 + 1 = 0\\
+&\Rightarrow x = e^y\\
+&\Rightarrow (\phi + \mathbb I_{\mathbb R_+})^*(y)  = ye^y - ye^y + e^y - 1 = e^y - 1
+\end{cases}
+$$
+
+Continue:
+
+
+
 
 #### End proof for proposition 1
-
 
 
 placeholder
