@@ -274,9 +274,10 @@ $
 
 (i) When $\mathcal W = \mathbb R_+, \phi (t) = t\log t -t + 1$:
 
-$(\phi + \mathbb I_{\mathbb R_+})^*(y) = \exp(\cdot) - 1$
+$(\phi + \mathbb I_{\mathbb R_+})^*(\cdot) = \exp(\cdot) - 1$
 
-- $$
+- 
+$$
 \begin{cases}
 &(\phi + \mathbb I_{\mathbb R_+})^*(y) \\
 &= \sup_{x\ge0}\{xy - (x\log x-x+1)\}\\
@@ -288,8 +289,62 @@ $$
 
 Continue:
 
+$$
+\begin{aligned} 
+&\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{z}, \hat{w})) \\ 
+& =\min _{z \in \mathcal{Z}}-\theta_{2} \cdot \exp \left(\frac{h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{\theta_{2}}\right)+\theta_{2} \\ & =-\theta_{2} \cdot \exp \left(\frac{\max _{z \in \mathcal{Z}} h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{\theta_{2}}\right)+\theta_{2} \\ & =-\theta_{2} \cdot \exp \left(\frac{\ell_{h, \theta_{1}}(\hat{z})+\alpha}{\theta_{2}}\right)+\theta_{2} \end{aligned} 
+$$
 
+Then we reformulate the [(D)](#function-d) :
 
+$\mathfrak{R}(\beta, r)=\sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} h r+\alpha-\theta_{2} \mathbb{E}_{\mathbb{P}_{0}}\left[\exp \left(\frac{\ell_{h, \theta_{1}}(\hat{Z})+\alpha}{\theta_{2}}\right)\right]+\theta_{2} $
+
+Derive the $\alpha  $:
+
+$1-\exp \left(\frac{\alpha}{\theta_{2}}\right) \mathbb{E}_{\mathbb{P}_{0}}\left[\exp \left(\frac{\ell_{h, \theta_{1}}(\hat{Z})}{\theta_{2}}\right)\right]=0$
+
+Solve this and get the $\alpha  $:
+
+$\alpha^{\star}=-\theta_{2} \log \left(\mathbb{E}_{\mathbb{P}_{0}}\left[\frac{\ell_{h, \theta_{1}}(\hat{z})}{\theta_{2}}\right]\right) $
+
+Put it back:
+
+$\mathfrak R(\beta, r)=\sup _{h \in \mathbb{R}_{+}} h r-\theta_{2} \log \left(\mathbb{E}_{\mathbb{P}_{0}}\left[\exp \left(\frac{\ell_{h, \theta_{1}}(\hat{Z})}{\theta_{2}}\right)\right]\right)$
+
+(ii)
+
+When $ \mathcal{W}=\mathbb{R}+ $ and $ \phi(t)=(t-1)^{2} $
+
+$\left(\phi+\mathbb{I}_{\mathbb{R}_{+}}\right)^{*}(\cdot)=\left(\frac{\cdot}{2}+1\right)_{+}^{2}-1 $
+
+- 
+$$
+\begin{cases}
+\left(\phi+\mathbb{I}_{\mathbb{R}_{+}}\right)^{*}(y) \\
+=\sup_{x\ge0}xy - (x-1)^2\\ 
+(Derive) y - 2x + 2 = 0 \\ 
+x = \dfrac{y}{2} + 1\\
+\left(\phi+\mathbb{I}_{\mathbb{R}_{+}}\right)^{*}(y) =\dfrac{y^2}{2} + y - \dfrac{y^2}{4} \\
+= (\dfrac{y}{2} + 1)^2 - 1 
+\end{cases}
+$$
+
+Then:
+
+$$
+\begin{aligned} 
+&\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{z}, \hat{w}))\\ 
+& =\min _{z \in \mathbb{Z}}-\theta_{2} \cdot\left(\phi+\mathbb{I}_{\mathcal{W}}\right)^{*}\left(\frac{h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{\theta_{2}}\right) \\ 
+& =\min _{z \in \mathcal{Z}}-\theta_{2} \cdot\left(\frac{h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}+\theta_{2} \\
+& =-\theta_{2} \cdot\left(\frac{\ell_{h, \theta_{1}}(\hat{z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}+\theta_{2}
+\end{aligned}
+$$
+
+Then we reformulate the [(D)](#function-d) :
+
+$\sup _{h \geq 0, \alpha \in \mathbb{R}} h r+\alpha+\theta_{2}-\theta_{2} \mathbb{E}_{\mathbb{P}_{0}}\left[\left(\frac{\ell_{h, \theta_{1}}(\hat{Z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}\right]$
+
+We can't continue, because it's a piecewise linear equation.
 
 #### End proof for proposition 1
 
