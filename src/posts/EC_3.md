@@ -155,6 +155,38 @@ Exists:
 
 $\bar h\in\mathbb R_+, \bar\alpha \in\mathbb R $, with $\sum_{n\to\infty}|h_n|\le\bar h, \sup_{n\to\infty }|\alpha _n|<\bar\alpha $, for all $n\ge 1$
 
+$\Rightarrow  \lim_{n\to+\infty}L(\pi;h_n,\alpha _n) = L(\pi;h,\alpha )$ ( dominated convergence theorem)
+
+$\Rightarrow  L(\pi;h,\alpha )$ is continuous in  $(h,\alpha )$ under the Ecludiean topology in  $\mathbb R_+ \times \mathbb  R$
+
+###### Formula 5
+
+$\Rightarrow \inf_{\pi\in\Pi_{\hat{\mathbb P }}}\sup_{h\in\mathbb R_+,\alpha \in\mathbb R }L(\pi;h,\alpha ) = \sup_{h\in\mathbb R_+,\alpha \in\mathbb R }\inf_{\pi\in\Pi_{\hat{\mathbb P }}}L(\pi;h,\alpha )$ (Sion's minmax theorem)
+
+Rewrite:
+
+$L(\pi ; h, \alpha)=\mathbb{E}_{\pi}\left[c((Z, W),(\hat{Z}, \hat{W}))\right]+h\left(r-\mathbb{E}_{\pi}[W \cdot \ell(\beta, Z)]\right)+\alpha\left(1-\mathbb{E}_{\pi}[W]\right)$ (The original paper lost a close bracket)
+
+$\Rightarrow \inf_{\pi\in\Pi_{\hat{\mathbb P }}}\sup_{h\in\mathbb R_+,\alpha \in\mathbb R }L(\pi;h,\alpha ) $ is bounded above
+
+We construct:
+
+$\mathbb Q_0 = \delta _{(z^*,1)}$
+
+- $z^* = \argmax_{z\in\mathcal Z }l(\beta ,z)$
+
+Then:
+
+$$\begin{aligned}
+&\inf _{\pi \in \Pi_{\mathbb{P}}} \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L(\pi ; h, \alpha) \\
+& \leq \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L\left(\mathbb{Q}_{0} \otimes \hat{\mathbb{P}} ; h, \alpha\right) \\
+& =\mathbb{E}_{\mathbb{Q}_{0} \otimes \hat{\mathbb{P}}}[c((Z, W),(\hat{Z}, \hat{W}))]+\sup _{h \in \mathbb{R}_{+}} h(r-\bar{r}) \\
+
+&<+\infty
+\end{aligned}
+$$
+
+
 ##### End Proof for Functino D
 
 

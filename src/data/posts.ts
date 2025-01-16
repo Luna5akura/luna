@@ -70,7 +70,7 @@ export const posts: Post[] = [
     title: '[CD] Day 4 - te-miru',
     date: '2024-12-12',
     excerpt: 'CD Day 4 - te-miru, masu, causative/receptive, place',
-    contentKey: 'CD_3',
+    contentKey: 'CD_4',
     author: '私',
     category: 'Cure Dolly',
   },
@@ -127,5 +127,14 @@ export const posts: Post[] = [
     contentKey: "EC_3",
     author: "Me",
     category: 'Economy paper'
+  },
+  {
+    id:17,
+    title: '[CD] Day 5 - te-oku',
+    date: '2025-1-15',
+    excerpt: 'CD Day 5 - te-oku',
+    contentKey: 'CD_5',
+    author: '私',
+    category: 'Cure Dolly',
   },
 ];
