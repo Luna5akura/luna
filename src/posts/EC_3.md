@@ -48,6 +48,8 @@ $$
 
 example c:
 
+##### formula 1
+
 $c((z,w), (\hat z, \hat w )) = \theta _1 \cdot w \cdot d(z, \hat z) +\theta _2 \cdot (\phi  (w) - \phi (\hat{w}))_+$
 
 - $d(z,\hat z) = \| x - \hat x \|^2_2 + \infty \cdot | y - \hat y|$: cost with different $z, \hat z$
@@ -58,6 +60,8 @@ $c((z,w), (\hat z, \hat w )) = \theta _1 \cdot w \cdot d(z, \hat z) +\theta _2 \
   - $\phi(1) = 0$
 - $\theta _1, \theta _2 \ge 0$ : hyperparameters, where:
   - $\dfrac{1}{\theta _1} + \dfrac{1}{\theta _2}=C $ for some constant $C$
+
+--- 
 
 ## Dual reformulation and its interpretation
 
@@ -81,7 +85,9 @@ $\mathfrak{R}(\beta, r)=\sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} h r+
 - $\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{Z}, \hat{W}))$ : surrogate function
   - it equals to : $\min_{(z,w)\in\mathcal Z\times\mathcal W}c((z,w),(\hat z,\hat w)) + \alpha w - h\cdot w \cdot l(\beta ,z)$, for all $\hat z \in \mathcal Z, \hat w \in \mathcal W$.
 
-[Skip the proof](#end-proof-for-functino-d)
+( is it $+aw$ ? in the proof it's $-aw$)
+
+[Skip the proof](#end-proof-for-function-d)
 
 ##### Proof for Function D
 
@@ -181,13 +187,86 @@ $$
 \begin{aligned}
 &\inf _{\pi \in \Pi_{\mathbb{P}}} \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L(\pi ; h, \alpha) \\
 & \leq \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} L\left(\mathbb{Q}_{0} \otimes \hat{\mathbb{P}} ; h, \alpha\right) \\
-& =\mathbb{E}_{\mathbb{Q}_{0} \otimes \hat{\mathbb{P}}}[c((Z, W),(\hat{Z}, \hat{W}))]+\sup _{h \in \mathbb{R}_{+}} h(r-\bar{r}) \\
+& =\mathbb{E}_{\mathbb{Q}_{0} \otimes \hat{\mathbb{P}}}[c((Z, W),(\hat{Z}, \hat{W}))]+\sup _{h \in \mathbb{R}_{+}} h(r-\bar{r}) \quad (E_\pi[W] = 1)\\
 & <+\infty
 \end{aligned}
 $$
 
+- $\bar r = \mathbb E_{\mathbb  Q_0 }[l(\beta ,Z)]$ (Notice $W$ is independent with it) $ = \max_{z\in Z }l(\beta ,Z)$
+- combined $c$ is continuous, it's bounded on a compact domain $Z\times W$ (The suppose)
+$$
+\begin{aligned}
+\Rightarrow & r - \mathbb E_\pi [W\cdot l(\beta ,Z)] \le 0 \\ 
+& \mathbb E_\pi [W] = 1
+\end{aligned}
+$$
 
-##### End Proof for Functino D
+Then: for [(5)](#formula-5) right hand side:
+
+$$
+\begin{aligned}
+& \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} \inf _{\pi \in \Pi_{\mathrm{P}}} L(\pi ; h, \alpha) . \\
+= & \sup _{h \in \mathbb{R}_{+}, \alpha \in \mathbb{R}} h r+\alpha+\inf _{\pi \in \Pi_{\mathbb{®}}} \mathbb{E}_{\pi}[c((Z, W),(\hat{Z}, \hat{W}))-h \cdot W \cdot \ell(\beta, Z)-\alpha \cdot W] .
+\end{aligned}
+$$
+
+Notice:
+
+$$
+\begin{aligned}
+& \inf _{\pi \in \Pi_{\mathfrak{R}}} \mathbb{E}_{\pi}[c((Z, W),(\hat{Z}, \hat{W}))-h \cdot W \cdot \ell(\beta, Z)-\alpha \cdot W] \\
+= & \mathbb{E}_{\hat{\mathbb{P}}}\left[\min _{(z, w) \in \mathcal{Z} \times \mathcal{W}} c((z, w),(\hat{Z}, \hat{W}))-h \cdot w \cdot \ell(\beta, z)-\alpha \cdot w\right],
+\end{aligned}
+$$
+
+##### End Proof for Function D
+
+We explore [(1)](#formula-1) with:
+
+- $\phi (t) = t\log t - t + 1$, Kullback-Leibler divergence
+
+- $\phi (t) = (t-1)^2$ , $\chi^2$-divergence
+
+### Proposition 1 (Dual reformulations)
+
+Suppose:
+
+$\mathcal  W = \mathbb  R_+$
+
+(i) If:
+
+$\phi (t) = t\log t - t + 1$, [(D)](#function-d) admits:
+
+#### function 2
+
+$\sup_{h\ge0 }hr - \theta _2\log \mathbb E_{\mathbb P_0 }\left[\exp\left(\dfrac{l_{h,\theta _1 }(\hat Z)}{\theta _2 }\right)\right]$
+
+(ii) If:
+
+$\phi(t) = (t-1)^2 $, [(D)](#function-d) admits:
+
+$\sup _{h \geq 0, \alpha \in \mathbb{R}} h r+\alpha+\theta_{2}-\theta_{2} \mathbb{E}_{\mathbb{P}_{0}}\left[\left(\frac{\ell_{h, \theta_{1}}(\hat{Z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}\right]$
+
+#### function 3
+
+- $l_{h,\theta _1 }(\hat z ):=\max_{z\in\mathcal Z }h\cdot l(\beta ,z)-\theta _1 \cdot d(z,\hat z)$ : the d-trasform of $h\cdot l(\beta, \cdot)$ with the step size $\theta_1$
+
+[Skip the Proof](#end-proof-for-proposition-1)
+
+#### Proof for proposition 1
+
+$$
+\begin{aligned}
+&\tilde{\ell}_{c}^{\alpha, h}(\beta,(\hat{z}, \hat{w})) \\ 
+& =\min _{(z, w) \in \mathcal{Z} \times \mathcal{W}} \theta_{1} \cdot w \cdot d(z, \hat{z})+\theta_{2}(\phi(w)-\phi(\hat{w}))_{+}-\alpha w-h \cdot w \cdot \ell(\beta, z) \\
+& =\min _{z \in \mathcal{Z}} \theta_{2} \cdot \min _{w \in \mathbb{R}}-w \frac{h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{\theta_{2}}+\phi(w)+\mathbb{I}_{\mathcal{W}}(w) \text{ // Notice } \hat W = 1 \text{ almost surely, and } \phi(1) = 0\\
+& =\min _{z \in \mathcal{Z}}-\theta_{2} \cdot\left(\phi+\mathbb{I}_{\mathcal{W}}\right)^{*}\left(\frac{h \cdot \ell(\beta, z)-\theta_{1} \cdot d(z, \hat{z})+\alpha}{\theta_{2}}\right) . \text{ Convex conjugate}
+\end{aligned}
+$$
+
+
+#### End proof for proposition 1
+
 
 
 placeholder
