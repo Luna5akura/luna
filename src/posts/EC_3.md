@@ -496,11 +496,11 @@ It should be $\alpha$ instead of $2\theta_1 \alpha$, the paper made a mistake he
 
 #### Proof for Theorem 3
 
-Start from [(2)](#function-2) :
+Start from [(3)](#function-3) :
 
 $$
 \begin{array}{l}
-\sup_{h\ge0 }hr - \theta _2\log \mathbb E_{\mathbb P_0 }\left[\exp\left(\dfrac{l_{h,\theta _1 }(\hat Z)}{\theta _2 }\right)\right]\\ 
+\sup _{h \geq 0, \alpha \in \mathbb{R}} h r+\alpha+\theta_{2}-\theta_{2} \mathbb{E}_{\mathbb{P}_{0}}\left[\left(\frac{\ell_{h, \theta_{1}}(\hat{Z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}\right]\\ 
 =\min _{h \geq 0, \alpha \in \mathbb{R}}-h r-\alpha+\theta_{2}+\theta_{2} \mathbb{E}_{\mathbb{P}_{0}}\left[\left(\frac{\ell_{h, \theta_{1}}(\hat{Z})+\alpha}{2 \theta_{2}}+1\right)_{+}^{2}\right] \\
 =\left\{\begin{array}{ll}
 \min & -h r-\alpha+t \\
@@ -562,10 +562,39 @@ $d(z, \hat{z})=\left\|z_{(i)}-\hat{z}_{(i)}\right\|_{2}^{2}+\infty \cdot\left\|z
 
 Then the $\mathfrak R_i(\beta ,r)$ indicates the stability
 
+---
+
 # Visualizations on stylized / toy examples
 
 Visualize the most sensitive distribution $\mathbb  Q^*$ based on
 [Remark 4](#remark-4-structure-of-the-most-sensitive-distribution)
+
+2d binary classifaction:
+
+$$
+\begin{cases}
+100 \text{ samples} \\ 
+Y = 0\\ 
+\mathcal  N([2,2]^T, I_2)
+\end{cases}
+$$
+
+
+$$
+\begin{cases}
+100 \text{ samples} \\ 
+Y = 1\\ 
+\mathcal  N([-1,-1]^T, I_2)
+\end{cases}
+$$
+
+$f_\beta (\cdot)$ : Logistic regression
+
+$\dfrac{1}{\theta_1} + \dfrac{1}{\theta_2} = 5$
+
+risk : $0.5$
+
+then solve $(2)$
 
 
 placeholder
