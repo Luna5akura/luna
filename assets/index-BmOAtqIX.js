@@ -1096,6 +1096,8 @@ We explore [(1)](#formula-1) with:
 
 - $\\phi (t) = (t-1)^2$ , $\\chi^2$-divergence
 
+---
+
 ### Proposition 1 (Dual reformulations)
 
 Suppose:
@@ -1218,11 +1220,15 @@ We can't continue, because it's a piecewise linear equation.
 
 #### End proof for proposition 1
 
+---
+
 ### Remark 4 (Structure of the most sensitive distribution)
 
 $\\mathbb  Q^* = \\dfrac{1}{n}\\sum_{n}^{i=1 }\\delta _{(z^*_i,w^*_i)}, (z^*_i, w^*_8)\\in \\mathcal Z \\times \\mathbb R_+$
 
 - $z_{i}^{\\star}=\\underset{z \\in \\mathcal{Z}}{\\arg \\max } h^{\\star} \\ell(\\beta ; z)-\\theta_{1} \\cdot d\\left(z, \\hat{z}_{i}\\right), \\quad \\forall i \\in[n]$
+
+---
 
 ## Computation
 
@@ -1328,6 +1334,8 @@ $$
 
 #### End proof for Theorem 2
 
+--- 
+
 ### Theorem 3 ($\\chi^2$ Divergence)
 
 Suppose:
@@ -1352,7 +1360,6 @@ $$
 #### Note for theorem 3
 
 It should be $\\alpha$ instead of $2\\theta_1 \\alpha$, the paper made a mistake here.
-
 
 [Skip the proof](#end-proof-for-theorem-3)
 
@@ -1393,6 +1400,8 @@ to get the second equivalent
 
 #### End proof for Theorem 3
 
+--- 
+
 ### 0/1 loss function
 
 $r$: risk level, error rate
@@ -1407,6 +1416,7 @@ $\\ell(\\beta,(x, y))=\\mathbb{I}_{y \\neq f_{\\beta}(x)}$ : loss function
 
 Gradient ascent
 
+---
 
 ## Feature stability analysis
 
