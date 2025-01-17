@@ -8,6 +8,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 import 'katex/dist/katex.min.css';
+import remarkWrapSections from '@/utils/remarkWarpSections';
 // import '@/styles/markdown.css';
 
 const markdownFiles = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true });
@@ -53,10 +54,11 @@ const PostDetails: React.FC = () => {
       </div>
       <div className="prose prose-sky max-w-full">
         <ReactMarkdown
-          children={markdownContent}
-          remarkPlugins={[remarkMath]}
+          remarkPlugins={[remarkMath, remarkWrapSections]}
           rehypePlugins={[rehypeKatex]}
-        />
+        >
+          {markdownContent}
+        </ReactMarkdown>
       </div>
     </div>
   );
