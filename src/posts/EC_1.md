@@ -303,6 +303,15 @@ notice $\Delta > 1 \Leftrightarrow \overline + \mathbb E[\zeta] - p + q \le -\De
 
 $\forall q \ge \Delta$, with [Assumption 1](#assumption-1---richness) and similar to [(A-2)](#(A-2))
 
+$\theta\ge\overline\theta - ( 1 - \Delta)$
+
+$\Rightarrow \underline\zeta < \lambda_{-\underline K} + p - \overline\theta - 1 \le \lambda_{-\underline K } + p - \theta - 1 \le \lambda_{\overline K } + p - (\overline\theta - (1 - \Delta)) - 1 < \overline \zeta$
+
+$\Rightarrow \max _{q \in[\Delta, 1]} \frac{\mathbb{P}_{\theta, \zeta}\left[\theta+\mathbb{E}[\zeta]+q-p \geq 0, \theta+\zeta+1-p \leq \lambda_{-\underline{K}}\right]}{\mathbb{P}_{\theta, \zeta}\left[\theta+\mathbb{E}[\zeta]+q-p \geq 0, \theta+\zeta-p \leq \lambda_{-\underline{K}}\right]}<1$
+
+the over part and below part difference is bounded by:
+
+$$
 
 
 placeholder
