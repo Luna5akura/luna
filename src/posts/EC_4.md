@@ -257,8 +257,69 @@ Notice $\boldsymbol \theta ^* \ne \boldsymbol \theta _u$, then AOG and PGO can b
 
 > In Example 1, Let: 
 > \( \overline{\mathbf{x}}_{\mathrm{IO}}(u)=\tilde{\mathbf{x}}\left(\boldsymbol{\theta}_{u}, u\right) \). 
+> Then:
 > For any \( v \in \mathbb{R}_{+} \)there exists some \( \bar{u}>1 \) such that: 
-> \( \mathrm{AOG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)>v \) and \( \mathrm{POG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)>v \) for any \( u>\bar{u} \).
+> \( \mathrm{AOG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)>v \) and \( \mathrm{POG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)>v \) for any \( u>\bar{u} \)
+
+[Skip the proof](#end-proof-for-proposition-1)
+
+
+
+#### Proof for Proposition 1
+
+##### Lemma 4
+
+> In Example 1, Let: 
+> \( \overline{\mathbf{x}}_{\mathrm{IO}}(u)=\tilde{\mathbf{x}}\left(\boldsymbol{\theta}_{u}, u\right) \). 
+> For any \( v \in \mathbb{R}_{+} \)there exists some \( \bar{u}>1 \), such that: 
+> \( \operatorname{AOG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)>v \) for any \( u>\bar{u}_{A O G} \).
+
+###### Proof for lemma 4
+
+According to the definition of $\bar{\mathbf  x}$, we know that:
+
+$\bar{\mathbf x_{IO}}(u)$ is uniformly drawn from:
+
+###### (21)
+
+\( \mathcal{X}^{\mathrm{OPT}}\left(\boldsymbol{\theta}_{u}, u\right)=\left\{\left.\left(\frac{u t}{\sqrt{u^{2}+1}}, 1-\frac{t}{\sqrt{u^{2}+1}}\right) \right\rvert\, t \in\left[0, \sqrt{u^{2}+1}\right]\right\} \)
+
+Since:
+
+$\boldsymbol \theta ^* = (\cos\dfrac{\pi}{4},\sin\dfrac{\pi}{4})$ : ground-truth
+$\mathbf x^* = (0,1)$: true optimal solution
+
+$\tilde f(\boldsymbol \theta ^*,u) = \dfrac{\sqrt 2}{2}$
+
+Then :
+
+###### (22)
+
+$$
+\begin{aligned}
+&\operatorname{AOG}\left(\overline{\mathrm{x}}_{\mathrm{IO}}\right)\\ 
+&=  \mathbb{E}\left[f\left(\boldsymbol{\theta}^{*}, \overline{\mathbf{x}}_{\mathrm{IO}}(\mathbf{u})\right)-f\left(\boldsymbol{\theta}^{*}, \tilde{\mathbf{x}}\left(\boldsymbol{\theta}^{*}, \mathbf{u}\right)\right)\right]  \\
+&=\int_{0}^{\sqrt{u^{2}+1}} \frac{\sqrt{2}}{2 \sqrt{u^{2}+1}}\left(\frac{u t}{\sqrt{u^{2}+1}} + 1-\frac{t}{\sqrt{u^{2}+1}}\right) d t-\frac{\sqrt{2}}{2}\\ 
+&=\frac{\sqrt{2}(u-1)}{4}
+\end{aligned}
+$$
+
+Therefore:
+
+For any $v\in\mathbb R_+$, exists:
+
+$\bar{u}_{\mathrm{AOG}} = 2\sqrt 2v + 1$, s.t.:
+
+$\mathrm{AOG} (\bar{\mathbf x}_{\mathrm{IO}}) > v$, for any $u > \bar{u}_{\mathrm{AOG}}$
+
+
+
+
+
+###### End proof for lemma 4
+
+
+#### End proof for proposition 1
 
 placeholder
 
