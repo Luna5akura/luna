@@ -5,11 +5,13 @@ import { posts } from '@/data/posts';
 import { Post } from '@/types';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
+import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
+import TableOfContents from '@/components/TableOfContents';
+import { MarkdownContent } from '@/components/MarkdownContent';
 
 import 'katex/dist/katex.min.css';
 import remarkWrapSections from '@/utils/remarkWarpSections';
-// import '@/styles/markdown.css';
 
 const markdownFiles = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true });
 
@@ -19,7 +21,7 @@ const PostDetails: React.FC = () => {
 
   if (!post) {
     return (
-      <div className="container mx-auto mt-10 pt-16 ml-64">
+      <div className="container mx-auto mt-10 pt-16">
         <h2 className="text-2xl font-bold text-sky-100">404 NOT FOUND</h2>
       </div>
     );
@@ -40,25 +42,30 @@ const PostDetails: React.FC = () => {
 
   if (!markdownContent) {
     return (
-      <div className="container mx-auto mt-10 pt-16 max-w-full">
+      <div className="container mx-auto mt-10 pt-16">
         <h2 className="text-2xl font-bold text-sky-100">Content Not Found</h2>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto mt-10 p-6 bg-sky-100 rounded-lg shadow pt-16 w-3/4">
-      <h1 className="text-3xl font-bold mb-4 text-sky-950">{post.title}</h1>
-      <div className="text-sm text-sky-950 mb-4">
-        {post.date} • {post.author}
-      </div>
-      <div className="prose prose-sky max-w-full">
-        <ReactMarkdown
-          remarkPlugins={[remarkMath, remarkWrapSections]}
-          rehypePlugins={[rehypeKatex]}
-        >
-          {markdownContent}
-        </ReactMarkdown>
+    <div className="relative">
+      <TableOfContents content={markdownContent} />
+      <div className="container mx-auto mt-10 p-6 bg-sky-100 rounded-lg shadow pt-16 w-3/4">
+        <h1 className="text-3xl font-bold mb-4 text-sky-950">{post.title}</h1>
+        <div className="text-sm text-sky-950 mb-4">
+          {post.date} • {post.author}
+        </div>
+        <MarkdownContent content={markdownContent}>
+          <div className="prose prose-sky max-w-full">
+            <ReactMarkdown
+              remarkPlugins={[remarkMath, remarkWrapSections]}
+              rehypePlugins={[rehypeKatex, rehypeSlug]}
+            >
+              {markdownContent}
+            </ReactMarkdown>
+          </div>
+        </MarkdownContent>
       </div>
     </div>
   );
