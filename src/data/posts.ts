@@ -137,4 +137,13 @@ export const posts: Post[] = [
     author: '私',
     category: 'Cure Dolly',
   },
+  {
+    id:18,
+    title: '[EC] Day 4 - Conformal Inverse Optimization',
+    date: '2025-1-18',
+    excerpt: '[EC] Day 4 - Conformal Inverse Optimization',
+    contentKey: "EC_4",
+    author: "Me",
+    category: 'Economy paper'
+  },
 ];
