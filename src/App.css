@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.toc {
+  @apply space-y-2 pt-4;
+}
+
+.toc div {
+  @apply transition-colors duration-200;
+}
