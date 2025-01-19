@@ -107,7 +107,7 @@ const TableOfContents = ({ content }: { content: string }) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="fixed top-4 right-4">
+       <Button variant="default" className="fixed top-20 right-4 bg-sky-900 hover:bg-sky-600 focus:outline-none">
           <Menu className="h-4 w-4" />
         </Button>
       </SheetTrigger>
