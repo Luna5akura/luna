@@ -1,8 +1,10 @@
-// src/pages/Home.tsx
 import BlogList from '@/components/BlogList';
 import {useLocation} from "react-router-dom";
 import {posts} from "@/data/posts";
 import Sidebar from "@/components/Sidebar";
+import { useState } from 'react';
+
+const ITEMS_PER_PAGE = 5; // 每页显示的文章数量
 
 const Home: React.FC = () => {
   const location = useLocation();
@@ -10,9 +12,19 @@ const Home: React.FC = () => {
   const selectedCategory = params.get('category');
   const allCategories = Array.from(new Set(posts.map((post) => post.category)));
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const filteredPosts = selectedCategory && selectedCategory !== 'All'
-  ? posts.filter((post) => post.category === selectedCategory)
-  : posts;
+    ? posts.filter((post) => post.category === selectedCategory)
+    : posts;
+
+  const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE);
+
+  // 计算当前页面应该显示的文章
+  const paginatedPosts = filteredPosts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const hasPosts = filteredPosts.length > 0;
 
@@ -29,7 +41,12 @@ const Home: React.FC = () => {
         </div>
         <div className="w-5/6">
           {hasPosts ? (
-            <BlogList posts={filteredPosts}/>
+            <BlogList
+              posts={paginatedPosts}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           ) : (
             <p className="text-sky-100">No posts found in this category.</p>
           )}
