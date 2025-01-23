@@ -1,10 +1,11 @@
+// Home.tsx
 import BlogList from '@/components/BlogList';
 import {useLocation} from "react-router-dom";
 import {posts} from "@/data/posts";
 import Sidebar from "@/components/Sidebar";
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
-const ITEMS_PER_PAGE = 5; // 每页显示的文章数量
+const ITEMS_PER_PAGE = 5;
 
 const Home: React.FC = () => {
   const location = useLocation();
@@ -12,15 +13,21 @@ const Home: React.FC = () => {
   const selectedCategory = params.get('category');
   const allCategories = Array.from(new Set(posts.map((post) => post.category)));
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(() => {
+    const saved = localStorage.getItem('sidebarExpanded');
+    return saved ? JSON.parse(saved) : false;
+  });
 
   const filteredPosts = selectedCategory && selectedCategory !== 'All'
     ? posts.filter((post) => post.category === selectedCategory)
     : posts;
 
   const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE);
-
-  // 计算当前页面应该显示的文章
   const paginatedPosts = filteredPosts.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
@@ -36,10 +43,23 @@ const Home: React.FC = () => {
       lg:text-6xl
       ">This is Luna's world</h1>
       <div className="flex row-auto">
-        <div className="w-1/6 m-6 h-screen">
-          <Sidebar key={selectedCategory} categories={allCategories}/>
+        <div className={`
+          transition-all duration-300 ease-in-out
+          ${isSidebarExpanded ? 'w-[250px]' : 'w-10'}
+          mr-6
+        `}>
+          <Sidebar
+            key={selectedCategory}
+            categories={allCategories}
+            isExpanded={isSidebarExpanded}
+            onExpandedChange={setIsSidebarExpanded}
+          />
         </div>
-        <div className="w-5/6">
+        <div className={`
+          transition-all duration-300 ease-in-out
+          flex-1
+          ${isSidebarExpanded ? 'ml-0' : 'ml-4'}
+        `}>
           {hasPosts ? (
             <BlogList
               posts={paginatedPosts}
