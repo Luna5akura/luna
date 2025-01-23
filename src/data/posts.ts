@@ -146,4 +146,13 @@ export const posts: Post[] = [
     author: "Me",
     category: 'Economy paper'
   },
+  {
+    id:19,
+    title: '[EC] Day 5 - A Survey of Contextual Optimization Methods for Decision-Making under Uncertainty',
+    date: '2025-1-21',
+    excerpt: '[EC] Day 5 - A Survey of Contextual Optimization Methods for Decision-Making under Uncertainty',
+    contentKey: "EC_5",
+    author: "Me",
+    category: 'Economy paper'
+  },
 ];
