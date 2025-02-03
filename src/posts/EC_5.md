@@ -1,4 +1,30 @@
-# 1. Glossary
+# 1. Examples
+
+2. Contextual Optimization
+
+$\boldsymbol  z$ : decision: The order for today inventory
+
+$\mathcal Z\subseteq \mathbb R^{d_{\boldsymbol  z}}$ : feasible set for orders
+
+- e.g. $ \mathcal{Z}=\{z \in \mathbb{R} \mid z \geq 0\} $
+
+$ c(\boldsymbol{z}, \boldsymbol{y}) $ : cost function
+
+- e.g. $ c(z, y)=h(z-y)^{+}+b(y-z)^{+} $ (h for over inventory, b for not enough inventory)
+
+$ \boldsymbol{y} \in \mathcal{Y} \subseteq \mathbb{R}^{d_{y}} $ : uncertain parameters : the everyday real need 
+
+$ \boldsymbol{x} \in \mathcal{X} \subseteq \mathbb{R}^{d_{x}} $ : a vector of relevant covariates : the history data 
+
+
+
+$\mathbb  P $: the joint distribution of :
+- the covariates in $\mathcal  X$
+- the uncertain parameters in $\mathcal  Y $
+- e.g.: the distribution of data and real need 
+
+
+
 
 
 
@@ -106,7 +132,7 @@ $ \quad \boldsymbol{\theta}^{*} \in \underset{\boldsymbol{\theta}}{\operatorname
 
 Then:
 
-Find the policy $ y \pi_{\theta^{*}} \in \Pi^{\theta} $ that minimizes the expected costs over the training data.
+Find the policy $  \pi_{\theta^{*}} \in \Pi^{\theta} $ that minimizes the expected costs over the training data.
 
 Approximations:
 
@@ -120,9 +146,9 @@ Disadvantage:
 
 ### 2.2.2 Learning and optimization 
 
-Predictive & Optimization
+**Predictive & Optimization**
 
-Predictive:
+**Predictive:**
 
 $f_{\boldsymbol \theta }$ : general model 
 - parameterized by $\boldsymbol \theta $
@@ -146,7 +172,7 @@ The only approximation:
 
 - $ f_{\boldsymbol{\theta}} $ is an approximation of $ \mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x}) $
 
-SLO(Sequential learning and optimization) :
+**SLO(Sequential learning and optimization) :**
 
 $\rho$ : estimation error
 - minimize it to obtain the contextual predictor
@@ -181,4 +207,75 @@ $ \min _{\boldsymbol{\theta}} \rho\left(g_{\boldsymbol{\theta}}, \hat{\mathbb{P}
 
 - for some distance metric $ d $, usually the mean squared errors
 
+MSE (mean squared error):
+
+$ g_{\hat{\boldsymbol{\theta}}}(\boldsymbol{x})=\mathbb{E}_{\mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x})}[\boldsymbol{y}] $ 
+
+ - as $ N \rightarrow \infty $
+
+
+
+Obtain an action: 
+
+$ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) \in \underset{\boldsymbol{z} \in \mathcal{Z}}{\operatorname{argmin}} h\left(\boldsymbol{z}, \delta_{g_{\boldsymbol{\theta}(\boldsymbol{x})}}\right)=\underset{\boldsymbol{z} \in \mathcal{Z}}{\operatorname{argmin}} c\left(\boldsymbol{z}, g_{\boldsymbol{\theta}}(\boldsymbol{x})\right) $,
+
+- For any new covariate $\boldsymbol x$
+- $z^*$ : an estimator of the mean of the conditional distribution
+- $ \delta_{y} $ : Dirac distribution (all mass at $\boldsymbol y$)
+
+These models: expected value-based models 
+
+More general: conditional distribution-based models
+
+Disadvantage:
+
+-  ignore the mismatch between the
+prediction divergence $ \mathfrak{D} $ and the cost function $ c(\boldsymbol{x}, \boldsymbol{y}) $
+
+- a small prediction error about $ \mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x}) $ may have a large impact on the prescription
+
+**Integrated learning and optimization**
+
+Goal:
+
+maximize the prescriptive performance of the induced policy
+- train the predictive component to minimize the task loss (as in [(3)](#3))
+- higher MSE but nearly-optimal 
+
+We have:
+
+#### (9)
+
+$ \min _{\boldsymbol{\theta}} H\left(z^{*}\left(\cdot, f_{\boldsymbol{\theta}}\right), \hat{\mathbb{P}}_{N}\right)=\min _{\boldsymbol{\theta}} \mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[c\left(z^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right), \boldsymbol{y}\right)\right] $
+- Finding the best parameterization of a contextual predictor
+  - minimizes the downstream
+expected costs of the CSO solution
+
+
+- minimizes the expected cost of the policy over the empirical distribution
+
+## Summary
+
+Design choices:
+
+- type of loss function during training
+  - e.g. decision rule/sequential/integrated paradigm
+- class of predictive model
+  - e.g. linear/neural network/random forest
+
+
+
+
+
+
+
+placeholder
+
+placeholder
+
+placeholder
+
+placeholder
+
+placeholder
 
