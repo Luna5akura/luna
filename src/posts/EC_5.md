@@ -1,4 +1,33 @@
-# 1. Examples
+# 1. Examples & Glossary
+
+$$
+\begin{array}{|c|c|l|}
+\hline
+\text{Domain} & \text{Description} \\
+\hline
+\mathbb{P} & \mathcal{M}(\mathcal{X} \times \mathcal{Y}) & \text{True (unknown) joint distribution of } (\boldsymbol{x}, \boldsymbol{y}) \\
+\hat{\mathbb{P}}_{N} & \mathcal{M}(\mathcal{X} \times \mathcal{Y}) & \text{Joint empirical distribution of } (\boldsymbol{x}, \boldsymbol{y}) \\
+\delta_{y} & \mathcal{M}(\mathcal{Y}) & \text{Dirac distribution that puts all of its weight on } \boldsymbol{y} \\
+\boldsymbol{x} & \mathcal{X} \subseteq \mathbb{R}^{d_{\boldsymbol{x}}} & \text{Contextual information} \\
+\boldsymbol{y} & Y \subseteq \mathbb{R}^{d_{\boldsymbol{y}}} & \text{Uncertain parameters} \\
+\boldsymbol{z} & \mathcal{Z} \subseteq \mathbb{R}^{d_{\boldsymbol{z}}} & \text{A feasible action} \\
+\boldsymbol{\theta} & \Theta & \text{Parameters of a prediction model} \\
+\hat{\boldsymbol{\theta}} & \Theta & \text{Optimal parameter value that minimizes the estimation error} \\
+c(\boldsymbol{z}, \boldsymbol{y}) & \mathbb{R} & \text{Cost of an action } \boldsymbol{z} \text{ under } \boldsymbol{y} \\
+h\left(\boldsymbol{z}, \mathbb{Q}_{\xi}\right) & \mathbb{R} & \text{Expected cost of an action } \boldsymbol{z} \text{ under } \mathbb{Q}_{\xi} \text{ (a distribution over } \boldsymbol{y}) \\
+H(\pi, \mathbb{Q}) & \mathbb{R} & \text{Expected cost of a policy } \pi \text{ under } \mathbb{Q} \text{ (a distribution over } (\boldsymbol{x}, \boldsymbol{y})) \\
+f_{\boldsymbol{\theta}}(\boldsymbol{x}) & \mathcal{M}(\mathcal{Y}) & \text{Estimate of the conditional distribution of } \boldsymbol{y} \text{ given } \boldsymbol{x} \\
+g_{\boldsymbol{\theta}}(\boldsymbol{x}) & \mathbb{R} \boldsymbol{R}_{\boldsymbol{y}} & \text{Estimate of the conditional expectation of } \boldsymbol{y} \text{ given } \boldsymbol{x} \\
+\pi^{*}(\boldsymbol{x}) & \mathcal{Z} & \text{Optimal solution of CSO under true conditional distribution } \mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x}) \\
+\pi_{\boldsymbol{\theta}}(\boldsymbol{x}) & \mathcal{Z} & \text{Action prescribed by a policy parameterized by } \boldsymbol{\theta} \text{ for context } \boldsymbol{x} \\
+z^{*}(\boldsymbol{x}) & \mathcal{Z} & \text{Optimal solution to the CSO problem under the true conditional distribution } \mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x}) \\
+z^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) & \mathcal{Z} & \text{Optimal solution to the CSO problem under the conditional distribution } f_{\boldsymbol{\theta}}(\boldsymbol{x}) \\
+z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) & \mathcal{Z} & \text{Optimal solution to the CSO problem under the Dirac distribution } \delta_{g \boldsymbol{\theta}}(\boldsymbol{x}) \\
+\rho\left(\boldsymbol{f}_{\boldsymbol{\theta}}, \hat{\mathbb{P}}_{N}\right) & \mathbb{R} & \text{Expected prediction error for distribution model } f_{\boldsymbol{\theta}} \text{ based on empirical distribution } \hat{\mathbb{P}}_{N} \\
+\rho\left(g_{\boldsymbol{\theta}}, \hat{\mathbb{P}}_{N}\right) & \mathbb{R} & \text{Expected prediction error for point prediction model } g_{\boldsymbol{\theta}} \text{ based on empirical distribution } \hat{\mathbb{P}}_{N} \\
+\hline
+\end{array}
+$$
 
 2. Contextual Optimization
 
@@ -262,6 +291,188 @@ Design choices:
   - e.g. decision rule/sequential/integrated paradigm
 - class of predictive model
   - e.g. linear/neural network/random forest
+
+# 3 Dicision rule optimization 
+
+Decision rules:
+- obtained by solving ERM in Problem [(4)](#4)
+- minimize the cost of a policy on the task
+  - that is, downstream optimization problem 
+
+Advantage:
+- once trained, no optimization problem needs
+
+Define decision rule approach as:
+
+employing a parameterized mapping $ \pi_{\boldsymbol{\theta}}(\boldsymbol{x}) $
+
+- e.g.: linear/neural network
+
+
+## 3.1 Linear decision rules
+
+1: SAA(sample-average approximation)
+
+for a newsvendor problem:
+
+Use LDRs(linear decision rules)
+
+Two variants with and without regularization:
+
+$ \min _{\pi: \exists \boldsymbol{\theta} \in \mathbb{R}^{d} \boldsymbol{x}, \pi(\boldsymbol{x})=\boldsymbol{\theta}^{\top} \boldsymbol{x}, \forall \boldsymbol{x}} H\left(\pi, \hat{\mathbb{P}}_{N}\right)+\Omega(\pi)=\min _{\boldsymbol{\theta}} \frac{1}{N} \sum_{i=1}^{N} u\left(y_{i}-\boldsymbol{\theta}^{\top} \boldsymbol{x}_{i}\right)^{+}+o\left(\boldsymbol{\theta}^{\top} \boldsymbol{x}_{i}-y_{i}\right)^{+}+\lambda\|\boldsymbol{\theta}\|_{k}^{2} $
+
+- $u$: per unit backordering (underage) cost 
+- $o$: per unit holding (overage) cost 
+
+2: For linear demand model:
+
+Generalization error for ERM model scales as :
+
+- $ \mathrm{O}\left(d_{x} / \sqrt{N}\right) $ , when there is no regularization
+- $ \mathrm{O}\left(d_{\boldsymbol{x}} /(\sqrt{N} \lambda)\right) $, with regularization
+
+Need balance (to get optimal performance):
+
+- generalization error
+- regularization bias
+
+Consider unconstrained problems because:
+- difficult to ensure the feasibility of policies 
+- maintain computational tractability
+
+3. General theory for generalization
+
+- Based on Rademacher complexity
+- beyond LDR
+
+LDRs may not be asymptotically optimal in general 
+
+To generalize LDRs:
+
+- decision rules that linear in transformations of the covariate vector 
+- lift covariate vector to RKHS(reproducing kernel Hilbert space)
+
+## 3.2 RKHS-based decision rules
+
+To:
+
+Obtain decision rules: more flexible than linear ones with respect to $\boldsymbol x$:
+
+lift the covariate vector to RKHS
+
+- LDRs might achieve better performance 
+
+Let:
+
+$ K: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R} $: symmetric positive definite kernel 
+- associated with the chosen RKHS 
+  - e.g.: $ K\left(\boldsymbol{x}_{1}, \boldsymbol{x}_{2}\right):=\exp \left(-\left\|\boldsymbol{x}_{1}-\boldsymbol{x}_{2}\right\|^{2} /\left(2 \sigma^{2}\right)\right) $
+
+$ \left\{\varphi: \mathcal{X} \rightarrow \mathbb{R} \mid \exists L \in \mathbb{N}, \boldsymbol{v}_{1}, \boldsymbol{v}_{2}, \cdots, \boldsymbol{v}_{L} \in \mathcal{X}, \varphi(\boldsymbol{x})=\sum_{l=1}^{L} a_{l} K\left(\boldsymbol{v}_{l}, \boldsymbol{x}\right), \forall \boldsymbol{x} \in \mathcal{X}\right\} $
+
+- the RKHS $\mathcal H_K$
+- Given $K$
+- the closure of a set functions
+- $ \varphi_{1}(\boldsymbol{x})=\sum_{i=1}^{L_{1}} a_{1}^{i} K\left(\boldsymbol{v}_{1}^{i}, \boldsymbol{x}\right) $
+- $ \varphi_{2}(\boldsymbol{x})=\sum_{j=1}^{L_{2}} a_{2}^{j} K\left(\boldsymbol{v}_{2}^{j}, \boldsymbol{x}\right) $
+- $ \left\langle\varphi_{1}, \varphi_{2}\right\rangle=\sum_{i=1}^{L_{1}} \sum_{j=1}^{L_{2}} a_{1}^{i} a_{2}^{j} K\left(\boldsymbol{v}_{1}^{i}, \boldsymbol{v}_{2}^{j}\right) $: inner product
+
+1: approximate the optimal policy:
+- with a linear policy in the RKHS
+  - $ \pi_{\varphi}(\boldsymbol{x}):=\langle\varphi, K(\boldsymbol{x}, \cdot)\rangle $ when $ d_{\boldsymbol{z}}=1 $
+
+using the representer theorem, the solution of :
+
+$ \min _{\varphi \in \mathcal{H}_{K}} H\left(\pi_{\varphi}, \hat{\mathbb{P}}_{N}\right)+\lambda\|\varphi\|_{2}^{2} $
+
+- regularized problem 
+
+takes the form $ \pi^{*}(\boldsymbol{x})=\sum_{i=1}^{N} K\left(\boldsymbol{x}_{i}, \boldsymbol{x}\right) a_{i}^{*} $
+
+reduce the decision rule problem to:
+
+$ \min _{\boldsymbol{a} \in \mathbb{R}^{N}} H\left(\sum_{i=1}^{N} K\left(\boldsymbol{x}_{i}, \cdot\right) a_{i}, \hat{\mathbb{P}}_{N}\right)+\lambda \sum_{i=1}^{N} \sum_{j=1}^{N} K\left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right) a_{i} a_{j} $
+
+can be extended to $ d_{z}>1 $ by employing one RKHS for each $ z_{i} $
+
+Some applications:
+
+- Data-driven single item newsvendor
+- single risky asset portfolio problems 
+  - establish bounds on the out-of-sample performance 
+- asymptotic optimality of RKHS-based policies 
+- two-stage capacity planning problem 
+  - multivariate demand 
+  - vector-valued capacity decisions 
+    - the underlying demand distribution is difficult to estimate in practice
+- optimize over policies that are linear in the RKHS 
+  - associatied with Gaussain kernerl
+  - identify generalization error bounds 
+  - for large dimension problems:
+    - slow convergence rate 
+    - propose instead using a data-dependent random forest kerenl
+
+## 3.3 Non-linear decision rules
+
+1: value of training a DNN
+
+- learn the ordering policy of a newsvendor problem 
+
+**neural networks**
+
+- universal approximation property
+  - approximate any continuous function arbitrarily well 
+- For constrained problem:
+  - softmax as final layer to ensure decisions lies in a simplex
+    - 2: portfolio optimization problem 
+- in general, not land in feasible space. to circumvent:
+  - 3: application-specific differentiable repair layer
+    - project the solution back to feasibility 
+  - 4: obtained by SGD(stochastic gradient descent) approximately minimize the Bayesian posterior loss
+
+Optimal solution of a newsvendor problem is a quantile of demand distribution:
+
+- 5: train an additive ensemble of decision trees using quantile regression
+  - produce thr ordering decision  
+  - Test the algorithms on a real-world dataset from a large German bakery chain 
+- 6: optimize decision tree-based decision rules 
+  - address the multi-item newsvendor, treatment planning, optimal stopping problems 
+- 7: tutorial on DNN-based decision rule optimization 
+
+8: piecewise-affine decision rules 
+
+- provice non-asymptotic and asymptotic consistency results
+  - for unconstrained and constrained problems 
+- learn policy through: stochastic majorization-minimization algorithm
+- experiment on constrained newsvendor problem 
+  - piecewise-affine decision rules outperform RKHS-based policies 
+
+## 3.4 Distributionally robust decision rules 
+
+Assume parammetric form $ \Pi^{\theta} $ for the policy, but:
+
+1: distributionally robust contextual newsvendor problem 
+
+- under type-1 Wasserstein ambiguity set
+- without assuming an explicit structure on the policy class 
+
+$ W_{p}\left(\mathbb{P}_{1}, \mathbb{P}_{2}\right)=\inf _{\gamma \in \mathcal{M}\left(\mathcal{Y}^{2}\right)}\left(\int_{\mathcal{Y} \times \mathcal{Y}}\left\|y_{1}-y_{2}\right\|^{p} \gamma\left(d y_{1}, d y_{2}\right)\right)^{\frac{1}{p}} $
+
+- type-$p$ Wasserstein distance between $ \mathbb{P}_{1} $ and $ \mathbb{P}_{2} $
+- $ \gamma $ is a joint distribution of $ y_{1} $ and $ y_{2} $ 
+  - with marginals $ \mathbb{P}_{1} $ and $ \mathbb{P}_{2} $
+
+2: avoids the degeneracies of ERM
+- for generic $\Pi  $
+- by define an optimal "Shapley" extension 
+  - to the scenario-based optimal policy
+
+That is:
+
+$ \min _{\pi \in \Pi} \sup _{\mathbb{Q} \in \mathcal{M}(\mathcal{X} \times \mathcal{Y})}\left\{H(\pi, \mathbb{Q}): \mathcal{W}\left(\mathbb{Q}, \hat{\mathbb{P}}_{N}\right) \leq r\right\} \equiv \min _{\pi: \hat{\mathcal{X}} \rightarrow \mathcal{Z} }\sup _{\mathbb  Q\in \mathcal M ({\mathcal { \hat X }} \times \mathcal{Y})}\left\{H(\pi, \mathbb{Q}): \mathcal{W}\left(\mathbb{Q}, \hat{\mathbb{P}}_{N}\right) \leq r\right\} $
+
+- $ \hat{\mathcal{X}}:=\cup_{i=1}^{N}\left\{\boldsymbol{x}_{i}\right\} $ 
+- $ \mathcal{M}(\hat{\mathcal{X}} \times \mathcal{Y}) $ is the set of all distribution supported on $ \hat{\mathcal{X}} \times \mathcal{Y} $.
 
 
 
