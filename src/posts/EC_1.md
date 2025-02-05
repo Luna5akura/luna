@@ -1,4 +1,6 @@
-# Environment
+# LEARNING FROM REVIEWS: THE SELECTION EFFECT AND THE SPEED OF LEARNING
+
+# 2 Environment
 
 Product: unknown to both side
 
@@ -10,7 +12,7 @@ Rating system:
 - purchase with ex ante type
 - ex post preference
 
-## Customers' Problem, Rating System
+## 2.1 Customers' Problem, Rating System
 
 $Q\in\{0, 1\}$: True quality of the product
 
@@ -55,7 +57,7 @@ Procedure:
   - $B_t(\Omega_t, \theta_t) = 1\quad$if and only if$\quad \theta_t + \mathbb E \left[\zeta_t\right] + q_t - p \ge 0$: Bayes-Nash equilibrium
   - $q_t = \mathbb P _{\{(\theta_S, \zeta_S\}_{S=1}^{t-1}}\left[Q=1\mid\Omega_t\right] \quad$ <p id = "2">(2)</p>: the belief of $t$
 
-### Review decision
+## 2.2 Review decision
 
 $\lambda_{-\underline K }\le \dots\le \lambda_{-1}\le \lambda_1\le\dots\le\lambda_{\overline K} \in \mathbb R$: threshold
 
@@ -71,7 +73,7 @@ $$
 
 ---
 
-### Assumption 1 - Richness
+#### Assumption 1 - Richness
 
 $\theta, \zeta$, random variable, drawn from $\left[\underline \theta, \overline\theta\right], \left[\underline \zeta, \overline\zeta\right]$, so that
 
@@ -83,15 +85,15 @@ why $\overline\theta$ ?
 - lower may not purchase
 - $Q = 0$ for most favorable review, $Q = 1$ for least favorable review , these are not fully revealing ablout the quality
 
-### Remark 1
+#### Remark 1
 
 ---
 
-# Full history
+# 3 Full history
 
 - $\Omega_t = h_t$
 
-## Learning Dynamics
+## 3.1 Learning Dynamics
 
 [(2)](#2) becomes:
 
@@ -146,7 +148,7 @@ $l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; 
 
 $l_{t+1} = l_t \times \dfrac{\pi(a_t; F_{\theta, \zeta}, Q = 1, q_t)}{\pi (a_t; F_{\theta, \zeta}, Q = 0, q_t )}, \quad \text{w.p. } \pi(a_t; F_{\theta,\zeta}, Q, q_t), a\in \mathcal A \text { for } t \ge 1$
 
-## Complete learning
+## 3.2 Complete learning
 
 ### Theorem 1:
 
@@ -155,6 +157,7 @@ If $\overline\theta + \mathbb E [\zeta] - p \ge 0, q_1 \in(0, 1)$, then $q_t\rig
 Proof
 
 $Z(a_t | l_t ) = \dfrac{\pi (a_t ; F_{\theta, \zeta}, Q = 1, q = q_t ) }{ \pi ( a*t ; F*{\theta, \zeta}, Q = 0, q = q_t)}, \forall a_t \in \mathcal A, $<p id = "A-1">(A-1)</p>
+
 : likelihood ratio
 
 #### Part 1 : when $\overline \theta + \mathbb E [\zeta] - p > 0$
@@ -311,8 +314,114 @@ $\Rightarrow \max _{q \in[\Delta, 1]} \frac{\mathbb{P}_{\theta, \zeta}\left[\the
 
 the over part and below part difference is bounded by:
 
-$$
+$ \mathbb{P}_{\theta, \zeta}\left[\theta \geq \bar{\theta}-(1-\Delta), \lambda_{-\underline{K}}+p-\theta-1 \leq \zeta \leq \lambda_{-\underline{K}}+p-\theta\right]>0 $
 
+--- 
+
+Theorem shows: 
+
+- $ \bar{\theta}+\mathbb{E}[\zeta]-p \geq 0 $ is sufficient for complete learning 
+  - starting from any initial belief 
+- when not hold:
+  - for sufficiently pessimistic beliefs about $Q$(quality of product)
+    - all customers stop buying it 
+
+Notice:
+- most positive assessment of expected utility: 
+  - hightest ex ante valuation $\bar \theta $
+  - $ \bar{\theta}+\mathbb{E}[\zeta]+q-p $
+    - $ q $ is the public belief at the time of purchase
+
+when: $ \bar{\theta}+\mathbb{E}[\zeta]-p<0 $
+
+- notice whole will $<0$
+  - once belief reach pessimistic level:
+    - the most positive valuation stop purchasing
+    - consequently beliefs remain stuck at $q$
+
+#### Assumption 2: $ \bar{\theta}+\mathbb{E}[\zeta]-p>0 $ 
+
+## 3.3 Speed of learning 
+
+Characterize the speed of learning under full history 
+
+Introduce KL(Kullback-Leibler) divergence 
+
+#### Definition 1 : KL Divergence 
+
+> $ D(\boldsymbol{\mu} \| \boldsymbol{\nu})=\sum_{i=1}^{m} \mu_{i} \log \left(\frac{\mu_{i}}{\nu_{i}}\right) $
+
+> - two strictly positive distributions :
+>   - $ \boldsymbol{\mu}=\left(\mu_{1}, \ldots\right. $, $ \left.\mu_{m}\right) $ 
+>   - $ \nu=\left(\nu_{1}, \ldots, \nu_{m}\right) $
+> - defined on a finite set $ \{1, \ldots, m\}, \mathrm{KL} $
+
+#### Definition 2 : Speed of learning 
+
+> For a rating system with exponentially fast (complete) learning:
+> - $ \lim _{t \rightarrow \infty} \frac{1}{t} \log q_{t} $ : the speed of learning 
+>   - when $ Q=0 $
+> - $ \lim _{t \rightarrow \infty} \frac{1}{t} \log (1- q_{t} )$
+>   - when $ Q=1 $
+> -  a rating system has faster learning than another one :
+>   - speed of learning is greater for both $Q = 0$ and $Q = 1$
+
+#### Theorem 2: 
+
+> Suppose:
+> -  Assumptions 1 and 2 hold 
+> - Then : learning is exponentially fast
+>   - that is: $ q_{t} $ almost surely converges exponentially to $ Q $
+> 
+> For $Q = 0$: almost sure have:
+> - $ \lim _{t \rightarrow \infty} \frac{1}{t} \log q_{t}=-D\left(\pi\left(F_{\theta, \zeta}, Q=0, q=0\right) \| \boldsymbol{\pi}\left(F_{\theta, \zeta}, Q=1, q=0\right)\right) $
+> For $Q = 1$: almost sure have:
+> $ \lim _{t \rightarrow \infty} \frac{1}{t} \log \left(1-q_{t}\right)=-D\left(\pi\left(F_{\theta, \zeta}, Q=1, q=1\right) \| \pi\left(F_{\theta, \zeta}, Q=0, q=1\right)\right) $
+
+Tell us:
+
+Learning under full history:
+
+- exponentially fast 
+- is governed by the **KL** divergence between:
+  - probability distribution of possible actions (i.e., $ a \in \mathcal{A} $ )
+    - when the underlying quality is $ Q $
+    - public belief is $q = Q $
+  - and the probability distribution
+    - when underlying quality is $1-Q $
+    - still $q=Q$
+
+Three components to intuition:
+
+-  the ability of users to overcome the selection effect and combine (the independent components of) past reviews
+   -  can achieve because: they know the distribution of
+past reviews and can draw the correct inferences from them
+- the speed of learning is given by KL divergence is intuitive as well
+  - think of distinguishing $ Q=0 $ from $ Q=1 $ as a binary hypothesis testing problem 
+  -  The best error exponent for a binary hypothesis testing problem from independently-drawn samples is given: 
+     -  by the KL divergence between the probability distributions of these samples conditional on the two hypotheses
+- both probability distributions in the KL divergence condition on $q=Q$
+   -  because: under full history, each customer correctly reasons about previous users’ beliefs, which are converging to $Q$
+   -  enables the effective filtering out of selection effect
+
+
+## 3.4 The Selection Effect 
+
+Because : 
+
+the composition of customers purchasing the product :
+-  influenced by information at time $t$ (summarized by $q_t$)
+
+Then :
+
+the distribution of reviews depends on this information. 
+
+For example:
+
+with full history, when the public belief $q_t $ is very low:
+- only customers with very high $\theta $ purchase
+- these customers are much more likely to enjoy a high material utility 
+- 
 
 placeholder
 
