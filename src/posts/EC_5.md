@@ -29,6 +29,52 @@ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) & \mathcal{Z} & \text{
 \end{array}
 $$
 
+$$
+\begin{array}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\text{Reference} & \text{rcso} & \text{wSAA} & \text{EVB} & \text{Reg. CSO} & \text{DRO} & \text{General} & \text{Linear} & \text{Kernel} & \text{kNN} & \text{DT} & \text{RF} \\
+\hline
+\text{Hannah et al. (2010)} & \times & \checkmark & \times & \times & \times & \times & \times & \checkmark & \times & \times & \times \\
+\hline
+\text{Ferreira et al. (2016)} & \times & \times & \checkmark & \times & \times & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Ban et al. (2019)} & \checkmark & \times & \times & \times & \times & \times & \checkmark & \times & \times & \times & \times \\
+\hline
+\text{Chen and Paschalidis (2019)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \times & \checkmark & \times & \times \\
+\hline
+\text{Bertsimas and Kallus (2020)} & \times & \checkmark & \times & \times & \times & \times & \checkmark & \times & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Kannan et al. (2020)} & \checkmark & \times & \times & \times & \times & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Kannan et al. (2021)} & \checkmark & \times & \times & \times & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Liu et al. (2021)} & \times & \times & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Srivastava et al. (2021)} & \times & \checkmark & \times & \checkmark & \times & \times & \times & \checkmark & \times & \times & \times \\
+\hline
+\text{Wang et al. (2021)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \checkmark & \times & \times & \times \\
+\hline
+\text{Bertsimas and Van Parys (2022)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \checkmark & \checkmark & \times & \times \\
+\hline
+\text{Deng and Sen (2022)} & \checkmark & \times & \times & \times & \times & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Esteban-Pérez and Morales (2022)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \checkmark & \checkmark & \times & \times \\
+\hline
+\text{Kannan et al. (2022)} & \checkmark & \times & \times & \times & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Lin et al. (2022)} & \times & \checkmark & \times & \checkmark & \times & \times & \times & \times & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Nguyen et al. (2021)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \times & \checkmark & \times & \times \\
+\hline
+\text{Notz and Pibernik (2022)} & \times & \checkmark & \times & \times & \times & \times & \times & \checkmark & \times & \checkmark & \times \\
+\hline
+\text{Zhu et al. (2022)} & \times & \times & \checkmark & \times & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+\text{Perakis et al. (2023)} & \checkmark & \times & \times & \times & \checkmark & \times & \checkmark & \times & \times & \times & \times \\
+\hline
+\end{array}
+$$
+
 2. Contextual Optimization
 
 $\boldsymbol  z$ : decision: The order for today inventory
@@ -473,6 +519,314 @@ $ \min _{\pi \in \Pi} \sup _{\mathbb{Q} \in \mathcal{M}(\mathcal{X} \times \math
 
 - $ \hat{\mathcal{X}}:=\cup_{i=1}^{N}\left\{\boldsymbol{x}_{i}\right\} $ 
 - $ \mathcal{M}(\hat{\mathcal{X}} \times \mathcal{Y}) $ is the set of all distribution supported on $ \hat{\mathcal{X}} \times \mathcal{Y} $.
+
+3: in non-contextual setting
+
+4: use LDRs to solve dynamic optimization problems with side information
+
+5: pertubed distributions in Wasserstein ambiguity set:
+- have a different conditional information structure 
+  - than estimated conditional distribution 
+- DRO(distributionally robust optimization) with causal transport metric 
+  - place an additional causality constraint on transport plan
+  - compare to Wasserstein metric 
+
+6: Bayesian interpretation of decision rule optimization 
+- using SGD 
+- provide an unbaised estimate of worst-case objective function of a DRO problem 
+  - as long as a uniqueness condition is satisfied 
+- Wasserstein ambiguity set violates this condition 
+- use KL(Kullback-Leibler) divergence to train models 
+
+# 4 SLO(Sequential learning and optimization )
+
+- a more traditional setting 
+  - sconditional distribution is learned from data 
+  - used directlly in optimization model 
+- attempt to produce disicions:
+  - robust to model misspecification 
+
+## 4.1 Learning conditional distribution 
+
+employed discrete models for $ f_{\boldsymbol{\theta}}(\boldsymbol{x}) $
+
+- motivatied from computational perspective
+  - CSO problem [(5)](#5) is easier to solve 
+
+CSO under continuous distribution:
+- needs to be first replaced by SAA to be solved
+
+Difficult: assess probability of outcomes:
+- that not present in the dataset 
+- justifying fixing the support of $\boldsymbol y $ to its observed values
+
+### 4.1.1 Residual-based distribution 
+
+1: use the errors of a trained regression model 
+- construct conditional distributions 
+
+Let: 
+
+- $ g_{\hat{\theta}} $ be a regression model trained to predict
+  - the response $ \boldsymbol{y} $ 
+  - from the covariate $ \boldsymbol{x} $
+
+minimizing an estimation error $ \rho $ as in [(7)](#7)
+
+$ \boldsymbol{\epsilon}_{i}=\boldsymbol{y}_{i}-g_{\hat{\boldsymbol{\theta}}}\left(\boldsymbol{x}_{i}\right) $: residual error of sample $i $
+
+$ \left\{\boldsymbol{\epsilon}_{i}\right\}_{i=1}^{N} $: set of residuals measured on the historical data 
+
+- used to form the conditional distribution 
+
+$ f_{\boldsymbol{\theta}}(\boldsymbol{x})=\mathbb{P}^{\mathrm{ER}}(\boldsymbol{x}):=\frac{1}{N} \sum_{i=1}^{N} \delta_{\operatorname{proj}_{\mathcal{Y}}\left(\mathrm{g}_{\hat{\boldsymbol{\theta}}}(\boldsymbol{x})+\boldsymbol{\epsilon}_{\mathrm{i}}\right)} $: the conditional distribution 
+- $ \operatorname{proj}_{y} $ the projection on the support $ \mathcal{Y} $
+
+the rCSO(residual-based CSO):
+
+#### 10
+
+$ (\mathbf{r C S O}) \min _{\boldsymbol{z} \in \mathcal{Z}} h\left(\boldsymbol{z}, \mathbb{P}^{\mathrm{ER}}(\boldsymbol{x})\right) $
+
+
+Advantage:
+
+- can be applied in conjunction with any trained regression model 
+
+2: conditional distribution for two-stage and multi-stage CSO 
+- use the residual obtained from parametric regression on historical data
+
+Notice: historical data is used twice 
+
+- train the regression model $g_{\boldsymbol \theta } $
+- measure the residuals $\boldsymbol \varepsilon _i $
+
+Lead to: underestimation of distribution of the residual error
+
+To remove bias:
+
+3: a leave-one-out model (jackknife)
+
+- measure the residuals as: $ \tilde{\boldsymbol{\epsilon}}_{i}=\boldsymbol{y}_{i}-g_{\hat{\boldsymbol{\theta}}_{-i}}\left(\boldsymbol{x}_{i}\right) $ 
+  -  $ \hat{\boldsymbol{\theta}}_{-i} $ is trained using all except the $i $-th sample $ \left(\boldsymbol{x}_{i}, \boldsymbol{y}_{i}\right) $
+- can be applied to heteroskedastic case in 3 
+  - obtain this conditional distribution :
+  - $ f_{\boldsymbol{\theta}}(\boldsymbol{x}):=\frac{1}{N} \sum_{i=1}^{N} \delta_{\operatorname{proj}}^{\mathcal{Y}}\left(\mathrm{g}_{\hat{\boldsymbol{\theta}}}(\boldsymbol{x})+\hat{\mathrm{Q}}(\boldsymbol{x}) \hat{\boldsymbol{\epsilon}}_{\mathrm{i}}\right) $
+    - by first estimating the conditional covariance matrix $ \hat{Q}(\boldsymbol{x}) $
+    - form the residuals:  $ \hat{\boldsymbol{\epsilon}}_{i}=\left[\hat{Q}\left(\boldsymbol{x}_{i}\right)\right]^{-1}\left(\boldsymbol{y}_{i}-g_{\hat{\boldsymbol{\theta}}}\left(\boldsymbol{x}_{i}\right)\right) $
+
+### 4.1.2 Weight-based distribution 
+
+A typical approach for formulating the CSO problem:
+
+assign weights to observations of the uncertain parameters in the historical data 
+- solve wSAA(weighted SAA problem) given by:
+
+#### (11)
+
+$ (\mathbf{w S A A}) \min _{z \in \mathcal{Z}} h\left(\boldsymbol{z}, \sum_{i=1}^{N} w_{i}(\boldsymbol{x}) \delta_{\boldsymbol{y}_{i}}\right) $
+
+- $ f_{\boldsymbol{\theta}}(\boldsymbol{x})=\sum_{i=1}^{N} w_{i}(\boldsymbol{x}) \delta_{\boldsymbol{y}_{i}} $: conditional distribution 
+
+  - fully determined by the function used to assign a weight to historical samples 
+
+
+Different approaches be proposed 
+- to determine the sample weights with ML method 
+
+**Weights based on proximity**
+
+Sample weights can be assigned based on the distance between:
+
+- covariate $\boldsymbol x $
+- each historical sample $\boldsymbol x_i$ 
+
+Instance: (kNN)$k$-nearest neighbor estimation 
+
+- gives equal weight to $k $ closest samples 
+- 0 weight for all other samples 
+- $ w_{i}^{\mathrm{kNN}}(\boldsymbol{x}):=(1 / k) \mathbb{1}\left[\boldsymbol{x}_{i} \in \mathcal{N}_{k}(\boldsymbol{x})\right] $
+  - $ \mathcal{N}_{k}(\boldsymbol{x}) $ the set of $ k $ nearest neighbors of $\boldsymbol  x$
+  - $ \mathbb{1}[\cdot] $ : the indicator function.
+
+Though: simple
+
+Benefit: asymptotic consistency
+- guarantee prescriptive performance 
+
+Another way: kernel density estimators 
+
+NW(Nadaraya-Watson) kernel estimator employ a weight function:
+
+$ w_{i}^{\mathrm{KDE}}(\boldsymbol{x}):=\frac{K\left(\left(\boldsymbol{x}-\boldsymbol{x}_{i}\right) / \boldsymbol{\theta}\right)}{\sum_{j=1}^{N} K\left(\left(\boldsymbol{x}-\boldsymbol{x}_{j}\right) / \boldsymbol{\theta}\right)} $
+
+- $ K $ : kernel function 
+- $ \boldsymbol{\theta} $ : its bandwidth parameter
+- Can use different kernel function 
+  - e.g. Gaussian kernel: $ K(\boldsymbol{\Delta}) \propto \exp \left(-\|\boldsymbol{\Delta}\|^{2}\right) $
+
+Also: bayesian approach that :
+- exploits the Dirichlet process mixture 
+  - to assign sample weights
+
+**Weights based on random forest **
+
+Weights can be designed 
+- based on random forest regressors
+
+Simplest setting:
+- weight function of a decision tree regressor is given by:
+
+$ w_{i}^{t}(\boldsymbol{x}):=\frac{\mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{i}\right)\right]}{\sum_{j=1}^{N} \mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{j}\right)\right]} $
+
+- $ \mathcal{R}_{t}(\boldsymbol{x}) $ : the terminal node of tree $ t $ 
+  -  contains covariate $ \boldsymbol{x} $
+
+A decision tree:
+- assign equal weights to all historical sample 
+  - that end in the same leaf node as $\boldsymbol  x $
+
+Random forest weight function:
+- generalize this idea 
+- over many random decision trees 
+
+Weight function is defined as:
+
+$ w_{i}^{\mathrm{RF}}(\boldsymbol{x}):=\frac{1}{T} \sum_{t=1}^{T} w_{i}^{t}(\boldsymbol{x}) $
+
+- $ w_{i}^{t} $ the weight function of tree $ t $
+
+Random forests are trained for:
+
+- perform an inference task
+  - e.g. regression, classification
+- also used and interpreted as:
+- nonparametric conditional density estimators
+
+1: conditions for the asymptotic optimality and consistency of prescriptions 
+- obtained by solving problem [(11)](#11)
+- with weights functions given by kNN, NW kernel estimator, local linear regression 
+
+### 4.1.3 Expected value-based models 
+
+When cost function is linear:
+
+training pipeline of SLO:
+
+reduces to conditional mean estimation 
+
+1: train regression trees 
+- forecast daily expected sales 
+  - for different product categories
+- inventory and pricing peoblem
+
+May attempt to approximate the doncitional density $ f_{\boldsymbol{\theta}}(\boldsymbol{x}) $ using a point prediction $ g_{\boldsymbol{\theta}}(\boldsymbol{x}) $
+
+2: a last-mile delivery problem 
+- customer orders are assigned to drivers 
+- replace conditional distribution of stochastic travel time 
+  - with point predictor 
+  - accounts for the number of stops, total distance of the trip 
+
+## 4.2 Regularization and distributionally robust optimization 
+
+Non-parametric conditional density estimation method benefit from asymptotic consistency, but:
+
+- produce overly optimistic policies 
+  - when size of covariate vector is large 
+
+To circumvent this issue:
+
+- regularize the CSO problem
+- cast it as a DRO problem 
+  - attempts to minimize the worst-case expected cost 
+  - over the set of distributions $ \mathcal{B}_{r}\left(f_{\boldsymbol{\theta}}(\boldsymbol{x})\right) $
+    - lie at a distance $r$
+    - from the estimated distribution 
+- $ f_{\boldsymbol{\theta}}(\boldsymbol{x}) $
+
+1: generate bootstrap data 
+- from training set 
+- use as prxy for "out-of-sample disappointment"
+  - of action $\boldsymbol z $
+  - resulting from out-of-sample cost
+    - exceeding the budget 
+    - given by $ \sup _{\mathbb{Q}_{y} \in \mathcal{B}_{r}\left(f_{\theta}(\boldsymbol{x})\right)} h\left(\boldsymbol{z}, \mathbb{Q}_{y}\right) $
+- for NW kernel estimator and KNN estimator:
+  - DRO under a range of ambiguity set 
+  - can be reformulated as convex optimization problem 
+- Use KL divergence
+  - measure distance between :
+    - probability distributions 
+  - obtain:
+    - guarantees with respect to estimate-then-optimize model 
+    - taking bootstrap data as proxy 
+    - for out-of-sample data 
+
+2: Taking center of Wasserstein ambiguity set:
+- be NW kernel estimator 
+
+Show that: 
+
+- distributionally robust newsvendor and CVaR(conditional value at risk) portfolio optimization problems 
+  - can be reformulated as convex program
+- provide conditions to obtain:
+  - asymptotic convergence 
+  - out-of-sample guarantees on the solutions of DRO model 
+
+3: study distributionally robust kNN regression problem 
+- by combining point estimation of outcome
+  - with DRO model over Wasserstein ambiguity set 
+- use kNN predict the outcome 
+  - based on weighted distance metric 
+    - constructed from the estimate 
+
+4: study a distributionally robust contextual portfolio allocation problem 
+- worst-case conditional return-risk tradeoff is computed
+  - over an optimal transport ambiguity set 
+    - consisting of pertubations of joint distributions of covariates and returns 
+
+- generalize the mean-variance and mean-CVaR model 
+  - distributionally robust models are equivalent to 
+    - semi-definite 
+    - second-order cone representable program 
+
+5: solve a DRO problem with novel ambiguity set 
+- based on trimming the empirical conditional distribution 
+  - i.e. reducing the weights over the support points 
+- show thelink between trimming a distribution and partial mass transportation problem 
+- 6: application in the optimal power flow problem 
+
+7: Distributionally robust extension of rCSO model 
+- hedges against all distributions 
+  - lie in $r$ radius of (Wasserstein) ambiguity ball 
+    - centered at the estimated distribution $\mathbb  P ^{ER }(\boldsymbol  x )$
+
+8: a DRO model to solve two-stage multi-item joint production and pricing problem 
+- with a partitioned-moment-based ambiguity set 
+- constructed by clustering the residual 
+  - estimated from an additive demand model 
+
+9: an expected value-based model 
+- suggest an ambiguity set that is informed by the estimation metric 
+  - used to train $ g_{\hat{\theta}} $.
+- that is:
+
+$ \min _{\boldsymbol{z} \in \mathcal{Z}} \sup _{\boldsymbol{\theta} \in \mathcal{U}(\hat{\boldsymbol{\theta}}, r)} c\left(\boldsymbol{z}, g_{\boldsymbol{\theta}}(\boldsymbol{x})\right) $
+
+- $ \mathcal{U}(\hat{\boldsymbol{\theta}}, r):=\left\{\boldsymbol{\theta} \in \boldsymbol{\theta} \mid \rho\left(g_{\boldsymbol{\theta}}, \hat{\mathbb{P}}_{N}\right) \leq \rho\left(g_{\hat{\boldsymbol{\theta}}}, \hat{\mathbb{P}}_{N}\right)+r\right\} $
+- finite-dimensional convex reformulations can be obtained 
+  - when $ g_{\boldsymbol{\theta}}(\boldsymbol{x}):=\boldsymbol{\theta}^{T} \boldsymbol{x} $
+- promote the use of "robustness optimization" form 
+
+
+
+
+
+
+
+
+
 
 
 
