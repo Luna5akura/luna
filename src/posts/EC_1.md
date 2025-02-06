@@ -421,7 +421,100 @@ For example:
 with full history, when the public belief $q_t $ is very low:
 - only customers with very high $\theta $ purchase
 - these customers are much more likely to enjoy a high material utility 
-- 
+-  leave a positive review than the
+average customer
+
+### Example 1 : 
+
+> A rating system : 
+>
+> $ p=0, \zeta=0, \theta \sim \mathcal{U}[-1,1] , Q=0 $
+> 
+> When $ Q+\theta \geq 0 $
+> - leave a positive review ("like")
+> 
+> Suppose:
+> - $ q \approx 1 $
+>
+> then all customers purchase 
+> - because: $ \theta+q \approx \theta+1 $ greater than zero 
+>
+> Then :
+>
+>  ex ante valuation of customers who have purchased the product : 
+> - uniformaly distributed over $[-1, 1]$
+> - half is positive 
+>
+> In contrast : 
+>
+> $ q \approx 0 $
+>
+> - only customers with positive $\theta $ purchase the product
+> - conditional distribution of ex ante valuations is uniform over $[0, 1]$ 
+> - all reviews will be positive
+
+Selection effect impact the speed of learning:
+
+Suppose:
+
+that customer $ t $ (in addition to $ h_{t} $ ) observes the ex ante valuation of previous customers :
+
+- $ \theta_{s} $ for $ s=1, \ldots, t-1 $
+
+In this setting:
+
+- extra information remove selection effect 
+  - because: current customers can condition on past customers' valuation 
+  - learning is faster 
+  - extra information regarding distribution of previous customers' preferences increases the speed of learning 
+
+# 4 Summary statistics 
+
+Characterize the conditions for:
+- complete learning
+- speed for more realistic rating system 
+  - where platform provides summary statistics of reviews
+  - by past customers
+
+## 4.1 Learning Dynamics 
+
+Summary statistics will not see full history 
+
+- only observe a vector of statistics $\mathbb S $ 
+  - include the fraction of review in a subset of all review 
+
+Formally:
+
+$T$ : a nonempty subset
+
+- of all possible actions $\mathcal A $
+
+a partition of $T $: A rating system $ \left\{T_{1}, \ldots, T_{m}\right\} $
+
+- i.e. $ T=\bigcup_{i=1}^{m} T_{i} $ and $ T_{i} \cap T_{j}=\emptyset, i \neq j \in[m] $
+
+- such that:
+  - for any $i>j $:
+  - reviews in $ T_{i} $ are more positive than the reviews in the set $ T_{j} $
+
+$\tau $: the times $ t $ at which an action in $ T $ occurs
+
+- $\tau $ will be the number of reviews left so far 
+
+So:
+
+-  customers observe the number of actions in the
+set $T $
+- know their own $\tau $
+- for user $\tau $:
+  - rating system takes the form: $ \Omega_{\tau}=\mathbf{S}_{\tau-1} $
+  - report information from the first $\tau - 1 $ reviews
+
+
+
+
+
+
 
 placeholder
 
