@@ -510,9 +510,835 @@ set $T $
   - rating system takes the form: $ \Omega_{\tau}=\mathbf{S}_{\tau-1} $
   - report information from the first $\tau - 1 $ reviews
 
+A summary statistic: $ \mathbf{S}_{\tau} \in \mathbb{R}^{m} $ with its $ i $ th entry representing fraction of past reviews in $ T_{i} $
+
+that is :
+
+$ \mathbf{S}_{\tau}(i)=\frac{1}{\tau} \sum_{s=1}^{\tau} \mathbf{1}\left\{a_{s} \in T_{i}\right\}, \quad i \in[m] $
+
+Examples: 
+
+- The fractions of each one of $ \underline{K}+\bar{K} $ reviews are reported.
+  -  $ \mathbf{S}_{\tau} \in \mathbb{R}^{m} $ where $ m=\underline{K}+\bar{K} $
+  -  $ T=\mathcal{R} \backslash\{{0\}}$,
+  -  $ T_{1}=\{-\underline{K}\}, \ldots, T_{\underline{K}}=\{-1\}$,
+  -  $ T_{\underline{K}+1}=\{1\}, \ldots, T_{\underline{K}+K}= $ $ \{\bar{K}\} $.
+-  Averages of the scores of past reviews
+-  rating system reports only the fraction of reviews that give the highest score: 
+   -  $ a=\bar{K} $
+   -   out of the available $ \underline{K}+\bar{K} $ options. 
+   -   In this case, $ T=\mathcal{R} \backslash\{0\}$
+   -   $ T_{2}=\{\bar{K}\}$,
+   -   $ T_{1}=T \backslash T_{2} $ 
+   -   the rating system is represented by: $ \mathbf{S}_{\tau} \in \mathbb{R}^{2} $ 
+       -   $ \mathbf{S}_{\tau}(2)=\frac{1}{\tau} \sum_{s=1}^{\tau} \mathbf{1}\left\{a_{s}=\bar{K}\right\}, \quad $
+       -   $ \quad \mathbf{S}_{\tau}(1)=1-\mathbf{S}_{\tau}(2)$
 
 
+Key object: expectation of qality $Q$
 
+- conditional on the information avaliable from the rating system at time $t$ : $q_t$
+
+the relevant information is summarized by : vector $ \mathbf{S}_{\tau} $ after $ \tau $ purchases
+- written as: $ q_{\tau}=\mathbb{P}_{\left\{\left(\theta_{s}, \zeta_{s}\right)\right\}_{s=1}^{\tau -1}}\left[Q=1 \mid \mathbf{S}_{\tau}\right] $
+
+In contrast to full history case:
+
+$q_\tau $ is not public belief because :
+
+- $ \mathbf{S}_{\tau} $ is only observed by the customer making the $ \tau $ th purchase
+
+The likelihood ratio implied by belief $q_\tau$ takes an analogous form to [(4)](#4) :
+
+#### (7)
+
+$ l_{\tau}=\frac{q_{\tau}}{1-q_{\tau}}=\frac{\mathbb{P}_{\left\{\left(\theta_{s}, \zeta_{s}\right)\right\}_{s=1}^{\tau-1}}\left[Q=1 \mid \mathbf{S}_{\tau}\right]}{\mathbb{P}_{\left\{\left(\theta_{s}, \zeta_{s}\right)\right\}_{s=1}^{\tau-1}}\left[Q=0 \mid \mathbf{S}_{\tau}\right]}=\frac{\mathbb{P}_{\left\{\left(\theta_{s}, \zeta_{s}\right)\right)_{s=1}^{\tau_{-1}-1}}\left[\mathbf{S}_{\tau} \mid Q=1\right]}{\mathbb{P}_{\left\{\left(\theta_{s}, \zeta_{s}\right)\right\}_{s=1}^{\tau-1}}\left[\mathbf{S}_{\tau} \mid Q=0\right]} $.
+
+Because :
+
+- future customers do not observe $ \mathbf{S}_{\tau} $ 
+- cannot compute $ q_{\tau} $ 
+
+So:
+
+the likelihood ratio $ l_{\tau} $ is no longer a martingale
+
+Then: 
+
+we develop a different approach to study its asymptotic properties.
+
+
+$ \pi\left(i ; F_{\theta, \zeta}, Q, q, T\right)=\mathbb{P}_{\theta, \zeta}\left[a \in T_{i} \mid a \in T, q, Q\right], \quad \forall i \in[m] $.
+
+- the probability 
+  - of observing an action profile $ a $ 
+  - in the set $ T_{i} $ 
+  - conditional on the action profile being in $ T $ 
+
+
+#### (8)
+
+$ \mathbf{S}_{\tau+1}=\frac{\tau}{\tau+1} \mathbf{S}_{\tau}+\frac{1}{\tau+1} \mathbf{Y}_{\tau+1}, \quad \forall \tau \geq 0 $
+
+- The governing stochastic process 
+  - for $ \mathbf{S}_{\tau} $ 
+  - given the true quality $ Q $
+- $ \mathbf{Y}_{\tau+1} \in \mathbb{R}^{m} $
+  - $ \mathbf{Y}_{\tau+1}=\mathbf{e}_{i}, \quad $ w.p. $ \pi\left(i ; F_{\theta, \zeta}, Q, q_{\tau+1}, T\right) $
+    - $ \mathbf{e}_{i} \in \mathbb{R}^{m} $ 
+    - is the $ i $ th canonical basis vector, $ \mathbf{e}_{i}=(0, \ldots, 0,1,0, \ldots, 0) $
+
+In computing [(7)](#7) :
+
+- agents know  there may be unobserved actions
+- but : because 
+  - the information observed by agent who did not leave a review
+  - is the same as the information available to the next agent
+- Bayesian customers can consistently compute posterior probabilities
+
+## 4.2 Negative and Positive Selection
+
+Intuitively:
+
+- negative selection corresponds to the case
+  - belief $ q_{t} $ becomes more favorable to $ Q=1 $
+  - reviews become less likely to be positive
+  - "negative selected"
+- Positive selection
+  - as belief $ q_{t} $ becomes more favorable to $ Q=1 $
+  - reviews are more likely to be
+positive
+
+### Definition 3:
+
+> Consider a rating system with $ m $ review options:
+> 
+>  $ T_{1}, \ldots, T_{m} $ such that
+> 
+> - for any $ i^{\prime}<i$
+> - $\mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in \bigcup_{j=i^{\prime}}^{m} T_{j}, q, Q=1\right]> $ $ \mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in \bigcup_{j=i^{\prime}}^{m} T_{j}, q, Q=0\right] .{ }^{12} $
+> 
+> The rating system has negative selection if
+> - for any $ i^{\prime}<i$, 
+> - $ \mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in\right. $ $ \left.\bigcup_{j=i^{\prime}}^{m} T_{j}, q, Q\right] $ is decreasing in $ q $
+>   - that is, if the probability of more favorable reviews is decreasing in belief $ q $.
+> The rating system has positive selection if
+> - for any $ i^{\prime}<i$,
+> - $ \mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in\right. $ $ \left.\bigcup_{j=i^{\prime}}^{m} T_{j}, q, Q\right] $ is increasing in $ q $
+>   - that is, if the probability of more favorable reviews is increasing in belief $ q $.
+
+In both:
+
+as $q_t $ becomes more favorable:
+
+-  customers with
+lower ex ante valuations (lower $\theta $) 
+- more likely to purchase the product.
+
+With negative selection:
+
+-  these additional purchases decrease the likelihood of favorable reviews
+  
+With potsitive selection: 
+
+- they increase the likelihood of favorable reviews
+
+Negative or positive?
+
+- depends on:
+  - review options available to customers
+  - the distribution of the random variables $\theta  \zeta$
+
+Next proposition:
+
+- present simple sufficient conditions for selection 
+  -  in terms of the primitives of the model
+  -  given a rating system with $ m=\stackrel{\rightharpoonup}{K}-\ell+1 \geq 2 $ review options 
+     -  that reporting the fraction of all reviews
+        -  reviews that are more favorable than $\ell $
+        -  for some $ \ell \in\{-\underline{K}+1, \ldots, \bar{K}-1\} $
+        -  i.e., the set $ T $ is $ \{\ell, \ldots, \bar{K}\} $ and we have $ T_{1}=\{\ell\}, \ldots, T_{m}= $ $ \{\bar{K}\}) 
+
+### Proposition 1 : 
+
+
+> For any $ \ell \in\{-\underline{K}+1, \ldots, \bar{K}-1\} $
+> 
+>  consider a rating system that : 
+> - reports the fraction of all reviews 
+>   - are more favorable than $ \ell $
+> 
+> If :
+> 
+> - $ \theta $ has a uniform distribution 
+> - and $ \bar{\theta} \geq \max \left\{p-\mathbb{E}[\zeta], \lambda_{\bar{K}}-\underline{\zeta}+p\right\} $, 
+> 
+> then :
+> 
+> for any $ i^{\prime}<i,$
+> 
+> $ \mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in \bigcup_{j=i^{\prime}}^{m} T_{j}, q, Q=1\right]> $ $ \mathbb{P}\left[a \in \bigcup_{j=i}^{m} T_{j} \mid a \in \bigcup_{j=i^{\prime}}^{m} \bar{T}_{j}, q, Q=0\right] $, 
+> 
+> and we have:
+
+> 1. If the hazard rate $ \frac{f_{\zeta}(x)}{1-F_{\zeta}(x)} $ is decreasing in $ x $,
+> 
+>  then :
+> 
+>  this rating system features negative selection.
+
+> 2. If the hazard rate $ \frac{f_{\xi}(x)}{1-F_{\xi}(x)} $ is increasing in $ x $
+> 
+>  then :
+> 
+>  this rating system features positive selection.
+
+Example: 
+
+### Example 2
+
+> Negative Selection: 
+> 
+> Consider a rating system with : 
+> 
+> two review options 
+> - reporting the fraction of the most favorable review: 
+>   - $ \bar{K} $ (i.e., $ T=\{\bar{K}-1, \bar{K}\}, T_{1}=\{\bar{K}-1\} $, $ T_{2}=\{\bar{K}\} $ with $ \bar{K} \geq 2 $ ).
+> 
+>  This rating system features negative selection when :
+> 
+> -  $ \zeta $ has decreasing hazard rate (e.g., when the distribution of $ \zeta $ is Pareto) 
+> - $ \theta $ is uniform with $ \bar{\theta} \geq \max \left\{p-\mathbb{E}[\zeta], \lambda_{K}-\underline{\zeta}+p\right\} $.
+> 
+> Positive Selection: Consider the same rating system, but now suppose that :
+> 
+> - $ \zeta $ has increasing hazard rate (e.g., when the distribution of $ \zeta $ is uniform) 
+> -  $ \theta $ is again uniform with $ \bar{\theta} \geq \max \left\{p-\mathbb{E}[\zeta], \lambda_{\bar{K}}-\zeta+p\right\} $.
+> 
+> A simpler, even if less realistic, example of positive selection :
+> 
+>  rating system with  two review options 
+> - reports the fraction of "likes" among all customers 
+> - that is
+>   - $ T= $ $ \{-1,0,1\} \cup\{N\} $ 
+>   - $ T_{1}=\{-1,0\} \cup\{N\}
+>   -  T_{2}=\{1\} $ with any distribution of $ \theta $ and $ \zeta $
+
+The selection effect is more pronounced when :
+
+-  customers have access to sum-
+mary statistics (rather than the full history as in the previous section)
+  - because:  customers do not know the exact belief with which the previous actions were taken
+- when there is negative selection
+  - suppose the rating system exhibits negative selection and $Q=0$
+  - as $q_t $ approaches 0:
+    -  only customers with very high $\theta $ purchase the product
+    -  tend to leave more positive reviews
+ -  makes it more difficult for $q_t $ to converge to 0 
+ -  also explains:
+    -  with positive selection: 
+       -  the selection effect will be less burdensome for learning
+       -  less harmful to the speed of learning
+    -  because as $q_t $ approaches 0:
+       -   more favorable reviews become less likely
+       -   helps faster convergence to 0
+
+## 4.3 Complete Learning
+
+Define **separation**:
+
+- it enables customers to filter out the selection effect for rating systems
+  - with summary statistics
+
+Intuitively: 
+
+- requires : 
+  - the distribution of at least one review option under $Q = 1$ :
+    - to be nonoverlapping with its distribution under $Q=0 $
+
+Formally:
+
+### Definition 4-Saparation 
+
+> A rating  system $ \left(T_{1}, \ldots, T_{m}\right) $ satisfies the weak separation condition if :
+> 
+> - there exists a subset of reviews $ \mathcal{S} \subseteq[m] $ such that : 
+>   - the range of functions $ \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=0, q, T\right) $ and $ \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=1, q, T\right) $ (as functions of $ q $ ) are weakly separate 
+>
+> formally either or:
+> 
+> - $ \min _{q \in[0,1]} \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=0, q, T\right) \geq \max _{q \in[0,1]} \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=1, q, T\right) $
+> - $ \min _{q \in[0,1]} \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=1, q, T\right) \geq \max _{q \in[0,1]} \sum_{i \in \mathcal{S}} \pi\left(i ; F_{\theta, \zeta}, Q=0, q, T\right) $
+
+Strict separation condition if above inequalities strict 
+
+### Theorem 3 : 
+
+> Suppose Assumptions 1 and 2 hold,
+>  consider a rating system with summary statistics.
+
+> - The strict separation condition is sufficient for complete learning
+> - For $m = 2$ reviews and negative selection:
+>   - the weak separation condition is necessary and sufficient for complete learning
+
+First part of theorem: 
+
+- with summary statistics, the strict separation is sufficient for complete learning
+
+Second part :
+
+- establishes a partial converse to this result: 
+  -  for rating systems with $m = 2$ reviews and negative selection
+     -  the weak separation condition is necessary 
+     -  being sufficient for complete learning
+
+if [Assumption 2](#assumption-2--barthetamathbbezeta-p0-) did not hold
+
+- purchases would stop with positive probability
+- there would be no complete learning
+
+We have a example:
+
+- absence of weak separation 
+  - will lead to failure of complete learning 
+    - with negative Selection
+  - but not necessarily with positive selection 
+
+### Example 3
+
+> Consider a rating system with two review options 
+> 
+> "like" and "dislike" denoted by $ \bar{K} $ and $ -\underline{K} $.
+> 
+>  Suppose : 
+> - $ p=0 $ 
+> -  a customer leaves review $ \bar{K} $ when her material utility is positive. 
+> 
+> let the distribution of $ \theta $ be close to : 
+> -  a distribution with two equally likely point masses at $ -7 / 8 $ and $ 1 / 2 $
+> 
+>  the distribution of $ \zeta $ 
+> - close to four equally likely point masses at $ -7 / 4,-1 / 4,1 / 4 $, and $ 7 / 4 $ 
+
+![Figure 1](EC_1/image.png)
+
+for (a):
+
+- presence of negative selection:
+  - curves are downward sloping
+- no weak separation :
+  - the ranges of $ \pi\left(\bar{K} ; F_{\theta, \zeta}, Q=0, q\right) $ and $ \pi\left(\bar{K} ; F_{\theta, \zeta}, Q=1, q\right) $ being overlapping
+
+for (b) :
+
+- distribution of the number of “likes” among 1000 reviews for both $ Q=1 $ and $ Q=0 $
+- complete learning fails
+  - beliefs in the overlapping range customers cannot identify the underlying quality
+
+If (in contrast) :
+
+- rating system reports fraction of “likes” among all (potential) customers
+
+Then : 
+
+![Figure 2](EC_1/image_2.png)
+
+- upward sloping
+  -  positive selection
+-  Even though weak separation again fails
+   -  (the ranges of $ \pi\left(\bar{K} ; F_{\theta, \zeta}, Q=0, q\right) $ and $ \pi\left(\bar{K} ; F_{\theta, \zeta}, Q=1, q\right) $ are overlapping )
+   -   the distributions of the number of “likes” among 1000 customers for$ Q = 1$ and $Q = 0$ are distinct 
+       -   ensure complete learning 
+
+The separation condition is stated :
+
+- about $ \pi\left(i ; F_{\theta, \zeta}, Q=0, q, T\right) $
+  - probabilities of realization of different review combinations 
+
+Next lemma:
+
+- simple property of distribution of ex ante valuation 
+  - sufficient for this condition to be satisfied 
+
+### Lemma 1 : 
+
+> Consider a rating system :
+> 
+>  reports the fraction of each review among all reviews
+> 
+>  that is : 
+> 
+> $ T=\mathcal{R} $ 
+> 
+>  $ T_{1}=\{-\underline{K}\}, \ldots, T_{m}=\{\bar{K}\} $ 
+> 
+> - $ m=\bar{K}+\underline{K}+1 $
+> 
+> For any distribution on $ \zeta $ :
+> 
+>  if the hazard rate $ \frac{f_{\theta}(x)}{1-F_{\theta}(x)} $ is monotonically increasing in $ x $ :
+> 
+> - then the strict separation condition holds.
+
+A consequence :
+
+for a rating system :
+- reports the fraction of each review among all reviews 
+
+strict separation is satisfied 
+
+- for a wide range of distributions of $\theta $
+- including uniform and normal
+
+## 4.4 Speed of Learning 
+
+conditional on complete learning:
+
+the speed of learning 
+
+- under summary statistics
+
+is governed by a KL divergence measure 
+
+- closely related to the full history case
+
+### Theorem 4:
+
+> For a given rating system $ \left(T_{1}, \ldots, T_{m}\right) $ : 
+> 
+> suppose Assumptions 1 and 2 and the strict separation condition hold.
+> 
+> Then learning is exponentially fast 
+> 
+> in particular :
+> 
+> for $ Q=0 $, we almost surely have :
+>
+> - $ \lim _{\tau \rightarrow \infty} \frac{1}{\tau} \log q_{\tau}=-D\left(\pi\left(F_{\theta, \zeta}, Q=0, q=0, T\right) \| \pi\left(F_{\theta, \zeta}, Q=1, q=1, T\right)\right) $
+>
+> for $ Q=1 $, we almost surely have :
+>
+> - $ \lim _{\tau \rightarrow \infty} \frac{1}{\tau} \log \left(1-q_{\tau}\right)=-D\left(\pi\left(F_{\theta, \zeta}, Q=1, q=1, T\right) \| \pi\left(F_{\theta, \zeta}, Q=0, q=0, T\right)\right) $
+
+Intuition on KL divergence determines the speed of learning :
+
+- similar to the full history case 
+
+Difference :
+
+- consider $Q=0$
+- with full history :
+  - the probability distribution under the alternative hypothesis was still conditioned on $q = 0$
+  - now conditioned on $q=1$
+- Difference is a consequence of the selection effect
+- Under full history :
+  -  when drawing inferences from past reviews
+     -  customers know the public belief at each point
+     -  correct for the selection effect
+        -  by conditioning on the public belief
+        -   at the time the review was left
+ -   not possible with summary statistics :
+   - forces a user into the following inference :
+     - if $Q = 1$ : 
+       -  the belief of all other customers (which she does not observe) is very likely to have also converged to $q=1$.
+
+
+Specifically:
+
+- consider customer $t$’s learning problem for some large $t$ :
+- both full history and summary statistics settings :
+- customer $t$ is facing a binary hypothesis testing problem 
+- About the belief of customer $t$ regarding previous customers’ beliefs:
+  - With full history:
+    - observes their public beliefs and conditions on them
+  - With summary statistics :
+    -  does not observe their beliefs
+    -  draws inferences about their belief
+       -  conditioning on her expectation
+       -  $q$ is converging to $Q$
+    -  that is :
+       -  $ q \approx 0 $ under the null hypothesis 
+       -  $ q \approx 1 $ under the alternative hypothesis 
+ 
+ This explains :
+
+ - in [Theorem 4](#theorem-4) : 
+   - the distributions being compared have $q = 0$ and $q = 1$
+ - in [Theorem 2](#theorem-2) :
+   - under full history, these distributions both condition on the same $q$ 
+
+We will investigate :
+
+- the implication of this difference 
+- on the speed of learning 
+- under full history and summary statistics 
+
+in Section 5
+
+### Remark 5
+
+> Notice: 
+> 
+> the results in [Theorems 3](#theorem-3-) and [4](#theorem-4) apply 
+> - even we consider more general summary statistics. 
+> 
+> In particular:
+> 
+>  a general summary statistics can be represented 
+> 
+> - by a mapping :
+>   - from the fraction of each of the $ k=\underline{K}+\bar{K}+ 1$  reviews 
+>   - among previous customers
+> - that is:
+> 
+> - $ f: \Delta^{k} \rightarrow \mathbb{R}^{m} $, 
+>   - $ \Delta^{k}=\left\{\left(x_{1}, \ldots, x_{k}\right) \in\right. $ $ \left.[0,1]^{k}: \sum_{i=1}^{k} x_{i}=1\right\} $
+
+# 5 Comparison of rating systems 
+
+- start with a comparison of full history and summary statistics
+- move to a characterization of :
+  - different review options affect the speed of learning
+- provide examples of fast and slow learning 
+  - as the rating system is modified
+
+## 5.1 Full history v.s. Summary Statistics 
+
+
+Natural conjecture:
+
+- full history  lead to faster learning
+
+We show:
+
+- when negative selection :
+  - learning is indeed faster under full history
+- when positive selection
+  - in fact slower
+
+### Proposition 2
+
+> Consider a rating system with summary statistics : 
+> 
+> - reports the fraction of reviews in sets $ T_{1}, \ldots, T_{m} $ 
+>   - $ T=\bigcup_{i=1}^{m} T_{i} $ 
+> - that is, $ \mathbf{S}_{\tau}(i)=\frac{1}{\tau} \sum_{s=1}^{\tau} \mathbf{1}\left\{a_{s} \in T_{i}\right\} $ 
+>   - $ \tau $ is the number of reviews in $ T $ (i.e., $ \tau=\#\{a \in T\}) $, 
+> 
+>  a rating system with full history : 
+> 
+>  reports the sequence of reviews in the sets $ T_{1}, \ldots, T_{m} $. 
+> 
+> Suppose that [Assumptions 1](#assumption-1---richness) and [2](#assumption-2--barthetamathbbezeta-p0-) and the strict separation condition hold (so that there is complete learning under both full history and summary statistics).
+> 
+>  Then: 
+> 
+> 1. If the rating system has negative selection: 
+> 
+> - the speed of learning under full history is greater than under summary statistics.
+
+> 2. If the rating system has positive selection
+> 
+> - the speed of learning under summary statistics is greater than under full history.
+
+Intuition:
+
+- the speed of learning is determined
+  - by the problem of distinguishing :
+  - the distribution of reviews under the true state
+    - $Q = 1$
+  - and their distribution under the alternative state
+    - $Q = 0$
+- As discussion in [Theorem 2](#theorem-2) and [4](#theorem-4)
+  - under full history:
+    - users observe the public belief
+    - $q=1$
+  - with summary statistics:
+    - users infer that when $ Q=1 $, we must have $ q=1 $
+    -  when $ Q=0 $, then we must have $q=0 $
+-  Then :
+   -  under full history:
+      -  distinguish $ (Q=1, q=1) $ from $ (Q=0, q=1) $
+   -  under summary statistics:
+      -  distinguish $ (Q=1, q=1) $ from $ (Q=0, q=0) $
+   -   exacerbates the selection effect, leading to slower learning
+- Because :
+-  under negative selection
+   -  false favorable reviews are quite likely when $ q=0 $
+      -  even if $ Q=0 $
+      -   making the task of distinguishing the two distributions more difficult
+-  under positive selection:
+   -  the combination $ (Q=0, q=1) $ generates more false favorable reviews than $ (Q=0, q=  0 )$, 
+      -  because: by the definition of positive selection
+      -  favorable reviews are less likely
+          -  when $q=0$
+   -  consequently :
+   -  distinguishing $ (Q=1, q=1) $ and $ (Q= $ $ 0, q=0) $ is easier than distinguishing $ (Q=1, q=1) $ from $ (Q=0, q=1) $
+   -  leading to faster learning under summary statistics than full history.
+
+This example illustrate the results of Proposition 2:
+
+> EXAMPLE 4: Consider a rating system with two review options 
+> 
+> - $ T=\{\bar{K}-1, \bar{K}\} $
+> - $ T_{1}=\{\bar{K}-1\}, T_{2}=\{\bar{K}\} $ 
+>   - they reports the fraction of the most favorable review among the most favorable two review options
+> - that is : $ S_{\tau}(2)=\frac{1}{\tau} \sum_{s=1}^{\tau} \mathbf{1}\left\{a_{s}=\bar{K}\right\} $ 
+>   - $ \tau $ is the number of reviews in the set $ \{\bar{K}-1, \bar{K}\} $. 
+> 
+> Suppose :
+> 
+> - the distribution of $ \theta $ is uniform 
+> - $ \bar{\theta} \geq \max \left\{p-\mathbb{E}[\zeta], \lambda_{\bar{K}}-\underline{\zeta}+p\right\} $ 
+> - the distribution of $ \zeta $ is Pareto
+> 
+> so that : 
+> 
+> this rating system features negative selection (as in [Example 2](#example-2)). 
+> 
+> Suppose that:
+> 
+>  the conditions in Theorem 3 are satisfied 
+> 
+> so that :
+> 
+> there is complete learning under both full history and summary statistics. 
+> 
+> Then :
+> 
+>  the speed of learning under full history is greater than under summary statistics.
+> 
+>  However , with the same rating system but now $ \zeta $ having a uniform distribution :
+> 
+>  there is positive selection
+> 
+>  the speed of learning under summary statistics is greater than full history.
+
+## 5.2 Learning from refined rating systems 
+
+Show **more refined** rating systems:
+
+- faster learning 
+  - both full history and under summary statistics
+
+Consider :
+
+- a rating system $ \boldsymbol{\Omega} $ 
+- review options $ \mathcal{R}=\{-\underline{K}, \ldots, \bar{K}\} $ 
+- thresholds $ \Lambda=\left\{\lambda_{-\underline{K}}, \ldots, \lambda_{\bar{K}}\right\} $
+
+We say : $ \boldsymbol{\Omega}^{\prime} $ is "coarser" than $ \boldsymbol{\Omega} $
+
+If:
+
+- the review options in $ \boldsymbol{\Omega}^{\prime} $ are fewer 
+- have thresholds $ \Lambda^{\prime}=\left\{\lambda_{i_{1}}, \ldots, \lambda_{i_{m}}\right\} $ 
+  -  $ i_{1}<\cdots<i_{m} $ 
+  -  $ i_{j} \in \mathcal{R} $ for $ j=1, \ldots, m $.
+
+### Proposition 3:
+
+> Consider a rating system with either full history or summary statistics
+>
+> suppose Assumptions 1 and 2 and the strict separation condition hold (so that there is complete learning).
+> 
+>  Then : 
+> 
+> the speed of learning is always faster under a more refined rating
+system.
+
+Intuition:
+
+- the more refined rating system $ \boldsymbol{\Omega} $:
+  - provides strictly more information 
+    - about the utility of previous users (and, therefore, their preferences) 
+  - than the less refined $ \boldsymbol{\Omega}^{\prime} $, 
+  - thus makes it easier for customers to distinguish between : 
+    - the probability distributions of reviews induced under the true state of nature 
+    - and the alternative.
+
+
+### Remark 3: 
+
+> we extend [Proposition 3](#proposition-3) to rating systems :
+> 
+> - with general summary statistics (as mentioned in [Remark 2](#remark-2)). 
+> 
+> In particular:
+> 
+> for a general summary statistic $ f: \Delta^{k} \rightarrow \mathbb{R}^{m} $ 
+> 
+> and a noninjective function $ g: \mathbb{R}^{m} \rightarrow \mathbb{R}^{m^{\prime}}$,
+> 
+> $ h=g \circ f $ will represent a coarser summary statistic
+> 
+> Proposition B-5 shows that this general form of coarsening always reduces the speed of learning.
+
+Application of [Proposition 3](#proposition-3) :
+
+
+rating systems :
+
+- report an average score of past
+reviews 
+- rather than reporting detailed fractions of reviews
+  -  that fall in different categories.
+
+When review thresholds remain unchanged:
+
+- a rating system reporting average scores is less refined 
+  -  than a rating system reporting detailed fractions
+
+- and from [Proposition 3](#proposition-3):
+  - leads to slower learning 
+
+Another application  :
+
+to rating systems that have "targeted information." 
+
+In particular:
+
+platforms such as Amazon offer information about:
+
+- the reviews of groups of customers with certain characteristics. 
+
+For instance:
+
+for a book at the intersection of climate science and economics:
+
+- Amazon separately depicts:
+  -  reviews among customers who are interested in economics 
+  - as well as reviews among customers who are interested in climate science.
+
+Providing information on reviews by groups of customers is a form of refinement
+
+we make this intuition precise in Appendix B.3.7
+
+- establishes that this type of targeting always leads to faster learning.
+
+Notice:
+
+when the platform alters the review options:
+
+- users’ thresholds might also change
+-  reducing the informativeness of their reviews. 
+
+For example:
+
+- when the review options are noncomparable between two rating systems 
+
+- or when additional options change the users’ review thresholds. 
+
+The next example shows that:
+
+- a greater number of review options may lead to slower learning.
+
+### EXAMPLE 5: 
+
+> Assume : 
+> 
+> - $ \zeta $ is uniform over $ [-2,2]$, 
+> - $ \theta $ is uniform over $ [-1,1] $
+> - $ p=0 $. 
+> 
+> Consider the following two rating systems: 
+> 
+> - (i) there are two review options $ \{-1,1\} $, with threshold 0
+>   - that is: the review is 1 if and only if the utility is nonnegative
+> - (ii) there are three review options $ \{-2,-1,1\} $, with thresholds $ -1 / 2 $ and $ 1 / 2 $
+>   - that is: 
+>      - the customer chooses -2 if her utility is below $ -1 / 2 $;
+>      - $-1 $ if her utility is between $ -1 / 2 $ and $ 1 / 2 $; 
+>      - 1 if her utility is above $ 1 / 2 $. 
+> 
+> It can be verified that :
+> 
+> - even though the second rating system has more review options
+> 
+> - it leads to slower learning.
+
+## 5.3 Fast and Slow Learning from reviews 
+
+we provide several examples illustrating :
+
+how 
+
+- different aspects of the rating system 
+-  the extent of heterogeneity among customers 
+
+affect the speed of
+learning. 
+
+Example B-1 illustrates:
+
+how a small refinement of a rating system can lead to a very large change in the speed of learning 
+
+- because the refinement provides a review option 
+  -  has a much higher likelihood ratio when $Q = 1$ than when $Q = 0$
+
+Examples B-2 and B-3 show that: 
+
+an increase in ex post heterogeneity (a wider support or greater variance of $ \zeta $ ):
+
+- reduces the speed of learning 
+
+because: reviews become less informative about the underlying quality of the product.
+
+In particular: 
+
+in Example B-3 we consider a setting 
+
+-  both $ \theta $ and $ \zeta $ are normally distributed (with $ \mathbb{E}[\zeta]=0 $ and $ \operatorname{var}(\theta)=1 $ )
+-  and then study :
+   -  how the speed of learning changes 
+   -  as a function of $ \operatorname{var}(\zeta) $ and $ \mathbb{E}[\theta] $. 
+- The speed of learning: 
+  -  is decreasing in $ \operatorname{var}(\zeta) $ 
+  -  and increasing in $ \mathbb{E}[\theta] $. 
+
+The intuition for the former result is that: 
+
+- more disperse ex post preferences make reviews less informative. 
+
+The intuition for the latter result is that:  
+
+- higher $ \mathbb{E}[\theta] $ implies that:
+  -  customers who purchase the product 
+     -  are more likely to have a positive experience
+  -  exacerbating the selection effect 
+  -  slowing down learning.
+
+# 6 Conclusion 
+
+For interesting directions: 
+
+- it is important to study how platform decisions, 
+  - including:
+    - design of rating systems and pricing
+    - interact with user learning. 
+  - We take a first step in this direction in Appendix B. 
+  - In Appendix B.3.8, we show that:
+    - if the platform would like to maximize participation by users, 
+    - then it will always choose a rating system that:
+      -  maximizes the speed of learning.
+  -  In Appendix B.3.9, we show that:
+     - our learning and speed of learning results generalize to some environments 
+       - where the platform also chooses an endogenous sequence of prices 
+       - to maximize revenue. 
+- another interesting direction is to introduce more strategic interactions between users 
+  - (our analysis of review decisions intended to influence future purchasing behavior in Appendix A.2.2 is one step in this direction). 
+- it is important to:
+  -  move beyond Bayesian learning 
+  -  investigate what types of rating systems robustly aggregate information 
+     -  when agents use simple learning rules. 
+- a fruitful area for future research would be: 
+  - to close the gap between :
+    - theoretical models of learning 
+    - and the burgeoning empirical literature 
+      - on behavior in online markets
+    - which highlights :
+      - both the role of selection effects 
+      - and user incentives.
 
 
 
