@@ -16,24 +16,26 @@ export const MarkdownContent = ({ children }: MarkdownContentProps) => {
 
       // 向上遍历找到最接近的<a>标签
       while (target && target.tagName !== 'A') {
-        if (target.parentElement) {
-          target = target.parentElement!;
-        } else {
-          break;
-        }
+        target = target.parentElement as HTMLElement;
       }
 
-      if (target && target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
-        e.preventDefault();
-        const id = target.getAttribute('href')?.slice(1);
-        const element = document.getElementById(id!);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+      if (target?.tagName === 'A') {
+        const href = target.getAttribute('href');
+        
+        // 只处理以 # 开头且不是路由跳转的链接
+        if (href?.startsWith('#') && !href.startsWith('#/')) {
+          e.preventDefault();
+          const id = href.slice(1);
+          const element = document.getElementById(id);
 
-          // 更新 URL 的查询参数
-          const params = new URLSearchParams(location.search);
-          params.set('scrollTo', id!);
-          navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+            
+            // 更新查询参数而不是 hash
+            const params = new URLSearchParams(location.search);
+            params.set('scrollTo', id);
+            navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+          }
         }
       }
     };
