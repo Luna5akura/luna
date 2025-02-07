@@ -1926,47 +1926,6 @@ For interesting directions:
       - both the role of selection effects 
       - and user incentives.
 
-
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
-
-placeholder
 `,H7=`# Model
 
 $1$: consumers totalling mass
