@@ -75,6 +75,79 @@ $$
 \end{array}
 $$
 
+
+$$
+\begin{array}{|c|c|c|c|c|c|c|c|c|c|}
+\hline 
+& \text{LP} & \text{QP} & \text{Convex} & \text{Non convex} & \text{Integer} & \text{Uncertain} & \text{Implicit diff.} & \substack{\text{Surr.} \\ \text{loss}} & \text{Surr. optim.} \\
+\hline
+\text{Amos and Kolter (2017)} & \times & \checkmark & \times & \times & \times & \checkmark & \checkmark & \times & \checkmark \\
+\hline
+\text{Donti et al. (2017)} & \times & \checkmark & \checkmark & \times & \times & \checkmark & \checkmark & \times & \times \\
+\hline
+\text{Agrawal et al. (2019)} & \times & \checkmark & \checkmark & \times & \times & \checkmark & \checkmark & \times & \checkmark \\
+\hline
+\text{Vlastelica et al. (2019)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Wilder et al. (2019a)} & \checkmark & \times & \times & \times & \checkmark & \times & \checkmark & \times & \times \\
+\hline
+\text{Wilder et al. (2019b)} & \times & \checkmark & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Berthet et al. (2020)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Elmachtoub et al. (2020)} & \checkmark & \times & \times & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Ferber et al. (2020)} & \checkmark & \times & \times & \times & \checkmark & \times & \checkmark & \times & \times \\
+\hline
+\text{Mandi and Guns (2020)} & \checkmark & \times & \times & \times & \checkmark & \times & \checkmark & \times & \times \\
+\hline
+\text{Mandi et al. (2020)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Grigas et al. (2021)} & \times & \times & \checkmark & \times & \times & \times & \times & \times & \checkmark \\
+\hline
+\text{Mulamba et al. (2021)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Chung et al. (2022)} & \times & \times & \checkmark & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Cristian et al. (2022)} & \times & \times & \checkmark & \times & \times & \times & \times & \times & \checkmark \\
+\hline
+\text{Dalle et al. (2022)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Elmachtoub and Grigas (2022)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Jeong et al. (2022)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Kallus and Mao (2022)} & \times & \times & \checkmark & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Kong et al. (2022)} & \times & \checkmark & \checkmark & \checkmark & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Lawless and Zhou (2022)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \checkmark & \times \\
+\hline
+\text{Loke et al. (2022)} & \checkmark & \times & \times & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Mandi et al. (2022)} & \checkmark & \times & \times & \times & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Muñoz et al. (2022)} & \checkmark & \times & \times & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Shah et al. (2022)} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \times & \times & \times & \checkmark \\
+\hline
+\text{Butler and Kwon (2023a)} & \times & \checkmark & \times & \times & \times & \times & \checkmark & \times & \times \\
+\hline
+\text{Costa and Iyengar (2023)} & \times & \checkmark & \checkmark & \times & \times & \checkmark & \checkmark & \checkmark & \times \\
+\hline
+\text{Estes and Richard (2023)} & \checkmark & \times & \checkmark & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Kotary et al. (2023)} & \checkmark & \checkmark & \checkmark & \checkmark & \times & \times & \checkmark & \times & \times \\
+\hline
+\text{McKenzie et al. (2023)} & \checkmark & \times & \times & \times & \times & \times & \checkmark & \times & \times \\
+\hline
+\text{Sun et al. (2023a)} & \checkmark & \times & \times & \times & \times & \times & \times & \checkmark & \times \\
+\hline
+\text{Sun et al. (2023b)} & \times & \checkmark & \times & \checkmark & \times & \times & \checkmark & \times & \times \\
+\hline
+\end{array}
+$$
+
 2. Contextual Optimization
 
 $\boldsymbol  z$ : decision: The order for today inventory
@@ -819,14 +892,210 @@ $ \min _{\boldsymbol{z} \in \mathcal{Z}} \sup _{\boldsymbol{\theta} \in \mathcal
   - when $ g_{\boldsymbol{\theta}}(\boldsymbol{x}):=\boldsymbol{\theta}^{T} \boldsymbol{x} $
 - promote the use of "robustness optimization" form 
 
+# 5 Integrated learning and optimization 
 
 
+ILO is an end-to-end framework that :
+
+includes three components in the training pipeline: 
+
+- (i) a prediction model that:
+  -  maps the covariate to a predicted distribution (or possibly a point prediction), 
+- (ii) an optimization model that:
+  -  takes as input a prediction and returns a decision,
+- (iii) a task-based loss function that :
+  -  captures the downstream optimization problem.
+
+The parameters of the prediction model are trained to : 
+
+- maximize the prescriptive performance of the policy,
+  -  i.e., it is trained on the task loss incurred by this induced policy 
+  -  rather than the estimation loss.
+
+Next:
+
+we discuss several methods for implementing the ILO approach
+
+- describing the different models that are used in ILO([Section 5.1]()) 
+- present the algorithms used
+to perform the training
+- divide the algorithms into four categories :
+  - unrolling([Section 5.2]())
+  - implicit differentiation([Section 5.3]())
+  - a surrogate differentiable loss function([Section 5.4]())
+  - a differentiable optimizer([Section 5.5]())
 
 
+## 5.1 Models
+
+1: Train a prediction model 
+
+- using a loss that:
+  - influenced by performance of an action 
+    - prescribed by conditional expected value-based decision rule
+- in a protfolio management context 
+
+More recent 
+- integrate full optimization model into pipeline 
+
+We next:
+- summarize how ILO is applied to 2 contextual optimization model 
+- introduce 2 additional popular task models 
+
+### Expected value-based model 
+
+Most literature:
+- perform ILO on expected value-based optimization model 
+
+Following the notation in [Definition 1](#definition-1-expected-value-based-model) :
+
+$ \mathcal{L}(\boldsymbol{\theta}):=H\left(z^{*}\left(\cdot, g_{\boldsymbol{\theta}}\right), \hat{\mathbb{P}}_{N}\right)= $ $ \mathbb{E}_{\mathfrak{P}_{N}}\left[c\left(z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}\right)\right] $
+- loss, training pipeline interested in.
+
+$ g_{\boldsymbol{\theta}}(\boldsymbol{x}) $ 
+- a point predictor for $ \boldsymbol{y} $, 
+-  we interpret as a prediction of $ \mathbb{E}[\boldsymbol{y} \mid \boldsymbol{x}] $.
+
+This already raises challenges related to:
+- the non-convexity of the integrated loss function $ \mathcal{L}(\boldsymbol{\theta}) $ 
+-  its differentiation with respect to $ \boldsymbol{\theta} $ :
+
+$ \begin{aligned} \nabla_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}) & =\frac{1}{N} \sum_{i=1}^{N} \nabla_{\boldsymbol{\theta}} c\left(z^{*}\left(\boldsymbol{x}_{i}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}_{i}\right) \\ & =\left.\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{d_{z}} \sum_{k=1}^{d_{\boldsymbol{y}}} \frac{\partial c\left(z^{*}\left(\boldsymbol{x}_{i}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}_{i}\right)}{\partial z_{j}} \frac{\partial z_{j}^{*}\left(\boldsymbol{x}_{i}, \hat{\boldsymbol{y}}\right)}{\partial \hat{y}_{k}}\right|_{\hat{\boldsymbol{y}}=g_{\theta}\left(\boldsymbol{x}_{i}\right)} \nabla_{\boldsymbol{\theta}}\left[g_{\boldsymbol{\theta}}\left(\boldsymbol{x}_{i}\right)\right]_{k}\end{aligned} $
+
+- $ \frac{\partial z_{j}^{*}\left(\boldsymbol{x}_{i}, \hat{\boldsymbol{y}}\right)}{\partial \hat{y}_{k}} $ : the most problematic evaluation
+  - e.g.:  when $ z^{*}\left(\boldsymbol{x}_{i}, g_{\boldsymbol{\theta}}\right) $ is the solution of a LP(Linear program) 
+    - its gradient is either null or non-existent
+
+### Conditional distribution-based model 
+
+In the context of :
+
+learning a conditional distribution model : $ f_{\theta}(\boldsymbol{x}) $
+
+1: First study ILO problem 
+
+- model distribution of uncertain parameter 
+  - using parametric distribution 
+- for newsvendor problem:
+  - ILO outperform :
+    - DRO with neural networks
+    - SLO with MLE(maximum likelihood estimation)
+  - when there is model misspecification 
+
+Since then:
+
+- formulate CSO problem as weighted SAA model (refer to [Section 4.1.2](#412-weight-based-distribution))
+
+- prediction model amounts to identify vector of weights to assign to each historical sample 
+
+Taken by 2:
+- train random forest regressor in integrated fashion to assign weights 
+
+by 3:
+- how to train general differentiable models 
+  - to predict probabilities of uncertain parameter $\boldsymbol y$ with finite support 
+
+### Regret minimization task
+
+tackle ILO problem from regret 
+
+1: contextual point predictor $ g_{\boldsymbol{\theta}}(\boldsymbol{x}) $ is learned by:
+
+- minimizing regret associated with implementing the prescribed action 
+  - based on mean estimator $ g_{\boldsymbol{\theta}}(\boldsymbol{x}) $ 
+  - instead of based on the realized parameters $ \boldsymbol{y} $
+  - a.k.a: optimal hindsight or wait-and-see decision 
+
+Value of an expected value-based policy  $ \pi_{\boldsymbol{\theta}}(\boldsymbol{x}):=  z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ is measured as the expected regret defined as:
+
+#### (13)
+
+$ H_{\text {Regret }}\left(\pi_{\boldsymbol{\theta}}, \mathbb{P}\right):=\mathbb{E}_{\mathbb{P}}\left[c\left(\pi_{\boldsymbol{\theta}}(\boldsymbol{x}), \boldsymbol{y}\right)-c\left(z^{*}(\boldsymbol{x}, \boldsymbol{y}), \boldsymbol{y}\right)\right] $
+
+Minimizing the expected regret: 
+- returns the same optimal parameter vector $ \boldsymbol{\theta} $ as the [ILO problem (9)](#9). 
+
+Because:
+
+$ H_{\text {Regret }}\left(\pi, \hat{\mathbb{P}}_{N}\right)=\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[c(\pi(\boldsymbol{x}), \boldsymbol{y})-c\left(z^{*}(\boldsymbol{x}, \boldsymbol{y}), \boldsymbol{y}\right)\right]=H\left(\pi, \hat{\mathbb{P}}_{N}\right)-\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[c\left(z^{*}(\boldsymbol{x}, \boldsymbol{y}), \boldsymbol{y}\right)\right] $
+
+- both $ H_{\text {Regret }}\left(\pi, \hat{\mathbb{P}}_{N}\right) $ and $ H\left(\pi, \hat{\mathbb{P}}_{N}\right) $ have the same set of minimizers
+
+### Optimal action imitation task 
+
+ILO has some connections to inverse optimization :
+
+- learning the parameters of an optimization model 
+  - given data about its optimal solution
+
+one can :
+
+replace the original objective of ILO 
+- with an objective that seeks 
+- to produce a $ z^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ 
+  - that is as close as possible to the optimal hindsight action 
+  - and, therefore, closer to the regret objective. 
+
+Specifically, to learn a policy that "imitates" the optimal hindsight action: 
+
+one can first augment the data set 
+- with $ \boldsymbol{z}_{i}^{*}:=z^{*}\left(\boldsymbol{x}_{i}, \boldsymbol{y}_{i}\right) $ to get $ \left\{\left(\boldsymbol{x}_{i}, \boldsymbol{y}_{i}, \boldsymbol{z}_{i}^{*}\right)\right\}_{i=1}^{N} $. 
+
+Thereafter:
+
+a prediction model $ f_{\boldsymbol{\theta}}(\boldsymbol{x}) $ is learned in a way : 
+- that the action $ z^{*}\left(\boldsymbol{x}_{i}, f_{\boldsymbol{\theta}}\right) $ is as close as possible to $ \boldsymbol{z}_{i}^{*} $
+  -  for all samples in the training set:
+
+#### (14)
+
+$ H_{\text {Imitation }}\left(\pi, \hat{\mathbb{P}}_{N}^{\prime}\right):=\mathbb{E}_{\hat{\mathbb{P}}_{N}^{\prime}}\left[d\left(\pi(\boldsymbol{x}), \boldsymbol{z}^{*}\right)\right]=\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[d\left(\pi(\boldsymbol{x}), z^{*}(\boldsymbol{x}, \boldsymbol{y})\right)\right] $
 
 
+- $ \hat{\mathbb{P}}_{N}^{\prime} $ : the empirical distribution 
+  - on the lifted tuple $ \left(\boldsymbol{x}, \boldsymbol{y}, z^{*}(\boldsymbol{x}, \boldsymbol{y})\right) $ 
+  - based on the augmented data set 
+  - and a distance function $ d\left(\boldsymbol{z}, \boldsymbol{z}^{*}\right) $. 
 
+Note that:
 
+there is no reason to believe that: 
+
+the best imitator under a general distance function, 
+- e.g., $ \left\|\boldsymbol{z}-\boldsymbol{z}^{*}\right\|_{2} $, 
+
+performs well under our original metric $ H\left(\pi, \hat{\mathbb{P}}_{N}\right) $.
+
+One exception:
+
+For $ d\left(\boldsymbol{z}, \boldsymbol{z}^{*}\right):=c(\boldsymbol{z}, \boldsymbol{y})-c\left(\boldsymbol{z}^{*}, \boldsymbol{y}\right) $, 
+- where we allow the distance to also depend on $ \boldsymbol{y} $, 
+- for which we recover the regret minimization approach
+- therefore the same solution as with $ H\left(\pi, \hat{\mathbb{P}}_{N}\right) $. 
+
+## 5.2 Training by unrolling 
+
+An approach to obtain Jacobian matrix $ \boldsymbol{\kappa} \frac{\partial z^{*}(\boldsymbol{x}, \hat{\boldsymbol{y}})}{\partial \hat{\boldsymbol{y}}} $ : unrolling 
+
+it involves:
+
+- approximating the optimization problem with an iterative solver
+  - e.g.:  first-order gradient-based method 
+
+Each operation is stored on the computational graph, 
+- then allows, in principle, for computing gradients through classical back-propagation methods. 
+
+Unfortunately: this approach requires extensive amounts of memory. 
+
+Besides this: 
+
+the large size of the computational graph 
+- exacerbates the vanishing and exploding gradient problems 
+  - typically associated with training neural networks
+
+## Training using implicit differentiation 
+
+Implicit differentiation allows for a memory-efficient backpropagation as opposed to unrolling (we refer to Bai et al. 2019, for discussion on training constant memory implicit models using a fixed-point - FP - equation and feedforward networks of infinite depths). Amos and Kolter (2017) appear to be the first to have employed implicit differentiation methods to train an ILO model, which they refer to as OptNet. They consider expected value-based optimization models that take the form of constrained quadratic programs (QP) with equality and inequality constraints. They show how the implicit function theorem (IFT - Halkin 1974) can be used to differentiate $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ with respect to $ \boldsymbol{\theta} $ using the Karush-Kuhn-Tucker (KKT) conditions that are satisfied at optimality. Further, they provide a custom solver based on a primal-dual interior method to simultaneously solve multiple QPs on GPUs in batch form, permitting 100-times speedups compared to Gurobi and CPLEX. This approach is extended to conditional stochastic and strongly convex optimization models in Donti et al. (2017). They use sequential quadratic programming (SQP) to obtain quadratic approximations of the objective functions of the convex program at each iteration until convergence to the solution and then differentiate the last iteration of SQP to obtain the Jacobian. For a broader view of implicit differentiation, we refer to the surveys by Duvenaud et al. (2020) and Blondel et al. (2022).
 
 
 
