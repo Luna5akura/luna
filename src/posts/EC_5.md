@@ -1095,7 +1095,540 @@ the large size of the computational graph
 
 ## Training using implicit differentiation 
 
-Implicit differentiation allows for a memory-efficient backpropagation as opposed to unrolling (we refer to Bai et al. 2019, for discussion on training constant memory implicit models using a fixed-point - FP - equation and feedforward networks of infinite depths). Amos and Kolter (2017) appear to be the first to have employed implicit differentiation methods to train an ILO model, which they refer to as OptNet. They consider expected value-based optimization models that take the form of constrained quadratic programs (QP) with equality and inequality constraints. They show how the implicit function theorem (IFT - Halkin 1974) can be used to differentiate $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ with respect to $ \boldsymbol{\theta} $ using the Karush-Kuhn-Tucker (KKT) conditions that are satisfied at optimality. Further, they provide a custom solver based on a primal-dual interior method to simultaneously solve multiple QPs on GPUs in batch form, permitting 100-times speedups compared to Gurobi and CPLEX. This approach is extended to conditional stochastic and strongly convex optimization models in Donti et al. (2017). They use sequential quadratic programming (SQP) to obtain quadratic approximations of the objective functions of the convex program at each iteration until convergence to the solution and then differentiate the last iteration of SQP to obtain the Jacobian. For a broader view of implicit differentiation, we refer to the surveys by Duvenaud et al. (2020) and Blondel et al. (2022).
+Implicit differentiation allows:
+- a memory-efficient backpropagation 
+- as opposed to unrolling 
+  - (we refer to Bai et al. 2019, for discussion on training constant memory implicit models using a fixed-point - FP - equation and feedforward networks of infinite depths).
+
+1: appear to be the first to have employed implicit differentiation methods to train an ILO model
+- which they refer to as OptNet. 
+
+They consider expected value-based optimization models 
+- take the form of constrained quadratic programs (QP) with equality and inequality constraints. 
+
+They show how the implicit function theorem (IFT - Halkin 1974) can be used to differentiate $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ with respect to $ \boldsymbol{\theta} $
+- using the Karush-Kuhn-Tucker (KKT) conditions 
+  -  are satisfied at optimality. 
+
+Further:
+
+they provide a custom solver based on a primal-dual interior method
+
+- to simultaneously solve multiple QPs on GPUs in batch form, 
+- permitting 100-times speedups compared to Gurobi and CPLEX. 
+
+This approach is extended to conditional stochastic and strongly convex optimization models in Donti et al. (2017): 
+
+They use sequential quadratic programming (SQP) to obtain quadratic approximations of the objective functions of the convex program at each iteration 
+
+- until convergence to the solution and then differentiate the last iteration of SQP to obtain the Jacobian. 
+
+For a broader view of implicit differentiation: we refer to the surveys by Duvenaud et al. (2020) and Blondel et al. (2022).
+
+To solve large-scale QPs with linear equality and box inequality constraints:
+
+2 Butler and Kwon (2023a) use the ADMM algorithm to decouple the differentiation procedure for primal and dual variables
+
+thereby:
+- decomposing the large problem into smaller subproblems. 
+
+Their procedure relies on: 
+- implicit differentiation of the FP equations of the alternating direction method of multipliers (ADMM) algorithm (ADMM-FP). 
+
+They show that: 
+- unrolling the iterations of the ADMM algorithm on the computational graph (Sun et al. 2016, Xie et al. 2019) results in higher computation time than ADMM-FP. 
+
+Their empirical results on a portfolio optimization problem with 254 assets suggest that : 
+
+computational time can be reduced by a factor of almost five 
+- by using ADMM-FP compared to OptNet, 
+
+mostly due to the use of the ADMM algorithm in the forward pass. 
+
+Note that the experiments in Butler and Kwon (2023a) were conducted on a
+CPU.
+
+To extend OptNet to a broader class of problems:
+
+3 introduce cvxpylayers that 
+- relies on converting disciplined convex programs in the domain-specific language 
+  - used by CVXPY into conic programs. 
+
+They implicitly differentiate the residual map of the homogeneous self-dual embedding associated with the conic program.
+
+4: note that using KKT conditions for constrained optimization problems with DNN-based policies"
+- is computationally costly 
+  - as "cvxpylayers struggles with solving problems containing more than 100 variables" (see also Butler and Kwon 2023a).
+-  An alternative is to use projected gradient descent (PGD) 
+   - where DNN-based policies are updated using an iterative solver 
+   - and projected onto the constraint set $ \mathcal{Z} $ at each iteration 
+   - and the associated FP system (Donti et al. 2021, Chen et al. 2021, Blondel et al. 2022) is used to obtain the Jacobian.
+ - Since a closed-form solution for the projection onto $ \mathcal{Z} $ is unavailable in many cases, 
+   - the projection step may be costly, 
+   - and in some cases, PGD may not even converge to a feasible point (Rychener et al. 2023). 
+
+To avoid computing the projection in the forward pass, 5 solve the expected value-based CSO problem using: 
+- Davis-Yin operator splitting (Davis and Yin 2017) 
+- while the backward pass uses the Jacobian-free backpropagation (Fung et al. 2022) 
+  - in which the Jacobian matrix is replaced with an identity matrix (see also Sahoo et al. 2023, where a similar approach is used for expected value-based models).
+
+To mitigate the issues with unrolling: 6 propose FP folding (fold-opt) that:
+- allows analytically differentiating the FP system of general iterative solvers, 
+  - e.g., ADMM, SQP, and PGD. 
+
+By unfolding (i.e., partial unrolling), some of the steps of unrolling are grouped in analytically differentiable update function $ \mathcal{T}: \mathbb{R}^{d_{y}} \rightarrow \mathbb{R}^{d_{y}} $ :
+
+$ z_{k+1}(\boldsymbol{x}, \hat{\boldsymbol{y}})=\mathcal{T}\left(z_{k}(\boldsymbol{x}, \hat{\boldsymbol{y}}), \hat{\boldsymbol{y}}\right) $
+
+Realizing that $ z^{*}(\boldsymbol{x}, \hat{\boldsymbol{y}}) $ is the FP of the above system:
+- they use the IFT to obtain a linear system (a differential FP condition) 
+  - that can be solved to obtain the Jacobian. 
+
+This effectively decouples the forward and backward pass enabling 
+- the use of black box solvers like Gurobi for the forward pass 
+- while cvxpylayers is restricted to operator splitting solvers like ADMM. 
+
+
+An added benefit of using fold-opt is that: 
+
+it can solve non-convex problems. 
+
+In the case of portfolio optimization, the authors note that :
+
+- the superior performance of their model with respect to cvxpylayers can be explained by the precise calculations made in the forward pass by Gurobi.
+
+
+
+While speedups can be obtained for sparse problems, Sun et al. (2023b) remark that:
+- the complexity associated with differentiating the KKT conditions is cubic in the total number of decision variables and constraints in general. 
+
+They propose an alternating differentiation framework (called Alt-Diff) to:
+- solve parameterized convex optimization problems 
+- with polyhedral constraints using ADMM 
+  - that decouples the objective and constraints. 
+
+This procedure results in:
+
+a smaller Jacobian matrix 
+- when there are many constraints 
+- since the gradient computations for primal, dual, and slack variables are done alternatingly. 
+
+The gradients are shown to converge to those obtained by differentiating the KKT conditions. 
+
+The authors employ truncation of iterations to compensate for the slow convergence of ADMM when compared to interior-point methods 
+
+and provide theoretical upper bounds on the error in the resulting gradients. 
+
+Alt-Diff is shown to achieve the same accuracy with truncation and lower computational time when compared to cvxpylayers:
+- for an energy generation scheduling problem.
+
+Motivated by OptNet, several extensions have been proposed to solve linear and combinatorial problems. 
+
+7 solve LP-representable combinatorial optimization problems and LP relaxations of combinatorial problems during the training phase. 
+
+Their model, referred to as QPTL (Quadratic Programming Task Loss):
+
+- adds a quadratic penalty term to the objective function of the linear problem. 
+
+This has two advantages: 
+- it recovers a differentiable linear-quadratic program, and the added term acts as a regularizer, 
+- which might avoid overfitting. 
+
+To solve a general mixed-integer LP (MILP), 8 develop a cutting plane method MIPaal,
+- which adds a given number of cutting planes in the form of constraints $ S \boldsymbol{z} \leq \boldsymbol{s} $ to the LP relaxation of the MILP.
+
+Instead of adding a quadratic term, 9 propose Intopt based on the interior point method to solve LPs
+- that adds a log barrier term to the objective function and differentiates the homogeneous self-dual formulation of the LP. 
+
+Their experimental analyses show that: 
+- this approach performs better on energy cost-aware scheduling problems than QPTL using the data from Ifrim et al. (2012).
+
+10 introduce an ILO framework with the weighted average of Sharpe ratio and MSE loss as a task loss and replace the optimization problem with a surrogate DRO problem. 
+
+By using convex duality:
+
+they reformulate the minimax problem as a minimization problem and learn the parameters (e.g., size of ambiguity set) using implicit differentiation instead of cross-validation (CV). 
+
+More specifically, the DRO model uses a deviation risk measure (e.g., variance) to control variability in the portfolio returns associated with the prediction errors $ \boldsymbol{\epsilon}_{i}= $ $ \boldsymbol{y}_{i}-g_{\theta}\left(\boldsymbol{x}_{i}\right): $
+
+$ \underset{\boldsymbol{z}}{\operatorname{argmin}} \max _{\mathbb{Q} \in \mathcal{B}_{r}^{\phi}\left(\hat{\mathbb{P}}_{N}\right)} \mathbb{E}_{\mathbb{Q}}\left[\left(\boldsymbol{\epsilon}^{\top} \boldsymbol{z}-\mathbb{E}_{\mathbb{Q}}\left[\boldsymbol{\epsilon}^{\top} \boldsymbol{z}\right]\right)^{2}\right] $
+
+- the distribution of errors lies in $ \phi $-divergence (e.g., Hellinger distance) based ambiguity set $ \mathcal{B}_{r}^{\phi}\left(\hat{\mathbb{P}}_{N}\right)=\left\{\mathbb{Q}: \mathbb{E}_{\hat{\mathbb{P}}}[\phi(\mathbb{Q} / \hat{\mathbb{P}})] \leq r\right\} $ centered at $ \hat{\mathbb{P}}_{N}=\frac{1}{N} \sum_{i=1}^{N} \delta_{\epsilon_{i}} $.
+
+For convex problems, the optimality conditions are given by KKT conditions, 
+
+can be represented as $ F(\boldsymbol{\theta}, \boldsymbol{z})=0 $ 
+- $ F: \mathbb{R}^{d_{\boldsymbol{x}}} \times \mathbb{R}^{d_{\boldsymbol{z}}} \rightarrow \mathbb{R}^{m} $, 
+  - $ m $ is proportional to the number of constraints that define $ \mathcal{Z} $. 
+
+From the classical IFT (Dontchev et al. 2009), we know that: 
+
+if $ F $ is continuously differentiable and the Jacobian matrix with respect to $ \boldsymbol{z} $, 
+- denoted by $ \nabla_{\boldsymbol{z}} F(\boldsymbol{\theta}, \boldsymbol{z}(\boldsymbol{\theta})) $, 
+
+is non-singular at the point $ (\overline{\boldsymbol{\theta}}, \overline{\boldsymbol{z}}) $, 
+
+then:
+
+there exists a neighborhood around $ \overline{\boldsymbol{\theta}} $ 
+- for which the gradient of the optimal solution with respect to the parameters is given by:
+
+$ \frac{\partial \boldsymbol{z}^{*}(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}}=-\left(\nabla_{\boldsymbol{z}} F(\boldsymbol{\theta}, \boldsymbol{z}(\boldsymbol{\theta}))\right)^{-1} \nabla_{\boldsymbol{\theta}} F(\boldsymbol{\theta}, \boldsymbol{z}(\boldsymbol{\theta})) $
+
+When the Jacobian matrix $ \nabla_{\boldsymbol{z}} F(\boldsymbol{\theta}, \boldsymbol{z}(\boldsymbol{\theta})) $ is singular, classical IFT cannot be applied. 
+
+This occurs in linear programs and can also arise in smooth QPs as shown in 11
+
+11 obtain a generalization of IFT to non-smooth functions:
+- using conservative Jacobians that generalize Clarke Jacobians (Clarke 1990) for locally Lipschitz function $ F $. 
+
+They also derive conservative Jacobians for conic optimization layers (Agrawal et al. 2019).
+
+Further, 12 illustrate using cvxpylayers that in a bilevel program 
+
+- which is a composition of a quadratic function 
+  - with the solution map of a linear program, 
+
+gradient descent does not converge but gets stuck in a "limit cycle of non-critical points" even though invertibility condition does not hold only on a set of measure 0 (defined by a line) 
+- where the solution map moves from extreme point to another. 
+
+As this example illustrates, the convergence of gradient methods based on IFT can be impacted by the non-invertibility of the Jacobian matrix and nonsmoothness 
+- which is difficult to verify a priori. 
+
+As a result, research efforts have been directed toward designing surrogate loss functions and perturbation-based models for CSO problems that could circumvent the need to use the IFT.
+
+## 5.4  Training using a surrogate differentiable loss function
+
+As discussed in Section 5.1, 
+
+minimizing directly the task loss in [(9)](#9) or the regret in [(13)](#13) is computationally difficult in most cases. 
+
+For instance: 
+
+the loss may be piecewise-constant as a function of the parameters of a prediction model and, 
+- thus, may have no informative gradient. 
+
+To address this issue, several surrogate loss functions with good properties, 
+- e.g., differentiability and convexity,
+
+have been proposed to train ILO models.
+
+### 5.4.1 SPO+
+
+In CSO problems, 1 first tackle the potential nonuniqueness of $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ by introducing a Smart "Predict, then Optimize" (SPO) model 
+- where the decision-maker chooses to minimize the empirical average of the regret 
+  - under the worst-case optimal solution as defined below:
+
+#### (15)
+
+$ \begin{aligned} \text { (SPO) } \quad \min _{\boldsymbol{\theta}} \max _{\pi} & H_{\text {Regret }}\left(\pi, \hat{\mathbb{P}}_{N}\right), \\ & \text { s.t. } \pi(\boldsymbol{x}) \in \underset{\boldsymbol{z} \in \mathcal{Z}}{\operatorname{argmin}} c\left(\boldsymbol{z}, g_{\boldsymbol{\theta}}(\boldsymbol{x})\right), \forall \boldsymbol{x} .\end{aligned} $
+
+In the expected value-based model, they show that the SPO objective reduces to training the prediction model according to the ERM problem:
+
+$ \boldsymbol{\theta}^{\star} \in \underset{\boldsymbol{\theta}}{\operatorname{argmin}} \rho_{\text {SPO }}\left(g_{\boldsymbol{\theta}}, \hat{\mathbb{P}}_{N}\right):=\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[\ell_{\text {SPO }}\left(g_{\boldsymbol{\theta}}(\boldsymbol{x}), \boldsymbol{y}\right)\right] $
+
+- $ \ell_{\mathrm{SPO}}(\hat{\boldsymbol{y}}, \boldsymbol{y}):=\sup _{\overline{\boldsymbol{z}} \in \operatorname{argmin}_{\boldsymbol{z} \in \mathcal{Z}} c(\boldsymbol{z}, \hat{\boldsymbol{y}})} c(\overline{\boldsymbol{z}}, \boldsymbol{y})-c\left(z^{*}(\boldsymbol{x}, \boldsymbol{y}), \boldsymbol{y}\right) $
+
+Since the SPO loss function is nonconvex and discontinuous in $ \hat{\boldsymbol{y}} $ (Ho-Nguyen and Kılıç-Karzan 2022, Lemma 1), Elmachtoub and Grigas (2022) focus on the linear objective $ c(\boldsymbol{z}, \boldsymbol{y}):=\boldsymbol{y}^{T} \boldsymbol{z} $ and replace the SPO loss with a convex upper bound called SPO+:
+
+$ \ell_{\text {SPO }+}(\hat{\boldsymbol{y}}, \boldsymbol{y}):=\sup _{\boldsymbol{z} \in \mathcal{Z}}(\boldsymbol{y}-2 \hat{\boldsymbol{y}})^{T} \boldsymbol{z}+2 \hat{\boldsymbol{y}}^{T} z^{*}(\boldsymbol{x}, \boldsymbol{y})-\boldsymbol{y}^{T} z^{*}(\boldsymbol{x}, \boldsymbol{y}) $
+
+ has a closed-form expression for its subgradient:
+
+#### (16)
+
+$ 2\left(z^{*}(\boldsymbol{x}, \boldsymbol{y})-z^{*}(\boldsymbol{x}, 2 \hat{\boldsymbol{y}}-\boldsymbol{y})\right) \in \nabla_{\hat{\boldsymbol{y}}} \ell_{\mathbf{s P O}+}(\hat{\boldsymbol{y}}, \boldsymbol{y}) $
+
+Loke et al. (2022) propose a decision-driven regularization model (DDR) 
+- that combines prediction accuracy - and decision quality 
+in a single optimization problem with loss function as follows:
+
+$ \ell_{\mathrm{DDR}}(\hat{\boldsymbol{y}}, \boldsymbol{y})=d(\hat{\boldsymbol{y}}, \boldsymbol{y})-\lambda \min _{\boldsymbol{z} \in \mathcal{Z}}\left\{\mu \boldsymbol{y}^{\top} \boldsymbol{z}+(1-\mu) \hat{\boldsymbol{y}}^{\top} \boldsymbol{z}\right\} $
+
+and SPO+ being a special case with $ \mu=-1, \lambda=1 $, and $ d(\hat{\boldsymbol{y}}, \boldsymbol{y})=2 \hat{\boldsymbol{y}}^{\top} z^{*}(\boldsymbol{x}, \boldsymbol{y})-\boldsymbol{y}^{T} z^{*}(\boldsymbol{x}, \boldsymbol{y}) $.
+
+#### SPO+ for combinatorial problems
+
+Evaluating the gradient of $ S P O+l o s s $ in [(16)](#16) requires solving the optimization problem [(8)](#8) to obtain $ z^{*}(\boldsymbol{x}, 2 \hat{\boldsymbol{y}}-\boldsymbol{y}) $ for each data point. 
+
+This can be computationally demanding when the optimization model in [(8)](#8) is an NP-hard problem. 
+
+1 propose a SPO-relax approach that : 
+
+- computes the gradient of SPO+ loss by solving instead a continuous relaxation when [(8)](#8) is a MILP. 
+
+They also suggest: 
+- speeding up the resolution using a warm-start for learning with a pre-trained model that:
+  -  uses MSE as the loss function. 
+- Another way proposed to speed up the computation is: warm-starting the solver. 
+  - For example, $ z^{*}(\boldsymbol{x}, \boldsymbol{y}) $ can be used as a starting point for MILP solvers or to cut away a large part of the feasible space.
+
+Mandi et al. (2020) show that:
+- for weighted and unweighted knapsack problems as well as energycost aware scheduling problems (CSPLib, Problem 059, Simonis et al. 2014), SPO-relax results in:
+- faster convergence and similar performance compared to SPO+ loss. 
+
+Also, SPO-relax provides low regret solutions and faster convergence compared to QPTL 
+- in the aforementioned three problems, 
+- except in the weighted knapsack problem with low capacity.
+
+With a focus on exact solution approaches, Jeong et al. (2022) study the problem of:
+
+minimizing the regret in [(13)](#13) assuming a linear prediction model $ g_{\boldsymbol{\theta}}(\boldsymbol{x})=\boldsymbol{\theta} \boldsymbol{x} $ with $ \boldsymbol{\theta} \in \mathbb{R}^{d_{\boldsymbol{z}} \times d_{\boldsymbol{x}}} $. 
+
+Under the assumption that : 
+
+$ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ is unique for all $ \boldsymbol{\theta} $ and $ \boldsymbol{x} $, 
+
+the authors reformulate the bilevel SPO problem as a single-level MILP using symbolic variable elimination. 
+
+They show that:
+- their model can achieve up to two orders of magnitude improvement in expected regret compared to SPO+ on the training set.
+
+Muñoz et al. (2022) applies a similar idea of representing the set of optimal solutions with a MILP. 
+
+They rely on the KKT conditions of the problem defining $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $
+- to transform the bilevel integrated problem into a single-level MILP. 
+
+Finally, Estes and Richard (2023) use the SPO loss function
+- to solve a two-stage LP with right-hand side uncertainty. 
+
+They propose a lexicographical ordering rule to select the minimal solution 
+- when there are multiple optima and approximate the resulting piecewise-linear loss function, lex-SPO, by a convex surrogate to find the point predictor.
+
+#### SPO Trees. 
+
+Elmachtoub et al. (2020) propose a model (SPOT) to construct decision trees that:
+
+- segment the covariates based on the SPO loss function
+-  while retaining the interpretability in the end-to-end learning framework.
+
+Their model outperforms classification and regression trees (CART) in the numerical experiments 
+
+on a news recommendation problem using a real-world dataset 
+
+and on the shortest path problem with synthetic data (also used in Elmachtoub and Grigas (2022)).
+
+Guarantees. Elmachtoub and Grigas (2022) show that: 
+
+under certain conditions, the minimizers of the SPO loss, SPO+ loss and MSE loss are almost always equal to $ \mathbb{E}_{\mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x})}[\boldsymbol{y}] $
+- given that $ \mathbb{E}_{\mathbb{P}(\boldsymbol{y} \mid \boldsymbol{x})}[\boldsymbol{y}] \in \mathcal{H} $. 
+
+Thus, $ \mathbf{S P O}+ $ is Fisher consistent (see Definition 4 in Appendix A) with respect to the SPO loss. 
+
+This means that: 
+- minimizing the surrogate loss also minimizes the true loss function. 
+
+Ho-Nguyen and Kılınç-Karzan (2022) show that: 
+
+for some examples of a multiclass classification problem, SPO+ is Fisher inconsistent, 
+- while MSE loss is consistent. 
+
+However, complete knowledge of the distribution is a limitation in practice
+- where the decision-maker has access to only the samples from the distribution.
+
+As a result, Ho-Nguyen and Kılınç-Karzan (2022) and Liu and Grigas (2021) provide calibration bounds:
+- that hold for a class of distributions $ \mathcal{D} $ on $ \mathcal{X} \times \mathcal{Y} $ and ensure that:
+- a lower excess risk of predictor for MSE and SPO+, respectively, translates to lower excess SPO risk (see Definition 5 in Appendix A).
+
+In many ML applications, one seeks to derive finite-sample guarantees, 
+- which are given in the form of a generalization bound,
+  - i.e., an upper bound on the difference between the true risk of a loss function and its empirical risk estimate for a given sample size $ N $. 
+A generalization bound for the SPO loss function is given in El Balghiti et al. (2022) (extension of El Balghiti et al. 2019) based on Rademacher complexity (see Definition 6 in Appendix A) of the SPO loss composed with the prediction functions $ g_{\boldsymbol{\theta}} \in \mathcal{H} $. 
+
+More specifically, the bound achieved in El Balghiti et al. (2019) is $ \mathrm{O}\left(\sqrt{\frac{\log (N)}{N}}\right) $, and tighter bounds with respect to action and feature dimension are obtained using SPO function's structure 
+
+and if $ \mathcal{Z} $ satisfies a "strength" property. 
+
+
+Hu et al. (2022) show that for linear CSO problems, the generalization bound for MSE loss and SPO loss is $ \mathrm{O}\left(\sqrt{\frac{1}{N}}\right) $ 
+
+while faster convergence rates for the SLO model compared to ILO model are obtained under certain low-noise assumptions. 
+
+Elmachtoub et al. (2023) show that :
+
+for non-linear optimization problems, SLO models stochastically dominate ILO in terms of their asymptotic optimality gaps
+- when the hypothesis class covers the true distribution.
+
+When the model is misspecified, they show that:
+
+ILO outperforms SLO asymptotically in a general nonlinear setting.
+
+### 5.4.2 Surrogate loss for a stochastic forest.
+
+Kallus and Mao (2022) propose an algorithm called StochOptForest, 
+- which generalizes the random-forest based local parameter estimation procedure in Athey et al. (2019). 
+
+A second-order perturbation analysis of stochastic optimization problems allows them to scale to larger CSO problems 
+
+since they can avoid solving an optimization problem at each candidate split. 
+
+The policies obtained using their model are shown to be asymptotically consistent, 
+
+and the benefit of ILO is illustrated by comparing their approach to the random forests of Bertsimas and Kallus (2020)
+- on a set of problems with synthetic and real-world data.
+
+### 5.4.3. Other surrogates. 
+
+Wilder et al. (2019b) introduce ClusterNet to solve hard combinatorial graph optimization problems:
+- by learning incomplete graphs. The model combines graph convolution networks
+- to embed the graphs in a continuous space
+- and uses a soft version of k-means clustering to obtain a differential proxy for the combinatorial problems,
+  - e.g., community detection and facility location.
+
+Numerical experiments on a synthetic data set show that:
+- ClusterNet outperforms the two-stage SLO approach of first learning the graph and then optimizing, 
+- as well as other baselines used in community detection and facility location.
+
+Focusing on combinatorial problems, Vlastelica et al. (2019) propose a differentiable black-box (DBB) approach to tackle the issue that : 
+
+the Jacobian of $ z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ is zero almost everywhere 
+
+by approximating the true loss function 
+- using an interpolation controlled in a way that
+  -  balances between "informativeness of the gradient" and "faithfulness to the original function".
+
+Algorithmically, this is done by perturbing the prediction $ g_{\boldsymbol{\theta}}(\boldsymbol{x}) $ in the direction $ \nabla_{\boldsymbol{z}} c\left(z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}\right) $ and obtaining a gradient of the surrogate loss based on the effect of this perturbation on the resulting perturbed action.
+
+Chung et al. (2022) introduce a computationally tractable ILO model : 
+
+to solve non-linear CSO problems. 
+
+Using the first-order Taylor expansion of the task loss around the prediction, 
+
+they introduce a reweighted MSE loss function 
+
+- where weights are determined by taking the gradient of task loss with respect to the prediction. 
+
+To solve a large-scale multi-facility inventory allocation problem 
+- with few samples for each facility, 
+
+they use a single random forest that:
+
+can predict the demand across facilities and products.
+
+Assuming that each tree in the random forest provides an independent and identically distributed realization of the uncertain parameter, 
+
+they obtain the conditional distribution of uncertain parameter, $ f_{\theta_{0}}=\frac{1}{T} \sum_{t=1}^{T} \delta_{\hat{\boldsymbol{y}}^{t}} $, 
+- where $ \hat{\boldsymbol{y}}^{t} $ is the prediction of tree $ t $.
+
+For each feature $ \boldsymbol{x}_{i} $ and conditional distribution $ f_{\boldsymbol{\theta}_{0}} $, 
+
+they obtain an optimal allocation, $ z_{i}^{j}= $ $ z^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}_{0}}\right) $ for facility $ j $ 
+- that minimizes the average unmet demand. In the last step, they retrain the random forest to minimize the reweighted MSE loss function:
+
+#### (17)
+
+$ \underset{\boldsymbol{\theta}}{\operatorname{argmin}} \sum_{i=1}^{N} \sum_{j=1}^{M} \sum_{t=1}^{T} \mathbb{1}\left[\hat{y}_{i}^{t, j} \geq s_{i}^{j}+z_{i}^{j}\right]\left|f_{\boldsymbol{\theta}}\left(\boldsymbol{x}_{i}\right)-\hat{y}_{i}^{t, j}\right| $
+
+- $ M $ is the number of facilities, 
+- $ \hat{y}_{i}^{t, j} $ and $ s_{i}^{j} $ denote the demand and inventory levels, respectively, at facility $ j $. 
+
+The above model [(17)](#17) solves the optimization problem once during training, 
+
+and is shown to be scalable for a medical allocation problem in Sierra Leone when compared to Kallus and Mao (2022)
+- where splitting of the feature space is done based on the task loss.
+
+Lawless and Zhou (2022) introduce a loss function similar to Chung et al. (2022) that:
+
+weighs the prediction error with a regret term as follows:
+
+#### (18)
+
+$ d\left(g_{\boldsymbol{\theta}}(\boldsymbol{x}), \boldsymbol{y}\right)=\left[c\left(z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}\right)-c\left(z^{*}(\boldsymbol{x}, \boldsymbol{y}), \boldsymbol{y}\right)\right]\left(\boldsymbol{y}-g_{\boldsymbol{\theta}}(\boldsymbol{x})\right)^{2} $
+
+Learning optimal $ \boldsymbol{\theta} $ from the above formulation involves an $ \operatorname{argmin} $ differentiation. 
+
+So, the authors provide a two-step polynomial time algorithm to approximately solve the above problem:
+
+It first computes a pilot estimator $ g_{\boldsymbol{\theta}_{0}} $
+- by solving [(7)](#7) with $ d\left(g_{\boldsymbol{\theta}}(\boldsymbol{x}), \boldsymbol{y}\right)=\left(g_{\boldsymbol{\theta}}(\boldsymbol{x})-\boldsymbol{y}\right)^{2} $ 
+
+and then solving [(7)](#7) with the distance function in [(18)](#18) where:
+-  $ c\left(z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right), \boldsymbol{y}\right) $ is substituted with $ c\left(z^{*}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}_{0}}\right), \boldsymbol{y}\right) $. 
+
+The authors show that their simple algorithm performs comparably to SPO+.
+
+We conclude this subsection on surrogate loss functions by : mentioning the efforts in Sun et al. (2023a) to learn a cost point estimator (in an expected value-based model)
+- to imitate the hindsight optimal solution.
+
+This is done by designing a surrogate loss function that:
+- penalizes how much the optimal basis optimality conditions are violated. 
+
+They derive generalization error bounds for this new loss function and employ them to provide a bound on the sub-optimality of the minimal $ \theta $.
+
+## 5.5  Training using a surrogate differentiable optimizer
+
+### 5.5.1  Differentiable perturbed optimizer
+
+One way of obtaining a differentiable optimizer is:
+- to apply a stochastic perturbation to the parameters predicted by the ML model. 
+
+Taking the case of expected value-based models as an example:
+
+the key idea is that:
+- although the gradient of the solution of the contextual problem with respect to the predicted parameters $ \hat{\boldsymbol{y}}:=g_{\boldsymbol{\theta}}(\boldsymbol{x}) $ is zero almost everywhere
+- if we perturb the predictor using a noise with differentiable density
+- then the expectation of the solution of the perturbed contextual problem:
+
+$ \bar{z}^{\varepsilon}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right)=\mathbb{E}_{\Psi}\left[\tilde{z}^{\varepsilon}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}, \Psi\right)\right] $ with $ \tilde{z}^{\varepsilon}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}, \Psi\right):=\underset{\boldsymbol{z} \in \mathcal{Z}}{\operatorname{argmin}} c\left(\boldsymbol{z}, g_{\boldsymbol{\theta}}(\boldsymbol{x})+\varepsilon \Psi\right) $
+
+- where $ \varepsilon>0 $ controls the amount of perturbation
+
+and more generally of the expected cost of the associated random policy $ \mathbb{E}_{\Psi}\left[H\left(\tilde{z}^{\varepsilon}\left(\cdot, g_{\boldsymbol{\theta}}, \Psi\right), \hat{\mathbb{P}}_{N}\right)\right] $ can be shown to be smooth and differentiable. 
+
+This idea is proposed and exploited in Berthet et al. (2020), which:
+- focus on a bi-linear cost $ c(\boldsymbol{z}, \boldsymbol{y}):=\boldsymbol{y}^{T} \boldsymbol{z} $ thus simplifying $ \mathbb{E}_{\Psi}\left[H\left(\tilde{z}^{\varepsilon}\left(\cdot, g_{\boldsymbol{\theta}}, \Psi\right), \hat{\mathbb{P}}_{N}\right)\right]=H\left(\bar{z}^{\varepsilon}\left(\cdot, g_{\boldsymbol{\theta}}\right), \hat{\mathbb{P}}_{N}\right) $. 
+
+Further, they show that:
+
+when an imitation ILO model is used 
+- with a special form of Bregman divergence 
+
+to capture the difference between $ z^{*}(\boldsymbol{x}, \boldsymbol{y}) $ and $ \tilde{z}^{\varepsilon}(\boldsymbol{x}, \hat{\boldsymbol{y}}, \Psi) $, 
+
+the gradient of $ H_{\text {Imitation }}\left(\tilde{z}^{\varepsilon}\left(\cdot, g_{\boldsymbol{\theta}}, \Psi\right), \hat{\mathbb{P}}_{N}^{\prime}\right) $ can be computed directly without needing to determine the Jacobian of $ \bar{z}^{\varepsilon}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}\right) $ (Blondel et al. 2020):
+
+$ H_{\text {Imitation }}\left(\tilde{z}^{\varepsilon}\left(\cdot, g_{\boldsymbol{\theta}}, \Psi\right), \hat{\mathbb{P}}_{N}^{\prime}\right):=\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[\ell_{\mathrm{PFYL}}\left(g_{\boldsymbol{\theta}}(\boldsymbol{x}), \boldsymbol{y}\right)\right] $
+
+- $ \ell_{\text {PFYI }} $ is a perturbed Fenchel-Young loss (PFYL) given by:
+
+- $ \ell_{\mathrm{PFYL}}(\hat{\boldsymbol{y}}, \boldsymbol{y}):=\hat{\boldsymbol{y}}^{T} z^{*}(\boldsymbol{x}, \boldsymbol{y})-\mathbb{E}_{\Psi}\left[(\hat{\boldsymbol{y}}+\varepsilon \Psi)^{T} \tilde{\boldsymbol{z}}^{\varepsilon}(\boldsymbol{x}, \hat{\boldsymbol{y}}, \Psi)\right]+\varepsilon \Omega_{\mathrm{PFYL}}\left(z^{*}(\boldsymbol{x}, \boldsymbol{y})\right) $
+
+- $ \Omega_{\mathrm{PFYL}}(\boldsymbol{z}) $ is the Fenchel dual of $ F(\boldsymbol{y}):=-\mathbb{E}_{\Psi}\left[(\boldsymbol{y}+\Psi)^{T} \tilde{z}^{\varepsilon}(\boldsymbol{x}, \boldsymbol{y}, \Psi)\right] $. 
+- The gradient of the FenchelYoung loss with respect to the model prediction is given by:
+  - $ \nabla_{\hat{\boldsymbol{y}}} \ell_{\mathrm{PFYL}}(\hat{\boldsymbol{y}}, \boldsymbol{y})=z^{*}(\boldsymbol{x}, \boldsymbol{y})-\overline{\boldsymbol{z}}^{\varepsilon}(\boldsymbol{x}, \hat{\boldsymbol{y}}) $
+
+
+Evaluating this gradient can be done through:
+
+Monte Carlo evaluations by sampling perturbations and solving the corresponding perturbed problems.
+
+Dalle et al. (2022) introduce a multiplicative perturbation: 
+
+with the advantage that:
+
+it preserves the sign of $ g_{\theta}(\boldsymbol{x}) $ without adding any bias:
+
+$ \tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, g_{\boldsymbol{\theta}}, \Psi\right):=\underset{\boldsymbol{z} \in \mathcal{Z}}{\operatorname{argmin}} c\left(\boldsymbol{z}, g_{\boldsymbol{\theta}}(\boldsymbol{x}) \odot \exp \left(\varepsilon \Psi-\varepsilon^{2} / 2\right)\right) $
+
+- $ \odot $ is the Hadamard dot-product and the exponential is taken elementwise. 
+
+Dalle et al. (2022) and Sun et al. (2023c) also show that: 
+
+there is a one-to-one equivalence between the:
+- perturbed optimizer approach
+- and using a regularized randomized version of the CSO problem for combinatorial problems with linear objective functions. 
+
+
+Finally, Dalle et al. (2022) show an intimate connection between:
+- the perturbed minimizer approach proposed by Berthet et al. (2020) 
+- and surrogate loss functions approaches
+
+such as SPO+ by casting them as special cases of a more general surrogate loss formulation.
+
+Mulamba et al. (2021) and Kong et al. (2022) consider an "energy-based" perturbed optimizer defined by its density of the form:
+
+#### (19)
 
 
 
