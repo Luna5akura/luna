@@ -1,8 +1,7 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface TocItem {
   id: string;
@@ -13,7 +12,7 @@ interface TocItem {
 
 const TableOfContents = ({ content }: { content: string }) => {
   const [toc, setToc] = useState<TocItem[]>([]);
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,7 +34,7 @@ const TableOfContents = ({ content }: { content: string }) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      setOpen(false);
+      setIsOpen(false);
 
       // 更新 URL 的查询参数
       const params = new URLSearchParams(location.search);
@@ -76,14 +75,15 @@ const TableOfContents = ({ content }: { content: string }) => {
   // 递归渲染目录项
   const renderTocItems = (items: TocItem[]) => {
     return (
-      <ul className="pl-4">
+      <ul className="space-y-1">
         {items.map((item) => (
-          <li key={item.id} className="mb-1">
+          <li key={item.id}>
             <div
-              className="cursor-pointer hover:text-primary"
+              className={`cursor-pointer hover:bg-accent rounded-md p-2 transition-colors
+                ${getLevelStyle(item.level)}`}
               onClick={() => handleClick(item.id)}
             >
-              {item.text}
+              <span className="truncate">{item.text}</span>
             </div>
             {item.children && renderTocItems(item.children)}
           </li>
@@ -92,31 +92,46 @@ const TableOfContents = ({ content }: { content: string }) => {
     );
   };
 
+  const getLevelStyle = (level: number) => {
+    switch(level) {
+      case 1: return "text-lg font-bold pl-0";
+      case 2: return "text-base pl-4";
+      case 3: return "text-sm pl-8";
+      default: return "text-xs pl-12";
+    }
+  };
+
   // 当路由变化时，检查查询参数并滚动
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const scrollToId = params.get('scrollTo');
-    if (scrollToId) {
-      const element = document.getElementById(scrollToId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [location.search]);
+    const handleScroll = () => {
+      // 这里可以添加滚动时的额外逻辑（如果需要）
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-       <Button variant="default" className="fixed top-20 right-4 bg-sky-900 hover:bg-sky-600 focus:outline-none">
+    <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50">
+      <div className={`relative transition-all duration-300 ${isOpen ? 'w-64' : 'w-auto'}`}>
+        <Button
+          variant="default"
+          className="bg-sky-900 hover:bg-sky-600 rounded-full shadow-lg absolute right-0"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <Menu className="h-4 w-4" />
         </Button>
-      </SheetTrigger>
-      <SheetContent>
-        <nav className="toc pt-4">
-          {renderTocItems(toc)}
-        </nav>
-      </SheetContent>
-    </Sheet>
+
+        {isOpen && (
+          <div className="ml-4 bg-background rounded-lg shadow-xl p-4 w-64 h-[70vh] flex flex-col 
+            border border-gray-200 absolute right-full top-0">
+            <h3 className="text-lg font-bold mb-4">目录导航</h3>
+            <div className="flex-1 overflow-y-auto">
+              {renderTocItems(toc)}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
