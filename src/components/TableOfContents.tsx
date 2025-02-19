@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -10,56 +10,51 @@ interface TocItem {
   children?: TocItem[];
 }
 
-const TableOfContents = ({ content }: { content: string }) => {
+interface TableOfContentsProps {
+  content: string;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+const TableOfContents = ({ content, isOpen, setIsOpen }: TableOfContentsProps) => {
   const [toc, setToc] = useState<TocItem[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // 解析页面中的标题，生成目录项
-    const headers = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    // 解析页面中的所有标题
+    const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
     const items: TocItem[] = Array.from(headers).map((header) => ({
       id: header.id,
-      text: header.textContent || '',
+      text: header.textContent || "",
       level: parseInt(header.tagName[1]),
     }));
-
-    // 生成嵌套的目录树结构
-    const tocTree = generateTocTree(items);
-    setToc(tocTree);
+    setToc(generateTocTree(items));
   }, [content]);
 
   const handleClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
       setIsOpen(false);
-
-      // 更新 URL 的查询参数
       const params = new URLSearchParams(location.search);
-      params.set('scrollTo', id);
+      params.set("scrollTo", id);
       navigate(`${location.pathname}?${params.toString()}`, { replace: true });
     }
   };
 
-  // 将扁平的目录列表转换为嵌套的目录树
   const generateTocTree = (items: TocItem[]): TocItem[] => {
     const tocTree: TocItem[] = [];
     const stack: TocItem[] = [];
 
     items.forEach((item) => {
-      // 弹出栈中比当前标题级别更高或相同的标题
       while (stack.length > 0 && item.level <= stack[stack.length - 1].level) {
         stack.pop();
       }
-
       if (stack.length === 0) {
-        // 当前标题是最高级别，添加到 tocTree
         tocTree.push(item);
         stack.push(item);
       } else {
-        // 当前标题是子标题，添加到父标题的 children
         const parent = stack[stack.length - 1];
         if (!parent.children) {
           parent.children = [];
@@ -68,22 +63,21 @@ const TableOfContents = ({ content }: { content: string }) => {
         stack.push(item);
       }
     });
-
     return tocTree;
   };
 
-  // 递归渲染目录项
   const renderTocItems = (items: TocItem[]) => {
     return (
       <ul className="space-y-1">
         {items.map((item) => (
           <li key={item.id}>
             <div
-              className={`cursor-pointer hover:bg-accent rounded-md p-2 transition-colors
-                ${getLevelStyle(item.level)}`}
+              className={`cursor-pointer hover:bg-accent rounded-md transition-colors ${getLevelStyle(
+                item.level
+              )} whitespace-normal break-words`}
               onClick={() => handleClick(item.id)}
             >
-              <span className="truncate">{item.text}</span>
+              {item.text}
             </div>
             {item.children && renderTocItems(item.children)}
           </li>
@@ -93,43 +87,53 @@ const TableOfContents = ({ content }: { content: string }) => {
   };
 
   const getLevelStyle = (level: number) => {
-    switch(level) {
-      case 1: return "text-lg font-bold pl-0";
-      case 2: return "text-base pl-4";
-      case 3: return "text-sm pl-8";
-      default: return "text-xs pl-12";
+    switch (level) {
+      case 1:
+        return "text-lg font-bold pl-0";
+      case 2:
+        return "text-base pl-4";
+      case 3:
+        return "text-sm pl-8";
+      default:
+        return "text-xs pl-12";
     }
   };
 
-  // 当路由变化时，检查查询参数并滚动
-  useEffect(() => {
-    const handleScroll = () => {
-      // 这里可以添加滚动时的额外逻辑（如果需要）
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50">
-      <div className={`relative transition-all duration-300 ${isOpen ? 'w-64' : 'w-auto'}`}>
-        <Button
-          variant="default"
-          className="bg-sky-900 hover:bg-sky-600 rounded-full shadow-lg absolute right-0"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <Menu className="h-4 w-4" />
-        </Button>
+    // 添加 sticky top-4 让目录在页面滚动时保持相对位置
+    <div
+      className="sticky top-4 flex flex-col items-start mr-8 mt-4 transition-all duration-300 ease-in-out bg-sky-900"
+      style={{
+        width: isOpen ? "30rem" : "3rem",
+        borderRadius: isOpen ? "0.75rem" : "1.5rem",
+      }}
+    >
+      {/* 按钮始终显示，同时添加 focus:outline-none 去除点击时的默认描边 */}
+      <Button
+        variant="default"
+        className="flex-shrink-0 w-12 h-12 bg-sky-900 hover:bg-sky-600 rounded-full shadow-lg focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <Menu className="h-4 w-4 text-white" />
+      </Button>
 
-        {isOpen && (
-          <div className="ml-4 bg-background rounded-lg shadow-xl p-4 w-64 h-[70vh] flex flex-col 
-            border border-gray-200 absolute right-full top-0">
-            <h3 className="text-lg font-bold mb-4">目录导航</h3>
-            <div className="flex-1 overflow-y-auto">
-              {renderTocItems(toc)}
-            </div>
+      {/* 目录内容区：外层 div 不再固定 m-4，而是根据 isOpen 动态设置外边距 */}
+      <div
+        className="transition-all duration-300 ease-in-out overflow-hidden"
+        style={{
+          maxHeight: isOpen ? "calc(100vh - 8rem)" : "0px",
+          margin: isOpen ? "1rem" : "0px",
+        }}
+      >
+        <div
+          className={`transition-all duration-300 ease-in-out ${
+            isOpen ? "p-4 opacity-100" : "p-0 opacity-0"
+          } bg-sky-100 rounded-md`}
+        >
+          <div className="overflow-y-auto" style={{ maxHeight: "calc(100vh - 8rem)" }}>
+            {renderTocItems(toc)}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
