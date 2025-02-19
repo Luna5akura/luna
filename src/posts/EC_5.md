@@ -148,6 +148,39 @@ $$
 \end{array}
 $$
 
+$$
+\begin{array}{|l|l|}
+\hline
+\text{Abbreviation} & \text{Description} \\
+\hline
+\text{ADMM} & \text{alternating direction method of multipliers} \\
+\text{CSO} & \text{contextual stochastic optimization} \\
+\text{CVaR} & \text{conditional value at risk} \\
+\text{DRO} & \text{distributionally robust optimization} \\
+\text{DNN} & \text{deep neural network} \\
+\text{ERM} & \text{empirical risk minimization} \\
+\text{FP} & \text{fixed point} \\
+\text{ILO} & \text{integrated learning and optimization} \\
+\text{IFT} & \text{implicit function theorem} \\
+\text{kNN} & k\text{-nearest neighbor} \\
+\text{KKT} & \text{Karush-Kuhn-Tucker} \\
+\text{KL} & \text{Kullback-Leibler} \\
+\text{LDR} & \text{linear decision rule} \\
+\text{LP} & \text{linear program} \\
+\text{MDP} & \text{Markov decision process} \\
+\text{ML} & \text{machine learning} \\
+\text{MLE} & \text{maximum likelihood estimation} \\
+\text{MILP} & \text{mixed-integer linear program} \\
+\text{NW} & \text{Nadaraya-Watson} \\
+\text{RKHS} & \text{reproducing kernel Hilbert space} \\
+\text{SAA} & \text{sample average approximation} \\
+\text{SLO} & \text{sequential learning and optimization} \\
+\text{QP} & \text{quadratic program} \\
+\hline
+\end{array}
+$$
+
+
 2. Contextual Optimization
 
 $\boldsymbol  z$ : decision: The order for today inventory
@@ -742,43 +775,43 @@ Also: bayesian approach that :
 - exploits the Dirichlet process mixture 
   - to assign sample weights
 
-**Weights based on random forest **
+  **Weights based on random forest**
 
-Weights can be designed 
-- based on random forest regressors
+  Weights can be designed 
+  - based on random forest regressors
 
-Simplest setting:
-- weight function of a decision tree regressor is given by:
+  Simplest setting:
+  - weight function of a decision tree regressor is given by:
 
-$ w_{i}^{t}(\boldsymbol{x}):=\frac{\mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{i}\right)\right]}{\sum_{j=1}^{N} \mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{j}\right)\right]} $
+  $ w_{i}^{t}(\boldsymbol{x}):=\frac{\mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{i}\right)\right]}{\sum_{j=1}^{N} \mathbb{1}\left[\mathcal{R}_{t}(\boldsymbol{x})=\mathcal{R}_{t}\left(\boldsymbol{x}_{j}\right)\right]} $
 
-- $ \mathcal{R}_{t}(\boldsymbol{x}) $ : the terminal node of tree $ t $ 
-  -  contains covariate $ \boldsymbol{x} $
+  - $ \mathcal{R}_{t}(\boldsymbol{x}) $ : the terminal node of tree $ t $ 
+    -  contains covariate $ \boldsymbol{x} $
 
-A decision tree:
-- assign equal weights to all historical sample 
-  - that end in the same leaf node as $\boldsymbol  x $
+  A decision tree:
+  - assign equal weights to all historical sample 
+    - that end in the same leaf node as $\boldsymbol  x $
 
-Random forest weight function:
-- generalize this idea 
-- over many random decision trees 
+  Random forest weight function:
+  - generalize this idea 
+  - over many random decision trees 
 
-Weight function is defined as:
+  Weight function is defined as:
 
-$ w_{i}^{\mathrm{RF}}(\boldsymbol{x}):=\frac{1}{T} \sum_{t=1}^{T} w_{i}^{t}(\boldsymbol{x}) $
+  $ w_{i}^{\mathrm{RF}}(\boldsymbol{x}):=\frac{1}{T} \sum_{t=1}^{T} w_{i}^{t}(\boldsymbol{x}) $
 
-- $ w_{i}^{t} $ the weight function of tree $ t $
+  - $ w_{i}^{t} $ the weight function of tree $ t $
 
-Random forests are trained for:
+  Random forests are trained for:
 
-- perform an inference task
-  - e.g. regression, classification
-- also used and interpreted as:
-- nonparametric conditional density estimators
+  - perform an inference task
+    - e.g. regression, classification
+  - also used and interpreted as:
+  - nonparametric conditional density estimators
 
-1: conditions for the asymptotic optimality and consistency of prescriptions 
-- obtained by solving problem [(11)](#11)
-- with weights functions given by kNN, NW kernel estimator, local linear regression 
+  1: conditions for the asymptotic optimality and consistency of prescriptions 
+  - obtained by solving problem [(11)](#11)
+  - with weights functions given by kNN, NW kernel estimator, local linear regression 
 
 ### 4.1.3 Expected value-based models 
 
@@ -1630,9 +1663,419 @@ Mulamba et al. (2021) and Kong et al. (2022) consider an "energy-based" perturbe
 
 #### (19)
 
+$ \tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) \sim \frac{\exp \left(-h\left(\boldsymbol{z}, f_{\boldsymbol{\theta}}(\boldsymbol{x})\right) / \varepsilon\right)}{\int \exp \left(-h\left(\boldsymbol{z}^{\prime}, f_{\boldsymbol{\theta}}(\boldsymbol{x})\right) / \varepsilon\right) d \boldsymbol{z}^{\prime}} $,
+
+- $\varepsilon  = 1$
+
+This general form of perturbed optimizer:
+- captures a varying amount of perturbation 
+  - through $ \varepsilon $, 
+  - with $ \tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ converging in distribution to $ z^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ as $ \varepsilon $ goes to zero. 
+
+They employ the negative log-likelihood to measure the divergence between:
+- $ \tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $
+-  and the hindsight optimal solution $ z^{*}(\boldsymbol{x}, \boldsymbol{y}) $. 
+
+Given the difficulties associated with calculating the partition function in the denominator of [(19)](#19), Mulamba et al. (2021) devise a surrogate loss function:
+- based on noise-contrastive estimation,
+-  which replaces likelihood with relative likelihood
+-   when compared to a set of sampled suboptimal solutions.
+
+This scheme is shown to improve the performance over SPO+ and DBB
+- in terms of expected regret performance for linear combinatorial CSO.
+- 
+Based on the noise contrastive estimation approach of Mulamba et al. (2021), Mandi et al. (2022) note that:
+- ILO for combinatorial problems can be viewed as a learning-to-rank problem. 
+
+They propose surrogate loss functions,
+- with closed-form expressions for gradients,
+  -  that are used to train to rank feasible points in terms of performance on the downstream optimization problem. 
+
+Unlike Mulamba et al. (2021), Kong et al. (2022) tackles the partition function challenge
+- by employing a self-normalized importance sampler
+  - that provides a discrete approximation. 
+
+To avoid overfitting, the authors also introduce a regularization that :
+
+penalizes the KL divergence between 
+- the perturbed optimizer distribution 
+- and a subjective posterior distribution over perturbed optimal hindsight actions $ \mathbb{P}\left(\tilde{\boldsymbol{z}}^{\varepsilon}(\boldsymbol{x}, \boldsymbol{y}) \mid \boldsymbol{y}\right) $ :
+
+$ \begin{array}{l}H_{\text {Imitation }}\left(\tilde{\boldsymbol{z}}^{\varepsilon}\left(\cdot, f_{\boldsymbol{\theta}}\right), \hat{\mathbb{P}}_{N}^{\prime}\right):= \\ \\ \quad-\mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[\log \left(\mathbb{P}\left(\tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right)=z^{*}(\boldsymbol{x}, \boldsymbol{y})\right) \mid \boldsymbol{x}, \boldsymbol{y}\right)\right]+\lambda \mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[\operatorname{KL}\left(\mathbb{P}\left(\tilde{\boldsymbol{z}}^{\varepsilon}(\boldsymbol{x}, \boldsymbol{y}) \mid \boldsymbol{y}\right) \| \tilde{\boldsymbol{z}}^{\varepsilon}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) \mid \boldsymbol{x}, \boldsymbol{y}\right)\right]\end{array} $
+
+The authors show that: 
+
+their model outperforms ILO trained using SQP and cvxpylayers
+- in terms of computational time
+
+and gives lower task loss than sequential models trained using MLE and policy learning with neural networks.
+
+### 5.5.2 Supervised learning 
+
+Grigas et al. (2021) solve a CSO problem with a convex and nonnegative decision regularizer $ \Omega(\boldsymbol{z}) $ assuming that:
+
+the uncertain parameter $ \boldsymbol{y} $ has discrete support. 
+
+Their model, called ICEO- $ \lambda $, is thus trained by solving:
+
+#### (20)
+
+$ \begin{array}{rll}\text { (ICEO- } \lambda) & \min _{\boldsymbol{\theta}} & H\left(z_{\lambda}^{*}\left(\cdot, f_{\boldsymbol{\theta}}\right), \hat{\mathbb{P}}_{N}\right)+\lambda \mathbb{E}_{\hat{\mathbb{P}}_{N}}\left[\Omega\left(z_{\lambda}^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right)\right)\right] \\ & \text { s.t. } & z_{\lambda}^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right)=\underset{\boldsymbol{z}}{\operatorname{argmin}} c\left(\boldsymbol{z}, f_{\boldsymbol{\theta}}(\boldsymbol{x})\right)+\lambda \Omega(\boldsymbol{z}), \forall \boldsymbol{x} .\end{array} $
+
+The regularization:
+- ensures uniqueness and Lipschitz property of $ z_{\lambda}^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ with respect to $ f_{\theta} $ 
+- leads to finite-sample guarantees. 
+
+To circumvent the challenge associated with nondifferentiability of $ z_{\lambda}^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ with respect to $ \boldsymbol{\theta} $:
+- they replace $ z_{\lambda}^{*}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $ with a smooth approximation $ \tilde{z}_{\lambda}\left(\boldsymbol{x}, f_{\boldsymbol{\theta}}\right) $
+  - that is learned using a random data set $ \left(\boldsymbol{p}_{i}, \boldsymbol{z}_{i}\right) $ generated by sampling $ \boldsymbol{p}_{i} $ from the probability simplex over the discrete support 
+- and then finding the optimal solution $ \boldsymbol{z}_{i} $. 
+
+They show asymptotic optimality and consistency of their solutions:
+
+- when the hypothesis class is wellspecified. 
+
+They compare their approach to other ILO pipelines and to the SLO approach that estimates the conditional distribution using cross-entropy.
+
+Cristian et al. (2022) introduce the ProjectNet model:
+- to solve uncertain constrained linear programs in an end-to-end framework
+- by training an optimal policy network,
+- which employs a differentiable approximation of the step of projection to feasibility.
 
 
 
+Another approach, related to Berthet et al. (2020), that generalizes beyond LPs is given in Shah et al. (2022) that:
+- constructs locally optimized decision losses (LODL)
+- with supervised learning 
+- to directly evaluate the performance of the predictors on the downstream optimization task. 
+
+To learn a convex LODL for each data point:
+
+this approach first generates labels in the neighborhood of label $ \boldsymbol{y}_{i} $ in the training set, 
+- e.g., by adding Gaussian noise, 
+  
+and then chooses the parameter that:
+- minimizes the MSE between LODL and the downstream task loss. 
+
+The LODL is used in place of the task-specific surrogate optimization layers 
+
+and outperforms SLO on three resource allocation problems (linear top-1 item selection problem, web advertising, and portfolio optimization). 
+
+The numerical experiments indicate that:
+- handcrafted surrogate functions only perform better for the web advertising problem.
+
+## 5.6 Applications 
+
+Tian et al. (2023a) and Tian et al. (2023b) use SPOT and noise-contrastive estimation method (Mulamba et al. 2021), respectively, 
+
+to solve the maritime transportation problem. 
+
+A comprehensive tutorial on prescriptive analytics methods for logistics is given in Tian et al. (2023c). 
+
+SPO has been used in solving last-mile delivery (Chu et al. 2023) and ship inspection problems (Yan et al. 2020, 2021, 2023). 
+
+Demirović et al. (2019) and Demirović et al. (2020) minimize the same expected regret as SPO for specific applications related to ranking optimization and dynamic programming problems, respectively.
+
+
+Perrault et al. (2020) solve a Stackelberg security game with the ILO framework by:
+- learning the attack probability distribution over a discrete set of targets
+- to maximize a surrogate for the defender's expected utility. 
+
+They show that: their model results in higher expected utility for the defender on synthetic and human subjects data than the sequential models that learn the attack probability by minimizing the cross entropy loss. 
+
+Wang et al. (2020) replace the large-scale optimization problem with a low dimensional surrogate by reparameterizing the feasible space of decisions. 
+
+They observe significant performance improvements for non-convex problems compared to the strongly convex case.
+
+Stratigakos et al. (2022) solve an integrated forecasting and optimization model
+- for trading in renewable energy 
+
+that: trains an ensemble of prescriptive trees
+- by randomly splitting the feature space $ \mathcal{X} $ based on the task-specific cost function. 
+
+Sang et al. (2022) introduce an ILO framework for electricity price prediction for energy storage system arbitrage. 
+
+They present a hybrid loss function 
+
+- to measure prediction and decision errors 
+
+and a hybrid stochastic gradient descent learning method. 
+
+Sang et al. (2023) solve a voltage regulation problem using:
+- a similar hybrid loss function, 
+
+and backpropagation is done by 
+- implicitly differentiating the optimality conditions of a secondorder cone program.
+
+Liu et al. (2023b) use a DNN to : 
+- model the routing behavior of users in a transportation network 
+- and learn the parameters by minimizing the mismatch between:
+  - the flow prescribed by the variational inequality
+  - and the observed flow. 
+
+The backward pass is obtained by:
+- applying the IFT to the variational inequality. 
+
+Wahdany et al. (2023) propose an integrated model for wind-power forecasting that:
+- learns the parameters of a neural network to optimize the energy system costs under the system constraints.
+
+Vohra et al. (2023) apply similar ideas to:
+- develop end-to-end renewable energy generation forecasts, 
+
+using multiple contextual sources such as satellite images and meteorological time series.
+
+Butler and Kwon (2023b) solves the contextual mean-variance portfolio (MVP) optimization problem by:
+- learning the parameters of the linear prediction model using the ILO framework. 
+
+The covariance matrix is estimated using:
+- the exponentially weighted moving average model.
+
+They provide analytical solutions to :
+- unconstrained and equality-constrained MVP optimization problems
+
+and show that:
+- they outperform SLO models based on ordinary least squares regression. 
+
+These analytical solutions lead to lower variance when:
+
+compared with the exact solutions of the corresponding inequality-constrained MVP optimization problem.
+
+# 6 Active research directions
+
+## Uncertainty in constraints. 
+
+Most studies on contextual optimization assume that:
+
+- there is no uncertainty in the constraints. 
+
+If constraints are also uncertain, the SAA solutions that ignore the covariates information might not be feasible (Rahimian and Pagnoncelli 2022). 
+
+Bertsimas and Kallus (2020) have highlighted the challenges in using ERM in a constrained CSO problem. 
+
+Rahimian and Pagnoncelli (2022) solve a conditional chance-constrained program that :
+- ensures with a high probability that the solution remains feasible under the conditional distribution 
+- given the realized covariates. 
+
+Although they do not focus on contextual optimization, interesting links can be found with the literature on constraint learning (Fajemisin et al. 2023) and inverse optimization (Chan et al. 2021).
+
+
+## Risk aversion. 
+
+There has been a growing interest in studying contextual optimization in the risk-averse setting.
+
+Specifically, one can consider replacing the risk-neutral expectation from [(1)](#1) with a risk measure such as value-at-risk.
+
+By doing so, one would expect, with a high probability, that:
+- a decision-maker's loss is lower than a particular threshold. 
+
+One can easily represent such a risk measure using an uncertainty set which represents the set of all possible outcomes that may occur in the future. 
+
+The resulting uncertainty set should be carefully chosen:
+- It should capture the most relevant scenarios to balance the trade-off between avoiding risks and obtaining returns. 
+
+The recently proposed Conditional Robust Optimization (CRO) paradigm by Chenreddy et al. (2022) (see also Ohmori 2021, Sun et al. 2023b, Peršak and Anjos 2023) consists in learning a conditional set $ \mathcal{U}(\boldsymbol{x}) $ to solve the following problem:
+
+### (21)
+
+(CRO) $ \min _{\boldsymbol{z} \in \mathcal{Z}} \max _{\boldsymbol{y} \in \mathcal{U}(\boldsymbol{x})} c(\boldsymbol{z}, \boldsymbol{y}) $
+
+- where $ \mathcal{U}(\boldsymbol{x}) $ is an uncertainty set designed to contain with high probability the realization of $ \boldsymbol{y} $ conditionally on observing $ x $.
+
+Their approach solves the CRO problem sequentially where:
+- $ \mathcal{U}(\boldsymbol{x}) $ is learned first
+-  and is subsequently used to solve the downstream RO problem. 
+
+A challenging problem is to learn the uncertainty set to minimize the downstream cost function.
+
+## Toolboxes and benchmarking. 
+
+Several toolboxes and packages have been proposed recently to train decision pipelines. 
+
+Agrawal et al. (2019) provide the cvxpylayers library, which includes a subclass of convex optimization problems as differentiable layers in auto-differentiation libraries in PyTorch, TensorFlow, and JAX. 
+
+Other libraries for differentiating non-linear optimization problems for end-to-end learning include:
+
+higher (Grefenstette et al. 2019), JAXopt (Blondel et al. 2022), TorchOpt (Ren et al. 2022), and Theseus (Pineda et al. 2022). 
+
+Tang and Khalil (2022) introduce an open-source software package called PyEPO (Pytorch-based End-to-End Predict-then-Optimize) implemented in Python for ILO of problems that are linear in uncertain parameters. They implement various existing methods, such as SPO+, DBB, and PFYL. 
+
+They also include new benchmarks and comprehensive experiments highlighting the advantages of integrated learning. 
+
+Dalle et al. (2022) provide similar tools for combinatorial problems in Julia.
+
+Comparisons of existing approaches in fixed simulation settings are scarce, especially with realworld data. 
+
+Buttler et al. (2022) provide a meta-analysis of selected methods on an unconstrained newsvendor problem on four data sets from the retail and food sectors. 
+
+They highlight that there is no single method that clearly outperforms all the others on the four data sets. Mandi et al. (2023) carried out a comprehensive benchmarking of ILO frameworks tailored for expected value-based models on seven distinct problems using public datasets.
+
+## Endogenous uncertainty. 
+
+While there has been some progress in studying problems where the decision affects the uncertain parameters (Basciftci et al. 2021, Liu et al. 2022), the literature on decision-dependent uncertainty with covariates is sparse (Bertsimas and Kallus 2020, Bertsimas and Koduri 2022). 
+
+An example could be:
+- a facility location problem where demand changes once a facility is located in a region
+- or a price-setting newsvendor problem whose demand depends on the price (Liu and Zhang 2023). 
+
+In these problems, the causal relationship between demand and prices is unknown. 
+
+These examples offer interesting parallels with the research on heterogeneous treatment effects
+- such as Wager and Athey (2018), 
+  - which introduce causal forests for estimating treatment effects and provide asymptotic consistency results. 
+- Alley et al. (2023) study a price-setting problem and provide a new loss function to isolate the causal effects of price on demand from the conditional effects due to other covariates.
+
+## Data privacy. 
+
+Another issue is that:
+
+- the data might come from multiple sources and contain sensitive private information, so it cannot be directly provided in its original form to the system operator. 
+
+Differential privacy techniques (see, e.g., Abadi et al. 2016) can be used to obfuscate data but may impact predictive and prescriptive performance. 
+
+Mieth et al. (2023) determine the data quality after obfuscation in an optimal power flow problem with a Wasserstein ambiguity set and use a DRO model to determine the data value for decision-making.
+
+## Interpretability & explainability. 
+
+Decision pipelines must be trusted to be implemented. 
+
+This is evident from the European Union legislation "General Data Protection Regulation" that requires entities using automated systems to provide "meaningful information about the logic involved" in making decisions, known popularly as the "right to explanation" (Doshi-Velez and Kim 2017, Kaminski 2019). 
+
+For instance, a citizen has the right to ask a bank for an explanation in the case of loan denial. 
+
+While interpretability has received much attention in predictive ML applications (Rudin 2019), it remains largely unexplored in a contextual optimization, 
+- i.e., prescriptive context. 
+
+Interpretability requires transparent decision pipelines that are intelligible to users,
+- e.g., built over simple models such as decision trees or rule lists. 
+
+In contrast, explainability may be achieved with an additional algorithm on top of a black box or complex model. 
+
+Feature importance has been analyzed in a prescriptive context by Serrano et al. (2022): 
+
+They introduce an integrated approach that solves a bilevel program with an integer master problem optimizing (cross-)validation accuracy. 
+
+To achieve explainability, Forel et al. (2023) adapt the concept of counterfactual explanations to explain a given data-driven decision through differences of context that make this decision optimal, or better suited than a given expert decision. 
+
+Having identified these differences, it becomes possible to correct or complete the contextual information, if necessary, or otherwise to give explanative elements supporting different decisions. 
+
+Another research direction could be to train tree-based models (such as optimal classification trees) to approximate the policy of a complex learning-and-optimization pipeline. 
+
+This has interesting connections with model distillation,
+- i.e., the idea in the ML community of approximating a large model by a smaller one,
+
+and the work of Bertsimas and Stellato (2021), which learns the mapping from the problem parameters to optimal decisions through interpretable models.
+
+## Fairness. Applying decisions based on contextual information can raise fairness issues when the context is made of protected attributes. 
+
+This has been studied especially in pricing problems, to ensure that:
+- different customers or groups of customers are proposed prices that don't differ significantly(Cohen et al. 2021, 2022).
+
+## Finite sample guarantees for ILO. 
+
+In Grigas et al. (2021), the authors derive finite-sample guarantees for ILO under the assumption of discrete support for the uncertain parameter. 
+
+An open problem is to derive generalization bounds on the performance of ILO models for non-linear problems where the uncertain parameters have continuous support.
+
+## Correcting for in-sample bias of data-driven optimization. 
+
+When devising an optimal policy based on a finite number of samples, it is desired that low in-sample risk translates to low out-of-sample risk. 
+
+However, decision rule optimization in [(4)](#4) or learning and optimization model in [(5)](#5) are known to produce optimistically biased estimates of the true expected cost of the prescribed policy (Ban and Rudin 2019, Costa and Iyengar 2023, Gupta et al. 2022). 
+
+While one can replace this estimation with an unbiased one
+- if data was reserved for this purpose,
+
+this is usually considered a wasteful use of data
+- given that it could instead have been used to obtain a better-performing policy. 
+
+Recent research has identified ways of circumventing this issue by estimating and correcting for the in-sample bias in contextual (Gupta et al. 2022) and non-contextual (Ito et al. 2018, Gupta and Rusmevichientong 2021, Iyengar et al. 2023) stochastic optimization problems
+- under the assumption that errors in the estimation of uncertain parameters are normally distributed. 
+
+In addition to correcting the bias using Stein's lemma, Gupta and Rusmevichientong (2021) show that :
+
+- certain "Bayes-inspired" and regularized policies achieve the same performance as optimal in-sample policy in small-data large-scale regimes.
+
+A promising future research direction could be:
+
+to build a general framework to learn the insample policies that :
+
+- directly minimize the debiased objective functions. 
+
+In this regard, one might find inspiration from the work of Gupta and Rusmevichientong (2021) addressing a similar issue in the non-contextual setting.
+
+## Multi-agent decision-making. 
+
+A multi-agent perspective becomes necessary in transportation and operations management problems, - where different agents have access to different sources of information (i.e. covariates). 
+
+In this regard, some recent work by Heaton et al. (2022) identifies the Nash equilibrium of contextual games using implicit differentiation of variational inequalities and jacobian-free backpropagation.
+
+## Costly label acquisition. 
+
+In many applications, it is costly to gather observations of uncertain vectors and covariate pairs. 
+
+For instance, in personalized pricing, surveys can be sent to customers to obtain information on the sensitivity of purchasing an item with respect to its price. 
+
+However, creating, sending, and collecting the surveys may have a cost. 
+
+Liu et al. (2023a) develop an active learning approach to obtain labels to solve the SPO problem, 
+- while the more general case of developing active learning methods for non-linear contextual optimization is an interesting future direction. 
+
+Besbes et al. (2023) provide theoretical results on the trade-off between the quality and quantity of data in a newsvendor problem, thus guiding decision-makers on how to invest in data acquisition strategies.
+
+## Multi-stage contextual optimization. 
+
+Most works on contextual optimization focus on single and two-stage problems. 
+
+Ban et al. (2019) and Rios et al. (2015) use the residuals of the regression model to build multi-stage scenario trees and solve multi-stage CSO problems. 
+
+Bertsimas et al. (2023) generalize the weighted SAA model for multi-stage problems. 
+
+Qi et al. (2023) propose an end-to-end learning framework to solve a real-world multistage inventory replenishment problem.
+
+## sequential decision-making with uncertainty. 
+
+Inverse reinforcement learning (Ng et al. 2000) focuses on learning rewards that are consistent with observed trajectories. 
+
+In the econometrics literature on dynamic discrete choice modeling the focus lies more broadly on estimating structural parameters of Markov decision processes (MDPs) (Rust 1988, Aguirregabiria and Mira 2010) including rewards, transition functions and discount factors. 
+
+On both topics, estimates are typically obtained through MLE employing a soft version of the Bellman operator (e.g., Rust 1987, Ziebart et al. 2008).
+
+In the context of model-based reinforcement learning, so-called decision awareness 
+- (i.e. explicitly training components of a reinforcement learning system to help the agent improve the total amount of collected reward, Nikishin et al. 2022b) 
+is receiving increasing attention (e.g., Joseph et al. 2013, Farahmand et al. 2017, Farahmand 2018, Grimm et al. 2020). 
+
+For example, Nikishin et al. (2022a) introduce an approach that combines learning and planning to optimize expected returns for both tabular and non-tabular MDPs. 
+
+They employ the soft version of the Bellman operator for efficient parameter learning using the IFT and show that:
+- their state-action value function has a lower approximation error than that of MLE in tabular MDPs.
+
+---
+
+Another interesting research direction is to challenge the assumption that: 
+
+the joint distribution of the covariate and uncertain parameters is stationary. 
+
+Neghab et al. (2022) study a newsvendor model with a hidden Markov model underlying the distribution of the covariates and demand.
+
+---
+
+Finally, an area that requires attention is the deployment of models for real-world applications 
+
+- by tackling computational hurdles associated with decision-aware learning in MDPs, 
+
+- such as large state-action pairs and high-dimensional policy spaces (Wang et al. 2023). 
+
+An example is a service call scheduling problem 
+- that is formulated as a restless multi-armed bandit (RMAB) problem in Mate et al. (2022) 
+- to improve maternal and child health in a non-profit organization. 
+
+They model each beneficiary as an arm, apply a clustering method to learn the dynamics, 
+
+and then use the Whittle Index policy to solve the RMAB. 
+
+Wang et al. (2023) use decision-focused learning to solve RMAB,
+- where the computational difficulty in differentiating the Whittle index policy of selecting the top-k arms, 
+- is mitigated by making a soft-top-k selection of arms which is an optimal transport problem (Xie et al. 2020).
 
 
 
