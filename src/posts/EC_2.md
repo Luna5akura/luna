@@ -354,6 +354,8 @@ Then, for each movie $ i \in \mathcal{I}_{j} $, compute the movie-user specific 
 
 Then, we define the user's stringency as the average of movie-user specific stringency over the set $ \mathcal{I}_{j} $ :
 
+### (4)
+
 
 
 
