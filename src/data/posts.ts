@@ -108,7 +108,7 @@ export const posts: Post[] = [
     excerpt: 'EC Day 1 - the seletion effect and the speed of learning',
     contentKey: "EC_1",
     author: 'Me',
-    category: 'Economy paper',
+    category: 'Business paper',
   },
   {
     id:15,
@@ -117,7 +117,7 @@ export const posts: Post[] = [
     excerpt: 'EC Day 2 - The Good, The Bad and The Picky: Reference Dependence and the Reversal of Product Ratings',
     contentKey: "EC_2",
     author: 'Me',
-    category: 'Economy paper',
+    category: 'Business paper',
   },
   {
     id:16,
@@ -126,7 +126,7 @@ export const posts: Post[] = [
     excerpt: '[EC] Day 3 - Stability Evaluation through Distributional Perturbation Analysis',
     contentKey: "EC_3",
     author: "Me",
-    category: 'Economy paper'
+    category: 'Business paper',
   },
   {
     id:17,
@@ -144,7 +144,7 @@ export const posts: Post[] = [
     excerpt: '[EC] Day 4 - Conformal Inverse Optimization',
     contentKey: "EC_4",
     author: "Me",
-    category: 'Economy paper'
+    category: 'Business paper',
   },
   {
     id:19,
@@ -153,6 +153,6 @@ export const posts: Post[] = [
     excerpt: '[EC] Day 5 - A Survey of Contextual Optimization Methods for Decision-Making under Uncertainty',
     contentKey: "EC_5",
     author: "Me",
-    category: 'Economy paper'
+    category: 'Business paper',
   },
 ];
