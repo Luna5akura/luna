@@ -18,7 +18,26 @@ Why Everyone benefits from encroachment?
 - $CS^{E} - CS^{N} = \underbrace{\frac{(9a-2c)(3a-2c)}{288b}}_{\text{Price reduction and increased choice}} > 0$
 - $c \in \left(\underbrace{\frac{3a}{4\sqrt{2}}}_{\text{Lower bound: avoid excessive squeezing of the retailer}}, \underbrace{\frac{3a}{5}}_{\text{Upper bound: ensure manufacturer's retail competitiveness}}\right)$
 
+---
 
+Balancing Cost Disadvantages
+
+When $c$ is moderate:
+
+- The manufacturer can credibly compete with the retailer without fully displacing it
+- The retailer benefits from a lower $w$, offsetting partial sales loss to encroachment.
+
+--- 
+
+Summary:
+
+Supplier encroachment, when strategically executed, transforms a zero-sum game into a Pareto improvement:
+
+- **Manufacturers** gain from optimized wholesale pricing and direct retail profits.
+
+- **Retailers** benefit if wholesale price cuts offset competitive losses.
+
+- **Consumers** enjoy lower prices and expanded choice.
 
 # 2 The basic model 
 
@@ -379,4 +398,36 @@ We get:
 > Under retail price competition:
 >
 > $ \begin{aligned} \widetilde{\Pi}_{R}^{E}(k) & =\left[a-\tilde{q}_{R}^{E}(k)-k \tilde{q}_{M}^{E}(k)\right] \tilde{q}_{R}^{E}(k)-w \tilde{q}_{R}^{E}(k) \\ & =\frac{\left[4-2 k^{2}\right][a(1-k)+c k]^{2}}{\left[1-k^{2}\right]\left[8-5 k^{2}+k^{4}\right]^{2}} .\end{aligned} $
+>
+> (i) Encroachment arises if and only if $ c<[8-6 k- $ $ \left.7 k^{2}+5 k^{3}+k^{4}-k^{5}\right] a /\left[8-7 k^{2}+k^{4}\right] $, in which case both the manufacturer and consumers benefit from encroachment; and
 > 
+> (ii) Encroachment that increases retailer profit arises if and only if
+> $\begin{array}{l}c \in\left(g_{2}(k) a, \frac{\left[8-6 k-7 k^{2}+5 k^{3}+k^{4}-k^{5}\right] a}{\left[8-7 k^{2}+k^{4}\right]}\right), \quad \text { where } \\g_{2}(k)=\frac{128-176 k-64 k^{2}+153 k^{3}-51 k^{5}+11 k^{7}-k^{9}}{4\left[\left(8-5 k^{2}+k^{4}\right) \sqrt{4-6 k^{2}+2 k^{4}}+8\left(2-2 k-k^{2}+k^{3}\right)\right]} \end{array}$
+
+## 4.3 Nonlinear Costs 
+
+Suppose manufacturer's cost:
+
+$cq_M+c_2[q_M]^2$
+
+We have:
+
+$ \begin{aligned} w^{E}\left(c_{2}\right)= & \frac{a}{2}-\frac{c+a c_{2}}{6+22 c_{2}+16 c_{2}^{2}}, \quad q_{R}^{E}\left(c_{2}\right)=\frac{2\left[c+a c_{2}\right]}{3+8 c_{2}} \\ & q_{M}^{E}\left(c_{2}\right)=\frac{3 a\left[1+2 c_{2}\right]-c\left[5+8 c_{2}\right]}{6+22 c_{2}+16 c_{2}^{2}}\end{aligned} $
+
+
+Also, the retailer's profit:
+
+$ \Pi_{R}^{E}\left(c_{2}\right)=\frac{2\left[1+2 c_{2}\right]\left[c+a c_{2}\right]^{2}}{\left[1+c_{2}\right]\left[3+8 c_{2}\right]^{2}} $
+
+Then we have:
+
+### Proposition 8
+
+> In nonlinear costs:
+>
+> (i) Encroachment arises if and only if $ c<3\left[1+2 c_{2}\right] $ a/ [ $ \left.5+8 c_{2}\right] $, in which case both the manufacturer and consumers benefit from encroachment; and
+>
+> (ii) Encroachment that increases retailer profit arises if and only if
+> 
+> $\begin{array}{c}c \in\left(h\left(c_{2}\right) a, \frac{3\left[1+2 c_{2}\right] a}{\left[5+8 c_{2}\right]}\right), \text { where } \\h\left(c_{2}\right)=\frac{9+57 c_{2}+80 c_{2}^{2}}{4\left[8 c_{2}\left(1+2 c_{2}\right)+\left(3+8 c_{2}\right) \sqrt{2+6 c_{2}+4 c_{2}^{2}}\right]} \end{array}$
+

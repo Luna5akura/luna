@@ -356,6 +356,27 @@ Then, we define the user's stringency as the average of movie-user specific stri
 
 ### (4)
 
+$ s_{j}:=\frac{\sum_{i \in \mathcal{I}_{j}}\left(\bar{r}_{i}-r_{i j}\right)}{n_{j}} $
+
+Then, we compute new movie ratings 
+- which take into account - and correct for - how stringent their watchers are. 
+
+Define by $ \mathcal{J}_{i} $ the set of all users who have watched movie $ i $, 
+
+and by $ n_{i} $ its cardinality. 
+
+Then, we update, or normalize, movie $ i $ 's rating $ \bar{r}_{i} $ to:
+
+### (5)
+
+$ \bar{r}_{i}^{\text {norm }}:=\frac{\sum_{j \in \mathcal{J}_{i}}\left(r_{i j}+s_{j}\right)}{n_{i}}=\bar{r}_{i}+\frac{\sum_{j \in \mathcal{J}_{i}} s_{j}}{n_{i}} $.
+
+Notice:
+
+-  it weights all opinions equally
+-   it does not require us to make assumptions about the rating and choice processes for each category of consumers.
+
+
 
 
 

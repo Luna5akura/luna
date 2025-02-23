@@ -4,6 +4,7 @@
 
 Sometimes が is invisible, it's called *zero particle*.
 
+
 が marks the **subject** of the sentence. e.g.: I, She, He.
 
 ---
