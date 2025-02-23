@@ -267,6 +267,53 @@ For $ t \geq 0 $ and a non-negative random variable $ X $, the function $ g(t)=\
 5. Joint MGF:
 - $\phi (t_1,\dots, t_n) = E[e^{(t_1X_1+\cdots+t_nX_n)}]$
 
+--- 
+
+**Binomial MGF**
+
+$ M_{X}(t)=\sum_{k=0}^{n} e^{t k}\binom{n}{k} p^{k}(1-p)^{n-k}=\sum_{k=0}^{n}\binom{n}{k}\left(p e^{t}\right)^{k}(1-p)^{n-k} $
+
+We get:
+
+$ M_{X}(t)=\left(p e^{t}+(1-p)\right)^{n} $
+
+**Poisson MGF**
+
+$ M_{X}(t)=\sum_{k=0}^{\infty} e^{t k} \frac{\lambda^{k} e^{-\lambda}}{k!}=e^{-\lambda} \sum_{k=0}^{\infty} \frac{\left(\lambda e^{t}\right)^{k}}{k!} $
+
+Then: 
+
+$ M_{X}(t)=e^{-\lambda} \cdot e^{\lambda e^{t}}=e^{\lambda\left(e^{t}-1\right)} $
+
+**Normal MGF**
+
+$ M_{X}(t)=\int_{-\infty}^{\infty} e^{t x} \cdot \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{-\frac{(x-\mu)^{2}}{2 \sigma^{2}}} d x $
+
+Look at the power:
+
+$ t x-\frac{(x-\mu)^{2}}{2 \sigma^{2}}=-\frac{x^{2}-2\left(\mu+\sigma^{2} t\right) x+\mu^{2}}{2 \sigma^{2}} $
+
+Then: 
+
+$ M_{X}(t)=e^{\mu t+\frac{\sigma^{2} t^{2}}{2}} $
+
+**Exponential MGF**
+
+$ M_{X}(t)=\int_{0}^{\infty} e^{t x} \cdot \lambda e^{-\lambda x} d x=\lambda \int_{0}^{\infty} e^{-(\lambda-t) x} d x $
+
+Then: 
+
+$ M_{X}(t)=\lambda \cdot \frac{1}{\lambda-t}=\frac{\lambda}{\lambda-t} \quad(t<\lambda) $
+
+**Gamma MGF**
+
+$ M_{X}(t)=\int_{0}^{\infty} e^{t x} \cdot \frac{\lambda^{\alpha}}{\Gamma(\alpha)} x^{\alpha-1} e^{-\lambda x} d x=\frac{\lambda^{\alpha}}{(\lambda-t)^{\alpha}} \cdot \frac{\Gamma(\alpha)}{\Gamma(\alpha)} $
+
+Then:
+
+$ M_{X}(t)=\left(\frac{\lambda}{\lambda-t}\right)^{\alpha} $
+
+
 ## Theorem
 
 ### 1. Markov's Inequality (Proposition 2.6)
@@ -349,6 +396,7 @@ Proof Sketch (Using Moment Generating Functions):
 1. Standardization:
 
 Let $ Y_{i}=\frac{X_{i}-\mu}{\sigma} $, so $ E\left[Y_{i}\right]=0, \operatorname{Var}\left(Y_{i}\right)=1 $.
+
 2. MGF of the Sum:
 
 The MGF of $ S_{n}=\frac{Y_{1}+\cdots+Y_{n}}{\sqrt{n}} $ is:
@@ -362,11 +410,73 @@ Expand $ M_{Y}\left(\frac{t}{\sqrt{n}}\right) $ around $ t=0 $ :
 $
 M_{Y}\left(\frac{t}{\sqrt{n}}\right)=1+\frac{t^{2}}{2 n}+o\left(\frac{1}{n}\right)
 $
+
 4. Limit as $ n \rightarrow \infty $ :
 $
 \lim _{n \rightarrow \infty} M_{S_{n}}(t)=e^{t^{2} / 2}
 $
 which is the MGF of $ N(0,1) $. By uniqueness of MGFs, the result follows.
+
+### 5. Composed Random Variable Equality
+
+For all $h$:
+
+$ 
+\mathrm{E}\left[S_{N} h\left(S_{N}\right)\right]=\mathrm{E}[N] \mathrm{E}\left[X_{1} h\left(S_{M}\right)\right]
+$
+
+Where:
+
+$P\{M=n\} = \dfrac{nP\{N=n\}}{E[N]}$
+
+Proof:
+
+$$
+\begin{aligned}
+&\mathrm{E}\left[S_{N} h\left(S_{N}\right)\right]\\ 
+&=\mathrm{E}\left[\sum_{i=1}^{N} X_{i} h\left(S_{N}\right)\right] \\ 
+& =\sum_{n=0}^{\infty} \mathrm{E}\left[\sum_{i=1}^{n} X_{i} h\left(S_{N}\right) \mid N=n\right] \cdot \mathrm{P}\{N=n\} \\ 
+& = \sum_{n=0}^{\infty} n \cdot \mathrm{E}\left[X_{1} h\left(S_{n}\right)\right] \cdot \mathrm{P}\{N=n\} \\ 
+&= \mathrm{E}[N] \cdot \sum_{n=0}^{\infty} \mathrm{E}\left[X_{1} h\left(S_{n}\right)\right] \cdot \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]}\\ 
+&=\mathrm{E}[N] \mathrm{E}\left[X_{1} h\left(S_{M}\right)\right]
+\end{aligned}
+$$
+
+### 6. A corollary
+
+$
+\begin{array}{l}
+\mathrm{P}\left\{S_{N}=0\right\}=\mathrm{P}\{N=0\} \\
+\mathrm{P}\left\{S_{N}=k\right\}=\frac{1}{k} \mathrm{E}[N] \sum_{j=1}^{k} j \alpha_{j} \mathrm{P}\left\{S_{M-1}=k-j\right\}, \quad k>0
+\end{array}
+$
+
+Proof:
+
+Choose $h$ as indicator function, we get:
+
+$ \mathrm{P}\left\{S_{N}=k\right\}=\frac{\mathrm{E}[N]}{k} \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{M}=k\right\}}\right] $
+
+Then for RHS:
+
+$$
+\begin{aligned}
+& \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{M}=k\right\}}\right] \\ 
+&=\sum_{n=1}^{\infty} \mathrm{P}\{M=n\} \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{M}=k\right\}} \mid M=n\right] \\
+& =\sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{n}=k\right\}}\right]\\
+&=\sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\ 
+& =\sum_{j=1}^{k} j \alpha_{j} \cdot \sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\
+&=\sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{M-1}=k-j\right\}\\  
+\end{aligned}
+$$
+
+Finally:
+
+$ \mathrm{P}\left\{S_{N}=k\right\}=\frac{\mathrm{E}[N]}{k} \cdot \sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{M-1}=k-j\right\} $
+
+
+
+
 
 placeholder
 
