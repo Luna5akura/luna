@@ -219,7 +219,7 @@ export const posts: Post[] = [
     category: 'Business paper',
   },
   {
-    id:26,
+    id:27,
     title: '[EC] Day 8 -  Service Oriented Considerate Routing',
     date: '2025-2-25',
     excerpt: '[EC] Day 8 - Service Oriented Considerate Routing',
