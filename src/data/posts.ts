@@ -218,4 +218,13 @@ export const posts: Post[] = [
     author: "Me",
     category: 'Business paper',
   },
+  {
+    id:26,
+    title: '[EC] Day 8 -  Service Oriented Considerate Routing',
+    date: '2025-2-25',
+    excerpt: '[EC] Day 8 - Service Oriented Considerate Routing',
+    contentKey: "EC_8",
+    author: "Me",
+    category: 'Business paper',
+  },
 ];
