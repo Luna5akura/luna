@@ -5901,12 +5901,12 @@ $S = \\{A,B\\}$
 
 $p_i,i\\in S$: provider's service quality 
 
-$$
+$
 \\begin{cases}
 1, &w.p.\\quad p_i \\\\ 
 0, &w.p.\\quad 1-p_i 
 \\end{cases}
-$$: consumer receive reward
+$: consumer receive reward
 
 $p_i$ is known to designer and consumers
 - a common prior belief
