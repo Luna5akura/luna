@@ -209,4 +209,13 @@ export const posts: Post[] = [
     author: "Me",
     category: 'Assignments',
   },
+  {
+    id:26,
+    title: '[EC] Day 6 - Crowdsourcing Exploration ',
+    date: '2025-2-25',
+    excerpt: '[EC] Day 6 - Crowdsourcing Exploration ',
+    contentKey: "EC_6",
+    author: "Me",
+    category: 'Business paper',
+  },
 ];
