@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// /pages/PostDetails.tsx
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -9,7 +10,6 @@ import { MarkdownContent } from "@/components/MarkdownContent";
 import { posts } from "@/data/posts";
 import { Post } from "@/types";
 import remarkWrapSections from "@/utils/remarkWarpSections";
-
 import "katex/dist/katex.min.css";
 
 const markdownFiles = import.meta.glob("../posts/*.md", {
@@ -21,6 +21,16 @@ const markdownFiles = import.meta.glob("../posts/*.md", {
 const PostDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isTocOpen, setIsTocOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const post: Post | undefined = posts.find((p) => p.id === Number(id));
   if (!post) {
@@ -52,14 +62,14 @@ const PostDetails: React.FC = () => {
   }
 
   return (
-    // 添加 items-start，防止子元素在垂直方向被拉伸
     <div className="flex items-start relative transition-all duration-300 ease-in-out">
-      {/* 正文区域，通过 margin-right 为目录预留空间 */}
       <div
-        className="flex-1 transition-all duration-300 ease-in-out"
-        style={{ marginRight: isTocOpen ? "16rem" : "3rem" }}
+        className={`flex-1 transition-all duration-300 ease-in-out ${
+          isMobile ? "" : isTocOpen ? "md:mr-[16rem]" : "md:mr-[3rem]"
+        }`}
       >
-        <div className="container mx-auto mt-10 p-6 bg-sky-100 rounded-lg shadow pt-16 w-3/4">
+        <div className="container mx-auto mt-10 p-6 bg-sky-100 rounded-lg shadow pt-16 w-3/4
+          max-md:w-full max-md:mt-2 max-md:pt-20 max-md:px-3">
           <h1 className="text-3xl font-bold mb-4 text-sky-950">{post.title}</h1>
           <div className="text-sm text-sky-950 mb-4">
             {post.date} • {post.author}
@@ -77,11 +87,11 @@ const PostDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* 目录区域 */}
       <TableOfContents
         content={markdownContent}
         isOpen={isTocOpen}
         setIsOpen={setIsTocOpen}
+        isMobile={isMobile}
       />
     </div>
   );
