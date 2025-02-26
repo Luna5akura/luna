@@ -194,3 +194,8 @@ placeholder
 
 
 
+
+
+Idea 
+
+- residual with z 

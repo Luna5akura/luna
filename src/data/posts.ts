@@ -178,7 +178,7 @@ export const posts: Post[] = [
     title: '[GT_P] Week 1 - supplier encroachment',
     date: '2025-2-24',
     excerpt: '[GT_P] Week 1 - supplier encroachment',
-    contentKey: "GT_A1",
+    contentKey: "GT_P1",
     author: "Me",
     category: 'Notes',
   },
