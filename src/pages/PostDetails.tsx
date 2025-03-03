@@ -11,6 +11,7 @@ import { posts } from "@/data/posts";
 import { Post } from "@/types";
 import remarkWrapSections from "@/utils/remarkWarpSections";
 import "katex/dist/katex.min.css";
+import SearchModal from "@/components/SearchModal";
 
 const markdownFiles = import.meta.glob("../posts/*.md", {
   query: "?raw",
@@ -22,6 +23,28 @@ const PostDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isTocOpen, setIsTocOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  // 键盘事件监听
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '/' && !isSearchVisible) {
+        e.preventDefault();
+        setIsSearchVisible(true);
+      }
+      if (e.key === 'Escape' && isSearchVisible) {
+        setIsSearchVisible(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchVisible]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -93,6 +116,17 @@ const PostDetails: React.FC = () => {
         setIsOpen={setIsTocOpen}
         isMobile={isMobile}
       />
+      {isSearchVisible && (
+        <SearchModal
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          onClose={() => {
+            setIsSearchVisible(false);
+            setSearchTerm('');
+          }}
+          posts={posts}
+        />
+      )}
     </div>
   );
 };
