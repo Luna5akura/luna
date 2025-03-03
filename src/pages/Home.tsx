@@ -4,6 +4,7 @@ import {useLocation} from "react-router-dom";
 import {posts} from "@/data/posts";
 import Sidebar from "@/components/Sidebar";
 import {useEffect, useState} from 'react';
+import SearchModal from '@/components/SearchModal';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -12,6 +13,27 @@ const Home: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
   const allCategories = Array.from(new Set(posts.map((post) => post.category)));
+
+  // 新增状态
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  // 键盘事件监听
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '/' && !isSearchVisible) {
+        e.preventDefault();
+        setIsSearchVisible(true);
+      }
+      if (e.key === 'Escape' && isSearchVisible) {
+        setIsSearchVisible(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchVisible]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -72,6 +94,17 @@ const Home: React.FC = () => {
           )}
         </div>
       </div>
+      {isSearchVisible && (
+        <SearchModal
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          onClose={() => {
+            setIsSearchVisible(false);
+            setSearchTerm('');
+          }}
+          posts={posts}
+        />
+      )}
     </div>
   );
 };
