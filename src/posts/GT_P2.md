@@ -1,5 +1,129 @@
 # Supplier Encroachment with Multiple Retailers
 
+# Intuitions
+
+## Proposition 1
+
+1. Wholesale price independence from $ n $ : The supplier sets $ w=a / 2 $, balancing profit margin and retailer participation. Retailers' Cournot competition ensures their total output adjusts to $ n $, but the supplier's optimal markup remains fixed as it depends only on market potential $ a $.
+
+2. Retailer quantities vs. total output: More retailers dilute individual orders ( $ q_{r_{i}} \downarrow $ ) but intensify competition, increasing total output ( $ \sum q_{r_{j}} \uparrow $ ).
+
+3. Profit dynamics: Supplier benefits from more retailers (no double marginalization), while retailers suffer from competition. Total supply chain profit rises due to reduced deadweight loss.
+
+**Counterintuitive Aspect**:
+
+- The wholesale price $ w^{n}=a / 2 $ being independent of $ n $ seems odd-intuitively, more retailers might incentivize the supplier to lower $ w $ to encourage ordering. However, in Cournot competition, retailers' aggregate output $ \sum q_{r_{j}}=\frac{n(a-w)}{n+1} $ increases with $ n $, so the supplier maximizes profit at $ w=a / 2 $ regardless of $ n $.
+
+## Proposition 2
+
+Supplier encroachment depends on its direct-selling cost $ c $.
+- Low $ c \leq \underline{c} $ : Encroachment occurs-direct selling is efficient enough.
+- Intermediate $ \underline{c}<c \leq \bar{c} $ : Threat of encroachment disciplines retailers to limit orders, avoiding actual encroachment.
+- High $ c>\bar{c} $ : Encroachment is too costly; equilibrium mirrors no-encroachment.
+
+**Counterintuitive Aspect**:
+
+The threat of encroachment (without actual encroachment) can discipline retailers. Retailers selfregulate orders to $ q_{r_{i}}=\frac{a-c}{n} $, preventing supplier entry. This strategic deterrence is a non-obvious equilibrium outcome.
+
+## Corollary 1
+
+1. Thresholds $ \underline{c}, \bar{c} \downarrow n $ : More retailers reduce the supplier's incentive to encroach (higher competition dilutes direct-selling gains). 
+
+2. Wholesale price $ w^{e n} \downarrow n $ under EO: With encroachment, more retailers force the supplier to lower $ w $ to retain their participation. 
+
+3. Constant total output under TE: Retailers collectively maintain $ \sum q_{r_{j}}=a-c $ to deter encroachment, regardless of $ n $. 
+
+
+**Counterintuitive Aspect**: 
+
+- Total retailer output $ \sum q_{r_{j}}=a-c $ under TE is invariant to $ n $. Despite more retailers, each reduces individual orders to keep total output fixed, strategically avoiding supplier entry.
+
+## Proposition 3
+
+- $ n>4 $ : Retailers are always harmed by encroachment. More retailers amplify competition, leaving no room for wholesale price concessions. 
+
+- $ n \leq 4 $ : Retailers may benefit if $ c \in\left[\underline{c}_{r}, \bar{c}_{r}\right] $. Supplier's moderate $ c $ allows a lower $ w $ (to enable encroachment), which offsets competition losses. 
+
+**Counterintuitive Aspect**: 
+
+Small $ n $ allows retailers to gain from encroachment. The supplier's need to balance encroachment profits with wholesale revenue can lead to a lower $ w $, paradoxically boosting retailer profits.
+
+## Proposition 4
+
+- $ n<3 $ : Supplier always benefits from encroachment-direct selling adds a high-margin channel. 
+
+- $ n \geq 3 $ : Encroachment can harm the supplier if $ c \in\left[\underline{c}_{s}, \bar{c}_{s}\right] $. Moderate $ c $ forces the supplier into a suboptimal trade-off: encroachment cannibalizes wholesale revenue more than it adds profit. 
+ 
+**Counterintuitive Aspect**:
+ 
+Encroachment option can reduce supplier profit. When $ c $ is moderate, the threat of encroachment forces the supplier to lower $ w $, but retailers' disciplined orders are insufficient to offset lost wholesale revenue.
+
+## Proposition 5
+
+Supplier prefers encroachment for very low or high $ c $, but enrolls new retailers for intermediate $ c $. 
+
+- Low $ c $ : Direct selling dominates (low cost). 
+
+- High $ c $ : Indirect channel expansion avoids costly encroachment. 
+
+- Mid $ c $ : Enrolling retailers balances competition and scale.
+
+**Counterintuitive Aspect**: 
+
+Supplier may prefer encroachment even at higher $ c $. For $ c $ near thresholds, channel substitutability and economies of scale tilt the balance toward direct selling.
+
+## Proposition 6
+
+With imperfect substitution $ (\theta<1) $ :
+
+- Retailers benefit from encroachment only if $ n $ is small and $ \theta $ is low (weak competition).
+
+- Supplier harm from encroachment persists for $ n \geq 3 $, but thresholds shrink as $ \theta \uparrow $.
+
+**Counterintuitive Aspect**:
+
+Lower $ \theta $ (weaker substitution) expands the range where retailers benefit. Reduced cannibalization allows coexistence of direct/indirect channels, creating win-win scenarios.
+
+## Proposition 7
+
+With fixed cost $ f $ to add retailers:
+
+- Low $ c \leq \underline{c}_{f} $ : Encroachment dominates.
+
+- Intermediate $ c \in\left(\underline{c}_{f}, \bar{c}_{f}\right) $ : Supplier balances enrolling retailers and deterring encroachment.
+
+- High $ c \geq \bar{c}_{f} $ : No encroachment; enrolls retailers up to $ n^{e n f} $.
+
+
+**Counterintuitive Aspect**:
+
+Fixed costs create non-monotonic strategies. For moderate $ c $, enrolling more retailers (despite $ f $ ) is better than encroachment, but only up to a threshold.
+
+## Proposition 8
+
+Under sequential retailer decisions:
+
+1. First-mover advantage: Retailer $ r_{1} $ may benefit from encroachment if $ n \leq 6 $, leveraging early commitment.
+
+2. Later retailers always lose: Followers face entrenched competition.
+
+3. Supplier harm: For $ n \geq 2 $, sequentiality amplifies profit loss from encroachment due to strategic retailer adjustments.
+
+
+
+**Counterintuitive Aspect**:
+
+Sequentiality creates asymmetry: early retailers can exploit encroachment to gain, while later ones lose. Supplier's profit loss arises from retailers' preemptive order reductions.
+
+## Key unifying insight
+
+**Strategic Deterrence vs. Cannibalization**:
+
+Encroachment creates a tension-its threat disciplines retailers (raising total output), but its execution risks cannibalizing wholesale revenue. The equilibrium hinges on whether supplier gains from direct selling outweigh lost wholesale profits. Small $ n $ and moderate $ c $ often lead to lose-lose outcomes, revealing the fragility of encroachment as a strategy.
+
+
+
+
 # 3 Model Setting 
 
 $s$: Supplier 

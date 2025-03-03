@@ -227,6 +227,72 @@ f_{Y_{1}, \ldots, Y_{n}}\left(y_{1}, \ldots, y_{n}\right)=f_{X_{1}, \ldots, X_{n
 $
 where $ |J|^{-1} $ is the absolute value of the reciprocal of the Jacobian determinant evaluated at $ x_{i}= $ $ h_{i}\left(y_{1}, \ldots, y_{n}\right) $.
 
+#### Example for Jacobian Matrix 
+
+(1):
+
+> Assume $X_1,X_2\sim N(0,1$ i.i.d. and $Y_1 = X_1+X_2,Y_2 = X_1-X_2$
+
+We have:
+
+$ X_{1}=\frac{Y_{1}+Y_{2}}{2}, \quad X_{2}=\frac{Y_{1}-Y_{2}}{2} $
+
+The Jacobian Matrix:
+
+$ J=\left|\begin{array}{ll}\frac{\partial Y_{1}}{\partial X_{1}} & \frac{\partial Y_{1}}{\partial X_{2}} \\ \frac{\partial Y_{2}}{\partial X_{1}} & \frac{\partial Y_{2}}{\partial X_{2}}\end{array}\right|=\left|\begin{array}{cc}1 & 1 \\ 1 & -1\end{array}\right|=-2 \Longrightarrow|J|^{-1}=\frac{1}{2} $
+
+Therefore:
+
+$ f_{Y_{1}, Y_{2}}\left(y_{1}, y_{2}\right)=f_{X_{1}, X_{2}}\left(\frac{y_{1}+y_{2}}{2}, \frac{y_{1}-y_{2}}{2}\right) \cdot \frac{1}{2} $
+
+We have:
+
+$ f_{X_{1}, X_{2}}\left(x_{1}, x_{2}\right)=\frac{1}{2 \pi} e^{-\frac{x_{1}^{2}+x_{2}^{2}}{2}} $
+
+Then we get:
+
+$ f_{Y_{1}, Y_{2}}\left(y_{1}, y_{2}\right)=\frac{1}{4 \pi} e^{-\frac{y_{1}^{2}+y_{2}^{2}}{4}} $
+
+Therefore, $Y_1, Y_2\sim N(0,2)$
+
+---
+
+(2)
+
+> Assume $ U_{1}, U_{2} \sim \operatorname{Uniform}(0,1) $, and $ Y_{1}=\sqrt{-2 \ln U_{1}} \cos \left(2 \pi U_{2}\right), \quad Y_{2}=\sqrt{-2 \ln U_{1}} \sin \left(2 \pi U_{2}\right) $
+
+We have:
+
+$ U_{1}=e^{-\frac{Y_{1}^{2}+Y_{2}^{2}}{2}}, \quad U_{2}=\frac{1}{2 \pi} \arctan \left(\frac{Y_{2}}{Y_{1}}\right) $
+
+Then Jacobian Matrix:
+
+$ |J|=\frac{1}{2 \pi} e^{-\frac{Y_{1}^{2}+Y_{2}^{2}}{2}} $, therefore $ |J|^{-1}=2 \pi e^{\frac{Y_{1}^{2}+Y_{2}^{2}}{2}} $
+
+$ f_{Y_{1}, Y_{2}}\left(y_{1}, y_{2}\right)=f_{U_{1}, U_{2}}\left(u_{1}, u_{2}\right) \cdot|J|^{-1}=1 \cdot 2 \pi e^{\frac{v_{1}^{2}+v_{2}^{2}}{2}} \cdot \frac{1}{2 \pi} e^{-\frac{v_{1}^{2}+v_{2}^{2}}{2}}=\frac{1}{2 \pi} e^{-\frac{-v_{1}^{2}+v_{2}^{2}}{2}} $
+
+Therefore, $Y_1, Y_2\sim N(0,1)$
+
+---
+
+(3)
+
+> Assume $ X_{1}, X_{2} \sim \operatorname{Exp}(\lambda) $ and $ Y_{1}=\frac{X_{1}}{X_{2}}, \quad Y_{2}=X_{2} $
+
+We have:
+
+$ X_{1}=Y_{1} Y_{2}, \quad X_{2}=Y_{2} $
+
+For Jacobian Matrix:
+
+$ J=\left|\begin{array}{cc}\frac{\partial X_{1}}{\partial Y_{1}} & \frac{\partial X_{1}}{\partial Y_{2}} \\ \frac{\partial X_{2}}{\partial Y_{1}} & \frac{\partial X_{2}}{\partial Y_{2}}\end{array}\right|=\left|\begin{array}{cc}Y_{2} & Y_{1} \\ 0 & 1\end{array}\right|=Y_{2} \Longrightarrow|J|^{-1}=\frac{1}{\left|Y_{2}\right|} $
+
+Then:
+
+$ f_{Y_{1}, Y_{2}}\left(y_{1}, y_{2}\right)=f_{X_{1}, X_{2}}\left(y_{1} y_{2}, y_{2}\right) \cdot \frac{1}{\left|y_{2}\right|}=\lambda^{2} e^{-\lambda\left(y_{1} y_{2}+y_{2}\right)} \cdot y_{2} $
+
+
+
 ---
 
 ## Moment Generating Function
@@ -463,9 +529,9 @@ $$
 \begin{aligned}
 & \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{M}=k\right\}}\right] \\ 
 &=\sum_{n=1}^{\infty} \mathrm{P}\{M=n\} \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{M}=k\right\}} \mid M=n\right] \\
-& =\sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{n}=k\right\}}\right]\\
-&=\sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\ 
-& =\sum_{j=1}^{k} j \alpha_{j} \cdot \sum_{n=1}^{\infty} \frac{n \mathrm{P}\{N=n\}}{\mathrm{E}[N]} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\
+& =\sum_{n=1}^{\infty} \mathrm{P}\{M=n\}  \cdot \mathrm{E}\left[X_{1} \mathbf{1}_{\left\{S_{n}=k\right\}}\right]\\
+&=\sum_{n=1}^{\infty} \mathrm{P}\{M=n\}  \cdot \sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\ 
+& =\sum_{j=1}^{k} j \alpha_{j} \cdot \sum_{n=1}^{\infty} \mathrm{P}\{M=n\} \cdot \mathrm{P}\left\{S_{n-1}=k-j\right\} \\
 &=\sum_{j=1}^{k} j \alpha_{j} \cdot \mathrm{P}\left\{S_{M-1}=k-j\right\}\\  
 \end{aligned}
 $$
