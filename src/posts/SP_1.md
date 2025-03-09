@@ -1,3 +1,68 @@
+# Cheat sheet
+
+$$
+\begin{array}{|c|c|c|c|c|}
+\hline
+\text{分布} & \text{概率密度函数 (PDF)} & \text{均值} & \text{方差} & \text{矩母函数 (MGF)} \\
+\hline
+\text{伯努利分布 } (p) & 
+f(x) = p^x (1-p)^{1-x}, \quad x \in \{0,1\} & 
+p & 
+p(1-p) & 
+1 - p + pe^t \\
+\hline
+\text{二项分布 } (n, p) & 
+f(x) = \binom{n}{x} p^x (1-p)^{n-x}, \quad x \in \{0,1,\dots,n\} & 
+np & 
+np(1-p) & 
+(1 - p + pe^t)^n \\
+\hline
+\text{泊松分布 } (\lambda) & 
+f(x) = \frac{e^{-\lambda} \lambda^x}{x!}, \quad x \in \{0,1,2,\dots\} & 
+\lambda & 
+\lambda & 
+e^{\lambda(e^t - 1)} \\
+\hline
+\text{几何分布 } (p) & 
+f(x) = p(1-p)^{x-1}, \quad x \in \{1,2,\dots\} & 
+\frac{1}{p} & 
+\frac{1-p}{p^2} & 
+\frac{pe^t}{1 - (1 - p)e^t} \\
+\hline
+\text{均匀分布 } (a, b) & 
+f(x) = \frac{1}{b-a}, \quad x \in [a,b] & 
+\frac{a + b}{2} & 
+\frac{(b - a)^2}{12} & 
+\frac{e^{tb} - e^{ta}}{t(b - a)} \\
+\hline
+\text{正态分布 } (\mu, \sigma^2) & 
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}, \quad x \in \mathbb{R} & 
+\mu & 
+\sigma^2 & 
+e^{\mu t + \frac{1}{2}\sigma^2 t^2} \\
+\hline
+\text{指数分布 } (\lambda) & 
+f(x) = \lambda e^{-\lambda x}, \quad x \geq 0 & 
+\frac{1}{\lambda} & 
+\frac{1}{\lambda^2} & 
+\frac{\lambda}{\lambda - t} \\
+\hline
+\text{伽马分布 } (\alpha, \beta) & 
+f(x) = \frac{\beta^\alpha x^{\alpha-1} e^{-\beta x}}{\Gamma(\alpha)}, \quad x \geq 0 & 
+\frac{\alpha}{\beta} & 
+\frac{\alpha}{\beta^2} & 
+\left(\frac{\beta}{\beta - t}\right)^\alpha \\
+\hline
+\text{卡方分布 } (k) & 
+f(x) = \frac{x^{k/2-1} e^{-x/2}}{2^{k/2} \Gamma(k/2)}, \quad x \geq 0 & 
+k & 
+2k & 
+(1 - 2t)^{-k/2} \\
+\hline
+\end{array}
+$$
+
+
 # Probability
 
 ## Sample Space & Event
