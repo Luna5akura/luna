@@ -7214,9 +7214,36 @@ $$
 
 ## 6.3 Manufacturer Service Effort 
 
+### Proposition 4 
 
 
+> (a) There exists $ \\tilde{r}_{I} \\in(0,1 / 4) $ such that $ \\pi_{I}^{A} \\geq $ $ \\pi_{I}^{R} $ if $ r \\geq \\tilde{r}_{I} $ and $ \\pi_{I}^{A}<\\pi_{I}^{R} $ otherwise. 
+> 
+> (b) There exist $ \\tilde{r}_{M} \\in $ $ (1 / 2,1) $ such that $ \\pi_{M}^{A} \\geq \\pi_{M}^{R} $ if $ r \\leq \\tilde{r}_{M} $ and $ \\pi_{M}^{A}<\\pi_{M}^{R} $ otherwise.
 
+$$
+\\begin{array}{|c|c|c|c|}
+\\hline
+\\text{Regions} & \\text{Profit Comparison} & \\text{Regions} & \\text{Profit Comparison} \\\\
+\\hline
+A & \\pi_{I}^{A} \\geq \\pi_{I}^{R},\\; \\pi_{M}^{A} < \\pi_{M}^{R} & C & \\pi_{I}^{A} < \\pi_{I}^{R},\\; \\pi_{M}^{A} < \\pi_{M}^{R} \\\\
+\\hline
+B & \\pi_{I}^{A} \\geq \\pi_{I}^{R},\\; \\pi_{M}^{A} \\geq \\pi_{M}^{R} & D & \\pi_{I}^{A} < \\pi_{I}^{R},\\; \\pi_{M}^{A} \\geq \\pi_{M}^{R} \\\\
+\\hline
+\\end{array}
+$$
+
+![Figure 4 (a)](image-20.png)
+
+![Figure 4 (b)](image-21.png)
+
+### Proposition 5
+
+> (a) There exist $ \\tilde{r}_{I 1} \\in(1 / 2,1) $ and $ \\tilde{r}_{12} \\in $ $ (0,1 / 4) $ such that $ \\pi_{I}^{A} \\geq \\pi_{I}^{R} $ if 
+> (i) $ k \\leq 1 / 2 $ and $ r \\leq \\tilde{r}_{11} $ or 
+> (ii) $ k>1 / 2 $ and $ r \\geq \\tilde{r}_{12} $ and $ \\pi_{I}^{A}<\\pi_{I}^{R} $ otherwise. 
+> 
+> (b) $ \\pi_{M}^{A} \\geq \\pi_{M}^{R} $ if $ r \\leq \\tilde{r}_{M} \\equiv 1 / 2 $ and $ \\pi_{M}^{A}<\\pi_{M}^{R} $ otherwise.
 
 `,y5=`# Introduction
 
