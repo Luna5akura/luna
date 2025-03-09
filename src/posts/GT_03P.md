@@ -90,4 +90,60 @@ $ \begin{array}{l}\pi_{M}^{A}=\frac{a^{2} k^{2}(1-r)}{(r-2 k)^{2}}, \\ \pi_{I}^{
 
 ## 4.3 Model R 
 
+Given $w$, intermediary have:
+
+$ \max _{e, q_{I}}\left(a-q_{I}+e-w\right) q_{I}-\frac{1}{2} k e^{2} $
+
+Then we get:
+
+$ \begin{array}{l}\hat{q}_{I}(w)=\frac{k(a-w)}{2 k-1}, \\ \hat{e}(w)=\frac{a-w}{2 k-1} .\end{array} $
+
+Then for manufacturer:
+
+$ \max _{w} w \hat{q}_{I}(w) $
+
+Then:
+
+$ \begin{aligned} w^{R} & =\frac{a}{2} \\ q_{I}^{R} & =\frac{a k}{2(2 k-1)} \\ e^{R} & =\frac{a}{2(2 k-1)}\end{aligned} $
+
+Finally:
+
+$ \begin{array}{l}\pi_{M}^{R}=\frac{a^{2} k}{4(2 k-1)}, \\ \pi_{I}^{R}=\frac{a^{2} k}{8(2 k-1)} .\end{array} $
+
+## 4.4 Model D 
+
+Given $w, q_I$, for manufacturer:
+
+$ \max _{q_{M}} w q_{I}+\left(a-q_{M}-q_{I}+e\right) q_{M}(1-r) $.
+
+For intermediary:
+
+$ \begin{array}{l}\max _{e}\left(a-q_{M}-q_{I}+e-w\right) q_{I}+\left(a-q_{M}-q_{I}+e\right) q_{M} r \\ \quad-\frac{1}{2} k e^{2}\end{array} $
+
+Then we get:
+
+$ \begin{array}{l}\hat{q}_{M}\left(q_{I}\right)=\frac{a k+(1-k) q_{I}}{2 k-r}, \\ \hat{e}\left(q_{I}\right)=\frac{a r+(2-r) q_{I}}{2 k-r} .\end{array} $
+
+For intermediary:
+
+$ \begin{array}{l}\max _{q_{I}}\left(a-\hat{q}_{M}\left(q_{I}\right)-q_{I}+\hat{e}\left(q_{I}\right)-w\right) q_{I} \\ \quad+\left(a-\hat{q}_{M}\left(q_{I}\right)-q_{I}+\hat{e}\left(q_{I}\right)\right) \hat{q}_{M}\left(q_{I}\right) r-\frac{1}{2} k\left(\hat{e}\left(q_{I}\right)\right)^{2}\end{array} $
+
+Then we get:
+
+$ \hat{q}_{I}(w)=\frac{a k(1-r)-w(2 k-r)}{k(2-r)} $.
+
+For manufacturer:
+
+$ \begin{array}{r}\max _{w} w \hat{q}_{I}(w)+\left(a-\hat{q}_{I}(w)-\hat{q}_{M}\left(\hat{q}_{I}(w)\right)\right. \\ \left.+\hat{e}\left(\hat{q}_{I}(w)\right)\right) \hat{q}_{M}\left(\hat{q}_{I}(w)\right)(1-r) .\end{array} $
+
+Finally:
+
+$ \begin{aligned} w^{D} & =\frac{a k(1-r)\left(2 k^{2}(3-r)-k r(4-r)-2(1-r)\right)}{2(k(3-r)-1)(k-r+1)(2 k-r)}, \\ q_{I}^{D} & =\frac{a k(2-r)(1-r)}{2(k(3-r)-1)(k-r+1)}, \\ q_{M}^{D} & =\frac{a k(k(3-r)-r+1)}{2(k(3-r)-1)(k-r+1)}, \\ e^{D} & =\frac{a((3-r) r k+2(1-r))}{2(k(3-r)-1)(k-r+1)} .\end{aligned} $
+
+
+
+
+
+
+
 
