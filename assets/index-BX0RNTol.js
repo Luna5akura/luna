@@ -7063,6 +7063,28 @@ $pQ - \\dfrac{ke^2}{2}$
 
 optimal solution:
 
+$ \\begin{array}{l}Q^{*}=\\frac{a k}{2 k-1}, \\\\ e^{*}=\\frac{a}{2 k-1} .\\end{array} $
+
+## 4.2 Model A 
+
+For Manufacturer:
+
+$ \\max _{q_{M}}\\left(a-q_{M}+e\\right) q_{M}(1-r) $
+
+For intermediary:
+
+$ \\max _{e}\\left(a-q_{M}+e\\right) q_{M} r-\\frac{1}{2} k e^{2} $.
+
+The equilibrium:
+
+$ \\begin{array}{l}q_{M}^{A}=\\frac{a k}{2 k-r}, \\\\ e^{A}=\\frac{a r}{2 k-r} .\\end{array} $
+
+Then we get:
+
+$ \\begin{array}{l}\\pi_{M}^{A}=\\frac{a^{2} k^{2}(1-r)}{(r-2 k)^{2}}, \\\\ \\pi_{I}^{A}=\\frac{a^{2} k r}{4 k-2 r} .\\end{array} $
+
+## 4.3 Model R 
+
 
 `,y5=`# Introduction
 
