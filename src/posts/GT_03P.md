@@ -140,8 +140,84 @@ Finally:
 
 $ \begin{aligned} w^{D} & =\frac{a k(1-r)\left(2 k^{2}(3-r)-k r(4-r)-2(1-r)\right)}{2(k(3-r)-1)(k-r+1)(2 k-r)}, \\ q_{I}^{D} & =\frac{a k(2-r)(1-r)}{2(k(3-r)-1)(k-r+1)}, \\ q_{M}^{D} & =\frac{a k(k(3-r)-r+1)}{2(k(3-r)-1)(k-r+1)}, \\ e^{D} & =\frac{a((3-r) r k+2(1-r))}{2(k(3-r)-1)(k-r+1)} .\end{aligned} $
 
+# 5 Equilibrium Profits and Channel Structure
+
+### Proposition 1
+
+> (a) Wholesale price effect: $ w^{D}<w^{R} $ and $ \partial w^{D} / \partial r<0 $. 
+> 
+> (b) Channel flexibility effect: $ \partial q_{M}^{D} / \partial r> $ $ 0, \partial q_{I}^{D} / \partial r<0, \partial\left(q_{M}^{D}+q_{I}^{D}\right) / \partial r>0 $ and $ \partial e^{D} / \partial r>0 $.
 
 
+### Proposition 2
+
+> (a) $ \pi_{I}^{D} \geq \pi_{I}^{A}, \pi_{M}^{D} \geq \pi_{M}^{A} $, and $ \pi_{I}^{D}+ $ $ \pi_{M}^{D} \geq \pi_{I}^{A}+\pi_{M}^{A} $. 
+> 
+> (b) There exists $ \tilde{r}_{S C} $ such that $ \pi_{I}^{D}+\pi_{M}^{D} \geq $ $ \pi_{I}^{R}+\pi_{M}^{R} $ if $ r \geq \tilde{r}_{S C} $ and $ \pi_{I}^{D}+\pi_{M}^{D}<\pi_{I}^{R}+\pi_{M}^{R} $ otherwise. 
+> 
+> (c) There exists $ \tilde{r}_{I} \in(0,1 / 2) $ such that $ \pi_{I}^{D} \geq \pi_{I}^{R} $ if $ r \geq \tilde{r}_{I} $ and $ \pi_{I}^{D}<\pi_{I}^{R} $ otherwise. 
+> 
+> (d) There exist $ \tilde{r}_{M} $ and $ \tilde{k}_{M} $ such that $ \pi_{M}^{D} \geq \pi_{M}^{R} $ if 
+> (i) $ k \geq \tilde{k}_{M} $ and $ r \leq 1 / 2 $ or 
+> (ii) $ k>1 $ and $ 1 / 2<r \leq \tilde{r}_{M} $, and $ \pi_{M}^{D}<\pi_{M}^{R} $ otherwise.
+
+---
+
+$
+\begin{array}{|c|c|c|c|}
+\hline
+\text{Regions} & \text{Profit Comparison} & \text{Regions} & \text{Profit Comparison} \\
+\hline
+A & \pi_{I}^{D} \geq \pi_{I}^{R}, \pi_{M}^{D}<\pi_{M}^{R} & C & \pi_{I}^{D}<\pi_{I}^{R}, \pi_{M}^{D}<\pi_{M}^{R} \\
+\hline
+B & \pi_{I}^{D} \geq \pi_{I}^{R}, \pi_{M}^{D} \geq \pi_{M}^{R} & D & \pi_{I}^{D}<\pi_{I}^{R}, \pi_{M}^{D} \geq \pi_{M}^{R} \\
+\hline
+\end{array}
+$
+
+![Figure 1](image-15.png)
+
+### Corollary 1
+
+> As $ k \rightarrow \infty, e_{I}^{D} \rightarrow 0, q_{I}^{D} \rightarrow 0, q_{M}^{D} \rightarrow q_{M}^{A}= $ $ Q^{*} $, and $ \pi_{I}^{D}+\pi_{M}^{D} \rightarrow \pi_{I}^{A}+\pi_{M}^{A}=a^{2} / 4 $.
+
+### Proposition 3
+
+> (a) When the intermediary chooses the channel structure, the equilibrium is dual channel if $ r \geq \tilde{r}_{I} $ (Regions A and B) and reselling channel otherwise (Regions $ C $ and $ D $ ). 
+> 
+> (b) When the manufacturer chooses the channel structure, the equilibrium is dual channel if 
+> (i) $ k \geq $ $ \tilde{k}_{M} $ and $ r \leq 1 / 2 $ or 
+> (ii) $ k>1 $ and $ 1 / 2<r \leq \tilde{r}_{M} $ (Regions $ B $ and $ D) $ and reselling channel otherwise (Regions $ A $ and $ C) $.
+> 
+> (c) Both firms prefer dual channel if (i) $ k \geq \tilde{k}_{M} $ and $ \tilde{r}_{I} \leq r \leq $ $ 1 / 2 $ or (ii) $ k>1 $ and $ 1 / 2<r \leq \tilde{r}_{M} $ (Region B). (d) Both firms prefer reselling channel if $ k<\tilde{k}_{M} $ and $ r<\tilde{r}_{I} $ (Region C).
+
+# Extensions
+
+$$
+\begin{array}{|c|c|c|c|}
+\hline
+\text{Regions} & \text{Profit Comparison} & \text{Regions} & \text{Profit Comparison} \\
+\hline
+A & \pi_{I}^{D} \geq \pi_{I}^{R},\; \pi_{M}^{D} < \pi_{M}^{R} & C & \pi_{I}^{D} < \pi_{I}^{R},\; \pi_{M}^{D} < \pi_{M}^{R} \\
+\hline
+B & \pi_{I}^{D} \geq \pi_{I}^{R},\; \pi_{M}^{D} \geq \pi_{M}^{R} & D & \pi_{I}^{D} < \pi_{I}^{R},\; \pi_{M}^{D} \geq \pi_{M}^{R} \\
+\hline
+\end{array}
+$$
+
+![Figure 2 (a)](image-16.png)
+
+![Figure 2 (b)](image-17.png)
+
+## 6.1 Observable Service Effort 
+
+![Figure 3 (a)](image-18.png)
+
+![Figure 3 (b)](image-19.png)
+
+## 6.2 Simultaneous Quantity Decisions
+
+## 6.3 Manufacturer Service Effort 
 
 
 
