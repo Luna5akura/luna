@@ -285,18 +285,165 @@ states.
 
 We denote $R$ as rain and $N$ as no rain, then:
 
+$$
+\begin{array}{|l|l|l|l|l|l|l|l|l|}
+\hline
+ & \text{R R R} & \text{R R N} & \text{R N R} & \text{R N N} & \text{N R R} & \text{N N R} & \text{N N R} \\ \hline
+\text{R R R} & 0.8 & 0.2 & 0 & 0 & 0 & 0 & 0 \\ \hline
+\text{R R N} & 0 & 0 & 0.4 & 0.6 & 0 & 0 & 0 \\ \hline
+\text{R N R} & 0 & 0 & 0 & 0 & 0.6 & 0 & 0 \\ \hline
+\text{R N N} & 0 & 0 & 0 & 0 & 0 & 0.4 & 0.6 \\ \hline
+\text{N R R} & 0.6 & 0.4 & 0 & 0 & 0 & 0 & 0 \\ \hline
+\text{N R N} & 0 & 0 & 0.4 & 0.6 & 0 & 0 & 0 \\ \hline
+\text{N N R} & 0 & 0 & 0 & 0 & 0.6 & 0.2 & 0.8 \\ \hline
+\text{N N N} & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+\end{array}
+$$
 
+## 4
 
+### Problem 
 
+> Consider a process $ \left\{X_{n}, n \geq 0\right\} $ taking values 0,1 , or 2 . Suppose 
+> 
+> $\mathrm{P}\left\{X_{n+1}=j \mid X_{n}=i, X_{n-1}=i_{n-1}, \cdots, X_{0}=i_{0}\right\}=\left\{\begin{array}{ll} P_{i j}^{\mathrm{I}}, & \text { if } n \text { is even } \\ P_{i j}^{\mathrm{II}}, & \text { if } n \text { is odd. } \end{array}\right. $
+> 
+>  Is $ \left\{X_{n}, n \geq 0\right\} $ a Markov chain? If not, explain how to enlarge the state space to make it a Markov chain.
 
+### Solution 
 
-placeholder
+No, it depends on if $n$ is odd.
 
+We can extend to $(i, k)$, where $k = \begin{cases}0 &\text {if } n \text{ is odd}\\ 1 &\text {if } n \text{ is even}\end{cases}$
 
-placeholder
+## 5
 
+### Problem 
 
-placeholder
+> A Markov chain $ \left\{X_{n}, n \geq 0\right\} $ with states $ 0,1,2 $ has the transition probability matrix: 
+> 
+> $ \left[\begin{array}{lll} \frac{1}{2} & \frac{1}{3} & \frac{1}{6} \\ 0 & \frac{1}{3} & \frac{2}{3} \\ \frac{1}{2} & 0 & \frac{1}{2} \end{array}\right] . $
+> 
+>  Given $ \mathrm{P}\left(X_{0}=0\right)=\mathrm{P}\left(X_{0}=1\right)=\frac{1}{4} $, find $ \mathrm{E}\left[X_{3}\right] $.
 
+### Solution 
 
-placeholder
+Notice:
+
+$$
+\begin{array}{l}
+ \left[\begin{array}{lll} \frac{1}{2} & \frac{1}{3} & \frac{1}{6} \\ 0 & \frac{1}{3} & \frac{2}{3} \\ \frac{1}{2} & 0 & \frac{1}{2} \end{array}\right]^3
+=  \left[\begin{array}{lll} \frac{13}{36} & \frac{11}{54} & \frac{47}{108} \\ \frac{4}{9} & \frac{4}{27} & \frac{11}{27} \\ \frac{5}{12} & \dfrac{2}{9} & \frac{13}{36} \end{array}\right]
+\end{array}
+$$
+
+Then:
+
+$$
+\begin{array}{l}
+[\frac{1}{4},\frac{1}{4},\frac{1}{2}]\left[\begin{array}{lll} \frac{13}{36} & \frac{11}{54} & \frac{47}{108} \\ \frac{4}{9} & \frac{4}{27} & \frac{11}{27} \\ \frac{5}{12} & \dfrac{2}{9} & \frac{13}{36} \end{array}\right]
+\\
+= \left[\frac{59}{144}, \frac{43}{216}, \frac{169}{432}\right] 
+\end{array}
+$$
+
+Therefore:
+
+$ \mathrm{E}\left[X_{3}\right]=0 \cdot \frac{59}{144}+1 \cdot \frac{43}{216}+2 \cdot \frac{169}{432}=\frac{43}{216}+\frac{338}{432}=\frac{53}{54} $
+
+## 8
+
+### Problem 
+
+>  Suppose Coin 1 lands heads with probability 0.7, and Coin 2 lands heads with probability 0.6. If the coin tossed today lands heads, we choose Coin 1 to toss tomorrow; if it lands tails, we choose Coin 2 to toss tomorrow. Initially, we toss either Coin 1 or Coin 2 with equal probability.
+> 
+> (a) What is the probability that Coin 1 is tossed on the third day after starting?
+> 
+> (b) If the coin tossed on Monday lands heads, what is the probability that the coin tossed on Friday of the same week also lands heads?
+
+### Solution (a)
+
+The probability transition matrix:
+
+$$
+\begin{array}{l|l|l|}
+\hline & 1 & 2 \\ 
+\hline 1 & 0.7 & 0.3 \\ 
+\hline 2 & 0.6 & 0.4 \\ 
+\hline 
+\end{array}
+$$
+
+Then for the third day:
+
+$[0.5, 0.5]\left[\begin{array}{ll}0.7&0.3\\ 0.6&0.4\end{array} \right]^2 = [0.665, 0.335]$
+
+So the probability is $0.665$
+
+### Solution (b)
+
+For Thursday:
+
+$[1, 0]\left[\begin{array}{ll}0.7&0.3\\ 0.6&0.4\end{array} \right]^3 = [0.6667, 0.3333]$
+
+Then for Friday:
+
+$P(H) = 0.6667 * 0.7 + 0.3333 * 0.6 = 0.6667$
+
+## 11 
+
+### Problem 
+
+> In Example 4.3, Gary was in glum 4 days ago. Given that he has not felt cheerful for a week, what is the probability that he is in glum today?
+>
+>  The transition probability matrix of $(C, S, G)$ (cheerful, so-so, glum) is: $\boldsymbol{P}=\left[\begin{array}{lll} 0.5 & 0.4 & 0.1 \\ 0.3 & 0.4 & 0.3 \\ 0.2 & 0.3 & 0.5 \end{array}\right]$
+
+### Solution
+
+Notice:
+
+$[\dfrac{7}{15}, \dfrac{8}{15}]\left[\begin{array}{ll}\dfrac{4}{7}&\dfrac{3}{7}\\ \dfrac{3}{8}&\dfrac{5}{8}\end{array}\right] = [\dfrac{7}{15}, \dfrac{8}{15}]$
+
+Therefore, we can approximate that:
+
+$[0, 1]\left[\begin{array}{ll}\dfrac{4}{7}&\dfrac{3}{7}\\ \dfrac{3}{8}&\dfrac{5}{8}\end{array}\right]^4 \approx \dfrac{8}{15}$
+
+## 12
+
+### Problem 
+
+> For a Markov chain $ \left\{X_{n}, n \geq 0\right\} $ with transition probabilities $ P_{i, j} $, consider the conditional probability $ \mathrm{P}\left(X_{n}=m \mid X_{0}=i, X_{k} \neq r\right. $ for $ \left.k=1, \ldots, n\right) $. Is this equal to the $ n $-step transition probability $ Q_{i, m}^{n} $ of a chain with state space excluding $ r $ and adjusted transitions $ Q_{i, j}=\frac{P_{i, j}}{1-P_{i, r}} $ ? Prove or provide a counterexample.
+
+### Solution
+
+Consider a Markov chain with states $ \{0,1,2\} $ where $ r=2 $.
+
+Transition probabilities from state 0: $ P_{0,0}=1 / 3, P_{0,1}=1 / 3, P_{0,2}=1 / 3 $.
+
+Transition probabilities from state $ 1: P_{1,0}=1 / 2, P_{1,1}=1 / 4, P_{1,2}=1 / 4 $.
+
+Then:
+
+$Q_{0,0}^{2}=(1 / 2)(1 / 2)+(1 / 2)(2 / 3)=1 / 4+1 / 3=7 / 12$
+
+$$
+\begin{array}{l }
+\mathrm{P}\left(X_{2}=0 \mid X_{0}=0, X_{1} \neq 2, X_{2} \neq 2\right)\\ 
+= \dfrac{1 / 9+1 / 6}{1 / 9+1 / 9+1 / 6+1 / 12}\\ 
+= 10 / 17 
+\end{array}
+$$
+
+Answer is No.
+
+## 13 
+
+### Problem
+
+> Prove that if $ \boldsymbol{P}^{r} $ has all positive entries for some $ r $, then $ \boldsymbol{P}^{n} $ has all positive entries for $ n \geq r $
+
+### Solution 
+
+We have:
+
+$ P^{n}(i, j)=\sum_{k} P^{r}(i, k) P^{n-r}(k, j)>0 $
