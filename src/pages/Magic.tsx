@@ -5,22 +5,22 @@ import Card from '../components/Card';
 const Magic: React.FC = () => {
   const cardsData = [
     {
-      imageUrl: '/src/assets/magic/Dice.jpg',
-      name: '张三',
-      shortDescription: '一个有趣的人',
-      longDescription: '张三是一个热爱编程和旅行的开发者，喜欢探索新技术，梦想走遍世界。',
+      imageUrl: '/assets/magic/Dice.jpg',
+      name: '打扁骰子',
+      shortDescription: '打扁骰子123456',
+      longDescription: '打扁骰子123456789123456789',
     },
     {
-      imageUrl: '/src/assets/magic/Handcuff.jpg',
-      name: '李四',
-      shortDescription: '设计师',
-      longDescription: '李四是一位才华横溢的设计师，擅长 UI/UX，作品充满创意和美感。',
+      imageUrl: '/assets/magic/Handcuff.jpg',
+      name: '千里眼1',
+      shortDescription: '千里眼123455678',
+      longDescription: '千里眼1123145468794651231',
     },
     {
-      imageUrl: '/src/assets/magic/SeeThrough.jpg',
-      name: '王五',
-      shortDescription: '自由职业者',
-      longDescription: '王五是一个自由职业者，喜欢挑战自我，专注于前端开发和写作。',
+      imageUrl: '/assets/magic/SeeThrough.jpg',
+      name: '逃脱手铐',
+      shortDescription: '逃脱手铐12654',
+      longDescription: '逃脱手铐45645498465123',
     },
   ];
 
