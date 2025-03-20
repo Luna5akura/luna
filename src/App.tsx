@@ -8,6 +8,7 @@ import PostDetails from "@/pages/PostDetails";
 import Warp from "@/pages/Warp";
 import Show from "@/pages/Show";
 import { FontToggleProvider } from "@/context/FontToggleContext";
+import Magic from "./pages/Magic";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/show" element={<Show />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/posts/:id" element={<PostDetails />} />
+                <Route path="/magic" element={<Magic />} />
               </Routes>
             </main>
             <Footer />
