@@ -165,3 +165,103 @@ If $P_{ij}\ne 0$,$i\to j, j \nrightarrow i, $ then $i$ can't be recurrent, becau
 
 ## Solution 
 
+We have:
+
+$\pi_j = \sum_{i}\pi_iP_{ij} = (\vec\pi, \vec P_j)$
+
+Therefore:
+
+$\vec\pi^T = \vec\pi^T P$
+
+Then we get:
+
+$\lambda = 1$
+
+With corresponding vector:
+
+$\vec v = (\dfrac{1}{M+1},\dots,\dfrac{1}{M+1})^T$
+
+Then we get the answer:
+
+$\pi_j = \dfrac{1}{M+1}$
+
+## Problem 21
+
+> A standard model for mutations at a specific DNA nucleotide site is a Markov chain where a nucleotide remains unchanged with probability $ 1-3 \alpha\left(0<\alpha<\frac{1}{3}\right) $ or changes to one of the other three nucleotides with equal probability $ \alpha $. 
+> 
+> (a) Show that $ P_{1,1}^{n}=\frac{1}{4}+\frac{3}{4}(1-4 \alpha)^{n} $. 
+> 
+> (b) What is the long-run proportion of time the chain spends in each state?
+
+## Solution (a)
+
+The matrix P is:
+
+$$
+\left[\begin{array}{cccc}
+1-3\alpha&\alpha &\alpha &\alpha \\ 
+\alpha&1-3\alpha &\alpha &\alpha \\ 
+\alpha&\alpha &1-3\alpha &\alpha \\ 
+\alpha&\alpha &\alpha &1-3\alpha \\ 
+\end{array}\right]
+$$
+
+When $n=1$, $P^n_{1,1} = 1 - 3\alpha$ holds.
+
+Assume it holds for $n-1$, then:
+
+$\begin{array}{l}P^n_{1,1}\\ 
+ = (1-3\alpha )P^{n-1}_{1,1}+\alpha(1-P^{n-1}_{1,1}) 
+ \\ = (1-3 \alpha )(\dfrac{1}{4} +\dfrac{3}{4}(1-4\alpha )^{n-1}) + \alpha (1-\dfrac{1}{4}-\dfrac{3}{4}(1-4\alpha )^{n-1}) \\ 
+ = \dfrac{1}{4} + \dfrac{3}{4}(1-4\alpha )^n\end{array} $
+
+## Solution (b)
+
+By symmetric, we can easily get:
+
+$\pi_j = \dfrac{1}{4}, j = 1, 2, 3, 4$
+
+## Problem 22
+
+> Let $ Y_{n} $ be the sum of $ n $ independent rolls of a fair six-sided die. Find $ \lim _{n \rightarrow \infty} \mathrm{P}\left\{Y_{n}\right. $ is a multiple of 13$ \} $.
+
+## Solution 
+
+Notice the chain is irreducible  and aperiodic, then:
+
+$ \lim _{n \rightarrow \infty} \mathrm{P}\left\{Y_{n}\right. $ is a multiple of 13$ \}= \dfrac{1}{13} $
+
+## Problem 23
+
+> In good weather years, the number of storms follows a Poisson distribution with mean 1 ; in bad weather years, the number of storms follows a Poisson distribution with mean 3 . The weather condition of any year depends only on the previous year's weather. After a good weather year, the next year is equally likely to be good or bad; after a bad weather year, the next year is twice as likely to be bad as good. Assume year 0 (last year) was a good weather year. 
+> 
+> (a) Find the expected total number of storms in the next two years (year 1 and year 2). 
+> 
+> (b) Find the probability that year 3 has no storms. 
+> 
+> (c) Find the long-run average number of storms per year.
+
+## Solution (a)
+
+Year 1:
+
+$E[X_1] = \dfrac{1}{2} + \dfrac{1}{2}\cdot 3 = 2$
+
+Year 2:
+
+$E[X_2] = \dfrac{5}{12} + \dfrac{7}{12}\cdot 3 = \dfrac{13}{6}$
+
+## Solution (b)
+
+$P(G_3) = \dfrac{29}{72}, P(B_3) = \dfrac{43}{72}$
+
+
+placeholder
+
+
+
+placeholder
+
+placeholder
+
+placeholder
