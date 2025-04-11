@@ -255,6 +255,320 @@ $E[X_2] = \dfrac{5}{12} + \dfrac{7}{12}\cdot 3 = \dfrac{13}{6}$
 
 $P(G_3) = \dfrac{29}{72}, P(B_3) = \dfrac{43}{72}$
 
+## Solution (c)
+
+Probability transition matrix:
+
+$P = \left(\begin{array}{ll}
+\dfrac{1}{2} & \dfrac{1}{2}\\ 
+\dfrac{1}{3} & \dfrac{2}{3}
+\end{array}\right)$
+
+Then solve the $\pi $:
+
+$\pi = (\dfrac{2}{5}, \dfrac{3}{5})^T$
+
+Then:
+
+$\dfrac{2}{5}\cdot 1 +\dfrac{3}{5}\cdot 3 = \dfrac{11}{5}$
+
+## Problem 26
+
+> Prove: repeatedly moving a randomly selected card to the top eventually results in a uniform distribution over all $ n $ ! permutations.
+
+
+## Solution 
+
+Notice if we do it reversely, that is `remove the top card and insert into position $i$`, every move has possibility  $\dfrac{1}{n}$ to tansit to another state, so it is double stochastic.
+
+## Problem 27
+
+> Any individual in a population of $ N $ may be active or inactive in each time period. If an individual is active in a given time period, then independently of all other individuals, the probability that they are also active in the next time period is $ \alpha $. Similarly, if an individual is inactive in a given time period, then independently of all other individuals, the probability that they remain inactive in the next time period is $ \beta $. Let $ X_{n} $ denote the number of active individuals in time period $ n $.
+> 
+> (a) Prove that $ \left\{X_{n}, n \geqslant 0\right\} $ is a Markov chain.
+> 
+> (b) Find $ \mathrm{E}\left[X_{n} \mid X_{0}=i\right] $.
+> 
+> (c) Derive an expression for the transition probabilities.
+> 
+> (d) Find the long-run proportion of time that exactly $ j $ individuals are active.
+
+## Solution (a)
+
+Notice state $n+1$ only depends on state $n$
+
+## Solution (b)
+
+$E[X_{n+1}|X_n] = \alpha X_n + (N-X_n)(1-\beta )$
+
+With induction:
+
+$ E\left[X_{n} \mid X_{0}=i\right]=\left(i-\dfrac{N(1-\beta)}{2-\alpha-\beta}\right)(\alpha+\beta-1)^{n}+\dfrac{N(1-\beta)}{2-\alpha-\beta} $
+
+## Solution (c)
+
+$P(X_{n+1}=j|X_n=k) = \sum_{m=\max (0, j-(N-k))}^{\min (k, j)}\binom{k}{m} \alpha^{m}(1-\alpha)^{k-m} \cdot\binom{N-k}{j-m}(1-\beta)^{j-m} \beta^{N-k-(j-m)}$
+
+## Solution (d)
+
+For $ N=1 $, the stationary distribution $ \pi $ satisfies:
+$
+\pi_{1}=\dfrac{1-\beta}{2-\alpha-\beta}, \quad \pi_{0}=\frac{1-\alpha}{2-\alpha-\beta}
+$
+
+For general $ N $, individuals act independently. The stationary distribution is binomial with parameters $ N $ and $ p=\dfrac{1-\beta}{2-\alpha-\beta} $ :
+$
+\pi_{j}=\binom{N}{j}\left(\dfrac{1-\beta}{2-\alpha-\beta}\right)^{j}\left(\frac{1-\alpha}{2-\alpha-\beta}\right)^{N-j}
+$
+
+## Problem 36
+
+> A process changes its state daily according to a two-state Markov chain. If the process is in state $ i $ on one day, then the next day it is in state $ j $ with probability $ P_{i, j} $, where
+$
+P_{0,0}=0.4, \quad P_{0,1}=0.6, \quad P_{1,0}=0.2, \quad P_{1,1}=0.8
+$
+
+Each day, a message is sent. If the Markov chain is in state $ i $ on that day, the probability that the message sent is a good message is $ p_{i} $, and the probability that it is a bad message is $ q_{i}=1-p_{i,} $ for $ i=0,1 $.
+> 
+> (a) If the process is in state 0 on Monday, what is the probability that a good message is sent on Tuesday?
+> 
+> (b) If the process is in state 0 on Monday, what is the probability that a good message is sent on Friday?
+> 
+> (c) In the long run, what is the proportion of messages that are good?
+> 
+> (d) If a good message is sent on day $ n $, let $ Y_{n}=1 $; otherwise, let $ Y_{n}=2 $. Is $ \left\{Y_{n}, n \geqslant 1\right\} $ a Markov chain? If yes, provide its transition probability matrix. If no, briefly explain why not.
+
+## Solution (a)
+
+$0.4p_0+0.6p_1$
+
+## Solution (b)
+
+We have:
+
+$ P^{4}=\left[\begin{array}{ll}0.2512 & 0.7488 \\ 0.2496 & 0.7504\end{array}\right] $
+
+Then it's:
+
+$0.2512p_0 + 0.7488p_1$
+
+## Solution (c)
+
+Solve $\pi^T = \pi^T P$ we get:
+
+$\pi = (\dfrac{1}{4}, \dfrac{3}{4})^T$
+
+Then:
+
+$0.25p_0+0.75p_1$
+
+## Solution (d)
+
+No.
+
+$Y_{n+1}$ is determined by $X_n$, instead of $Y_n$
+
+## Problem 37
+
+> Prove that the stationary probabilities of a Markov chain with transition probabilities $ P_{i, j} $ are also the stationary probabilities of the Markov chain defined by the transition probabilities
+$
+Q_{i, j}=P_{i, j}^{k}
+$
+for a specific positive integer $ k $.
+
+## Solution 
+
+we have:
+
+$\pi^T = \pi^T P$
+
+Therefore:
+
+$\pi^T = \pi^T P = \pi^T = \pi^T P^2 = \pi^T = \pi^T P^k = \pi^T = \pi^T Q$
+
+## Problem 42
+
+> Let $ A $ be a set of states, and $ A^{\mathrm{c}} $ be the set of remaining states.
+(a) What does $ \sum_{i \in A} \sum_{j \in A^{c}} \pi_{i} P_{i j} $ represent?
+(b) What does $ \sum_{i \in A^{c}} \sum_{j \in A} \pi_{i} P_{i j} $ represent?
+(c) Explain the identity
+$
+\sum_{i \in A} \sum_{j \in A^{c}} \pi_{i} P_{i j}=\sum_{i \in A^{c}} \sum_{j \in A} \pi_{i} P_{i j}
+$
+
+## Solution (a)
+
+Probability of $A$ flows to $A^C$
+
+
+## Solution (b)
+
+Probability of $A^C$ flows to $A$
+
+## Solution (c)
+
+Two flows must be equal
+
+## Problem 45
+
+> Consider an irreducible finite Markov chain with states $ 0,1, \cdots, N $.
+> 
+> (a) Starting from state $ i $, what is the probability that the process eventually visits state $ j $ ? Provide an explanation.
+> 
+> (b) Let $ x_{i}=\mathrm{P}\{ $ visiting state $ N $ before visiting state $ 0 \mid $ starting at $ i\} $. Compute the system of linear equations satisfied by $ x_{i} $, for $ i=0,1, \cdots, N $.
+> 
+> (c) If for $ i=1, \cdots, N-1 $, it holds that $ \sum_{j} j P_{i j}=i $, prove that $ x_{i}=i / N $ is a solution to the equations in (b).
+
+## Solution (a)
+
+1
+
+finite and irreducible, therefore every state is **recurrent**
+
+## Solution (b)
+
+We have:
+
+$ \left\{\begin{array}{l}x_{i}=\sum_{j=0}^{N} P_{i j} x_{j} \quad \text { for } i=1,2, \ldots, N-1 \\ x_{0}=0 \\ x_{N}=1\end{array}\right. $
+
+## Solution (c)
+
+$\begin{array}{l} 
+\sum_{j=0}^{N} P_{i j} x_{j} \\ 
+=\sum_{j=0}^{N} P_{i j} \cdot \frac{j}{N} \\ 
+=\frac{1}{N} \sum_{j=0}^{N} j P_{i j} 
+\\ = \frac{i}{N} 
+\\ = x_i
+\end{array}$
+
+## Problem 47
+
+> Consider an ergodic Markov chain $ \left\{X_{n}, n \geqslant 0\right\} $ with limiting probabilities $ \pi_{i} $. Define the process $ \left\{Y_{n}, n \geqslant 1\right\} $ by $ Y_{n}=\left(X_{n-1}, X_{n}\right) $. That is, $ Y_{n} $ tracks the last two states of the original chain. Is $ \left\{Y_{n}, n \geqslant 1\right\} $ a Markov chain? If so, determine its transition probabilities and find
+> $\lim _{n \rightarrow \infty} \mathrm{P}\left\{Y_{n}=(i, j)\right\}$
+
+## Solution 
+
+$ P\left(Y_{n+1}=(j, l) \mid Y_{n}=(i, j)\right)=P\left(X_{n+1}=l \mid X_{n}=j, X_{n-1}=i\right) = P_{jl}$.
+
+Therefore, $Y_n$ is a Markov chain 
+
+$ P\left(Y_{n+1}=(k, l) \mid Y_{n}=(i, j)\right)=\left\{\begin{array}{ll}P_{j l} & \text { if } k=j, \\ 0 & \text { if } k \neq j .\end{array}\right. $
+
+$ \lim _{n \rightarrow \infty} \mathrm{P}\left\{Y_{n}=(i, j)\right\}=\pi_{i} P_{i j} $.
+
+## Problem 57
+
+> A particle moves between $ n+1 $ vertices located on a circle in the following manner: at each step, it moves one step clockwise with probability $ p $, or one step counterclockwise with probability $ q= $ $ 1-p $. Starting from a special state 0 , let $ T $ be the first time it returns to state 0 . Find the probability that all states have been visited before $ T $.
+
+## Solution 
+
+if first move is $p$ and goes to 1, and we want to visit $n+1$ before $0$, we have:
+
+
+We have:
+
+$ \left\{\begin{array}{l}x_{i}=px_{i-1} + (1-p)x_{i+1} \quad \text { for } i=1,2, \ldots, N \\ x_{0}=0 \\ x_{N+1}=1\end{array}\right. $
+
+When $p\ne \dfrac{1}{2}$ We can get:
+
+$x_1 = \dfrac{1-\frac{p}{q}}{1-\frac{p^n}{q^n}}$
+
+Similarly we can get the answer:
+
+$P = px_1 + qy_1 = p\dfrac{1-\frac{p}{q}}{1-\frac{p^n}{q^n}} + q\dfrac{1-\frac{q}{p}}{1-\frac{q^n}{p^n}}$
+
+When $p = \dfrac{1}{2}$:
+
+$x_1 = \dfrac{1}{2}$
+
+$P = px_1+qy_1 = \dfrac{1}{2}$
+
+## Problem 59
+
+> For the gambler's ruin model in Section 4.5.1, it is known that a gambler starts with wealth $ i $ (where $ i=0,1, \ldots, N) $, and $ M_{i} $ denotes the average number of bets required until the gambler either goes bankrupt (wealth reaches 0 ) or achieves wealth $ N $. Prove that $ M_{i} $ satisfies the following system of equations:
+$
+M_{0}=M_{N}=0 ; \quad M_{i}=1+p M_{i+1}+q M_{i-1}, \quad \text { for } i=1, \ldots, N-1
+$
+
+> Solve the above system of equations to obtain:
+$
+M_{i}=\left\{\begin{array}{ll}
+i(N-i), & \text { if } p=\frac{1}{2} \\
+\frac{i}{q-p}-\frac{N}{q-p} \frac{1-(q / p)^{i}}{1-(q / p)^{N}}, & \text { if } p \neq \frac{1}{2}
+\end{array}\right.
+$
+
+## Solution 
+
+It is trivial that:$ M_{0}=M_{N}=0 ; \quad M_{i}=1+p M_{i+1}+q M_{i-1}, \quad i=1, \cdots, N-1 $
+
+When $p = \dfrac{1}{2}$:
+
+$p(M_{i+1}-M_i) - q(M_i - M_{i-1}) = -1 $
+
+Then:
+
+$M_N - M_{N-1} = -\dfrac{1}{p} -\dfrac{q}{p^2}-\cdots-\dfrac{q^{
+N-2}}{p^{N-1}} +\dfrac{q^{N-1}}{p^{N-1}}M_1= -\dfrac{1-\frac{q^{N-1}}{p^{N-1}}}{p-q}+\dfrac{q^{N-1}}{p^{N-1}}M_1$
+
+Then:
+
+$M_N = \dfrac{N}{p-q}-\dfrac{1-\frac{q^N}{p^N}}{(p-q)(1-\frac{q}{p})}+\dfrac{1-\frac{q^N}{p^N}}{1-\frac{q}{p}}M_1 = 0 $
+
+Then:
+
+$M_1 = \dfrac{1}{p-q}-\dfrac{N}{p(1-\frac{q^N}{p^N})}$
+
+Therefore:
+
+$M_i =  \frac{i}{q-P}-\frac{N}{q-P} \frac{1-(q / p)^{i}}{1-(q / p)^{N}}$
+
+When $p=\dfrac{1}{2}$:
+
+$M_N - M_{N-1} = -2(N-1)+M_1$
+
+Then:
+
+$M_N = -N(N-1)+(N-1)M_1 = 0$
+
+Then:
+
+$M_1 = \dfrac{1}{N}$
+
+Then:
+
+$M_i = i(N-i)$
+
+Therefore:
+
+$ M_{i}=\left\{\begin{array}{ll}i(N-i), & \text { if } P=\frac{1}{2} \\ \frac{i}{q-P}-\frac{N}{q-P} \frac{1-(q / p)^{i}}{1-(q / p)^{N}}, & \text { if } P \neq \frac{1}{2}\end{array}\right. $
+
+
+## Problem 61
+
+> Suppose in the gambler's ruin problem, the probability of winning a round depends on the gambler's current wealth. Specifically, let $ \alpha_{i} $ be the probability that the gambler wins a round when his wealth is $ i $. Given that the gambler's initial wealth is $ i $, let $ P(i) $ denote the probability that the gambler's wealth reaches $ N $ before reaching 0 .
+> 
+> (a) Derive a formula relating $ P(i) $ to $ P(i-1) $ and $ P(i+1) $.
+> 
+> (b) Using the same method as in the gambler's ruin problem, solve the equation for $ P(i) $ from part (a).
+> 
+> (c) Suppose there are initially $ i $ balls in jar 1 and $ N-i $ balls in jar 2, and each time a ball is randomly selected from the $ N $ balls and moved to the other jar. Find the probability that jar 1 becomes empty before jar 2.
+
+## Solution (a)
+
+$ P(i)=\alpha_{i} P(i+1)+\left(1-\alpha_{i}\right) P(i-1) $
+
+## Solution (b)
+
+We omit the steps:
+
+$ P(i)=\frac{\sum_{j=1}^{i}(-1)^{j-1} \prod_{k=1}^{j-1} \frac{1-\alpha_{k}}{\alpha_{k}}}{\sum_{j=1}^{N}(-1)^{j-1} \prod_{k=1}^{j-1} \frac{1-\alpha_{k}}{\alpha_{k}}} $
+
+## Solution (c)
+
+$\alpha _i = \dfrac{i}{N}$, then:
+
+$ \frac{\sum_{j=i+1}^{N}(j-1)!(N-j)!}{\sum_{j=1}^{N}(j-1)!(N-j)!} $
 
 placeholder
 
