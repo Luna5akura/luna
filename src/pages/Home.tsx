@@ -1,25 +1,25 @@
-// Home.tsx
+// src/pages/Home.tsx (assuming it's in pages; adjust path if needed)
 import BlogList from '@/components/BlogList';
-import {useLocation} from "react-router-dom";
-import {posts} from "@/data/posts";
-import Sidebar from "@/components/Sidebar";
-import {useEffect, useState} from 'react';
+import { useLocation } from 'react-router-dom';
+import Sidebar from '@/components/Sidebar';
+import { useEffect, useState } from 'react';
 import SearchModal from '@/components/SearchModal';
+import { usePosts } from '@/hooks/usePosts'; // New hook
 
 const ITEMS_PER_PAGE = 5;
 
 const Home: React.FC = () => {
+  const { posts } = usePosts(); // Use shared hook
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
   const allCategories = Array.from(new Set(posts.map((post) => post.category)));
 
-  // 新增状态
+  // Search states
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-
-  // 键盘事件监听
+  // Keyboard event listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '/' && !isSearchVisible) {

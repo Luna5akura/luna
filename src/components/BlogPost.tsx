@@ -28,7 +28,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
       sm:text-sm
       lg:text-base
       ">{post.excerpt}</p>
-      <Link to={`/posts/${post.id}`}>
+      <Link to={`/posts/${post.contentKey}`}>
         <Button variant="default" className="font-semibold bg-sky-900 text-sky-100 hover:bg-sky-600 focus:outline-none
         text-sm
         sm:text-sm

@@ -1,2 +1,0 @@
-### te iru/te aru
-
