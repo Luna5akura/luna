@@ -7,45 +7,50 @@ import rehypeSlug from "rehype-slug";
 import rehypeKatex from "rehype-katex";
 import TableOfContents from "@/components/TableOfContents";
 import { MarkdownContent } from "@/components/MarkdownContent";
-import { posts } from "@/data/posts";
 import { Post } from "@/types";
 import remarkWrapSections from "@/utils/remarkWarpSections";
 import "katex/dist/katex.min.css";
 import SearchModal from "@/components/SearchModal";
+import matter from "gray-matter"; // Add this import (install via: npm install gray-matter)
 
-const markdownFiles = import.meta.glob("../posts/*.md", {
+const markdownFiles = import.meta.glob("../posts/**/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
 });
 
+// Helper function to title-case a string
+const toTitleCase = (str: string) => {
+  return str.replace(/[-_]/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+};
+
 const PostDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>(); // Changed from 'id' to 'slug' for clarity; update your router accordingly (e.g., path="/post/:slug")
   const [isTocOpen, setIsTocOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]); // Dynamically generated posts
+  const [post, setPost] = useState<Post | undefined>(undefined);
+  const [markdownContent, setMarkdownContent] = useState<string | undefined>(undefined);
 
-
-  // 键盘事件监听
+  // Keyboard event listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '/' && !isSearchVisible) {
+      if (e.key === "/" && !isSearchVisible) {
         e.preventDefault();
         setIsSearchVisible(true);
       }
-      if (e.key === 'Escape' && isSearchVisible) {
+      if (e.key === "Escape" && isSearchVisible) {
         setIsSearchVisible(false);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isSearchVisible]);
 
-
+  // Resize handler
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -55,31 +60,53 @@ const PostDetails: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const post: Post | undefined = posts.find((p) => p.id === Number(id));
-  if (!post) {
+  // Dynamically load and parse all Markdown files
+  useEffect(() => {
+    const generatedPosts: Post[] = [];
+    const contentModules: { [key: string]: string } = {};
+
+    let nextId = 1; // Incremental ID starting from 1 (can adjust if needed)
+
+    for (const path in markdownFiles) {
+      const rawContent = markdownFiles[path] as string;
+      const match = path.match(/\/posts\/(.*)\.md$/);
+      if (match) {
+        const key = match[1]; // e.g., 'subfolder/file' for nested files
+        const { data, content } = matter(rawContent); // Parse frontmatter
+
+        contentModules[key] = content;
+
+        // Generate Post with frontmatter or defaults
+        generatedPosts.push({
+          id: nextId++, // Auto-increment ID; alternatively, use a hash if IDs need to be stable
+          title: data.title || toTitleCase(key),
+          date: data.date || new Date().toISOString().split("T")[0], // Default to current date if no frontmatter
+          excerpt: data.excerpt || content.slice(0, 150) + "...", // Auto-generate excerpt if missing
+          contentKey: key,
+          author: data.author || "Anonymous",
+          category: data.category || key.split("/")[0] || "Uncategorized", // Use first folder as category if nested
+        });
+      }
+    }
+
+    setPosts(generatedPosts.sort((a, b) => a.id - b.id)); // Sort by ID or adjust as needed (e.g., by date)
+  }, []);
+
+  // Find the specific post and content based on slug (which is contentKey)
+  useEffect(() => {
+    if (posts.length > 0 && slug) {
+      const foundPost = posts.find((p) => p.contentKey === slug);
+      if (foundPost) {
+        setPost(foundPost);
+        setMarkdownContent((markdownFiles[`../posts/${slug}.md`] as string) || undefined);
+      }
+    }
+  }, [posts, slug]);
+
+  if (!post || !markdownContent) {
     return (
       <div className="container mx-auto mt-10 pt-16">
         <h2 className="text-2xl font-bold text-sky-100">404 NOT FOUND</h2>
-      </div>
-    );
-  }
-
-  const contentModules: { [key: string]: string } = {};
-  for (const path in markdownFiles) {
-    const content = markdownFiles[path] as string;
-    const match = path.match(/\/([a-zA-Z0-9_-]+)\.md$/);
-    if (match) {
-      const key = match[1];
-      contentModules[key] = content;
-    }
-  }
-
-  const markdownContent = contentModules[post.contentKey];
-
-  if (!markdownContent) {
-    return (
-      <div className="container mx-auto mt-10 pt-16">
-        <h2 className="text-2xl font-bold text-sky-100">Content Not Found</h2>
       </div>
     );
   }
@@ -122,9 +149,9 @@ const PostDetails: React.FC = () => {
           onSearchTermChange={setSearchTerm}
           onClose={() => {
             setIsSearchVisible(false);
-            setSearchTerm('');
+            setSearchTerm("");
           }}
-          posts={posts}
+          posts={posts} // Now using dynamically generated posts
         />
       )}
     </div>
