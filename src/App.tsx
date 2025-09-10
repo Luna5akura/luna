@@ -21,7 +21,7 @@ function App() {
                 <Route path="/warp" element={<Warp />} />
                 <Route path="/show" element={<Show />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/posts/:id" element={<PostDetails />} />
+                <Route path="/posts/*" element={<PostDetails />} /> {/* Updated to handle string slugs with possible nested paths (e.g., /posts/QC/QC_1) */}
                 <Route path="/magic" element={<Magic />} />
               </Routes>
             </main>

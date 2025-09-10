@@ -1,4 +1,14 @@
 // src/data/posts.ts
+
+//frontmatter (YAML at the top of the .md file, e.g., ---\ntitle: My Title\ndate: 2024-01-01\n---\nContent here). If no frontmatter, defaults are used:
+
+// Title: Derived from the file path (e.g., subfolder/my_file becomes "Subfolder My File").
+// Date: Current date.
+// Excerpt: First 150 characters of content.
+// Author: "Anonymous".
+// Category: First subfolder name or "Uncategorized".
+
+
 import { Post } from '@/types';
 
 export const posts: Post[] = [
