@@ -1,6 +1,7 @@
 ---
 title: Financial Engineer - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # 两个基本问题

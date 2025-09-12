@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Paper - Week 3
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Channel Structures of Online Retail Platforms

@@ -1,6 +1,7 @@
 ---
 title: Science Create Startup - Week 0
 category: Notes
+date: 2025-9-10 
 ---
 
 # 科技创新创业

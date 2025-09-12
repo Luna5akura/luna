@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Paper - Week 1
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # The Bright Side of Supplier Encroachment

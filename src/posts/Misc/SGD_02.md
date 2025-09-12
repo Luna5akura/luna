@@ -1,5 +1,6 @@
 ---
 title: Strict Game Development
+date: 2025-9-10 
 ---
 
 # MDA

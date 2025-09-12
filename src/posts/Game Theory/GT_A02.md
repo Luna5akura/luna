@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Assignment - Week 2
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1.2 

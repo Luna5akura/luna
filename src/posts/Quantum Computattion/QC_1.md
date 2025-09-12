@@ -1,5 +1,6 @@
 ---
 title: Quantum Computation - Week 1
+date: 2025-9-10 
 ---
 
 # Exercise 2.58

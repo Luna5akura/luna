@@ -1,6 +1,7 @@
 ---
 title: Financial Engineer - Week 9
 category: Notes
+date: 2025-9-10 
 ---
 
 FE_9.md

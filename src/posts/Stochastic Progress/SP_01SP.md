@@ -1,6 +1,7 @@
 ---
 title: Stochastic Progress - Special 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # 一维随机游走是暂态还是常返态？

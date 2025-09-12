@@ -1,5 +1,6 @@
 ---
 title: Cure Dolly - Week 4
+date: 2025-9-10 
 ---
 
 # あいだ
