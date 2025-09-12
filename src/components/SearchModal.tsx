@@ -68,8 +68,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
     }
   };
 
-  const handlePostClick = (id: number) => {
-    navigate(`/posts/${id}`);
+  const handlePostClick = (post: Post) => {
+    navigate(`/posts/${post.contentKey}`);
     onClose();
   };
 
@@ -99,10 +99,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
               tabIndex={0}
               className={`p-2 hover:bg-slate-700 rounded cursor-pointer text-sky-100
                 ${focusedIndex === index ? 'bg-slate-700 ring-2 ring-sky-400' : ''}`}
-              onClick={() => handlePostClick(post.id)}
+              onClick={() => handlePostClick(post)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handlePostClick(post.id);
+                  handlePostClick(post);
                 }
               }}
             >
