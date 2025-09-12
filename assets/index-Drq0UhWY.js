@@ -135,6 +135,7 @@ Error generating stack: `+$.message+`
                 ${g===_?"bg-sky-900 text-sky-100":"bg-sky-100 text-sky-900"}`,onClick:()=>b(_),children:_})},_))]})]})]})},SearchModal=({searchTerm:e,onSearchTermChange:a,onClose:o,posts:c})=>{const d=useNavigate(),$=reactExports.useRef(null),g=reactExports.useRef([]),[b,_]=reactExports.useState(-1),j=c.filter(tt=>tt.title.toLowerCase().includes(e.toLowerCase()));reactExports.useEffect(()=>{var tt;(tt=$.current)==null||tt.focus(),g.current=[]},[]),reactExports.useEffect(()=>{_(-1)},[e]);const _e=tt=>{var nt,at,lt,ht,ot;if(tt.key==="Tab"&&j.length>0){tt.preventDefault();const st=j.length-1;if(tt.shiftKey)if(b<=0)(nt=$.current)==null||nt.focus(),_(-1);else{const ut=Math.max(0,b-1);_(ut),(at=g.current[ut])==null||at.focus()}else if(b===-1)_(0),(lt=g.current[0])==null||lt.focus();else if(b<st){const ut=b+1;_(ut),(ht=g.current[ut])==null||ht.focus()}else(ot=$.current)==null||ot.focus(),_(-1)}},et=tt=>{d(`/posts/${tt.contentKey}`),o()};return jsxRuntimeExports.jsx("div",{className:"fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center pt-20 z-50",onClick:o,children:jsxRuntimeExports.jsxs("div",{className:"bg-slate-800 p-4 rounded-lg w-full max-w-xl",onClick:tt=>tt.stopPropagation(),children:[jsxRuntimeExports.jsx("input",{ref:$,type:"text",placeholder:"Search posts...",className:"w-full p-2 rounded bg-slate-700 text-sky-100",value:e,onChange:tt=>a(tt.target.value),onKeyDown:_e}),jsxRuntimeExports.jsx("div",{className:"mt-2 max-h-60 overflow-auto",children:j.map((tt,nt)=>jsxRuntimeExports.jsx("div",{ref:at=>g.current[nt]=at,tabIndex:0,className:`p-2 hover:bg-slate-700 rounded cursor-pointer text-sky-100
                 ${b===nt?"bg-slate-700 ring-2 ring-sky-400":""}`,onClick:()=>et(tt),onKeyDown:at=>{at.key==="Enter"&&et(tt)},children:tt.title},tt.id))})]})})},__vite_glob_0_0=`---
 title: Algebra Chapter 0 - Week 1
+date: 2025-9-10 
 ---
 
 # Exercise 1.1
@@ -248,6 +249,7 @@ Transitivity: $b-a = x\\in\\mathbb{Z}, c-b = y\\in\\mathbb{Z}, y + x\\in\\mathbb
 $R/\\sim \\cong [0,1)$
 `,__vite_glob_0_1=`---
 title: Algebra Chapter 0 - Week 2
+date: 2025-9-10 
 ---
 
 # Function between sets
@@ -305,6 +307,7 @@ monomorphism / monic : $f\\circ \\alpha' = f\\circ \\alpha' \\Rightarrow \\alpha
 `,__vite_glob_0_2=`---
 title: Business English - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Introduction 
@@ -362,6 +365,7 @@ For example
 - `,__vite_glob_0_3=`---
 title: Business English - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # Reading Aim
@@ -371,6 +375,7 @@ category: Notes
 `,__vite_glob_0_4=`---
 title: Business English - Week 6
 category: Assignments
+date: 2025-9-10 
 ---
 
 - Objective:
@@ -410,6 +415,7 @@ Specialized Terms Used:
 `,__vite_glob_0_5=`---
 title: Business English - Week 8
 category: Notes
+date: 2025-9-10 
 ---
 
 No
@@ -436,6 +442,7 @@ younger retailer: better: mix channel sortment - GAP -
 # Brick-n-mortar`,__vite_glob_0_6=`---
 title: Business English - Week 9
 category: Notes
+date: 2025-9-10 
 ---
 
 # Product-Service System
@@ -470,6 +477,7 @@ category: Notes
 `,__vite_glob_0_7=`---
 title: Business English - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 # Unit 1
@@ -981,6 +989,7 @@ $$
 
 `,__vite_glob_0_8=`---
 title: Business Paper - Week 9
+date: 2025-9-10 
 ---
 
 # Advance Admission Scheduling via Resource Satisficing
@@ -1389,6 +1398,7 @@ $$
 
 通过优化(4)式子，最优 $\\beta^* = 0.4$，表示资源满足指数的最大值为0.4，确保所有资源在所有天数上都不会超载。这个例子展示了如何将资源满足优化问题应用于医院调度，平衡已知和潜在患者的需求。`,__vite_glob_0_9=`---
 title: Business Paper - Week 1
+date: 2025-9-10 
 ---
 
 
@@ -2734,6 +2744,7 @@ For interesting directions:
 
 `,__vite_glob_0_10=`---
 title: Business Paper - Week 2
+date: 2025-9-10 
 ---
 
 # Model
@@ -3137,6 +3148,7 @@ placeholder
 
 `,__vite_glob_0_11=`---
 title: Business Paper - Week 3
+date: 2025-9-10 
 ---
 
 # Model Evaluation Framework
@@ -3750,6 +3762,7 @@ placeholder
 
 placeholder`,__vite_glob_0_12=`---
 title: Business Paper - Week 4
+date: 2025-9-10 
 ---
 
 # Preliminaries
@@ -4567,6 +4580,7 @@ $ \\begin{aligned} \\operatorname{AOG}\\left(\\overline{\\mathbf{x}}_{\\mathrm{C
 
 `,__vite_glob_0_13=`---
 title: Business Paper - Week 5
+date: 2025-9-10 
 ---
 
 # 1. Examples & Glossary
@@ -6662,6 +6676,7 @@ placeholder
 
 `,__vite_glob_0_14=`---
 title: Business Paper - Week 6
+date: 2025-9-10 
 ---
 
 # Crowdsourcing Exploration 
@@ -7046,6 +7061,7 @@ The designer can choose for each message $ m \\in M $ used in period $ t $ an ac
 
 `,__vite_glob_0_15=`---
 title: Business Paper - Week 7
+date: 2025-9-10 
 ---
 
 $x$: Covariates 
@@ -7101,6 +7117,7 @@ $z^*(x) = \\argmin_{z\\in\\mathcal Z}\\mathbb E[c(z;Y(z))\\mid X=x]$
 
 `,__vite_glob_0_16=`---
 title: Business Paper - Week 8
+date: 2025-9-10 
 ---
 
 # 3 Predicting Delivery Time 
@@ -7306,6 +7323,7 @@ Idea
 - residual with z 
 `,__vite_glob_0_17=`---
 title: Cure Dolly - Week 1
+date: 2025-9-10 
 ---
 
 # Quick review
@@ -7397,6 +7415,7 @@ Actually: lower yourself and raise the person whom you are talking.
 
 `,__vite_glob_0_18=`---
 title: Cure Dolly - Week 2
+date: 2025-9-10 
 ---
 
 # い and な adjectives
@@ -7477,6 +7496,7 @@ to command (it's time to XXX)---
 
 `,__vite_glob_0_19=`---
 title: Cure Dolly - Week 3
+date: 2025-9-10 
 ---
 
 # も
@@ -7534,6 +7554,7 @@ a-stem + る is 自動詞
 - e-stem + る flips the meaning 従う(shitagau): follow / 従える:  be accompanied by
 `,__vite_glob_0_20=`---
 title: Cure Dolly - Week 4
+date: 2025-9-10 
 ---
 
 # あいだ
@@ -7599,6 +7620,7 @@ past negative ませんでした
 
 `,__vite_glob_0_21=`---
 title: Cure Dolly - Week 5
+date: 2025-9-10 
 ---
 
 ### te iru/te aru
@@ -7606,6 +7628,7 @@ title: Cure Dolly - Week 5
 `,__vite_glob_0_22=`---
 title: Econometrics - Week 1
 category: Notes
+date: 2025-9-12
 ---
 
 # 1 复习
@@ -7949,6 +7972,7 @@ placeholder
 placeholder`,__vite_glob_0_23=`---
 title: Econometrics - Detail - Week 1
 category: Notes
+date: 2025-9-12
 ---
 
 
@@ -8083,6 +8107,7 @@ placeholder
 `,__vite_glob_0_24=`---
 title: Financial Engineer - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # 投资收益分析
@@ -8249,6 +8274,7 @@ $ \\begin{array}{l}\\frac{T_{2} \\cdot R_{T_{2}}-T_{1} \\cdot R_{T_{1}}}{\\left(
 `,__vite_glob_0_25=`---
 title: Financial Engineer - Week 2
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 问题
@@ -8300,6 +8326,7 @@ $R = 1.6523$
 `,__vite_glob_0_26=`---
 title: Financial Engineer - Week 4
 category: Notes
+date: 2025-9-10 
 ---
 
 # Model 
@@ -8437,6 +8464,7 @@ $ \\begin{aligned} \\operatorname{Var}\\left(S_{t}\\right) & =E\\left(S_{t}^{2}\
 `,__vite_glob_0_27=`---
 title: Financial Engineer - Week 5
 category: Notes
+date: 2025-9-10 
 ---
 
 # 期望效用准则
@@ -8496,6 +8524,7 @@ $A(r)>0 \\Lrarr U''(r)<0$: 风险规避
 `,__vite_glob_0_28=`---
 title: Financial Engineer - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # 两个基本问题
@@ -8562,6 +8591,7 @@ placeholder
 `,__vite_glob_0_29=`---
 title: Financial Engineer - Week 9
 category: Notes
+date: 2025-9-10 
 ---
 
 FE_9.md
@@ -8603,6 +8633,7 @@ nto a big deal
 \`\`\``,__vite_glob_0_30=`---
 title: Financial Engineer - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 # 01 绪论
@@ -9624,6 +9655,7 @@ Black－Scholes 微分方程
 - 避免负的概率的方法：- 取一个期货合约，当前的期货价格为 $ F $ 。该合约与期权合约有相同的标的资产和到期日（ $ T $ ）。－用二叉树模拟 $ F $ 。$ > $ 在树图中时间为 $ i \\Delta t $ 的每个结点上，通过以下公式计算标的资产的价格 $ S $ ：$$S=F e^{-r(T-i \\Delta t)}$$`,__vite_glob_0_31=`---
 title: Game Theory - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # Static 
@@ -9715,7 +9747,14 @@ When in a combination:
 
 - Every player **CANNOT** do better by choosing a different choice.
 
-`,__vite_glob_0_32=`# Problem 1.4
+`,__vite_glob_0_32=`---
+title: Game Theory - Assignment - Week 3
+category: Assignments 
+date: 2025-9-10 
+---
+
+
+# Problem 1.4
 
 ## Problem 
 
@@ -9825,6 +9864,7 @@ $$
 `,__vite_glob_0_33=`---
 title: Game Theory - Paper - Week 3
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Channel Structures of Online Retail Platforms
@@ -10082,6 +10122,7 @@ $$
 `,__vite_glob_0_34=`---
 title: Game Theory - Week 4
 category: Notes
+date: 2025-9-10 
 ---
 
 
@@ -10140,6 +10181,7 @@ $u_i(g_1,\\dots,g_n) = g_i \\cdot v(g_1+\\dots+g_n)-cg_1$
 `,__vite_glob_0_35=`---
 title: Game Theory - Assignment - Week 4
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1
@@ -10228,6 +10270,7 @@ $\\left(\\left(\\frac{2 w_{1}-w_{2}}{w_{1}+w_{2}}, \\frac{2 w_{2}-w_{1}}{w_{1}+w
 `,__vite_glob_0_36=`---
 title: Game Theory - Paper - Week 4
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Quality in Supply Chain Encroachment
@@ -10433,13 +10476,9 @@ b+k(u-u_0)^2&u>u_0
 
 
 `,__vite_glob_0_37=`---
-title: Game Theory - Week 5
-category: Notes
----
-
-`,__vite_glob_0_38=`---
 title: Game Theory - Assignment - Week 5
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1
@@ -10698,9 +10737,10 @@ He will first pick 2, then pick the number that makes $N$ proportional to $4$
 
 Player 1 wins.
 
-He will first pick 3, then pick the number that makes $N$ proportional to $4$`,__vite_glob_0_39=`---
+He will first pick 3, then pick the number that makes $N$ proportional to $4$`,__vite_glob_0_38=`---
 title: Game Theory - Paper - Week 5
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Supplier Encroachment with a Dual-Purpose Retailer
@@ -10930,9 +10970,10 @@ $q_i = \\dfrac{(1-k)a-p_i+kp_i}{1-k^2}$
 
 - the supplier secures greater retail profit (relies more on reselling) by raising the wholesale price even if her selling cost is relatively small
 
-`,__vite_glob_0_40=`---
+`,__vite_glob_0_39=`---
 title: Game Theory - Assignment - Week 6
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 2.4
@@ -11004,9 +11045,10 @@ Final answer:
 3. Else:
 - Partner 1 contributes $ c_{1}=0 $.
 - Partner 2 contributes $ c_{2}=0 $.
-- Project is not completed.`,__vite_glob_0_41=`---
+- Project is not completed.`,__vite_glob_0_40=`---
 title: Game Theory - Assignment - Week 7
 category: Assignments
+date: 2025-9-10 
 ---
 
 # Problem
@@ -11052,9 +11094,10 @@ Then:
 $Q = \\dfrac{5(a-c)}{6}$
 
 $P = \\dfrac{a + 5c}{6}$
-`,__vite_glob_0_42=`---
+`,__vite_glob_0_41=`---
 title: Game Theory - Assignment - Week 8
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1
@@ -11207,9 +11250,10 @@ No unilateral deviation improves either player's total payoff:
 - Player 2: Sticking with R gives 5, deviating gives 4 (L), 3 (C).
 
 Thus, (B,R) is a NE in the first stage given the second-stage strategies.
-`,__vite_glob_0_43=`---
+`,__vite_glob_0_42=`---
 title: Game Theory - Assignment - Week 9
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 2.15
@@ -11294,9 +11338,10 @@ Then:
 - Worker's Strategy: In period $ t $, produce $ y $ if the firm has always paid $ w_{t} \\geq c $ when $ y $ was produced in the past (or $ t=1 $ ); otherwise, produce 0 .
 - Condition: The equilibrium exists if and only if $ \\delta \\geq \\dfrac{c}{y} $.
 
-`,__vite_glob_0_44=`---
+`,__vite_glob_0_43=`---
 title: Game Theory - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Introduction
@@ -11354,9 +11399,10 @@ Static / Dynamic + Complete / private
   - All players know that all players know the game being played 
   - etc.
 
-`,__vite_glob_0_45=`---
+`,__vite_glob_0_44=`---
 title: Game Theory - Assignment - Week 10
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 7
@@ -11498,9 +11544,10 @@ Then:
 
 produce both, $x=4, y=6$, profit $3P$
 
-`,__vite_glob_0_46=`---
+`,__vite_glob_0_45=`---
 title: Game Theory - Paper - Week 10
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Model 
@@ -11588,9 +11635,10 @@ Why Benefits Persist: Rebates, regardless of duration, mitigate strategic invent
 
 
 
-`,__vite_glob_0_47=`---
+`,__vite_glob_0_46=`---
 title: Game Theory - Assignment - Week 11
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 4.4
@@ -11747,9 +11795,10 @@ Summary of All Pure-Strategy PBEs
 3. Separating Equilibrium 2:
 - $ t_{1} $ sends $ R, t_{2} $ sends $ L $.
 - Receiver plays $ u $ after $ L, d $ after $ R $.
-- Beliefs: Certainty at each information set.`,__vite_glob_0_48=`---
+- Beliefs: Certainty at each information set.`,__vite_glob_0_47=`---
 title: Game Theory - Assignment - Week 2
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1.2 
@@ -11817,9 +11866,10 @@ Therefore, he can't be better off.
 
 
 
-`,__vite_glob_0_49=`---
+`,__vite_glob_0_48=`---
 title: Game Theory - Assignment - Week 1
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1 Solution 
@@ -12020,9 +12070,10 @@ Xiaoming now know the day:
 Thus, we can get the final answer: **May 2**
 
 
-`,__vite_glob_0_50=`---
+`,__vite_glob_0_49=`---
 title: Game Theory - Paper - Week 1
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # The Bright Side of Supplier Encroachment
@@ -12458,9 +12509,10 @@ Then we have:
 > 
 > $\\begin{array}{c}c \\in\\left(h\\left(c_{2}\\right) a, \\frac{3\\left[1+2 c_{2}\\right] a}{\\left[5+8 c_{2}\\right]}\\right), \\text { where } \\\\h\\left(c_{2}\\right)=\\frac{9+57 c_{2}+80 c_{2}^{2}}{4\\left[8 c_{2}\\left(1+2 c_{2}\\right)+\\left(3+8 c_{2}\\right) \\sqrt{2+6 c_{2}+4 c_{2}^{2}}\\right]} \\end{array}$
 
-`,__vite_glob_0_51=`---
+`,__vite_glob_0_50=`---
 title: Game Theory - Paper - Week 2
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Supplier Encroachment with Multiple Retailers
@@ -12875,9 +12927,10 @@ $
 
 
 
-`,__vite_glob_0_52=`---
+`,__vite_glob_0_51=`---
 title: Game Theory - Assignment - Paper
 category: Assignments
+date: 2025-9-10 
 ---
 
 # The Dollar Auction Game: A Game-Theoretic Analysis of Escalation and Commitment
@@ -13117,16 +13170,18 @@ Shubik, M. (1971). The dollar auction game: A paradox in noncooperative behavior
 
 Staw, B. M. (1976). Knee-deep in the big muddy: A study of escalating commitment to a chosen course of action. *Organizational Behavior and Human Performance*, 16(1), 27-44.
 
-Teger, A. I. (1980). *Too much invested to quit*. New York: Pergamon Press.`,__vite_glob_0_53=`---
+Teger, A. I. (1980). *Too much invested to quit*. New York: Pergamon Press.`,__vite_glob_0_52=`---
 title: Math
+date: 2025-9-10 
 ---
 
 
 
 # Useful Taylor Expression:
 
-$\\ln(1+x) = \\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$`,__vite_glob_0_54=`---
+$\\ln(1+x) = \\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$`,__vite_glob_0_53=`---
 title: Musician
+date: 2025-9-10 
 ---
 
 江湖悠悠
@@ -13143,15 +13198,17 @@ title: Musician
 
 3. 哼旋律 DDD
 
-4. 第二个曲谱 AAA`,__vite_glob_0_55=`---
+4. 第二个曲谱 AAA`,__vite_glob_0_54=`---
 title: Nethack Diary
+date: 2025-9-10 
 ---
 
 # Shortcuts
 
 
-`,__vite_glob_0_56=`---
+`,__vite_glob_0_55=`---
 title: Strict Game Development
+date: 2025-9-10 
 ---
 
 # MDA
@@ -13316,7 +13373,12 @@ Challenge, narration, discovery, fantaasy
 
 
 
-`,__vite_glob_0_57=`# VSCode Vim setting: jj for esc
+`,__vite_glob_0_56=`---
+title: Diary 
+date: 2025-9-10 
+---
+
+# VSCode Vim setting: jj for esc
 
 \`\`\`json
 {
@@ -13325,8 +13387,9 @@ Challenge, narration, discovery, fantaasy
 }
 \`\`\`
 
-`,__vite_glob_0_58=`---
+`,__vite_glob_0_57=`---
 title: Test
+date: 2025-9-10 
 ---
 
 # Understanding React Hooks
@@ -13342,10 +13405,9 @@ $$
 $$
 
 More content...
-`,__vite_glob_0_59=`Strategy: "Verified Creator" Program
-
-`,__vite_glob_0_60=`---
+`,__vite_glob_0_58=`---
 title: Quantum Computation - Week 1
+date: 2025-9-10 
 ---
 
 # Exercise 2.58
@@ -13452,8 +13514,9 @@ $\\dfrac{|\\psi'\\rangle}{\\sqrt{\\langle \\psi'|\\psi'\\rangle}} = \\dfrac{(1 +
 
 
 
-`,__vite_glob_0_61=`---
+`,__vite_glob_0_59=`---
 title: Quantum Computation - Week 2
+date: 2025-9-10 
 ---
 
 # Phase
@@ -13487,8 +13550,9 @@ $=\\langle (|00\\rangle + |11\\rangle) / \\sqrt 2 |(|10\\rangle - |01\\rangle)/\
 $=0 $
 
 ---
-`,__vite_glob_0_62=`---
+`,__vite_glob_0_60=`---
 title: Quantum Computation - Week 3
+date: 2025-9-10 
 ---
 
 # Exercise 2.67
@@ -13661,8 +13725,9 @@ $\\rho \\rightarrow U\\rho U^\\dagger$
 $\\rho_m = \\dfrac{M_m\\rho M_m^\\dagger}{tr(M^\\dagger_m M_m \\rho)}$
 
 $\\rho = \\sum_i p_i \\rho_i =\\sum_m M_m \\rho M_m ^\\dagger$
-`,__vite_glob_0_63=`---
+`,__vite_glob_0_61=`---
 title: Quantum Computation - Week 4
+date: 2025-9-10 
 ---
 
 # More density operator
@@ -13765,9 +13830,10 @@ $\\vec r = (0, 0, 0)$
 
 ## (3)
 
-)`,__vite_glob_0_64=`---
+)`,__vite_glob_0_62=`---
 title: Science Create Startup - Week 0
 category: Notes
+date: 2025-9-10 
 ---
 
 # 科技创新创业
@@ -13814,9 +13880,10 @@ category: Notes
 
 
 
-`,__vite_glob_0_65=`---
+`,__vite_glob_0_63=`---
 title: Science Create Startup - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # 科技创新创业
@@ -13863,9 +13930,10 @@ category: Notes
 
 
 
-`,__vite_glob_0_66=`---
+`,__vite_glob_0_64=`---
 title: Science Create Startup - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 #
@@ -13875,9 +13943,10 @@ category: Notes
 - 创新：企业存在。产品、工艺、市场、组织、原材料创新
 - 创业：企业不存在，通过技术经济过程让企业能生存
 
-`,__vite_glob_0_67=`---
+`,__vite_glob_0_65=`---
 title: Stochastic Progress - Special 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # 一维随机游走是暂态还是常返态？
@@ -14073,9 +14142,10 @@ $$
 - 三维随机游走的“内部”可以看作一个空间内的一个球（如 $x^2+y^2+z^2 = 1$）
 
 可以发现：维度越高，“内部” 相对于“外部” 所占的 “比例” 会更小，因此也更难返回
-`,__vite_glob_0_68=`---
+`,__vite_glob_0_66=`---
 title: Stochastic Progress - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # Conditional Expectation & Probability 
@@ -14145,9 +14215,10 @@ $k = \\dfrac{n-1}{e}$
 
 
 
-`,__vite_glob_0_69=`---
+`,__vite_glob_0_67=`---
 title: Stochastic Progress - Assignment - Week 2
 category: Assignments
+date: 2025-9-10 
 ---
 
 # Discrete Martingale
@@ -14599,9 +14670,10 @@ Answer is No.
 We have:
 
 $ P^{n}(i, j)=\\sum_{k} P^{r}(i, k) P^{n-r}(k, j)>0 $
-`,__vite_glob_0_70=`---
+`,__vite_glob_0_68=`---
 title: Stochastic Progress - Week 3
 category: Notes
+date: 2025-9-10 
 ---
 
 ## Conditional Expectation
@@ -14809,9 +14881,10 @@ $\\{Z_n\\}$ Non-negative Martingale, then:
 $ \\lim_{n\\to\\infty}Z_n \\overset{\\text{w.p. 1}}{\\to} a$
 
 
-`,__vite_glob_0_71=`---
+`,__vite_glob_0_69=`---
 title: Stochastic Progress - Assignment - Week 3
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1
@@ -15394,9 +15467,10 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_72=`---
+placeholder`,__vite_glob_0_70=`---
 title: Stochastic Progress - Week 4
 category: Notes
+date: 2025-9-10 
 ---
 
 # Markov Chain
@@ -15446,9 +15520,10 @@ $$
 
 
 
-`,__vite_glob_0_73=`---
+`,__vite_glob_0_71=`---
 title: Stochastic Progress - Assignment - Week 4
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 6
@@ -15915,9 +15990,10 @@ $ \\operatorname{Var}(X(t))=\\lambda t \\mathrm{E}\\left[Y^{2}\\right]=\\lambda 
 
 $ P(X(15)<6000)=P\\left(Z<\\dfrac{6000-5400}{782.30}\\right)=P(Z<0.767)\\approx 0.778 $
 
-`,__vite_glob_0_74=`---
+`,__vite_glob_0_72=`---
 title: Stochastic Progress - Week 5
 category: Notes
+date: 2025-9-10 
 ---
 
 <!-- # Problem
@@ -15981,9 +16057,10 @@ it is **Recurrent** if $f_i = 1$
 
 
 
-`,__vite_glob_0_75=`---
+`,__vite_glob_0_73=`---
 title: Stochastic Progress - Assignment - Week 5
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1
@@ -16518,9 +16595,10 @@ $$
 
 ## Solution (b)
 
-$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_76=`---
+$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_74=`---
 title: Stochastic Progress - Week 6
 category: Notes
+date: 2025-9-10 
 ---
 
 # Long-run property 
@@ -16649,9 +16727,10 @@ placeholder
 placeholder
 
 
-`,__vite_glob_0_77=`---
+`,__vite_glob_0_75=`---
 title: Stochastic Progress - Assignment - Week 6
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 2
@@ -17494,9 +17573,10 @@ $$
 \\text { Long-run average cost }=\\frac{K+\\frac{c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}{\\frac{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}=\\frac{K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}} \\text {. }
 $$
 
-The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_78=`---
+The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_76=`---
 title: Stochastic Progress - Week 7
 category: Notes
+date: 2025-9-10 
 ---
 
 # 
@@ -17624,9 +17704,10 @@ E[L_{-k}]\\\\
 \\end{array}
 $$
 
-`,__vite_glob_0_79=`---
+`,__vite_glob_0_77=`---
 title: Stochastic Progress - Week 8
 category: Notes
+date: 2025-9-10 
 ---
 
 # Exponential Distribution
@@ -17963,9 +18044,10 @@ placeholder
 placeholder  
 
 
-`,__vite_glob_0_80=`---
+`,__vite_glob_0_78=`---
 title: Stochastic Progress - Special 8
 category: Notes
+date: 2025-9-10 
 ---
 
 # 8.1.2
@@ -18119,9 +18201,10 @@ where $ (X-y)^{+}=\\max (X-y, 0) $.
 
 
 
-`,__vite_glob_0_81=`---
+`,__vite_glob_0_79=`---
 title: Stochastic Progress - Week 9
 category: Notes
+date: 2025-9-10 
 ---
 
 # Nonhomogeneous Poisson Process
@@ -18230,9 +18313,10 @@ A counting process $ \\{N(t), t \\geq 0\\} $ is called a conditional Poisson pro
 $ \\begin{array}{c}E[N(t)]=t E[L] \\\\ \\operatorname{Var}[N(t)]=E[L t]+\\operatorname{Var}[L t]=t E[L]+t^{2} \\operatorname{Var}[L]\\end{array} $
 
 
-`,__vite_glob_0_82=`---
+`,__vite_glob_0_80=`---
 title: Stochastic Progress - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Cheat sheet
@@ -18859,9 +18943,10 @@ placeholder
 
 placeholder
 
-`,__vite_glob_0_83=`---
+`,__vite_glob_0_81=`---
 title: Stochastic Progress - Week 10
 category: Notes
+date: 2025-9-10 
 ---
 
 # Continuous-time Markov chain 
@@ -19121,9 +19206,10 @@ $
 
 
 
-`,__vite_glob_0_84=`---
+`,__vite_glob_0_82=`---
 title: Stochastic Progress - Week 11
 category: Notes
+date: 2025-9-10 
 ---
 
 
@@ -19351,9 +19437,10 @@ P_{i j}^{\\prime}(t)=\\sum_{k \\neq j} q_{k j} P_{i k}(t)-\\left(\\lambda_{j}+\\
 $$
 
 
-`,__vite_glob_0_85=`---
+`,__vite_glob_0_83=`---
 title: Stochastic Progress - Week 12
 category: Notes
+date: 2025-9-10 
 ---
 
 # Limiting Probability (Long-run proportion)
@@ -19386,9 +19473,10 @@ $P_{n}=\\dfrac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{
 
 $P_{0}=\\dfrac{1}{1+\\sum_{n=1}^{\\infty} \\frac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{\\mu_{n} \\mu_{n-1} \\ldots \\mu_{2} \\mu_{1}}} $
 
-`,__vite_glob_0_86=`---
+`,__vite_glob_0_84=`---
 title: Stochastic Progress - Week 13
 category: Notes
+date: 2025-9-10 
 ---
 
 # Renewal Process 
@@ -19486,9 +19574,10 @@ $ E\\left[\\sum_{n=1}^{N} X_{n}\\right]=E[N] E[X] $
 
  $ E\\left[S_{N(t)+1}\\right]=\\mu[m(t)+1] $
 
- `,__vite_glob_0_87=`---
+ `,__vite_glob_0_85=`---
 title: Stochastic Progress - Assignment - Week 1
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 2
@@ -20224,9 +20313,10 @@ $
 \\end{aligned}$
 
 
-`,__vite_glob_0_88=`---
+`,__vite_glob_0_86=`---
 title: Stochastic Progress - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 指数分布
@@ -20637,9 +20727,10 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_89=`---
+`,__vite_glob_0_87=`---
 title: Supply Chain Management - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Introduction to Supply chain management
@@ -20675,9 +20766,10 @@ Developing triangle
 
 ## KYCash - Know your Cash 
 
-$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_90=`---
+$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_88=`---
 title: Supply Chain Management - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # Why changes?
@@ -20738,9 +20830,10 @@ Buy material - sell - pay - get money
 - DSO stands for Days Sales Outstanding
 - DPO stands for Days Payable Outstanding
 
-`,__vite_glob_0_91=`---
+`,__vite_glob_0_89=`---
 title: Supply Chain Management - Week 4
 category: Notes
+date: 2025-9-10 
 ---
 
 # Mismatching Between Supply and Demand 
@@ -20763,9 +20856,10 @@ category: Notes
 Risk sharing 
 - global optimization 
 - local optimization 
-`,__vite_glob_0_92=`---
+`,__vite_glob_0_90=`---
 title: Supply Chain Management - Week 5
 category: Notes
+date: 2025-9-10 
 ---
 
 # CSR - Creating shared value 
@@ -20777,9 +20871,10 @@ category: Notes
 - legal
 - compliance 
 
-`,__vite_glob_0_93=`---
+`,__vite_glob_0_91=`---
 title: Supply Chain Management - Week 6
 category: Notes
+date: 2025-9-10 
 ---
 
 # Inventory Management and Risk Pooling
@@ -20841,9 +20936,10 @@ $Q^* = \\sqrt{\\dfrac{2K\\cdot AVG}{h}}$: best quantity
 
 
 
-`,__vite_glob_0_94=`---
+`,__vite_glob_0_92=`---
 title: Supply Chain Management - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 # Conception
@@ -21052,7 +21148,7 @@ return `+str.trim()+`;
 `?e+`
 `:e}const defaults$2=defaults$4;var excerpt$1=function(e,a){const o=defaults$2(a);if(e.data==null&&(e.data={}),typeof o.excerpt=="function")return o.excerpt(e,o);const c=e.data.excerpt_separator||o.excerpt_separator;if(c==null&&(o.excerpt===!1||o.excerpt==null))return e;const d=typeof o.excerpt=="string"?o.excerpt:c||o.delimiters[0],$=e.content.indexOf(d);return $!==-1&&(e.excerpt=e.content.slice(0,$)),e};const typeOf$1=kindOf,stringify$3=stringify$4,utils$2=utils$4;var toFile$1=function(e){return typeOf$1(e)!=="object"&&(e={content:e}),typeOf$1(e.data)!=="object"&&(e.data={}),e.contents&&e.content==null&&(e.content=e.contents),utils$2.define(e,"orig",utils$2.toBuffer(e.content)),utils$2.define(e,"language",e.language||""),utils$2.define(e,"matter",e.matter||""),utils$2.define(e,"stringify",function(a,o){return o&&o.language&&(e.language=o.language),stringify$3(e,a,o)}),e.content=utils$2.toString(e.content),e.isEmpty=!1,e.excerpt="",e};const getEngine=engine,defaults$1=defaults$4;var parse$4=function(e,a,o){const c=defaults$1(o),d=getEngine(e,c);if(typeof d.parse!="function")throw new TypeError('expected "'+e+'.parse" to be a function');return d.parse(a,c)};const fs=require$$0,sections=sectionMatter,defaults=defaults$4,stringify$2=stringify$4,excerpt=excerpt$1,engines=enginesExports,toFile=toFile$1,parse$3=parse$4,utils$1=utils$4;function matter(e,a){if(e==="")return{data:{},content:e,excerpt:"",orig:e};let o=toFile(e);const c=matter.cache[o.content];if(!a){if(c)return o=Object.assign({},c),o.orig=c.orig,o;matter.cache[o.content]=o}return parseMatter(o,a)}function parseMatter(e,a){const o=defaults(a),c=o.delimiters[0],d=`
 `+o.delimiters[1];let $=e.content;o.language&&(e.language=o.language);const g=c.length;if(!utils$1.startsWith($,c,g))return excerpt(e,o),e;if($.charAt(g)===c.slice(-1))return e;$=$.slice(g);const b=$.length,_=matter.language($,o);_.name&&(e.language=_.name,$=$.slice(_.raw.length));let j=$.indexOf(d);return j===-1&&(j=b),e.matter=$.slice(0,j),e.matter.replace(/^\s*#[^\n]+/gm,"").trim()===""?(e.isEmpty=!0,e.empty=e.content,e.data={}):e.data=parse$3(e.language,e.matter,o),j===b?e.content="":(e.content=$.slice(j+d.length),e.content[0]==="\r"&&(e.content=e.content.slice(1)),e.content[0]===`
-`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_23,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_24,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_25,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_26,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_27,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_28,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_30,"../posts/Game Theory/GT_02.md":__vite_glob_0_31,"../posts/Game Theory/GT_03A.md":__vite_glob_0_32,"../posts/Game Theory/GT_03P.md":__vite_glob_0_33,"../posts/Game Theory/GT_04.md":__vite_glob_0_34,"../posts/Game Theory/GT_04A.md":__vite_glob_0_35,"../posts/Game Theory/GT_04P.md":__vite_glob_0_36,"../posts/Game Theory/GT_05.md":__vite_glob_0_37,"../posts/Game Theory/GT_05A.md":__vite_glob_0_38,"../posts/Game Theory/GT_05P.md":__vite_glob_0_39,"../posts/Game Theory/GT_06A.md":__vite_glob_0_40,"../posts/Game Theory/GT_07A.md":__vite_glob_0_41,"../posts/Game Theory/GT_08A.md":__vite_glob_0_42,"../posts/Game Theory/GT_09A.md":__vite_glob_0_43,"../posts/Game Theory/GT_1.md":__vite_glob_0_44,"../posts/Game Theory/GT_10A.md":__vite_glob_0_45,"../posts/Game Theory/GT_10P.md":__vite_glob_0_46,"../posts/Game Theory/GT_11A.md":__vite_glob_0_47,"../posts/Game Theory/GT_A02.md":__vite_glob_0_48,"../posts/Game Theory/GT_A1.md":__vite_glob_0_49,"../posts/Game Theory/GT_P1.md":__vite_glob_0_50,"../posts/Game Theory/GT_P2.md":__vite_glob_0_51,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_52,"../posts/Misc/MA_1.md":__vite_glob_0_53,"../posts/Misc/MU_01.md":__vite_glob_0_54,"../posts/Misc/Nethack.md":__vite_glob_0_55,"../posts/Misc/SGD_02.md":__vite_glob_0_56,"../posts/Misc/diary.md":__vite_glob_0_57,"../posts/Misc/post1.md":__vite_glob_0_58,"../posts/Misc/temp.md":__vite_glob_0_59,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_60,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_61,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_62,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_63,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_64,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_65,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_66,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_67,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_68,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_69,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_70,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_71,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_72,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_73,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_74,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_75,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_76,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_77,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_78,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_79,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_80,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_81,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_82,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_83,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_84,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_85,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_86,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_87,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_88,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_89,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_90,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_91,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_92,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_93,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_94}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let g=1;for(const b in markdownFiles){const _=markdownFiles[b],j=b.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:g++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(b=>b.contentKey)),a(d.sort((b,_)=>new Date(_.date).getTime()-new Date(b.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(ot=>ot.category))),[$,g]=reactExports.useState(!1),[b,_]=reactExports.useState("");reactExports.useEffect(()=>{const ot=st=>{st.key==="/"&&!$&&(st.preventDefault(),g(!0)),st.key==="Escape"&&$&&g(!1)};return document.addEventListener("keydown",ot),()=>document.removeEventListener("keydown",ot)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const ot=localStorage.getItem("sidebarExpanded");return ot?JSON.parse(ot):!1}),nt=c&&c!=="All"?e.filter(ot=>ot.category===c):e,at=Math.ceil(nt.length/ITEMS_PER_PAGE),lt=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),ht=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
+`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_23,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_24,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_25,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_26,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_27,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_28,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_30,"../posts/Game Theory/GT_02.md":__vite_glob_0_31,"../posts/Game Theory/GT_03A.md":__vite_glob_0_32,"../posts/Game Theory/GT_03P.md":__vite_glob_0_33,"../posts/Game Theory/GT_04.md":__vite_glob_0_34,"../posts/Game Theory/GT_04A.md":__vite_glob_0_35,"../posts/Game Theory/GT_04P.md":__vite_glob_0_36,"../posts/Game Theory/GT_05A.md":__vite_glob_0_37,"../posts/Game Theory/GT_05P.md":__vite_glob_0_38,"../posts/Game Theory/GT_06A.md":__vite_glob_0_39,"../posts/Game Theory/GT_07A.md":__vite_glob_0_40,"../posts/Game Theory/GT_08A.md":__vite_glob_0_41,"../posts/Game Theory/GT_09A.md":__vite_glob_0_42,"../posts/Game Theory/GT_1.md":__vite_glob_0_43,"../posts/Game Theory/GT_10A.md":__vite_glob_0_44,"../posts/Game Theory/GT_10P.md":__vite_glob_0_45,"../posts/Game Theory/GT_11A.md":__vite_glob_0_46,"../posts/Game Theory/GT_A02.md":__vite_glob_0_47,"../posts/Game Theory/GT_A1.md":__vite_glob_0_48,"../posts/Game Theory/GT_P1.md":__vite_glob_0_49,"../posts/Game Theory/GT_P2.md":__vite_glob_0_50,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_51,"../posts/Misc/MA_1.md":__vite_glob_0_52,"../posts/Misc/MU_01.md":__vite_glob_0_53,"../posts/Misc/Nethack.md":__vite_glob_0_54,"../posts/Misc/SGD_02.md":__vite_glob_0_55,"../posts/Misc/diary.md":__vite_glob_0_56,"../posts/Misc/post1.md":__vite_glob_0_57,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_58,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_59,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_60,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_61,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_62,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_63,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_64,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_65,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_66,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_67,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_68,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_69,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_70,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_71,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_72,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_73,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_74,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_75,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_76,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_77,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_78,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_79,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_80,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_81,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_82,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_83,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_84,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_85,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_86,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_87,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_88,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_89,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_90,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_91,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_92}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let g=1;for(const b in markdownFiles){const _=markdownFiles[b],j=b.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:g++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(b=>b.contentKey)),a(d.sort((b,_)=>new Date(_.date).getTime()-new Date(b.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(ot=>ot.category))),[$,g]=reactExports.useState(!1),[b,_]=reactExports.useState("");reactExports.useEffect(()=>{const ot=st=>{st.key==="/"&&!$&&(st.preventDefault(),g(!0)),st.key==="Escape"&&$&&g(!1)};return document.addEventListener("keydown",ot),()=>document.removeEventListener("keydown",ot)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const ot=localStorage.getItem("sidebarExpanded");return ot?JSON.parse(ot):!1}),nt=c&&c!=="All"?e.filter(ot=>ot.category===c):e,at=Math.ceil(nt.length/ITEMS_PER_PAGE),lt=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),ht=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
       text-5xl
       sm:text-5xl
       lg:text-6xl
