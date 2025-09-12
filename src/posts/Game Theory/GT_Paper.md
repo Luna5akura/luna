@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Assignment - Paper
 category: Assignments
+date: 2025-9-10 
 ---
 
 # The Dollar Auction Game: A Game-Theoretic Analysis of Escalation and Commitment

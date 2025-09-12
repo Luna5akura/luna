@@ -1,6 +1,7 @@
 ---
 title: Stochastic Progress - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 指数分布

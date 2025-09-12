@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Paper - Week 10
 category: Game Theory Paper
+date: 2025-9-10 
 ---
 
 # Model 

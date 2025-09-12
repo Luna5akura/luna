@@ -1,6 +1,7 @@
 ---
 title: Supply Chain Management - Week 2
 category: Notes
+date: 2025-9-10 
 ---
 
 # Why changes?

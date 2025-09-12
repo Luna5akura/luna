@@ -1,5 +1,6 @@
 ---
 title: Business Paper - Week 6
+date: 2025-9-10 
 ---
 
 # Crowdsourcing Exploration 

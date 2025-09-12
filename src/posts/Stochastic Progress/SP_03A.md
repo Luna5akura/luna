@@ -1,6 +1,7 @@
 ---
 title: Stochastic Progress - Assignment - Week 3
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 1

@@ -1,6 +1,7 @@
 ---
 title: Supply Chain Management - Week 4
 category: Notes
+date: 2025-9-10 
 ---
 
 # Mismatching Between Supply and Demand 
