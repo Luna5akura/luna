@@ -7748,7 +7748,7 @@ $ \\begin{aligned} S S T & =\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2} \\\
 
 $R^2 = \\dfrac{SSE}{SST} = \\dfrac{s^2_{\\bar{Y}}}{s^2_Y}$
 
-#### $R^2$ 与 相关系数
+#### 1.6.4.1 $R^2$ 与 相关系数
 
 $ r_{\\hat{Y} Y}=\\frac{\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\overline{\\hat{Y}}\\right)\\left(Y_{i}-\\bar{Y}\\right)}{\\sqrt{\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\overline{\\hat{Y}}\\right)^{2}} \\sqrt{\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2}}} $
 
@@ -7757,6 +7757,82 @@ $ r_{\\hat{Y} Y}=\\frac{\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\overline{\\hat{Y}}\
 
 如果 $X$ 为一维，还有： $ R^{2}=r_{\\hat{Y} Y}^{2}=r_{X Y}^{2} $
 
+# 2 关注变量 $Z$
+
+总体： 变量 $Z $ 的所有可能取值的全体
+$F_Z $： 总体的概率分布
+$\\theta  $： 与分布有关的关键参数
+任务：对 $\\theta  $ 的取值作出估计和推断
+
+解决方法：抽样收集 $Z $ 的一组数据 $z_1, \\cdots\\ z_n $
+
+目标：对参数作出估计和推断
+
+## 2.1 总体、样本、实现值、估计量
+
+简单随机样本： $Z_1, \\dots,Z_n $：互相独立并服从 $F_Z $ 分布
+实现值： $z_1, \\dots,z_n $ 是 $Z_1, \\dots,Z_n $ 的实现值
+
+目标：基于样本建立决策规则，应用于观测到的数据上
+
+决策规则：
+
+- 点估计： $\\hat\\theta (Z_1,\\dots\\Z_n) $ 来估计 $\\Theta  $的取值， $\\hat\\theta $ 是 $\\theta $ 的估计量
+- 区间估计：构建区间 $ \\left[a\\left(Z_{1}, \\ldots, Z_{n}\\right), b\\left(Z_{1}, \\ldots, Z_{n}\\right)\\right] $ 估计 $\\theta  $ 的取值范围
+- 假设检验：判断关于 $\\theta  $ ，比如 $\\theta  \\ge 0 $ 的论断的正确性
+
+### 2.1.1 假设条件
+
+第一类假设条件： $F $ 属于某个已知的分布族，比如正态分布族
+- 叫做参数模型
+  
+第二类条件： $F $ 是未知的，但是已知有连续的密度函数
+- 叫做非参数模型
+
+第三类条件： $F $ 未知，但已知存在 $\\phi(\\cdot) $ 满足：
+
+$E[\\phi(Z_i,\\theta )] = 0, \\forall i = 1, \\dots, n $
+
+- $\\phi $ 是向量值函数
+- 叫做半参数模型
+- 矩条件
+
+## 2.2 参数估计方法的构造
+
+1. 矩估计方法
+2. 极大似然估计方法
+3. 最小二乘法
+4. 核估计方法
+
+### 2.2.1 矩估计
+
+已知矩条件，则可以构造：
+
+$ \\bar{\\phi}(\\theta)=\\frac{1}{n} \\sum_{i=1}^{n} \\phi\\left(Z_{i}, \\theta\\right) $
+
+- $\\bar \\phi (\\theta )$ ：样本矩 
+- $\\hat\\theta  $：$\\bar \\phi (\\theta )$ 的解
+- $\\hat\\theta  $：$\\theta $ 的矩估计量
+
+#### 2.2.1.1 算例：正态分布的矩估计
+
+$ \\begin{array}{l}E\\left[Z_{i}\\right]=\\mu, E\\left[Z_{i}^{2}\\right]=\\mu^{2}+\\sigma^{2} \\\\ \\phi\\left(Z_{i}, \\mu, \\sigma^{2}\\right)=\\left[\\begin{array}{c}Z_{i}-\\mu \\\\ Z_{i}^{2}-\\mu^{2}-\\sigma^{2}\\end{array}\\right] \\\\ \\bar{\\phi}\\left(\\mu, \\sigma^{2}\\right)=\\left[\\begin{array}{c}\\bar{Z}-\\mu \\\\ \\frac{1}{n} \\sum_{i=1}^{n} Z_{i}^{2}-\\mu^{2}-\\sigma^{2}\\end{array}\\right]\\end{array} $
+
+可得：$ \\hat{\\mu}=\\bar{Z}, \\hat{\\sigma}^{2}=\\frac{1}{n} \\sum_{i=1}^{n}\\left(Z_{i}-\\bar{Z}\\right)^{2} $
+
+### 2.2.2 最大似然估计
+
+设 $Z_1, \\dots, Z_n $ 有联合密度分布 $p(z_1, \\dots, z_n, \\theta ) $ 
+
+- $l_Z(\\theta  )= \\log p(z_1, \\dots, z_n, \\theta) $: 对数似然函数
+- 最大似然估计量： $\\tilde \\theta  = \\arg \\max l_Z(\\theta ) $
+- 通常情况：解 $\\dfrac{\\partial l_Z(\\theta )}{\\partial\\theta } = 0$
+
+#### 2.2.2.1 算例：正态分布的最大似然估计
+
+$ \\begin{array}{l}L\\left(\\mu, \\sigma^{2}\\right)=\\prod_{i=1}^{n} \\frac{1}{\\sqrt{2 \\pi \\sigma^{2}}} \\exp \\left(-\\frac{\\left(x_{i}-\\mu\\right)^{2}}{2 \\sigma^{2}}\\right) \\\\ \\ell\\left(\\mu, \\sigma^{2}\\right)=\\ln L=-\\frac{n}{2} \\ln (2 \\pi)-\\frac{n}{2} \\ln \\sigma^{2}-\\frac{1}{2 \\sigma^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)^{2} \\\\ \\frac{\\partial \\ell}{\\partial \\mu}=\\frac{1}{\\sigma^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)=0 \\\\ \\Rightarrow \\hat{\\mu}=\\frac{1}{n} \\sum_{i=1}^{n} x_{i} \\\\ \\frac{\\partial \\ell}{\\partial \\sigma^{2}}=-\\frac{n}{2 \\sigma^{2}}+\\frac{1}{2\\left(\\sigma^{2}\\right)^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)^{2}=0 \\\\ \\Rightarrow \\hat{\\sigma}^{2}=\\frac{1}{n} \\sum_{i=1}^{n}\\left(x_{i}-\\hat{\\mu}\\right)^{2}\\end{array} $
+
+
 
 
 
@@ -7773,7 +7849,13 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_23=`# 1.1.1 推论证明
+placeholder`,__vite_glob_0_23=`---
+title: Econometrics - Detail - Week 1
+category: Notes
+---
+
+
+# 1.1.1 推论证明
 
 ## $E[Y|X] = \\argmin E[(Y-f(X))^2]$
 
@@ -7883,6 +7965,7 @@ $ \\begin{array}{l}s_{X}^{2}=\\frac{1}{n-1} \\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}
 对于样本协方差：
 
 $ \\begin{array}{l}s_{X Y}=\\frac{1}{n-1} \\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)\\left(Y_{i}-\\bar{Y}\\right) \\\\ \\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)\\left(Y_{i}-\\bar{Y}\\right)=\\sum_{i=1}^{n} X_{i} Y_{i}-n \\bar{X} \\bar{Y} \\\\ s_{X Y}=\\frac{1}{n-1}\\left(\\sum_{i=1}^{n} X_{i} Y_{i}-n \\bar{X} \\bar{Y}\\right) \\\\ \\mathbb{E}\\left[s_{X Y}\\right]=\\frac{1}{n-1}\\left(\\mathbb{E}\\left[\\sum_{i=1}^{n} X_{i} Y_{i}\\right]-n \\mathbb{E}[\\bar{X} \\bar{Y}]\\right) \\\\ \\mathbb{E}\\left[X_{i} Y_{i}\\right]=\\operatorname{Cov}\\left(X_{i}, Y_{i}\\right)+\\mu_{X} \\mu_{Y}=\\sigma_{X Y}+\\mu_{X} \\mu_{Y} \\\\ \\mathbb{E}\\left[\\sum_{i=1}^{n} X_{i} Y_{i}\\right]=n\\left(\\sigma_{X Y}+\\mu_{X} \\mu_{Y}\\right) \\\\ \\mathbb{E}[\\bar{X} \\bar{Y}]=\\operatorname{Cov}(\\bar{X}, \\bar{Y})+\\mu_{X} \\mu_{Y}=\\frac{\\sigma_{X Y}}{n}+\\mu_{X} \\mu_{Y} \\\\ n \\mathbb{E}[\\bar{X} \\bar{Y}]=\\sigma_{X Y}+n \\mu_{X} \\mu_{Y} \\\\ \\mathbb{E}\\left[s_{X Y}\\right]=\\frac{1}{n-1}\\left(n\\left(\\sigma_{X Y}+\\mu_{X} \\mu_{Y}\\right)-\\left(\\sigma_{X Y}+n \\mu_{X} \\mu_{Y}\\right)\\right) \\\\ =\\frac{1}{n-1}\\left(n \\sigma_{X Y}+n \\mu_{X} \\mu_{Y}-\\sigma_{X Y}-n \\mu_{X} \\mu_{Y}\\right) \\\\ =\\frac{1}{n-1}(n-1) \\sigma_{X Y} \\\\ \\mathbb{E}\\left[s_{X Y}\\right]=\\sigma_{X Y}\\end{array} $
+
 
 
 
@@ -12964,6 +13047,13 @@ title: Musician
 3. 哼旋律 DDD
 
 4. 第二个曲谱 AAA`,__vite_glob_0_55=`---
+title: Nethack Diary
+---
+
+# Shortcuts
+
+
+`,__vite_glob_0_56=`---
 title: Strict Game Development
 ---
 
@@ -13129,7 +13219,7 @@ Challenge, narration, discovery, fantaasy
 
 
 
-`,__vite_glob_0_56=`# VSCode Vim setting: jj for esc
+`,__vite_glob_0_57=`# VSCode Vim setting: jj for esc
 
 \`\`\`json
 {
@@ -13138,7 +13228,7 @@ Challenge, narration, discovery, fantaasy
 }
 \`\`\`
 
-`,__vite_glob_0_57=`---
+`,__vite_glob_0_58=`---
 title: Test
 ---
 
@@ -13155,9 +13245,9 @@ $$
 $$
 
 More content...
-`,__vite_glob_0_58=`Strategy: "Verified Creator" Program
+`,__vite_glob_0_59=`Strategy: "Verified Creator" Program
 
-`,__vite_glob_0_59=`---
+`,__vite_glob_0_60=`---
 title: Quantum Computation - Week 1
 ---
 
@@ -13265,7 +13355,7 @@ $\\dfrac{|\\psi'\\rangle}{\\sqrt{\\langle \\psi'|\\psi'\\rangle}} = \\dfrac{(1 +
 
 
 
-`,__vite_glob_0_60=`---
+`,__vite_glob_0_61=`---
 title: Quantum Computation - Week 2
 ---
 
@@ -13300,7 +13390,7 @@ $=\\langle (|00\\rangle + |11\\rangle) / \\sqrt 2 |(|10\\rangle - |01\\rangle)/\
 $=0 $
 
 ---
-`,__vite_glob_0_61=`---
+`,__vite_glob_0_62=`---
 title: Quantum Computation - Week 3
 ---
 
@@ -13474,7 +13564,7 @@ $\\rho \\rightarrow U\\rho U^\\dagger$
 $\\rho_m = \\dfrac{M_m\\rho M_m^\\dagger}{tr(M^\\dagger_m M_m \\rho)}$
 
 $\\rho = \\sum_i p_i \\rho_i =\\sum_m M_m \\rho M_m ^\\dagger$
-`,__vite_glob_0_62=`---
+`,__vite_glob_0_63=`---
 title: Quantum Computation - Week 4
 ---
 
@@ -13578,7 +13668,7 @@ $\\vec r = (0, 0, 0)$
 
 ## (3)
 
-)`,__vite_glob_0_63=`---
+)`,__vite_glob_0_64=`---
 title: Science Create Startup - Week 0
 category: Notes
 ---
@@ -13627,7 +13717,7 @@ category: Notes
 
 
 
-`,__vite_glob_0_64=`---
+`,__vite_glob_0_65=`---
 title: Science Create Startup - Week 1
 category: Notes
 ---
@@ -13676,7 +13766,7 @@ category: Notes
 
 
 
-`,__vite_glob_0_65=`---
+`,__vite_glob_0_66=`---
 title: Science Create Startup - Week 2
 category: Notes
 ---
@@ -13688,7 +13778,7 @@ category: Notes
 - 创新：企业存在。产品、工艺、市场、组织、原材料创新
 - 创业：企业不存在，通过技术经济过程让企业能生存
 
-`,__vite_glob_0_66=`---
+`,__vite_glob_0_67=`---
 title: Stochastic Progress - Special 1
 category: Notes
 ---
@@ -13886,7 +13976,7 @@ $$
 - 三维随机游走的“内部”可以看作一个空间内的一个球（如 $x^2+y^2+z^2 = 1$）
 
 可以发现：维度越高，“内部” 相对于“外部” 所占的 “比例” 会更小，因此也更难返回
-`,__vite_glob_0_67=`---
+`,__vite_glob_0_68=`---
 title: Stochastic Progress - Week 2
 category: Notes
 ---
@@ -13958,7 +14048,7 @@ $k = \\dfrac{n-1}{e}$
 
 
 
-`,__vite_glob_0_68=`---
+`,__vite_glob_0_69=`---
 title: Stochastic Progress - Assignment - Week 2
 category: Assignments
 ---
@@ -14412,7 +14502,7 @@ Answer is No.
 We have:
 
 $ P^{n}(i, j)=\\sum_{k} P^{r}(i, k) P^{n-r}(k, j)>0 $
-`,__vite_glob_0_69=`---
+`,__vite_glob_0_70=`---
 title: Stochastic Progress - Week 3
 category: Notes
 ---
@@ -14622,7 +14712,7 @@ $\\{Z_n\\}$ Non-negative Martingale, then:
 $ \\lim_{n\\to\\infty}Z_n \\overset{\\text{w.p. 1}}{\\to} a$
 
 
-`,__vite_glob_0_70=`---
+`,__vite_glob_0_71=`---
 title: Stochastic Progress - Assignment - Week 3
 category: Assignments
 ---
@@ -15207,7 +15297,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_71=`---
+placeholder`,__vite_glob_0_72=`---
 title: Stochastic Progress - Week 4
 category: Notes
 ---
@@ -15259,7 +15349,7 @@ $$
 
 
 
-`,__vite_glob_0_72=`---
+`,__vite_glob_0_73=`---
 title: Stochastic Progress - Assignment - Week 4
 category: Assignments
 ---
@@ -15728,7 +15818,7 @@ $ \\operatorname{Var}(X(t))=\\lambda t \\mathrm{E}\\left[Y^{2}\\right]=\\lambda 
 
 $ P(X(15)<6000)=P\\left(Z<\\dfrac{6000-5400}{782.30}\\right)=P(Z<0.767)\\approx 0.778 $
 
-`,__vite_glob_0_73=`---
+`,__vite_glob_0_74=`---
 title: Stochastic Progress - Week 5
 category: Notes
 ---
@@ -15794,7 +15884,7 @@ it is **Recurrent** if $f_i = 1$
 
 
 
-`,__vite_glob_0_74=`---
+`,__vite_glob_0_75=`---
 title: Stochastic Progress - Assignment - Week 5
 category: Assignments
 ---
@@ -16331,7 +16421,7 @@ $$
 
 ## Solution (b)
 
-$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_75=`---
+$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_76=`---
 title: Stochastic Progress - Week 6
 category: Notes
 ---
@@ -16462,7 +16552,7 @@ placeholder
 placeholder
 
 
-`,__vite_glob_0_76=`---
+`,__vite_glob_0_77=`---
 title: Stochastic Progress - Assignment - Week 6
 category: Assignments
 ---
@@ -17307,7 +17397,7 @@ $$
 \\text { Long-run average cost }=\\frac{K+\\frac{c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}{\\frac{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}=\\frac{K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}} \\text {. }
 $$
 
-The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_77=`---
+The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_78=`---
 title: Stochastic Progress - Week 7
 category: Notes
 ---
@@ -17437,7 +17527,7 @@ E[L_{-k}]\\\\
 \\end{array}
 $$
 
-`,__vite_glob_0_78=`---
+`,__vite_glob_0_79=`---
 title: Stochastic Progress - Week 8
 category: Notes
 ---
@@ -17776,7 +17866,7 @@ placeholder
 placeholder  
 
 
-`,__vite_glob_0_79=`---
+`,__vite_glob_0_80=`---
 title: Stochastic Progress - Special 8
 category: Notes
 ---
@@ -17932,7 +18022,7 @@ where $ (X-y)^{+}=\\max (X-y, 0) $.
 
 
 
-`,__vite_glob_0_80=`---
+`,__vite_glob_0_81=`---
 title: Stochastic Progress - Week 9
 category: Notes
 ---
@@ -18043,7 +18133,7 @@ A counting process $ \\{N(t), t \\geq 0\\} $ is called a conditional Poisson pro
 $ \\begin{array}{c}E[N(t)]=t E[L] \\\\ \\operatorname{Var}[N(t)]=E[L t]+\\operatorname{Var}[L t]=t E[L]+t^{2} \\operatorname{Var}[L]\\end{array} $
 
 
-`,__vite_glob_0_81=`---
+`,__vite_glob_0_82=`---
 title: Stochastic Progress - Week 1
 category: Notes
 ---
@@ -18672,7 +18762,7 @@ placeholder
 
 placeholder
 
-`,__vite_glob_0_82=`---
+`,__vite_glob_0_83=`---
 title: Stochastic Progress - Week 10
 category: Notes
 ---
@@ -18934,7 +19024,7 @@ $
 
 
 
-`,__vite_glob_0_83=`---
+`,__vite_glob_0_84=`---
 title: Stochastic Progress - Week 11
 category: Notes
 ---
@@ -19164,7 +19254,7 @@ P_{i j}^{\\prime}(t)=\\sum_{k \\neq j} q_{k j} P_{i k}(t)-\\left(\\lambda_{j}+\\
 $$
 
 
-`,__vite_glob_0_84=`---
+`,__vite_glob_0_85=`---
 title: Stochastic Progress - Week 12
 category: Notes
 ---
@@ -19199,7 +19289,7 @@ $P_{n}=\\dfrac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{
 
 $P_{0}=\\dfrac{1}{1+\\sum_{n=1}^{\\infty} \\frac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{\\mu_{n} \\mu_{n-1} \\ldots \\mu_{2} \\mu_{1}}} $
 
-`,__vite_glob_0_85=`---
+`,__vite_glob_0_86=`---
 title: Stochastic Progress - Week 13
 category: Notes
 ---
@@ -19299,7 +19389,7 @@ $ E\\left[\\sum_{n=1}^{N} X_{n}\\right]=E[N] E[X] $
 
  $ E\\left[S_{N(t)+1}\\right]=\\mu[m(t)+1] $
 
- `,__vite_glob_0_86=`---
+ `,__vite_glob_0_87=`---
 title: Stochastic Progress - Assignment - Week 1
 category: Assignments
 ---
@@ -20037,7 +20127,7 @@ $
 \\end{aligned}$
 
 
-`,__vite_glob_0_87=`---
+`,__vite_glob_0_88=`---
 title: Stochastic Progress - Cheatsheet
 category: Cheatsheets
 ---
@@ -20450,7 +20540,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_88=`---
+`,__vite_glob_0_89=`---
 title: Supply Chain Management - Week 1
 category: Notes
 ---
@@ -20488,7 +20578,7 @@ Developing triangle
 
 ## KYCash - Know your Cash 
 
-$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_89=`---
+$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_90=`---
 title: Supply Chain Management - Week 2
 category: Notes
 ---
@@ -20551,7 +20641,7 @@ Buy material - sell - pay - get money
 - DSO stands for Days Sales Outstanding
 - DPO stands for Days Payable Outstanding
 
-`,__vite_glob_0_90=`---
+`,__vite_glob_0_91=`---
 title: Supply Chain Management - Week 4
 category: Notes
 ---
@@ -20576,7 +20666,7 @@ category: Notes
 Risk sharing 
 - global optimization 
 - local optimization 
-`,__vite_glob_0_91=`---
+`,__vite_glob_0_92=`---
 title: Supply Chain Management - Week 5
 category: Notes
 ---
@@ -20590,7 +20680,7 @@ category: Notes
 - legal
 - compliance 
 
-`,__vite_glob_0_92=`---
+`,__vite_glob_0_93=`---
 title: Supply Chain Management - Week 6
 category: Notes
 ---
@@ -20654,7 +20744,7 @@ $Q^* = \\sqrt{\\dfrac{2K\\cdot AVG}{h}}$: best quantity
 
 
 
-`,__vite_glob_0_93=`---
+`,__vite_glob_0_94=`---
 title: Supply Chain Management - Cheatsheet
 category: Cheatsheets
 ---
@@ -20865,7 +20955,7 @@ return `+str.trim()+`;
 `?e+`
 `:e}const defaults$2=defaults$4;var excerpt$1=function(e,a){const o=defaults$2(a);if(e.data==null&&(e.data={}),typeof o.excerpt=="function")return o.excerpt(e,o);const c=e.data.excerpt_separator||o.excerpt_separator;if(c==null&&(o.excerpt===!1||o.excerpt==null))return e;const d=typeof o.excerpt=="string"?o.excerpt:c||o.delimiters[0],$=e.content.indexOf(d);return $!==-1&&(e.excerpt=e.content.slice(0,$)),e};const typeOf$1=kindOf,stringify$3=stringify$4,utils$2=utils$4;var toFile$1=function(e){return typeOf$1(e)!=="object"&&(e={content:e}),typeOf$1(e.data)!=="object"&&(e.data={}),e.contents&&e.content==null&&(e.content=e.contents),utils$2.define(e,"orig",utils$2.toBuffer(e.content)),utils$2.define(e,"language",e.language||""),utils$2.define(e,"matter",e.matter||""),utils$2.define(e,"stringify",function(a,o){return o&&o.language&&(e.language=o.language),stringify$3(e,a,o)}),e.content=utils$2.toString(e.content),e.isEmpty=!1,e.excerpt="",e};const getEngine=engine,defaults$1=defaults$4;var parse$4=function(e,a,o){const c=defaults$1(o),d=getEngine(e,c);if(typeof d.parse!="function")throw new TypeError('expected "'+e+'.parse" to be a function');return d.parse(a,c)};const fs=require$$0,sections=sectionMatter,defaults=defaults$4,stringify$2=stringify$4,excerpt=excerpt$1,engines=enginesExports,toFile=toFile$1,parse$3=parse$4,utils$1=utils$4;function matter(e,a){if(e==="")return{data:{},content:e,excerpt:"",orig:e};let o=toFile(e);const c=matter.cache[o.content];if(!a){if(c)return o=Object.assign({},c),o.orig=c.orig,o;matter.cache[o.content]=o}return parseMatter(o,a)}function parseMatter(e,a){const o=defaults(a),c=o.delimiters[0],d=`
 `+o.delimiters[1];let $=e.content;o.language&&(e.language=o.language);const g=c.length;if(!utils$1.startsWith($,c,g))return excerpt(e,o),e;if($.charAt(g)===c.slice(-1))return e;$=$.slice(g);const b=$.length,_=matter.language($,o);_.name&&(e.language=_.name,$=$.slice(_.raw.length));let j=$.indexOf(d);return j===-1&&(j=b),e.matter=$.slice(0,j),e.matter.replace(/^\s*#[^\n]+/gm,"").trim()===""?(e.isEmpty=!0,e.empty=e.content,e.data={}):e.data=parse$3(e.language,e.matter,o),j===b?e.content="":(e.content=$.slice(j+d.length),e.content[0]==="\r"&&(e.content=e.content.slice(1)),e.content[0]===`
-`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_23,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_24,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_25,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_26,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_27,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_28,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_30,"../posts/Game Theory/GT_02.md":__vite_glob_0_31,"../posts/Game Theory/GT_03A.md":__vite_glob_0_32,"../posts/Game Theory/GT_03P.md":__vite_glob_0_33,"../posts/Game Theory/GT_04.md":__vite_glob_0_34,"../posts/Game Theory/GT_04A.md":__vite_glob_0_35,"../posts/Game Theory/GT_04P.md":__vite_glob_0_36,"../posts/Game Theory/GT_05.md":__vite_glob_0_37,"../posts/Game Theory/GT_05A.md":__vite_glob_0_38,"../posts/Game Theory/GT_05P.md":__vite_glob_0_39,"../posts/Game Theory/GT_06A.md":__vite_glob_0_40,"../posts/Game Theory/GT_07A.md":__vite_glob_0_41,"../posts/Game Theory/GT_08A.md":__vite_glob_0_42,"../posts/Game Theory/GT_09A.md":__vite_glob_0_43,"../posts/Game Theory/GT_1.md":__vite_glob_0_44,"../posts/Game Theory/GT_10A.md":__vite_glob_0_45,"../posts/Game Theory/GT_10P.md":__vite_glob_0_46,"../posts/Game Theory/GT_11A.md":__vite_glob_0_47,"../posts/Game Theory/GT_A02.md":__vite_glob_0_48,"../posts/Game Theory/GT_A1.md":__vite_glob_0_49,"../posts/Game Theory/GT_P1.md":__vite_glob_0_50,"../posts/Game Theory/GT_P2.md":__vite_glob_0_51,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_52,"../posts/Misc/MA_1.md":__vite_glob_0_53,"../posts/Misc/MU_01.md":__vite_glob_0_54,"../posts/Misc/SGD_02.md":__vite_glob_0_55,"../posts/Misc/diary.md":__vite_glob_0_56,"../posts/Misc/post1.md":__vite_glob_0_57,"../posts/Misc/temp.md":__vite_glob_0_58,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_59,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_60,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_61,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_62,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_63,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_64,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_65,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_66,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_67,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_68,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_69,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_70,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_71,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_72,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_73,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_74,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_75,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_76,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_77,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_78,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_79,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_80,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_81,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_82,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_83,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_84,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_85,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_86,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_87,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_88,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_89,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_90,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_91,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_92,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_93}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let g=1;for(const b in markdownFiles){const _=markdownFiles[b],j=b.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:g++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(b=>b.contentKey)),a(d.sort((b,_)=>new Date(_.date).getTime()-new Date(b.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(ot=>ot.category))),[$,g]=reactExports.useState(!1),[b,_]=reactExports.useState("");reactExports.useEffect(()=>{const ot=st=>{st.key==="/"&&!$&&(st.preventDefault(),g(!0)),st.key==="Escape"&&$&&g(!1)};return document.addEventListener("keydown",ot),()=>document.removeEventListener("keydown",ot)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const ot=localStorage.getItem("sidebarExpanded");return ot?JSON.parse(ot):!1}),nt=c&&c!=="All"?e.filter(ot=>ot.category===c):e,at=Math.ceil(nt.length/ITEMS_PER_PAGE),lt=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),mt=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
+`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_23,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_24,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_25,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_26,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_27,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_28,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_30,"../posts/Game Theory/GT_02.md":__vite_glob_0_31,"../posts/Game Theory/GT_03A.md":__vite_glob_0_32,"../posts/Game Theory/GT_03P.md":__vite_glob_0_33,"../posts/Game Theory/GT_04.md":__vite_glob_0_34,"../posts/Game Theory/GT_04A.md":__vite_glob_0_35,"../posts/Game Theory/GT_04P.md":__vite_glob_0_36,"../posts/Game Theory/GT_05.md":__vite_glob_0_37,"../posts/Game Theory/GT_05A.md":__vite_glob_0_38,"../posts/Game Theory/GT_05P.md":__vite_glob_0_39,"../posts/Game Theory/GT_06A.md":__vite_glob_0_40,"../posts/Game Theory/GT_07A.md":__vite_glob_0_41,"../posts/Game Theory/GT_08A.md":__vite_glob_0_42,"../posts/Game Theory/GT_09A.md":__vite_glob_0_43,"../posts/Game Theory/GT_1.md":__vite_glob_0_44,"../posts/Game Theory/GT_10A.md":__vite_glob_0_45,"../posts/Game Theory/GT_10P.md":__vite_glob_0_46,"../posts/Game Theory/GT_11A.md":__vite_glob_0_47,"../posts/Game Theory/GT_A02.md":__vite_glob_0_48,"../posts/Game Theory/GT_A1.md":__vite_glob_0_49,"../posts/Game Theory/GT_P1.md":__vite_glob_0_50,"../posts/Game Theory/GT_P2.md":__vite_glob_0_51,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_52,"../posts/Misc/MA_1.md":__vite_glob_0_53,"../posts/Misc/MU_01.md":__vite_glob_0_54,"../posts/Misc/Nethack.md":__vite_glob_0_55,"../posts/Misc/SGD_02.md":__vite_glob_0_56,"../posts/Misc/diary.md":__vite_glob_0_57,"../posts/Misc/post1.md":__vite_glob_0_58,"../posts/Misc/temp.md":__vite_glob_0_59,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_60,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_61,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_62,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_63,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_64,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_65,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_66,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_67,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_68,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_69,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_70,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_71,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_72,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_73,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_74,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_75,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_76,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_77,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_78,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_79,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_80,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_81,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_82,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_83,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_84,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_85,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_86,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_87,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_88,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_89,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_90,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_91,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_92,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_93,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_94}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let g=1;for(const b in markdownFiles){const _=markdownFiles[b],j=b.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:g++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(b=>b.contentKey)),a(d.sort((b,_)=>new Date(_.date).getTime()-new Date(b.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(ot=>ot.category))),[$,g]=reactExports.useState(!1),[b,_]=reactExports.useState("");reactExports.useEffect(()=>{const ot=st=>{st.key==="/"&&!$&&(st.preventDefault(),g(!0)),st.key==="Escape"&&$&&g(!1)};return document.addEventListener("keydown",ot),()=>document.removeEventListener("keydown",ot)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const ot=localStorage.getItem("sidebarExpanded");return ot?JSON.parse(ot):!1}),nt=c&&c!=="All"?e.filter(ot=>ot.category===c):e,at=Math.ceil(nt.length/ITEMS_PER_PAGE),lt=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),mt=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
       text-5xl
       sm:text-5xl
       lg:text-6xl
