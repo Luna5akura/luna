@@ -1,2 +1,0 @@
-Strategy: "Verified Creator" Program
-

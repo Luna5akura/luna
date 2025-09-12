@@ -1,6 +1,7 @@
 ---
 title: Financial Engineer - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 # 01 绪论

@@ -1,5 +1,6 @@
 ---
 title: Cure Dolly - Week 2
+date: 2025-9-10 
 ---
 
 # い and な adjectives

@@ -1,5 +1,6 @@
 ---
 title: Business Paper - Week 5
+date: 2025-9-10 
 ---
 
 # 1. Examples & Glossary

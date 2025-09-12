@@ -1,6 +1,7 @@
 ---
 title: Supply Chain Management - Cheatsheet
 category: Cheatsheets
+date: 2025-9-10 
 ---
 
 # Conception

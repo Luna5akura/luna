@@ -1,6 +1,7 @@
 ---
 title: Stochastic Progress - Special 8
 category: Notes
+date: 2025-9-10 
 ---
 
 # 8.1.2

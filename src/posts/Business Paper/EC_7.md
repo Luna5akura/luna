@@ -1,5 +1,6 @@
 ---
 title: Business Paper - Week 7
+date: 2025-9-10 
 ---
 
 $x$: Covariates 

@@ -1,6 +1,7 @@
 ---
 title: Econometrics - Detail - Week 1
 category: Notes
+date: 2025-9-12
 ---
 
 

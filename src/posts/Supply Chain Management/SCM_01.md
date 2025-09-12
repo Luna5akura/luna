@@ -1,6 +1,7 @@
 ---
 title: Supply Chain Management - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Introduction to Supply chain management

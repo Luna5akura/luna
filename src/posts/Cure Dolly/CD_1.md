@@ -1,5 +1,6 @@
 ---
 title: Cure Dolly - Week 1
+date: 2025-9-10 
 ---
 
 # Quick review

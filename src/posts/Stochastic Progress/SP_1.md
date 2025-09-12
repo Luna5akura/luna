@@ -1,6 +1,7 @@
 ---
 title: Stochastic Progress - Week 1
 category: Notes
+date: 2025-9-10 
 ---
 
 # Cheat sheet

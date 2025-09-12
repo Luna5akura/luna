@@ -1,3 +1,10 @@
+---
+title: Game Theory - Assignment - Week 3
+category: Assignments 
+date: 2025-9-10 
+---
+
+
 # Problem 1.4
 
 ## Problem 

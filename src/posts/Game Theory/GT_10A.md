@@ -1,6 +1,7 @@
 ---
 title: Game Theory - Assignment - Week 10
 category: Assignments
+date: 2025-9-10 
 ---
 
 # 7

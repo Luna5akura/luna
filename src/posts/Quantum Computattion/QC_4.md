@@ -1,5 +1,6 @@
 ---
 title: Quantum Computation - Week 4
+date: 2025-9-10 
 ---
 
 # More density operator

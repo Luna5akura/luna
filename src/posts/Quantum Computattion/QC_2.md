@@ -1,5 +1,6 @@
 ---
 title: Quantum Computation - Week 2
+date: 2025-9-10 
 ---
 
 # Phase
