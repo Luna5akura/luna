@@ -1,3 +1,9 @@
+---
+title: Econometrics - Detail - Week 1
+category: Notes
+---
+
+
 # 1.1.1 推论证明
 
 ## $E[Y|X] = \argmin E[(Y-f(X))^2]$
@@ -108,6 +114,7 @@ $ \begin{array}{l}s_{X}^{2}=\frac{1}{n-1} \sum_{i=1}^{n}\left(X_{i}-\bar{X}\righ
 对于样本协方差：
 
 $ \begin{array}{l}s_{X Y}=\frac{1}{n-1} \sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right) \\ \sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)=\sum_{i=1}^{n} X_{i} Y_{i}-n \bar{X} \bar{Y} \\ s_{X Y}=\frac{1}{n-1}\left(\sum_{i=1}^{n} X_{i} Y_{i}-n \bar{X} \bar{Y}\right) \\ \mathbb{E}\left[s_{X Y}\right]=\frac{1}{n-1}\left(\mathbb{E}\left[\sum_{i=1}^{n} X_{i} Y_{i}\right]-n \mathbb{E}[\bar{X} \bar{Y}]\right) \\ \mathbb{E}\left[X_{i} Y_{i}\right]=\operatorname{Cov}\left(X_{i}, Y_{i}\right)+\mu_{X} \mu_{Y}=\sigma_{X Y}+\mu_{X} \mu_{Y} \\ \mathbb{E}\left[\sum_{i=1}^{n} X_{i} Y_{i}\right]=n\left(\sigma_{X Y}+\mu_{X} \mu_{Y}\right) \\ \mathbb{E}[\bar{X} \bar{Y}]=\operatorname{Cov}(\bar{X}, \bar{Y})+\mu_{X} \mu_{Y}=\frac{\sigma_{X Y}}{n}+\mu_{X} \mu_{Y} \\ n \mathbb{E}[\bar{X} \bar{Y}]=\sigma_{X Y}+n \mu_{X} \mu_{Y} \\ \mathbb{E}\left[s_{X Y}\right]=\frac{1}{n-1}\left(n\left(\sigma_{X Y}+\mu_{X} \mu_{Y}\right)-\left(\sigma_{X Y}+n \mu_{X} \mu_{Y}\right)\right) \\ =\frac{1}{n-1}\left(n \sigma_{X Y}+n \mu_{X} \mu_{Y}-\sigma_{X Y}-n \mu_{X} \mu_{Y}\right) \\ =\frac{1}{n-1}(n-1) \sigma_{X Y} \\ \mathbb{E}\left[s_{X Y}\right]=\sigma_{X Y}\end{array} $
+
 
 
 

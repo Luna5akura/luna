@@ -1,0 +1,7 @@
+---
+title: Nethack Diary
+---
+
+# Shortcuts
+
+
