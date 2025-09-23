@@ -1,3 +1,8 @@
+---
+title: Optimization Theory - Assignment - Week 1
+category: Assignments
+---
+
 # 1
 
 ## Problem
