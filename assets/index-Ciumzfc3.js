@@ -13603,7 +13603,12 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_59=`# 1
+`,__vite_glob_0_59=`---
+title: Optimization Theory - Assignment - Week 1
+category: Assignments
+---
+
+# 1
 
 ## Problem
 
@@ -14504,7 +14509,13 @@ date: 2025-9-10
 - 创新：企业存在。产品、工艺、市场、组织、原材料创新
 - 创业：企业不存在，通过技术经济过程让企业能生存
 
-`,__vite_glob_0_69=`# 1 排队论
+`,__vite_glob_0_69=`---
+title: Stochastic Operation - Week 1
+category: Notes
+---
+
+
+# 1 排队论
 
 ## 1.1 排队系统
 
