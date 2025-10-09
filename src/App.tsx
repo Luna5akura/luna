@@ -4,30 +4,41 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Skill from "@/pages/Skill";
 import PostDetails from "@/pages/PostDetails";
 import Warp from "@/pages/Warp";
 import Show from "@/pages/Show";
 import { FontToggleProvider } from "@/context/FontToggleContext";
 import Magic from "./pages/Magic";
 
+const skillItems = [
+  { imageUrl: 'image1.jpg', content: <p>内容1</p>, leftText: '左文字1', rightText: '右文字1' },
+  { imageUrl: 'image2.jpg', content: <p>内容2</p>, leftText: '左文字2', rightText: '右文字2' },
+  { imageUrl: 'image2.jpg', content: <p>内容2</p>, leftText: '左文字2', rightText: '右文字2' },
+  { imageUrl: 'image2.jpg', content: <p>内容2</p>, leftText: '左文字2', rightText: '右文字2' },
+  { imageUrl: 'image2.jpg', content: <p>内容2</p>, leftText: '左文字2', rightText: '右文字2' },
+  // 更多项...
+];
+
 function App() {
   return (
-      <FontToggleProvider>
-          <div className="flex flex-col w-screen min-h-screen bg-sky-600">
-            <Navbar />
-            <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/warp" element={<Warp />} />
-                <Route path="/show" element={<Show />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/posts/*" element={<PostDetails />} /> {/* Updated to handle string slugs with possible nested paths (e.g., /posts/QC/QC_1) */}
-                <Route path="/magic" element={<Magic />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-      </FontToggleProvider>
+    <FontToggleProvider>
+      <div className="flex flex-col w-screen min-h-screen bg-sky-600">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/warp" element={<Warp />} />
+            <Route path="/show" element={<Show />} />
+            <Route path="/skill" element={<Skill items={skillItems} />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/posts/*" element={<PostDetails />} /> {/* Updated to handle string slugs with possible nested paths (e.g., /posts/QC/QC_1) */}
+            <Route path="/magic" element={<Magic />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </FontToggleProvider>
   );
 }
 

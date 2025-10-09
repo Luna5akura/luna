@@ -1,0 +1,187 @@
+.skill-container {
+  min-height: 200vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 100px 0;
+  position: relative;
+}
+
+.perspective-wrapper {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.stack-item {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  transform-style: preserve-3d;
+  transition: all 0.3s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform, opacity;
+}
+
+.item-background {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 25px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.item-image {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.item-content {
+  padding: 30px;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateZ(-45deg); /* 初始时反向旋转内容，使其在菱形中正立 */
+  transition: transform 0.5s ease-out;
+}
+
+.stack-item.facing-camera .item-content {
+  transform: rotateZ(0deg); /* 当正方形正对摄像头时，内容恢复正常 */
+}
+
+.side-text {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2d3748;
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.5s ease-out;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1000; /* 确保文字在最上层 */
+}
+
+.left-text {
+  right: calc(100% + 40px);
+  transform: translateY(-50%) translateX(-30px);
+}
+
+.right-text {
+  left: calc(100% + 40px);
+  transform: translateY(-50%) translateX(30px);
+}
+
+.stack-item.facing-camera .side-text {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* 为每个项目添加不同的颜色 */
+.stack-item:nth-child(1) .item-background {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stack-item:nth-child(2) .item-background {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stack-item:nth-child(3) .item-background {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stack-item:nth-child(4) .item-background {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stack-item:nth-child(5) .item-background {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item-content > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .perspective-wrapper {
+    width: 95%;
+    height: 500px;
+  }
+  
+  .stack-item {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .side-text {
+    font-size: 14px;
+    min-width: 140px;
+    padding: 20px;
+  }
+  
+  .left-text {
+    right: calc(100% + 20px);
+  }
+  
+  .right-text {
+    left: calc(100% + 20px);
+  }
+  
+  .item-content {
+    padding: 20px;
+    font-size: 14px;
+  }
+}
+
+/* 确保3D变换平滑 */
+.perspective-wrapper, .stack-item {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
