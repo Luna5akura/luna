@@ -178,6 +178,112 @@ Thus, $ \theta(\boldsymbol{\lambda}) $ is concave.
 
 ## Problem
 
+Prove that every local solution of the following problem is a global solution as well: $ \begin{aligned} \min _{x_{1}, x_{2}, x_{3} \in \mathbb{R}} & e^{x_{1}-2 x_{2}+x_{3}}+\left(x_{1}-5 x_{2}+6 x_{3}\right)^{2}+\left(-x_{1}+2 x_{2}+3 x_{3}\right)^{6} \\ \text { s.t. } & x_{1}+x_{2}-7 x_{3}=1 \\ & x_{1}^{2}+x_{2}^{2}+e^{x_{1}-2 x_{2}-x_{3}} \leq 2 \\ & x_{1} \geq 0 \\ & x_{3} \geq 0 \end{aligned} $
+
+## Solution
+
+First, we show that the function is convex
+
+$e^{x_1-2x_2+x_3}$:
+- $x_1-2x_2+x_3$ is linear, $e^x $ is convex, so it's convex (Lemma 1.41)
+
+$(x_1-5x_2+6x_3)^2$:
+- $x_1-5x_2+6x_3$ is linear, $x^2$ is convex, so it's convex (Lemma 1.41)
+
+Similarly, $(-x_1+2x_2+3x_3)^6$ is convex 
+
+Then the whole function is convex (Lemma 1.40)
+
+Then, we show that the feasible set is convex:
+
+$x_1+x_2-7x_3=1$: This is a linear function, defines a convex set. (Lemma 1.38)
+
+$x_1^2+x_2^2 +  e ^{x_1-2x_2-x3 } \le 2$: Similarly, this function is convex, so this inequality is defines a convex set. (Lemma 1.38)
+
+$x_1\ge 0, x_3 \ge 0 $: These are linear inequality, defines a convex set. (Lemma 1.38)
+
+Therefore, the intersection of convex sets is also convex (Lemma 1.39)
+
+$\square$
+
+# 6
+
+## Problem
+
+Consider the optimization problem 
+
+$ \begin{array}{rl} \min _{x \in \mathbb{R}} & 2 x^{2}-x^{3} \\ \text { s.t. } & x \in\{-2,-1,0,1,2\} \end{array} $
+
+1. Convert the above problem to an optimization problem with a linear objective. 2. Draw the feasible set of the reformulated problem. 3. Convexify the reformulated problem and draw the feasible set of the resulting convex problem.
+
+## Solution (1)
+
+Let $ y=\left(y_{-2}, y_{-1}, y_{0}, y_{1}, y_{2}\right) $ be binary variables such that:
+
+$
+y_{i}=\left\{\begin{array}{ll}
+1 & \text { if } x=i \\
+0 & \text { otherwise }
+\end{array}\right.
+$
+
+Then:
+
+$ \begin{array}{rl}\min _{y} & 16 y_{-2}+3 y_{-1}+0 \cdot y_{0}+1 \cdot y_{1}+0 \cdot y_{2} \\ \mathrm{s.t.} & y_{-2}+y_{-1}+y_{0}+y_{1}+y_{2}=1 \\ & y_{i} \in\{0,1\}, \quad i \in\{-2,-1,0,1,2\}\end{array} $
+
+## Solution (2)
+
+$ \{(1,0,0,0,0),(0,1,0,0,0),(0,0,1,0,0),(0,0,0,1,0),(0,0,0,0,1)\} $
+
+## Solution (3)
+
+Relax the variables:
+
+$ \begin{array}{rl}\min _{y} & 16 y_{-2}+3 y_{-1}+0 \cdot y_{0}+1 \cdot y_{1}+0 \cdot y_{2} \\ \mathrm{s.t.} & y_{-2}+y_{-1}+y_{0}+y_{1}+y_{2}=1 \\ & y_{i} \geq 0\end{array} $
+
+Then the answer:
+
+$ \left\{y \in \mathbb{R}^{5}: y_{i} \geq 0, \sum y_{i}=1\right\} $
+
+# 7
+
+## Problem 
+
+Employ AI to evaluate the benefits of studying convex programming and to provide a concrete example illustrating how convex programming can be applied to solve practical problems.
+
+## Solution 
+
+Studying convex programming is highly beneficial because it provides a powerful framework for solving a wide range of optimization problems reliably and efficiently. Its value is evident in both theoretical research and practical applications across various industries.
+
+### 💡 The Key Benefits of Convex Programming
+The primary advantages of convex programming stem from the mathematical properties of convex functions and convex sets.
+
+*   **Guaranteed Global Optimality**: Perhaps the most significant benefit is that for a convex problem, any local solution you find is guaranteed to be a global solution. This eliminates the uncertainty of whether a better solution exists, which is a major challenge in non-convex optimization.
+*   **Efficient and Reliable Algorithms**: Because of their well-behaved structure, convex problems can be solved using highly efficient algorithms. There are well-established methods for various types of convex problems, such as Quadratic Programming (QP) and Second-Order Cone Programming (SOCP), which are both reliable and can handle large-scale problems.
+*   **The Foundation for Complex Problems**: Convex optimization serves as a cornerstone for tackling more complex, non-convex problems. Techniques like **Sequential Convex Programming (SCP)** approximate a non-convex problem as a sequence of convex sub-problems, solving them iteratively. Similarly, **convex relaxations** (e.g., using Second-Order Cones) can transform intractable non-convex constraints into solvable convex ones, providing useful bounds and approximations.
+
+### 🚰 A Concrete Example: Pollution Control in Wastewater Networks
+A great example of convex programming in action is the management of sewer networks and wastewater treatment plants, a problem tackled by researchers using a Model-Predictive Control (MPC) framework.
+
+*   **The Practical Problem**: The goal is to control actuators (like gates and pumps) in a sewer system to minimize flooding and the release of untreated pollutants, especially during heavy rain. At its core, this involves balancing the flow of wastewater to treatment plants over time.
+*   **The Optimization Challenge**: The natural mathematical model of this system is **non-convex**, primarily due to two factors:
+    1.  **Microbial growth kinetics** in treatment plants, which follow complex, non-linear rules.
+    2.  **Bilinear terms** arising from the product of flow rates and pollutant concentrations.
+    Solving non-convex optimization problems in real-time for a dynamic system like this is computationally very difficult.
+*   **The Convex Programming Solution**: To make the problem tractable for real-time control, the researchers applied convexification techniques:
+    - They used a **second-order cone (SOC) relaxation** to convexify the complex microbial growth kinetics.
+    - They introduced a novel approximation that separated the modeling of flow rates in the pipes from concentrations in the plants, effectively **eliminating the bilinearities**.
+*   **The Outcome**: After these transformations, the complex, non-convex trajectory optimization problem in each control step becomes a **Second-Order Cone Program (SOCP)**. This convex formulation can be solved quickly and reliably. In simulations, this convex optimization-based controller achieved a **15% reduction in released pollutant mass** compared to conventional methods while treating nearly the same volume of wastewater.
+
+### 🔍 How to Deepen Your Understanding
+To further your study of convex programming, you can explore its intersections with other cutting-edge fields:
+
+*   **Integration with Machine Learning**: Concepts from convex optimization are being deeply integrated into machine learning, leading to approaches like **Decision-Focused Learning**, where ML models are tailored to improve the outcomes of downstream convex optimization solvers.
+*   **Convex Optimization in Autonomous Systems**: Beyond wastewater management, convex programming is crucial in safety verification for autonomous vehicles, helping to ensure that a car's steering decisions are safe and reliable.
+
+I hope this overview provides you with a clear picture of the value and application of convex programming. If you are interested in a specific industry or type of problem, feel free to ask for more detailed examples.
+
+
 
 
 placeholder
