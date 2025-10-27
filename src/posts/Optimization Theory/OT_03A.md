@@ -403,7 +403,92 @@ $
 
 $\square$
 
+# 7
 
+## Problem
+
+Maximize $ f(\mathbf{x})=x_{1}^{2}+x_{1} x_{2}+x_{2}^{2} $ subject to
+$
+-3 x_{1}-2 x_{2}+6 \leq 0, \quad-x_{1}+x_{2}-3 \leq 0, \quad x_{1}-2 \leq 0 .
+$
+1. Sketch the feasible set.
+2. Show that a solution exists.
+3. Find the solution.
+
+## Solution (1)
+
+The feasible set is defined by the intersection of three half-planes. To sketch it, we first draw the boundary lines for each inequality.
+
+1.  **Constraint 1:** $-3 x_{1}-2 x_{2}+6 \leq 0 \implies 3 x_{1}+2 x_{2} \geq 6$
+    *   The boundary line is $3x_1 + 2x_2 = 6$.
+    *   If $x_1 = 0$, then $x_2 = 3$. The y-intercept is (0, 3).
+    *   If $x_2 = 0$, then $x_1 = 2$. The x-intercept is (2, 0).
+    *   The inequality $3x_1 + 2x_2 \geq 6$ means the feasible region is on or above this line.
+
+2.  **Constraint 2:** $-x_{1}+x_{2}-3 \leq 0 \implies x_{2} \leq x_{1}+3$
+    *   The boundary line is $x_2 = x_1 + 3$.
+    *   If $x_1 = 0$, then $x_2 = 3$. The y-intercept is (0, 3).
+    *   If $x_2 = 0$, then $x_1 = -3$. The x-intercept is (-3, 0).
+    *   The inequality $x_2 \leq x_1+3$ means the feasible region is on or below this line.
+
+3.  **Constraint 3:** $x_{1}-2 \leq 0 \implies x_{1} \leq 2$
+    *   The boundary line is $x_1 = 2$, which is a vertical line.
+    *   The inequality $x_1 \leq 2$ means the feasible region is on or to the left of this line.
+
+**Finding the Vertices:**
+The feasible region is a polygon. Its vertices are the intersection points of the boundary lines.
+
+*   **Vertex A:** Intersection of $3x_1 + 2x_2 = 6$ and $x_2 = x_1 + 3$.
+    *   Substitute $x_2$: $3x_1 + 2(x_1 + 3) = 6 \implies 3x_1 + 2x_1 + 6 = 6 \implies 5x_1 = 0 \implies x_1 = 0$.
+    *   Then $x_2 = 0 + 3 = 3$.
+    *   **Vertex A = (0, 3)**
+
+*   **Vertex B:** Intersection of $3x_1 + 2x_2 = 6$ and $x_1 = 2$.
+    *   Substitute $x_1$: $3(2) + 2x_2 = 6 \implies 6 + 2x_2 = 6 \implies 2x_2 = 0 \implies x_2 = 0$.
+    *   **Vertex B = (2, 0)**
+
+*   **Vertex C:** Intersection of $x_2 = x_1 + 3$ and $x_1 = 2$.
+    *   Substitute $x_1$: $x_2 = 2 + 3 = 5$.
+    *   **Vertex C = (2, 5)**
+
+**Sketch:**
+The feasible set is the unbounded region defined by the vertices A(0,3), B(2,0), and C(2,5), extending upwards and to the left.
+
+
+
+## Solution (2)
+
+The existence of a solution is not guaranteed by the standard Extreme Value Theorem because the feasible set is **unbounded**. We need a more specific argument.
+
+1.  **Analyze the objective function:** $f(\mathbf{x})=x_{1}^{2}+x_{1} x_{2}+x_{2}^{2}$.
+    This is a quadratic form. Let's analyze its Hessian matrix to determine its convexity.
+    *   $\frac{\partial f}{\partial x_1} = 2x_1 + x_2$
+    *   $\frac{\partial f}{\partial x_2} = x_1 + 2x_2$
+    *   The Hessian matrix is $H = \begin{bmatrix} \frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} \\ \frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$.
+
+2.  **Check for convexity:**
+    *   The first principal minor is $det(H_1) = 2 > 0$.
+    *   The second principal minor is $det(H_2) = (2)(2) - (1)(1) = 3 > 0$.
+    Since the principal minors are all positive, the Hessian is positive definite, which means the function $f(\mathbf{x})$ is **strictly convex**.
+
+3.  **Apply the correct theorem:** A fundamental result in optimization states that the maximum of a convex function over a closed, convex, polyhedral set (if it exists) must be attained at one of the **extreme points (vertices)** of the set.
+
+Since our feasible set has a finite number of vertices, we can find the maximum by simply evaluating the function at each vertex. The existence of a finite set of candidates guarantees that a maximum among them exists.
+
+## Solution (3)
+
+Based on the reasoning above, we only need to test the value of $f(\mathbf{x})$ at the vertices A, B, and C.
+
+*   **At Vertex A = (0, 3):**
+    $f(0, 3) = (0)^2 + (0)(3) + (3)^2 = 0 + 0 + 9 = 9$
+
+*   **At Vertex B = (2, 0):**
+    $f(2, 0) = (2)^2 + (2)(0) + (0)^2 = 4 + 0 + 0 = 4$
+
+*   **At Vertex C = (2, 5):**
+    $f(2, 5) = (2)^2 + (2)(5) + (5)^2 = 4 + 10 + 25 = 39$
+
+Therefore **The maximum value of the function is 39, which occurs at the point $\mathbf{x} = (2, 5)$.**
 
 
 placeholder
