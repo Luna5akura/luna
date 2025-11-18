@@ -11087,7 +11087,428 @@ category: Notes
 - 税前利润 - 所得税费用 = 税后利润
 - 扣除非经常性项目前的利润 + 非经常性项目的影响 = 净利润
 - 净利润 - 优先股权利 = 可供普通股东享有的利润
-`,__vite_glob_0_38=`---
+`,__vite_glob_0_38=`# 1
+
+## Problem
+
+
+第2章 相关性与可靠性的权衡
+
+＂有些资产采用历史成本进行的资产计量，既具有决策相关性，又具备可靠性；而另一些采用历史成本的资产计量，或许能做到比较可靠计量，却缺乏相关性。有些资产基于公允价值计量，既具有高度决策相关性，又具备可靠性；而另一些基于公允价值的资产计量，或许具有相关性，却缺乏可靠性。＂
+
+请对该表述进行简略阐释，并为每种情况举一个例子。
+
+## Solution
+
+
+*   **历史成本 (Historical Cost):** 指的是资产在取得时所支付的现金或现金等价物的金额。 它是一个过去交易的价格，具有客观、可验证的特点。
+*   **公允价值 (Fair Value):** 指在计量日，市场参与者在有序交易中，出售一项资产所能收到或者转移一项负债所需支付的价格。 它反映的是当前市场的看法，更具前瞻性。
+*   **相关性 (Relevance):** 指会计信息能够影响信息使用者的决策。 具有预测价值和反馈价值的信息被认为是相关的。
+*   **可靠性 (Reliability):** 指会计信息是真实、可靠、内容完整的，没有重大的错误或偏差。 可验证性是其重要特征。
+
+在会计实务中，相关性和可靠性往往难以两全。 追求信息的及时性和预测性（相关性）可能会牺牲其客观准确性（可靠性），反之亦然。因此，需要在两者之间进行权衡。
+
+以下是针对表述中四种情况的阐释和举例：
+
+### 1. 采用历史成本计量，既具决策相关性，又具备可靠性
+
+**阐释：**
+这种情况通常发生在资产取得后不久，或者资产的价值在短期内相对稳定。此时，历史成本能够很好地反映资产的当前价值，因此对于决策而言是相关的。同时，由于历史成本是基于实际发生的交易，有原始凭证作为依据，因此其可靠性非常高。
+
+**例子：**
+**一个月前刚购入的办公电脑。**
+*   **可靠性：** 购买电脑的成本有明确的发票可以核对，金额是客观且可验证的。
+*   **相关性：** 由于购买时间很短，这台电脑的市场价值与当初的购买价格（历史成本）相差无几。因此，以历史成本来评估这台电脑的价值，对于公司内部管理、资产盘点等决策是相关的。
+
+### 2. 采用历史成本计量，能做到比较可靠计量，却缺乏相关性
+
+**阐释：**
+这种情况通常发生在资产持有时间较长，且其市场价值发生了显著变化的情况下。历史成本虽然依然可靠（有据可查），但已无法反映资产的真实价值，因此对于当前的经济决策（如出售资产或进行投资决策）失去了参考意义。
+
+**例子：**
+**二十年前在市中心购置的一栋办公楼。**
+*   **可靠性：** 这栋办公楼当年的采购成本是有合同和付款凭证支持的，非常可靠。
+*   **缺乏相关性：** 经过二十年的发展，这栋楼所在区域的房地产价格可能已经大幅上涨。对于“是否出售这栋楼”的决策而言，其账面上的历史成本几乎没有参考价值，决策者更关心的是它当前的市场价值（即公允价值）。
+
+### 3. 基于公允价值计量，既具高度决策相关性，又具备可靠性
+
+**阐释：**
+这种情况通常适用于存在活跃公开市场的资产。由于市场价格是实时、公开且被广泛认可的，因此它既能为决策提供最相关的信息，其数据来源也相对客观，从而保证了可靠性。
+
+**例子：**
+**持有的上市公司股票。**
+*   **高度决策相关性：** 对于投资者来说，股票在证券交易所的实时报价是决定买入、卖出或继续持有的最直接和最重要的依据。
+*   **可靠性：** 股票的公允价值（即市场报价）是公开市场上众多买家和卖家共同交易形成的结果，数据公开透明，可以随时查询和验证，因此是可靠的。
+
+### 4. 基于公允价值计量，或许具有相关性，却缺乏可靠性
+
+**阐释：**
+这种情况通常发生在没有活跃市场的资产，其公允价值难以直接观察，需要通过估值模型等方法进行估计。 这种估计虽然对决策是相关的，但由于包含了较多的主观判断和假设，其结果的可靠性会受到质疑。
+
+**例子：**
+**一项未上市公司的股权投资或一件独特的艺术品。**
+*   **相关性：** 了解这项股权或艺术品当前的价值对于投资决策或资产处置至关重要，因此公允价值信息是高度相关的。
+*   **缺乏可靠性：** 由于没有公开交易市场，确定其公允价值需要依赖复杂的估值模型和大量的假设（如对公司未来现金流的预测、对艺术品市场未来走势的判断等）。不同的评估师可能会得出差异巨大的估值结果，因此其可靠性较低。
+
+# 2
+
+## Problem
+
+2．第3章 现金流量表解读
+新宝公司（Sunbeam Corporation）生产并销售各类小型家用电器，包括烤面包机、食品加工机和华夫饼烤炉。下表列示了该公司第5年、第6年和第7年的现金流量表。
+
+第 5 年经历销售额下滑后，新宝公司于第 6 年聘请阿尔伯特•邓拉普（Albert Dunlap）
+推动公司转型。阿尔伯特•邓拉普在行业内被称为＂电锯阿尔＂（Chainsaw AI），此前曾
+主导斯科特纸业公司（Scott Paper Company）的重组工作。新宝公司的重组举措主要包括裁员及大力削减成本，且大部分重组工作在第 6 年实施。市场预期该公司第 7 年业绩将显著改善。
+财报显示，第 6 年至第 7 年销售额增长 
+18.7
+%
+18.7%
+ ，净利润亦有所提升。但后续披露信息表明，上述销售额增长中近一半来自第 7 年第四季度的欺诈性收入提前确认 —— 这些收入本应在第 8 年第一季度确认。第 5 年、第 6 年和第 7 年的收入增长率分别为 
+−
+2.6
+%
+、
+−
+3.2
+%
+−2.6%、−3.2%
+ 和 
+18.7
+%
+18.7%
+ 。
+
+要求：
+a．结合所提供信息及下表中第 5 年的现金流量表，识别新宝公司存在经营困境且需要重组的相关信号。
+b．利用第 6 年现金流量表中的信息，识别转型举措的相关指标，并指出令你担忧的现金流量间关联关系。
+c．依据第 7 年现金流量表中的信息，指出该公司可能存在激进收入确认行为，且尚未解决其一般性经营问题的相关信号。
+
+| 项目                         | 第7年  | 第6年     | 第5年   |
+|------------------------------|--------|-----------|---------|
+| 经营活动                     |        |           |         |
+| 净收益（亏损）                | 109.4  | （228.3）  | 50.5    |
+| 折旧与摊销                    | 38.6   | 47.4      | 44.2    |
+| 重组与资产减值费用            | －     | 283.7     | －      |
+| 递延所得税                    | 57.8   | （77.8）  | 25.1    |
+| 其他加项                      | 13.7   | 46.2      | 10.8    |
+| 其他减项                      | （84.6）| （27.1）  | （21.7）|
+| 应收账款（增加）减少          | （84.6）| （13.8）  | （4.5） |
+| 存货（增加）减少              | （100.8）| （11.6）  | （4.9） |
+| 预付款项（增加）减少          | （9.0） | 2.7       | （8.8） |
+| 应付账款增加（减少）          | （1.6） | 14.7      | 9.2     |
+| 其他流动负债增加（减少）      | 52.8   | （21.9）  | （18.4）|
+| 经营活动产生的现金流量        | （8.3） | 14.2      | 81.5    |
+| 投资活动                     |        |           |         |
+| 购置固定资产                  | （58.3）| （75.3）  | （140.1）|
+| 出售业务                      | 91.0   | －        | 65.3    |
+| 收购业务                      | －     | （9.0）   | （33.0）|
+| 投资活动产生的现金流量        | 32.7   | （76.2）  | （107.4）|
+| 筹资活动                     |        |           |         |
+| 短期借款增加（减少）          | 5.0    | 30.0      | 40.0    |
+| 长期债务增加                  | －     | 11.5      | －      |
+| 发行普通股                    | 26.6   | 9.2       | 9.8     |
+| 长期债务减少                  | （12.2）| （1.8）   | （5.4） |
+| 普通股回购                    | －     | －        | （13.0）|
+| 股利                          | （3.4） | （3.3）   | （3.3） |
+| 其他筹资交易                  | 0.5    | （4.0）   | （2.0） |
+| 筹资活动产生的现金流量        | 16.5   | 45.2      | 27.9    |
+| 现金变动                       | 40.9   | （16.8）  | 2.0     |
+| 年初现金                       | 11.5   | 28.3      | 26.3    |
+| 年末现金                       | 52.4   | 11.5      | 28.3    |
+
+
+## Solution (a)
+
+结合背景信息和第 5 年的现金流量表，可以识别出公司存在经营困境并需要重组的几个关键信号：
+
+1.  **销售下滑与低质量的经营现金流**：
+    *   **直接信号**：题目信息明确指出，第 5 年的收入增长率为 -2.6%，表明公司主营业务已经陷入停滞甚至萎缩。
+    *   **现金流结构**：尽管经营活动产生的现金流量（OCF）为正（81.5 百万美元），但其构成值得关注。其中，折旧与摊销（44.2 百万美元）和递延所得税（25.1 百万美元）等非现金项目占了很大一部分。这表明，公司依靠非现金项目调整才获得了正向的经营现金流，其核心业务的现金生成能力可能已经开始减弱。
+
+2.  **不可持续的投资策略**：
+    *   **巨额资本支出**：公司在“购置固定资产”上花费了巨额现金（-140.1 百万美元），远超当年的折旧费用（44.2 百万美元）。在销售下滑的背景下，如此激进的扩张性投资策略是值得怀疑的，可能导致未来产能过剩和资产回报率下降。
+    *   **依赖资产出售**：公司通过“出售业务”获得了 65.3 百万美元的现金。这表明公司可能在变卖部分资产来资助其庞大的资本支出，这并非可持续的融资方式。
+
+3.  **高风险的筹资结构**：
+    *   **投资资金来源错配**：公司巨大的投资现金流出（-107.4 百万美元）远高于其经营现金流入（81.5 百万美元）。缺口主要通过筹资活动来弥补，其中“短期借款增加”达到了 40.0 百万美元。用短期债务来支持长期的固定资产投资（如购置固定资产）是一种典型的“短贷长投”，会带来巨大的流动性风险和财务压力。
+
+**结论**：第 5 年，新宝公司在主营业务下滑的同时，仍在进行大规模、高风险的投资，并且依赖变卖资产和增加短期债务来维持运营，这表明公司战略混乱，财务状况紧张，亟需进行重组。
+
+## Solution (b)
+
+第 6 年是“电锯阿尔”主导重组的关键年份，现金流量表清晰地反映了重组的行动及其中隐藏的风险：
+
+1.  **转型举措的指标**：
+    *   **巨额重组费用**：经营活动现金流量表中出现了高达 283.7 百万美元的“重组与资产减值费用”。这是“裁员及大力削减成本”等重组活动在账面上的最直接体现。这笔费用导致了当期巨大的净亏损（-228.3 百万美元）。
+    *   **削减资本支出**：为收缩战线和保存现金，“购置固定资产”的支出从 140.1 百万美元大幅削减至 75.3 百万美元，显示了公司停止了前一年的激进扩张策略。
+
+2.  **令人担忧的现金流量间关联关系**：
+    *   **经营现金流急剧恶化**：尽管有巨额的非现金重组费用加回，公司的经营活动现金流量（OCF）从 81.5 百万美元骤降至 14.2 百万美元。这表明，剔除一次性的会计调整后，公司的核心业务造血能力已经几乎枯竭。
+    *   **靠借债来维持生存**：公司的经营活动（14.2 百万美元）和投资活动（-76.2 百万美元）合计产生了 62.0 百万美元的现金缺口。这个缺口完全依赖于筹资活动（45.2 百万美元，主要来自短期和长期借款）来弥补。这揭示了一个危险的信号：**公司正在通过借债来支付其日常运营和投资，而不是通过经营盈利。这是一种不可持续的生存模式。**
+
+**结论**：第 6 年的重组虽然在削减成本和控制投资上有所体现，但公司的核心经营能力并未改善，反而严重恶化，只能依赖外部输血（借款）来度日。
+
+## Solution (c)
+
+第 7 年，尽管财报显示销售额和净利润均大幅提升，但现金流量表揭示了这场“复苏”的真相，发出了强烈的警报信号：
+
+1.  **利润与现金流的严重背离（最大的警报信号）**：
+    *   公司报告了 109.4 百万美元的净收益，但其**经营活动产生的现金流量却是负的 8.3 百万美元**。健康的盈利应当伴随着正向的经营现金流入，这种“有利润无现金”的情况是公司盈利质量极差的典型特征，强烈暗示利润是通过非现金的会计手段创造的。
+
+2.  **激进收入确认的直接证据**：
+    *   **应收账款激增**：经营活动现金流量表中，“应收账款（增加）”导致了 84.6 百万美元的现金流出。这意味着公司绝大部分的销售增长（财报销售额增长 18.7%）并没有收到现金，而是变成了给客户的欠款（应收账款）。这与背景信息中提到的“欺诈性收入提前确认”完全吻合——确认了本不该确认的收入，但客户在当期并不会付款。
+    *   **存货大幅积压**：“存货（增加）”导致了 100.8 百万美元的现金流出，这是一个巨大的危险信号。如果销售真的如报表所示那样强劲，存货应该减少而非以前所未有的速度积压。这表明产品可能并未真正销售出去，或者公司为制造虚假销售而进行了超额生产。
+
+3.  **经营问题未解决的旁证**：
+    *   **持续依赖资产出售**：公司通过“出售业务”获得了 91.0 百万美元的现金。这笔现金流入掩盖了经营活动和投资活动的现金流失，使得公司整体现金余额表现尚可。然而，这再次表明，**公司产生现金的能力并非来自其核心业务，而是来自于变卖家当。** 一个真正复苏的公司应当依靠主营业务创造现金流。
+
+**结论**：第 7 年的现金流量表通过“利润与现金流的严重背离”、“应收账款和存货的异常剧增”以及“对资产出售的持续依赖”这三大信号，有力地揭示了该公司所谓的业绩改善是会计操纵的结果，其根本的经营问题不仅没有解决，反而可能在虚假的繁荣下进一步恶化。
+
+# 3
+
+## Problem
+
+第 4 章 普通股股东权益回报率及其构成的计算与解读
+
+杰西潘尼公司（JCPenney）运营着连锁零售百货商店，销售服装、鞋类、珠宝及家居装饰品，同时也通过分销的方式销售其大部分产品。在第 5 财年，该公司出售了旗下连锁零售药店——埃克德药房（Eckerd Drugs），并将此次出售获得的现金收入部分用于回购其普通股股份。
+下表列示了杰西潘尼公司第 3 财年、第 4 财年及第 5 财年的部分选定数据。
+要求：
+a．计算第3财年、第4财年及第5财年的资产回报率（ROA）。将资产回报率拆解为资产回报率利润率（profit margin for ROA）与总资产周转率（ATO）两个构成部分。所得税率按 \\( 35 \\% \\) 计算。
+b．计算第 3 财年、第 4 财年及第 5 财年的普通股股东权益回报率（ROCE）。将普通
+
+股股东权益回报率拆解为普通股股东权益回报率利润率（profit margin for ROCE）、资产周转率及资本结构杜杆率三个构成部分。
+c．分析普通股股东权益回报率（ROCE）在这三年间发生变化的原因。
+d．计算每年普通股股东权益回报率（ROCE）与资产回报率（ROA）的比率。
+e．在这三年中的每一年，财务杜杆是否都对普通股股东产生了有利影响？请说明理由。
+
+|                                | 截至1月31日年度                             |           |           |               |
+|--------------------------------|--------------------------------------------|-----------|-----------|---------------|
+|                                | 第5年      | 第4年     | 第3年     |               |
+| 营业收入                       | 18,424     | 17,786    | 17,633    |               |
+| 净收益（亏损）                  | 524        | －928     | 405       |               |
+| 利息费用                        | 279        | 271       | 245       |               |
+| 优先股股息                      | 12         | 25        | 27        |               |
+| 所得税率                        | 35%        | 35%       | 35%       |               |
+| **1月31日：**                   | 第5年      | 第4年     | 第3年     | 第2年         |
+| 总资产                          | 14,127     | 18,300    | 17,787    | 18,048        |
+| 优先股                          | 0          | 304       | 333       | 363           |
+| 普通股股东权益总额              | 4,856      | 5,121     | 6,037     | 5,766         |
+
+## Solution (a)
+
+首先，我们需要计算各年度的平均资产和平均普通股股东权益，这是后续比率计算的基础。
+
+*   **平均总资产**
+    *   第3年: (17,787 + 18,048) / 2 = 17,917.5
+    *   第4年: (18,300 + 17,787) / 2 = 18,043.5
+    *   第5年: (14,127 + 18,300) / 2 = 16,213.5
+*   **平均普通股股东权益**
+    *   第3年: (6,037 + 5,766) / 2 = 5,901.5
+    *   第4年: (5,121 + 6,037) / 2 = 5,579.0
+    *   第5年: (4,856 + 5,121) / 2 = 4,988.5
+
+---
+
+资产回报率（ROA）衡量的是公司利用其所有资产（不论是股东的还是债权人的）创造利润的效率。其计算公式为：
+*   **ROA = [净收益 + (1 - 所得税率) × 利息费用] / 平均总资产**
+
+我们将ROA拆解为两个部分：
+1.  **资产回报率利润率 (Profit Margin for ROA)** = [净收益 + (1 - 所得税率) × 利息费用] / 营业收入
+2.  **总资产周转率 (ATO)** = 营业收入 / 平均总资产
+
+**计算结果如下表所示：**
+
+| 项目 | 第5年 | 第4年 | 第3年 |
+| :--- | :--- | :--- | :--- |
+| **调整后净收益** (净收益 + 0.65 × 利息费用) | 705.35 | -751.85 | 564.25 |
+| 平均总资产 | 16,213.5 | 18,043.5 | 17,917.5 |
+| 营业收入 | 18,424 | 17,786 | 17,633 |
+| **资产回报率 (ROA)** | **4.3\\%** | **-4.2\\%** | **3.1\\%** |
+| | | | |
+| **资产回报率利润率** | 3.8\\% | -4.2\\% | 3.2\\% |
+| **总资产周转率 (ATO)** | 1.14 | 0.99 | 0.98 |
+
+---
+
+## Solution (b)
+
+普通股股东权益回报率（ROCE）衡量的是公司为普通股股东创造利润的能力。其计算公式为：
+*   **ROCE = (净收益 - 优先股股息) / 平均普通股股东权益**
+
+我们将ROCE拆解为三个部分：
+1.  **普通股股东权益回报率利润率 (Profit Margin for ROCE)** = (净收益 - 优先股股息) / 营业收入
+2.  **资产周转率 (ATO)** (同上)
+3.  **资本结构杜杆率 (Leverage)** = 平均总资产 / 平均普通股股东权益
+
+**计算结果如下表所示：**
+
+| 项目 | 第5年 | 第4年 | 第3年 |
+| :--- | :--- | :--- | :--- |
+| **普通股净收益** (净收益 - 优先股股息) | 512 | -953 | 378 |
+| 平均普通股股东权益 | 4,988.5 | 5,579.0 | 5,901.5 |
+| **普通股股东权益回报率 (ROCE)** | **10.3\\%** | **-17.1\\%** | **6.4\\%** |
+| | | | |
+| **普通股股东权益回报率利润率** | 2.8\\% | -5.4\\% | 2.1\\% |
+| **资产周转率 (ATO)** | 1.14 | 0.99 | 0.98 |
+| **资本结构杜杆率** | 3.25 | 3.23 | 3.04 |
+
+---
+
+## Solution (c)
+
+杰西潘尼公司的ROCE在这三年间经历了剧烈的波动：从第3年的6.4%暴跌至第4年的-17.1%，再反弹至第5年的10.3%。其变化原因可以通过分析其三个构成部分来解释：
+
+1.  **从第3年到第4年：**
+    *   **ROCE暴跌的主要原因是利润率的崩溃。** 普通股股东权益回报率利润率从2.1%骤降至-5.4%，这是由于公司在该年度产生了巨额净亏损（-928）。尽管资产周转率（0.98 -> 0.99）和资本结构杠杆率（3.04 -> 3.23）保持稳定甚至略有上升，但它们完全无法抵消盈利能力崩塌带来的负面影响。
+
+2.  **从第4年到第5年：**
+    *   **ROCE的强劲反弹是三个因素共同作用的结果。**
+        *   **利润率恢复：** 公司扭亏为盈，利润率从-5.4%恢复至2.8%，这是ROCE回升的基础。
+        *   **资产周转率显著提升：** ATO从0.99大幅提升至1.14。这是因为公司在第5年出售了埃克德药房，导致总资产规模大幅下降（平均资产从18,043.5降至16,213.5），而营业收入保持稳定。这表明公司剥离资产后，其剩余资产的运营效率更高。
+        *   **资本结构杠杆率微升：** 杠杆率从3.23微升至3.25。公司出售资产获得的现金部分用于回购普通股，导致股东权益下降。资产下降的幅度与股东权益下降的幅度大致相当，维持并略微提升了财务杠杆。
+
+**总结：** 第4年的ROCE暴跌源于经营亏损。第5年的ROCE强势反弹，不仅是因为公司恢复了盈利，更得益于出售资产带来的资产运营效率（周转率）的显著提高。
+
+---
+
+## Solution (d)
+
+| 比率 | 第5年 | 第4年 | 第3年 |
+| :--- | :--- | :--- | :--- |
+| ROCE / ROA | **2.40** | **4.07** | **2.06** |
+
+*注意：第4年的比率为 (-17.1%) / (-4.2%)。负号相消，该比率反映的是财务杠杆对亏损的放大倍数。*
+
+---
+
+## Solution (e)
+
+财务杠杆是否对股东有利，取决于公司的资产回报率（ROA）是否高于其债务的税后成本。一个简便的判断方法是比较ROCE和ROA：
+
+*   如果 **ROCE > ROA**，则财务杠杆是**有利**的。这意味着公司通过借债所投资产的回报率，高于其支付给债权人的成本，多余的收益归属于股东，从而放大了股东的回报。
+*   如果 **ROCE < ROA**，则财务杠杆是**不利**的。这意味着资产回报率不足以覆盖债务成本，财务杠杆反而侵蚀了股东的收益。
+
+根据我们的计算：
+
+*   **第3年：ROCE (6.4%) > ROA (3.1%)**。财务杠杆对股东**有利**。
+*   **第4年：ROCE (-17.1%) < ROA (-4.2%)**。财务杠杆对股东**非常不利**。公司本身经营亏损（ROA为负），财务杠杆进一步放大了这种亏损，对股东造成了更严重的损失。
+*   **第5年：ROCE (10.3%) > ROA (4.3%)**。财务杠杆对股东**有利**。公司恢复盈利后，杠杆再次起到了积极的放大作用。
+
+
+# 4
+
+## Problem
+
+第5章 为一家已宣布破产的公司计算并解释风险与破产预测比率。
+
+达美航空公司（Delta Air Lines，Inc．）是美国最大的航空公司之一。多年来其经营一直濒临破产。下图列示了达美航空在截至2000年12月31日至2004年12月31日这五个年度的若干财务数据。达美航空于2005年9月14日申请破产。建议建立一个 Excel 表格，分别计算在要求 a 和 b 中所需比率与 Altman 的 Z 分数。
+要求
+a．计算下列各项风险比率的数值。
+（1）流动比率（截至2000－2004年年末）
+（2）经营现金流与流动负债比率（2001－2004年）
+（3）负债与资产比率（截至2000－2004年年末）
+（4）长期债务与长期资本比率（截至2000－2004年年末）
+（5）经营现金流与总负债比率（2001－2004年）
+（6）利息保障倍数（2000－2004年）
+b．计算达美航空 2000－2004 各年的 Altman Z 分数。
+c．利用要求 a 和 b 中的分析，讨论在 2005 年显示达美航空破产可能性的最重要因素。
+
+|                                    | 截至12月31日年度              |           |           |           |           |
+|------------------------------------|------------------------------|-----------|-----------|-----------|-----------|
+|                                    | 2004 年                     | 2003 年  | 2002年    | 2001 年   | 2000 年   |
+| 营业收入                           | 15,002                       | 14,087    | 13,866    | 13,879    | 15,657    |
+| 息税前净收益（亏损）                | (3,168)                      | （432）   | (1,337)   | (1,365)   | 1,829     |
+| 利息费用                           | 824                          | 757       | 665       | 499       | 380       |
+| 净收益（亏损）                     | (5,198)                      | （773）   | (1,272)   | (1,216)   | 828       |
+| 流动资产                           | 3,606                        | 4,550     | 3,902     | 3,567     | 3,205     |
+| 总资产                             | 21,801                       | 25,939    | 24,720    | 23,605    | 21,931    |
+| 流动负债                           | 5,941                        | 6,157     | 6,455     | 6,403     | 5,245     |
+| 长期债务                           | 12,507                       | 11,040    | 9,576     | 7,781     | 5,797     |
+| 总负债                             | 27,320                       | 26,323    | 23,563    | 19,581    | 16,354    |
+| 留存收益（赤字）                   | (4,373)                      | 844       | 1,639     | 2,930     | 4,176     |
+| 股东权益                           | (5,519)                      | （384）   | 1,157     | 4,024     | 5,577     |
+| 经营活动产生的现金流量             | (1,123)                      | 142       | 225       | 236       | 2,898     |
+| 流通在外普通股普通股股数           | 140                          | 124       | 123       | 123       | 123       |
+| 每股市价                           | $7.48                         | $11.81    | $12.10    | $29.26    | $50.18    |
+
+
+## Solution (a)
+
+下表列示了根据公司财务数据计算出的六项风险比率。
+
+| 风险比率 | 2004 年 | 2003 年 | 2002 年 | 2001 年 | 2000 年 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **(1) 流动比率** | 0.61 | 0.74 | 0.60 | 0.56 | 0.61 |
+| **(2) 经营现金流与流动负债比率** | -18.9% | 2.3% | 3.5% | 3.7% | (不适用) |
+| **(3) 负债与资产比率** | 125.3% | 101.5% | 95.3% | 82.9% | 74.6% |
+| **(4) 长期债务与长期资本比率** | 179.0% | 103.6% | 89.1% | 65.8% | 50.9% |
+| **(5) 经营现金流与总负债比率** | -4.1% | 0.5% | 1.0% | 1.2% | (不适用) |
+| **(6) 利息保障倍数** | -3.85 | -0.57 | -2.01 | -2.74 | 4.81 |
+
+**计算公式说明：**
+*   (1) = 流动资产 / 流动负债
+*   (2) = 经营活动产生的现金流量 / 流动负债
+*   (3) = 总负债 / 总资产
+*   (4) = 长期债务 / (长期债务 + 股东权益)
+*   (5) = 经营活动产生的现金流量 / 总负债
+*   (6) = 息税前净收益 / 利息费用
+
+---
+
+## Solution (b)
+
+Altman Z 分数是一个综合衡量公司破产风险的模型。其公式为：
+**Z = 1.2 * X1 + 1.4 * X2 + 3.3 * X3 + 0.6 * X4 + 1.0 * X5**
+
+其中：
+*   **X1** = 营运资本 / 总资产
+*   **X2** = 留存收益 / 总资产
+*   **X3** = 息税前净收益 (EBIT) / 总资产
+*   **X4** = 股东权益的市场价值 / 总负债
+*   **X5** = 营业收入 / 总资产
+
+**Z 分数的判别标准：**
+*   **Z > 2.99**：安全区
+*   **1.81 < Z < 2.99**：灰色区
+*   **Z < 1.81**：危险区（破产可能性高）
+
+下表为 Z 分数的计算过程：
+
+| Z 分数构成 | 2004 年 | 2003 年 | 2002 年 | 2001 年 | 2000 年 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 营运资本 (X1) | -0.107 | -0.062 | -0.103 | -0.120 | -0.093 |
+| 留存收益 (X2) | -0.201 | 0.033 | 0.066 | 0.124 | 0.190 |
+| EBIT (X3) | -0.145 | -0.017 | -0.054 | -0.058 | 0.083 |
+| 股东权益市场价值 / 总负债 (X4) | 0.038 | 0.056 | 0.063 | 0.183 | 0.377 |
+| 营业收入 (X5) | 0.688 | 0.543 | 0.561 | 0.588 | 0.714 |
+| **Altman Z 分数** | **-0.18** | **0.80** | **0.65** | **0.78** | **1.89** |
+
+---
+
+## Solution (c)
+
+结合上述两部分的计算结果，可以清晰地看到达美航空走向破产的轨迹。以下是在 2005 年显示其破产可能性的最重要因素：
+
+1.  **核心盈利能力崩溃与经营现金流枯竭（根本原因）**
+    *   **利息保障倍数**：从 2000 年健康的 4.81 倍，急转直下为 2001 年至 2004 年连续四年的负值。这意味着公司核心业务产生的利润（EBIT）甚至远不足以支付其利息费用，表明其主营业务已陷入严重亏损。
+    *   **经营现金流**：从 2000 年强劲的 29 亿美元流入，逐年萎缩，到 2004 年变为 **-11.23 亿美元** 的巨额流出。这是最致命的信号，说明公司的日常经营活动本身就在“烧钱”，失去了自我造血能力，只能依赖外部融资或变卖资产来维持生存。
+
+2.  **资不抵债与极端的财务杠杆（财务状况）**
+    *   **负债与资产比率**：该比率从 2000 年的 74.6% 一路攀升，在 2003 年突破 100% (101.5%)，到 2004 年更是高达 125.3%。**比率超过 100% 意味着公司已经资不抵债**，其所有资产甚至不足以偿还其全部债务，股东权益已为负值。从会计角度看，公司已经破产。
+    *   **长期债务与长期资本比率**：同样，该比率在 2003 年超过 100%，并在 2004 年达到惊人的 179.0%。这表明公司的长期资本结构已经完全被债务主导，股东的资本缓冲垫已不复存在。
+
+3.  **流动性严重不足（短期风险）**
+    *   **流动比率**：在整个五年期间，该比率始终在 0.6 左右徘徊，远低于通常认为安全的 1.0 或 1.5 水平。这表明公司的流动资产远不足以覆盖其短期内（一年内）到期的流动负债，随时可能面临债务违约风险。
+    *   **经营现金流与流动负债比率**：2004 年该比率降至 -18.9%，说明公司不仅没有任何经营现金来偿还短期债务，反而因经营活动产生了更多的现金缺口，加剧了流动性危机。
+
+4.  **Altman Z 分数的综合预警**
+    *   Altman Z 分数提供了一个全面的视角。达美航空在 2000 年的 Z 分数为 1.89，已处于“灰色区”边缘。从 **2001 年到 2004 年，其 Z 分数连续四年都远低于 1.81，深陷“危险区”**，甚至在 2004 年变为负值。这个综合指标明确且持续地发出了公司存在极高破产风险的强烈信号。
+
+**结论：**
+最重要的破产预警因素是 **核心盈利能力的完全丧失和经营现金流的枯竭**。这是导致公司财务状况急剧恶化的根本原因。在此基础上，**极端且不断攀升的财务杠杆**使其财务结构变得异常脆弱，最终导致公司**资不抵债**。同时，**严重的流动性短缺**则意味着公司已无力应对短期到期的债务，破产只是时间问题。Altman Z 分数作为一项综合性指标，在 2001 年就已明确地将公司划入高风险类别，为破产提供了强有力的早期预警。
+
+`,__vite_glob_0_39=`---
 title: Game Theory - Week 2
 category: Notes
 date: 2025-9-10 
@@ -11182,7 +11603,7 @@ When in a combination:
 
 - Every player **CANNOT** do better by choosing a different choice.
 
-`,__vite_glob_0_39=`---
+`,__vite_glob_0_40=`---
 title: Game Theory - Assignment - Week 3
 category: Assignments 
 date: 2025-9-10 
@@ -11296,7 +11717,7 @@ $$
 \\hline
 \\end{array}
 $$
-`,__vite_glob_0_40=`---
+`,__vite_glob_0_41=`---
 title: Game Theory - Paper - Week 3
 category: Game Theory Paper
 date: 2025-9-10 
@@ -11554,7 +11975,7 @@ $$
 > 
 > (b) $ \\pi_{M}^{A} \\geq \\pi_{M}^{R} $ if $ r \\leq \\tilde{r}_{M} \\equiv 1 / 2 $ and $ \\pi_{M}^{A}<\\pi_{M}^{R} $ otherwise.
 
-`,__vite_glob_0_41=`---
+`,__vite_glob_0_42=`---
 title: Game Theory - Week 4
 category: Notes
 date: 2025-9-10 
@@ -11613,7 +12034,7 @@ $u_i(g_1,\\dots,g_n) = g_i \\cdot v(g_1+\\dots+g_n)-cg_1$
 
 
 
-`,__vite_glob_0_42=`---
+`,__vite_glob_0_43=`---
 title: Game Theory - Assignment - Week 4
 category: Assignments
 date: 2025-9-10 
@@ -11702,7 +12123,7 @@ Then we get:
 
 $\\left(\\left(\\frac{2 w_{1}-w_{2}}{w_{1}+w_{2}}, \\frac{2 w_{2}-w_{1}}{w_{1}+w_{2}}\\right),\\left(\\frac{2 w_{1}-w_{2}}{w_{1}+w_{2}}, \\frac{2 w_{2}-w_{1}}{w_{1}+w_{2}}\\right)\\right)$
 
-`,__vite_glob_0_43=`---
+`,__vite_glob_0_44=`---
 title: Game Theory - Paper - Week 4
 category: Game Theory Paper
 date: 2025-9-10 
@@ -11910,7 +12331,7 @@ b+k(u-u_0)^2&u>u_0
 
 
 
-`,__vite_glob_0_44=`---
+`,__vite_glob_0_45=`---
 title: Game Theory - Assignment - Week 5
 category: Assignments
 date: 2025-9-10 
@@ -12172,7 +12593,7 @@ He will first pick 2, then pick the number that makes $N$ proportional to $4$
 
 Player 1 wins.
 
-He will first pick 3, then pick the number that makes $N$ proportional to $4$`,__vite_glob_0_45=`---
+He will first pick 3, then pick the number that makes $N$ proportional to $4$`,__vite_glob_0_46=`---
 title: Game Theory - Paper - Week 5
 category: Game Theory Paper
 date: 2025-9-10 
@@ -12405,7 +12826,7 @@ $q_i = \\dfrac{(1-k)a-p_i+kp_i}{1-k^2}$
 
 - the supplier secures greater retail profit (relies more on reselling) by raising the wholesale price even if her selling cost is relatively small
 
-`,__vite_glob_0_46=`---
+`,__vite_glob_0_47=`---
 title: Game Theory - Assignment - Week 6
 category: Assignments
 date: 2025-9-10 
@@ -12480,7 +12901,7 @@ Final answer:
 3. Else:
 - Partner 1 contributes $ c_{1}=0 $.
 - Partner 2 contributes $ c_{2}=0 $.
-- Project is not completed.`,__vite_glob_0_47=`---
+- Project is not completed.`,__vite_glob_0_48=`---
 title: Game Theory - Assignment - Week 7
 category: Assignments
 date: 2025-9-10 
@@ -12529,7 +12950,7 @@ Then:
 $Q = \\dfrac{5(a-c)}{6}$
 
 $P = \\dfrac{a + 5c}{6}$
-`,__vite_glob_0_48=`---
+`,__vite_glob_0_49=`---
 title: Game Theory - Assignment - Week 8
 category: Assignments
 date: 2025-9-10 
@@ -12685,7 +13106,7 @@ No unilateral deviation improves either player's total payoff:
 - Player 2: Sticking with R gives 5, deviating gives 4 (L), 3 (C).
 
 Thus, (B,R) is a NE in the first stage given the second-stage strategies.
-`,__vite_glob_0_49=`---
+`,__vite_glob_0_50=`---
 title: Game Theory - Assignment - Week 9
 category: Assignments
 date: 2025-9-10 
@@ -12773,7 +13194,7 @@ Then:
 - Worker's Strategy: In period $ t $, produce $ y $ if the firm has always paid $ w_{t} \\geq c $ when $ y $ was produced in the past (or $ t=1 $ ); otherwise, produce 0 .
 - Condition: The equilibrium exists if and only if $ \\delta \\geq \\dfrac{c}{y} $.
 
-`,__vite_glob_0_50=`---
+`,__vite_glob_0_51=`---
 title: Game Theory - Week 1
 category: Notes
 date: 2025-9-10 
@@ -12834,7 +13255,7 @@ Static / Dynamic + Complete / private
   - All players know that all players know the game being played 
   - etc.
 
-`,__vite_glob_0_51=`---
+`,__vite_glob_0_52=`---
 title: Game Theory - Assignment - Week 10
 category: Assignments
 date: 2025-9-10 
@@ -12979,7 +13400,7 @@ Then:
 
 produce both, $x=4, y=6$, profit $3P$
 
-`,__vite_glob_0_52=`---
+`,__vite_glob_0_53=`---
 title: Game Theory - Paper - Week 10
 category: Game Theory Paper
 date: 2025-9-10 
@@ -13070,7 +13491,7 @@ Why Benefits Persist: Rebates, regardless of duration, mitigate strategic invent
 
 
 
-`,__vite_glob_0_53=`---
+`,__vite_glob_0_54=`---
 title: Game Theory - Assignment - Week 11
 category: Assignments
 date: 2025-9-10 
@@ -13230,7 +13651,7 @@ Summary of All Pure-Strategy PBEs
 3. Separating Equilibrium 2:
 - $ t_{1} $ sends $ R, t_{2} $ sends $ L $.
 - Receiver plays $ u $ after $ L, d $ after $ R $.
-- Beliefs: Certainty at each information set.`,__vite_glob_0_54=`---
+- Beliefs: Certainty at each information set.`,__vite_glob_0_55=`---
 title: Game Theory - Assignment - Week 2
 category: Assignments
 date: 2025-9-10 
@@ -13301,7 +13722,7 @@ Therefore, he can't be better off.
 
 
 
-`,__vite_glob_0_55=`---
+`,__vite_glob_0_56=`---
 title: Game Theory - Assignment - Week 1
 category: Assignments
 date: 2025-9-10 
@@ -13505,7 +13926,7 @@ Xiaoming now know the day:
 Thus, we can get the final answer: **May 2**
 
 
-`,__vite_glob_0_56=`---
+`,__vite_glob_0_57=`---
 title: Game Theory - Paper - Week 1
 category: Game Theory Paper
 date: 2025-9-10 
@@ -13944,7 +14365,7 @@ Then we have:
 > 
 > $\\begin{array}{c}c \\in\\left(h\\left(c_{2}\\right) a, \\frac{3\\left[1+2 c_{2}\\right] a}{\\left[5+8 c_{2}\\right]}\\right), \\text { where } \\\\h\\left(c_{2}\\right)=\\frac{9+57 c_{2}+80 c_{2}^{2}}{4\\left[8 c_{2}\\left(1+2 c_{2}\\right)+\\left(3+8 c_{2}\\right) \\sqrt{2+6 c_{2}+4 c_{2}^{2}}\\right]} \\end{array}$
 
-`,__vite_glob_0_57=`---
+`,__vite_glob_0_58=`---
 title: Game Theory - Paper - Week 2
 category: Game Theory Paper
 date: 2025-9-10 
@@ -14362,7 +14783,7 @@ $
 
 
 
-`,__vite_glob_0_58=`---
+`,__vite_glob_0_59=`---
 title: Game Theory - Assignment - Paper
 category: Assignments
 date: 2025-9-10 
@@ -14605,7 +15026,7 @@ Shubik, M. (1971). The dollar auction game: A paradox in noncooperative behavior
 
 Staw, B. M. (1976). Knee-deep in the big muddy: A study of escalating commitment to a chosen course of action. *Organizational Behavior and Human Performance*, 16(1), 27-44.
 
-Teger, A. I. (1980). *Too much invested to quit*. New York: Pergamon Press.`,__vite_glob_0_59=`---
+Teger, A. I. (1980). *Too much invested to quit*. New York: Pergamon Press.`,__vite_glob_0_60=`---
 title: International Businerss Management - Assignment - Week 1
 category: Assignments
 ---
@@ -14622,7 +15043,7 @@ category: Assignments
 | **生产与供应链本土化** | - 上海超级工厂零部件本土化率**超过95%**<br>- 签约**400余家**中国一级供应商，其中**60余家**进入全球供应链体系 | - 实现**全球最低的制造成本**与售价<br>- 上海工厂成为特斯拉的**全球产能支柱**与**出口中心** |
 | **技术研发本土化** | - 设立**上海研发中心**，专注软硬件开发与中国市场适配<br>- 与**百度**合作，利用其高精度地图优化FSD（完全自动驾驶）系统<br>- 与**字节跳动火山引擎**合作，搭载本土AI大模型，提升智能座舱体验 | - 攻克技术落地面临的**本地法规**与**道路环境**挑战<br>- 满足中国消费者对**智能交互**的本土化需求，弥补早期短板 |
 | **生态体系与营销本土化** | - **充电网络**等基础设施全面覆盖中国360多座城市<br>- 入驻**天猫**等第三方平台，开展本土化营销与用户服务<br>- 在华布局**储能业务**（Megapack），形成新增长点 | - 构建从用车到服务的**本地化生态闭环**，提升用户粘性<br>- 拓展新的业务增长曲线，降低单一依赖整车销售的风险 |
-`,__vite_glob_0_60=`---
+`,__vite_glob_0_61=`---
 title: Internation Business Management - Assignment - Week 3
 category: Assignments
 ---
@@ -14673,7 +15094,7 @@ category: Assignments
 
 最后，中国也在**推动区域经济一体化**方面发挥着重要作用。通过积极参与和推动区域全面经济伙伴关系协定 (RCEP) 等区域贸易安排，中国为促进亚洲乃至世界的经济融合做出了贡献。
 
-综上所述，世界经济一体化是由跨国公司这支主力军，在科技、制度和市场三大力量的驱动下不断深化的复杂过程。与传统教材相比，国际商务管理的视角更加注重微观主体的能动性和各项驱动力的动态交互。在这一历史进程中，中国已经从一个重要的参与者，转变为一个积极的建设者和塑造者，为充满不确定性的世界经济注入了宝贵的稳定性和增长动力。`,__vite_glob_0_61=`## 数字化浪潮下的中国企业全球化：机遇、挑战与管理策略
+综上所述，世界经济一体化是由跨国公司这支主力军，在科技、制度和市场三大力量的驱动下不断深化的复杂过程。与传统教材相比，国际商务管理的视角更加注重微观主体的能动性和各项驱动力的动态交互。在这一历史进程中，中国已经从一个重要的参与者，转变为一个积极的建设者和塑造者，为充满不确定性的世界经济注入了宝贵的稳定性和增长动力。`,__vite_glob_0_62=`## 数字化浪潮下的中国企业全球化：机遇、挑战与管理策略
 
 在当今全球化的新阶段，数字化流动正以前所未有的深度和广度重塑国际商业格局。对于积极“走出去”的中国企业而言，这既带来了跨越式发展的历史性机遇，也带来了前所未有的复杂挑战。从国际商务管理的视角看，成功驾驭这股数字化浪潮，关键在于企业能否识别并利用其带来的机遇，同时有效应对并管理其伴随的风险。
 
@@ -14711,7 +15132,7 @@ category: Assignments
 
 *   **积极参与国际合作，共建数字生态**：在当前复杂的地缘政治环境下，单打独斗难以应对所有挑战。中国企业应积极寻求与国际伙伴的合作，共同建立开放、公平、非歧视的数字发展环境。 通过参与“数字丝绸之路”等国际合作项目，企业不仅可以拓展新的市场机会，也有助于在全球数字治理中贡献中国智慧。
 
-综上所述，数字化流动为中国企业的国际化带来了深刻的变革。企业唯有在国际商务管理的框架下，系统性地把握机遇、应对挑战，才能在这场全球性的数字化浪潮中行稳致远，实现高质量的全球化发展。`,__vite_glob_0_62=`# 大变局对国际商务管理的挑战
+综上所述，数字化流动为中国企业的国际化带来了深刻的变革。企业唯有在国际商务管理的框架下，系统性地把握机遇、应对挑战，才能在这场全球性的数字化浪潮中行稳致远，实现高质量的全球化发展。`,__vite_glob_0_63=`# 大变局对国际商务管理的挑战
 
 时代、定位、类群
 
@@ -14723,7 +15144,7 @@ category: Assignments
 
 
 
-`,__vite_glob_0_63=`### 1. 什么是跨国公司？
+`,__vite_glob_0_64=`### 1. 什么是跨国公司？
 
 首先，我们需要明确跨国公司的基本定义和特征。
 
@@ -14799,7 +15220,74 @@ CAGE框架帮助我们理解，麦当劳的全球成功并非简单的复制粘�
 *   CAGE距离框架帮助企业评估“**在哪里**”开展业务以及需要应对的挑战。
 *   Bartlett & Ghoshal的战略框架则揭示了跨国公司“**如何**”在全球范围内组织和管理其业务。
 
-结合丰田和麦当劳等真实案例，我们可以看到这些理论在现实世界中的应用，从而更深刻地理解跨国公司在全球化浪潮中的复杂运作和战略决策。`,__vite_glob_0_64=`---
+结合丰田和麦当劳等真实案例，我们可以看到这些理论在现实世界中的应用，从而更深刻地理解跨国公司在全球化浪潮中的复杂运作和战略决策。`,__vite_glob_0_65=`|       |      |
+|-|-|
+| だから | Result | dakara
+| ところが | Unexpected Oral | tokoroga
+| ですが | Unexpected Formal | desuga
+| もっとも | Contrast | mottomo
+| それでも | Even if | soredemo
+
+|||
+|-|-|
+| だけ | neural objective |
+| きり | Subjective |
+
+|||
+|-|-|
+| そう | Hear Will |
+| よう | Formal Inference |
+| みたい | Oral Inference |
+| みえる | See |
+
+|||
+|-|-|
+| しだい | Sequencial |
+| うちに | Within |
+| ながら | as... as... |
+| ている | One thing, doing |
+
+|||
+|-|-|
+| にかぎる | |
+| ばかりだ | |
+
+|||
+|-|-|
+| ことになった | Passive |
+| のはきめた | Not Passive |
+
+|||
+|-|-|
+| もし | If |
+| いちおう | In case |
+
+|||
+|-|-|
+| について | Just a side evidence |
+| にあたる | A and B has relationship |
+| にたいして | |
+
+|||
+|-|-|
+| ついに | good result, waiting|
+| とうとう | can't avoid |
+
+|||
+|-|-|
+| それに | Parallel |
+| そのうえ | On top of that |
+
+|||
+|-|-|
+| くらい | | kurai
+| ごろ | Date time | goro
+
+|||
+|-|-|
+| でも | An example | demo
+| さえ | The least possibility | sae
+`,__vite_glob_0_66=`---
 title: Math
 date: 2025-9-10 
 ---
@@ -14808,7 +15296,7 @@ date: 2025-9-10
 
 # Useful Taylor Expression:
 
-$\\ln(1+x) = \\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$`,__vite_glob_0_65=`---
+$\\ln(1+x) = \\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$`,__vite_glob_0_67=`---
 title: Musician
 date: 2025-9-10 
 ---
@@ -14827,7 +15315,7 @@ date: 2025-9-10
 
 3. 哼旋律 DDD
 
-4. 第二个曲谱 AAA`,__vite_glob_0_66=`---
+4. 第二个曲谱 AAA`,__vite_glob_0_68=`---
 title: Nethack Diary
 date: 2025-9-10 
 ---
@@ -14835,7 +15323,7 @@ date: 2025-9-10
 # Shortcuts
 
 
-`,__vite_glob_0_67=`---
+`,__vite_glob_0_69=`---
 title: Strict Game Development
 date: 2025-9-10 
 ---
@@ -15002,7 +15490,7 @@ Challenge, narration, discovery, fantaasy
 
 
 
-`,__vite_glob_0_68=`---
+`,__vite_glob_0_70=`---
 title: VSCode Shortcut
 category: 
 ---
@@ -15016,7 +15504,49 @@ category:
 
 
 
-`,__vite_glob_0_69="---\ntitle: Vimium shortcuts\n---\n\n# Vimium 常用快捷键速查表\n\n## 🎯 基本操作\n\n| 功能               | 快捷键  |\n|--------------------|---------|\n| **显示所有可点击链接（Hint 模式）** | `f`     |\n| 在新标签页打开链接  | `F`     |\n| **向下滚动**         | `j`     |\n| **向上滚动**         | `k`     |\n| **向右滚动**         | `l`     |\n| **向左滚动**         | `h`     |\n| **滚动到页面顶部**   | `gg`    |\n| **滚动到页面底部**   | `G`     |\n| **向上翻页**         | `u`     |\n| **向下翻页**         | `d`     |\n| **返回上一个页面**   | `H`     |\n| **前进到下一个页面** | `L`     |\n| **重新加载页面**     | `r`     |\n| **关闭当前标签页**   | `x`     |\n| **恢复刚关闭的标签页** | `X`     |\n| **切换到左边的标签页** | `J`     |\n| **切换到右边的标签页** | `K`     |\n| **打开新标签页**     | `t`     |\n| **聚焦地址栏（进入输入模式）** | `o`     |\n| **搜索当前页面**     | `/`     |\n| **显示帮助页**       | `?`     |\n\n## 🔧 Hint 模式（超实用）\n\n1. **按下 `f`**，页面上所有可点击的元素（链接、按钮、输入框等）会显示提示字符（如 “AA”, “SD”等）。\n2. 输入对应字母即可点击该元素，按 `F` 则会在新标签页中打开链接。\n\n## ⚙️ 高级功能\n\n| 功能              | 快捷键   | 说明                      |\n|-------------------|----------|---------------------------|\n| 打开书签或历史记录 | `b` / `B` | 与 `o` 类似                |\n| 复制当前网址      | `yy`     | 类似 Vim 的 `yy` 复制行    |\n| 粘贴并打开网址    | `p` / `P` | 打开剪贴板中的 URL        |\n| 缩放页面          | `zi` / `zo` | 放大/缩小                  |\n| 暂时禁用 Vimium（在某个页面） | `Shift + Esc` | 恢复用鼠标操作             |\n\n## 🌟 自定义快捷键\n\n1. 进入 Vimium 设置页面 → **Options**\n2. 在 “Custom key mappings” 区域添加你自己的映射，例如：\n    ```txt\n    map J previousTab\n    map K nextTab\n    unmap f\n    map s LinkHints.activate\n    ```\n\n3. 点击 “Save Changes”\n\n---\n\n## 🔄 Vimium 与 Vim 对照表\n\n| Vim 操作 | Vimium 类似功能 |\n|----------|----------------|\n| `j` / `k` | 上下滚动页面 |\n| `gg` / `G` | 跳到顶部 / 底部 |\n| `/` 搜索  | 页面内搜索   |\n| `x` 删除行 | 关闭标签页   |\n| `u` 撤销   | 恢复关闭标签页（`X`） |\n\n---\n\n## 📌 小贴士\n\n- 如果某个网页的键盘快捷键与 Vimium 冲突，可以：\n  1. 进入 Vimium 设置 → **Excluded URLs and Keys**  \n  2. 添加该网址，让 Vimium 在该页面禁用\n- 在网页上按 `?` 可随时查看完整快捷键帮助。\n",__vite_glob_0_70=`---
+`,__vite_glob_0_71="---\ntitle: Vimium shortcuts\n---\n\n# Vimium 常用快捷键速查表\n\n## 🎯 基本操作\n\n| 功能               | 快捷键  |\n|--------------------|---------|\n| **显示所有可点击链接（Hint 模式）** | `f`     |\n| 在新标签页打开链接  | `F`     |\n| **向下滚动**         | `j`     |\n| **向上滚动**         | `k`     |\n| **向右滚动**         | `l`     |\n| **向左滚动**         | `h`     |\n| **滚动到页面顶部**   | `gg`    |\n| **滚动到页面底部**   | `G`     |\n| **向上翻页**         | `u`     |\n| **向下翻页**         | `d`     |\n| **返回上一个页面**   | `H`     |\n| **前进到下一个页面** | `L`     |\n| **重新加载页面**     | `r`     |\n| **关闭当前标签页**   | `x`     |\n| **恢复刚关闭的标签页** | `X`     |\n| **切换到左边的标签页** | `J`     |\n| **切换到右边的标签页** | `K`     |\n| **打开新标签页**     | `t`     |\n| **聚焦地址栏（进入输入模式）** | `o`     |\n| **搜索当前页面**     | `/`     |\n| **显示帮助页**       | `?`     |\n\n## 🔧 Hint 模式（超实用）\n\n1. **按下 `f`**，页面上所有可点击的元素（链接、按钮、输入框等）会显示提示字符（如 “AA”, “SD”等）。\n2. 输入对应字母即可点击该元素，按 `F` 则会在新标签页中打开链接。\n\n## ⚙️ 高级功能\n\n| 功能              | 快捷键   | 说明                      |\n|-------------------|----------|---------------------------|\n| 打开书签或历史记录 | `b` / `B` | 与 `o` 类似                |\n| 复制当前网址      | `yy`     | 类似 Vim 的 `yy` 复制行    |\n| 粘贴并打开网址    | `p` / `P` | 打开剪贴板中的 URL        |\n| 缩放页面          | `zi` / `zo` | 放大/缩小                  |\n| 暂时禁用 Vimium（在某个页面） | `Shift + Esc` | 恢复用鼠标操作             |\n\n## 🌟 自定义快捷键\n\n1. 进入 Vimium 设置页面 → **Options**\n2. 在 “Custom key mappings” 区域添加你自己的映射，例如：\n    ```txt\n    map J previousTab\n    map K nextTab\n    unmap f\n    map s LinkHints.activate\n    ```\n\n3. 点击 “Save Changes”\n\n---\n\n## 🔄 Vimium 与 Vim 对照表\n\n| Vim 操作 | Vimium 类似功能 |\n|----------|----------------|\n| `j` / `k` | 上下滚动页面 |\n| `gg` / `G` | 跳到顶部 / 底部 |\n| `/` 搜索  | 页面内搜索   |\n| `x` 删除行 | 关闭标签页   |\n| `u` 撤销   | 恢复关闭标签页（`X`） |\n\n---\n\n## 📌 小贴士\n\n- 如果某个网页的键盘快捷键与 Vimium 冲突，可以：\n  1. 进入 Vimium 设置 → **Excluded URLs and Keys**  \n  2. 添加该网址，让 Vimium 在该页面禁用\n- 在网页上按 `?` 可随时查看完整快捷键帮助。\n",__vite_glob_0_72=`---
+title: What is IS?
+category: 
+---
+
+# 1 专有名词
+
+是
+
+存在者
+
+存在：怎样去**是**
+
+此在：会发问的**存在者**
+
+生存：**此在**以对它的是什么有所作为的**存在**
+
+本质：是什么
+
+本真生存：立足于自己本身i**生存**
+
+范畴：非**此在**式的**存在者**的**存在**规定
+
+在之中：**此在**的某种生存论性质
+
+操劳：**在之中**的方式
+
+# 2 概说准备性的此在分析
+
+**此在**的**本质**在于它的**生存**
+
+**此在**立足于自己本身**生存** / **此在**是**本真生存**
+
+# 3 此在的基本建构——在世界中存在
+
+
+
+
+
+
+
+
+`,__vite_glob_0_73=`---
 title: Diary 
 date: 2025-9-10 
 ---
@@ -15029,8 +15559,9 @@ date: 2025-9-10
     "after": ["<Esc>"]
 }
 \`\`\`
+https://rich-d-wilkinson.github.io/MATH3030/
 
-`,__vite_glob_0_71=`---
+`,__vite_glob_0_74=`---
 title: Test
 date: 2025-9-10 
 ---
@@ -15048,7 +15579,7 @@ $$
 $$
 
 More content...
-`,__vite_glob_0_72=`好的，我们来分析这个问题。这个问题要求对一个连续时间系统进行离散化，并分析离散化对能控性的影响。
+`,__vite_glob_0_75=`好的，我们来分析这个问题。这个问题要求对一个连续时间系统进行离散化，并分析离散化对能控性的影响。
 
 我们将分步进行分析：
 1.  判断原连续时间系统的能控性。
@@ -15150,7 +15681,7 @@ $$ 2\\sin(T)(\\cos(T) - 1) = 0 $$
 3.  如果采样周期 **T 不是 π 的整数倍** ($ T \\neq k\\pi, k \\in \\mathbb{Z}^+ $)，则离散化后的系统**保持能控性**。
 4.  如果采样周期 **T 是 π 的整数倍** ($ T = k\\pi, k \\in \\mathbb{Z}^+ $)，则离散化后的系统会**失去能控性**，变为不可控系统。
 
-这种现象被称为“采样引起不可控性”。它发生在当采样频率与系统的自然频率之间存在特定关系时，导致输入在采样点上对系统的某个模态失去控制能力。对于本题中的系统，其特征值为 $ \\lambda = \\pm i $，对应的是一个振荡频率为 1 rad/s 的谐振环节，其周期为 $ 2\\pi $。当采样周期 T 是振荡周期的一半（$ \\pi $）的整数倍时，采样点恰好落在系统状态循环的特定位置，使得控制输入无法影响系统的状态，从而导致能控性丧失。`,__vite_glob_0_73=`---
+这种现象被称为“采样引起不可控性”。它发生在当采样频率与系统的自然频率之间存在特定关系时，导致输入在采样点上对系统的某个模态失去控制能力。对于本题中的系统，其特征值为 $ \\lambda = \\pm i $，对应的是一个振荡频率为 1 rad/s 的谐振环节，其周期为 $ 2\\pi $。当采样周期 T 是振荡周期的一半（$ \\pi $）的整数倍时，采样点恰好落在系统状态循环的特定位置，使得控制输入无法影响系统的状态，从而导致能控性丧失。`,__vite_glob_0_76=`---
 title: Optimization Theory - Week 1
 category: Notes
 ---
@@ -15348,7 +15879,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_74=`---
+`,__vite_glob_0_77=`---
 title: Optimization Theory - Assignment - Week 1
 category: Assignments
 ---
@@ -15566,7 +16097,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_75=`---
+placeholder`,__vite_glob_0_78=`---
 title: Optimization Theory - Week 2
 category: Notes 
 ---
@@ -15708,7 +16239,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_76=`---
+placeholder`,__vite_glob_0_79=`---
 title: Optimization Theory - Assignment - Week 2
 category: Assignments
 ---
@@ -16007,7 +16538,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_77=`---
+`,__vite_glob_0_80=`---
 title: Optimization Theory - Detail - Week 2
 category: Notes
 ---
@@ -16015,7 +16546,7 @@ category: Notes
 ## 1.3 Proof
 
 
-`,__vite_glob_0_78=`---
+`,__vite_glob_0_81=`---
 title: Optimization Theory - Week 3
 category: Notes
 ---
@@ -16328,7 +16859,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_79=`---
+placeholder`,__vite_glob_0_82=`---
 title: Optimization Theory - Assignment - Week 3
 category: Assignments
 ---
@@ -16831,7 +17362,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_80=`---
+placeholder`,__vite_glob_0_83=`---
 title: Optimization Theory - Week 4
 category: Notes
 ---
@@ -17047,7 +17578,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_81=`---
+placeholder`,__vite_glob_0_84=`---
 title: Optimization Theory - Assignment - Week 4
 category: Assignments
 ---
@@ -17383,7 +17914,7 @@ Studying Lagrangian Dual problems offers a wealth of benefits in the field of op
  *   **Engineering**: In fields like structural design and electrical networks, duality provides alternative perspectives on the problem. For instance, in electrical networks, primal variables might represent current flows, while dual variables correspond to voltage differences. 
  *   **Combinatorial Optimization**: For many discrete optimization problems that are NP-hard, the Lagrangian dual can provide tight bounds that are essential for the performance of exact algorithms and for evaluating the quality of approximate solutions. 
 
- In conclusion, the study of Lagrangian Dual problems provides a rich theoretical framework with profound practical implications. It offers a powerful lens through which to view and solve optimization problems, leading to deeper understanding, more efficient algorithms, and the ability to tackle a wide array of real-world challenges.`,__vite_glob_0_82=`---
+ In conclusion, the study of Lagrangian Dual problems provides a rich theoretical framework with profound practical implications. It offers a powerful lens through which to view and solve optimization problems, leading to deeper understanding, more efficient algorithms, and the ability to tackle a wide array of real-world challenges.`,__vite_glob_0_85=`---
 title: Optimization Theory - Week 5
 category: Notes
 ---
@@ -17579,7 +18110,95 @@ Let $ X_{0}=\\mathbb{R}^{n}, A $ have full rank, the primal problem CP be strong
 
 
 
-`,__vite_glob_0_83=`---
+`,__vite_glob_0_86=`# 1
+
+## Problem
+
+Minimize $ f(\\mathbf{x})=\\sum_{\\mathbf{i}=\\mathbf{1}}^{\\mathbf{n}} \\mathbf{c}_{\\mathbf{i}} / \\mathbf{x}_{\\mathbf{i}} $ subject to
+$
+\\sum_{i=1}^{n} a_{i} x_{i}=b, \\quad x_{i}>0, \\quad i=1, \\ldots, n,
+$
+where $ c_{i}, a_{i}, i=1, \\ldots, n $, and $ b $ are positive constants.
+
+## Solution
+
+$ \\mathcal{L}(\\mathbf{x}, \\lambda) = \\sum_{i=1}^{n} \\frac{c_i}{x_i} + \\lambda \\left( \\sum_{i=1}^{n} a_i x_i - b \\right) $
+
+$ \\frac{\\partial \\mathcal{L}}{\\partial x_i} = -\\frac{c_i}{x_i^2} + \\lambda a_i = 0 \\quad \\text{for } i = 1, \\ldots, n $
+
+$\\lambda a_i = \\frac{c_i}{x_i^2} \\implies x_i^2 = \\frac{c_i}{\\lambda a_i} \\implies x_i = \\sqrt{\\frac{c_i}{\\lambda a_i}} = \\frac{1}{\\sqrt{\\lambda}} \\sqrt{\\frac{c_i}{a_i}} $
+
+$ \\frac{1}{\\sqrt{\\lambda}} \\sum_{i=1}^{n} \\sqrt{a_i c_i} = b$
+
+$\\sqrt{\\lambda} = \\frac{\\sum_{j=1}^{n} \\sqrt{a_j c_j}}{b} $
+
+Then:
+
+$x_i = \\frac{b}{\\sum_{j=1}^{n} \\sqrt{a_j c_j}} \\sqrt{\\frac{c_i}{a_i}}$
+
+# 2
+
+## Problem
+
+Consider the following quadratic programming problem:
+$
+\\begin{aligned}
+\\operatorname{minimize} & \\frac{1}{2}\\langle\\mathbf{x}, \\mathbf{Q x}\\rangle-\\langle\\mathbf{b}, \\mathbf{x}\\rangle \\\\
+\\text { s.t. } \\mathbf{A x} & \\leq \\mathbf{c}
+\\end{aligned}
+$
+
+Show that if $ Q $ is positive definite, then the quadratic programming problem has a unique solution.
+
+## Solution
+
+Assume: $ f(\\mathbf{x}_1) = f(\\mathbf{x}_2) = f^*$
+
+$ f\\left(\\frac{1}{2}\\mathbf{x}_1 + \\frac{1}{2}\\mathbf{x}_2\\right) < \\frac{1}{2}f(\\mathbf{x}_1) + \\frac{1}{2}f(\\mathbf{x}_2)$
+
+Which contradict the assumption.
+
+# 3
+
+
+## Problem
+
+
+PROBLEM 3: Prove the following result. If the feasible set of a linear program
+$
+\\begin{array}{l}
+\\min \\mathbf{c}^{\\mathbf{t}} \\mathbf{x} \\\\
+\\text { s.t. } \\mathbf{A} \\mathbf{x} \\leq \\mathbf{b}
+\\end{array}
+$
+is nonempty and bounded, then the feasible set of the corresponding dual problem
+$
+\\begin{array}{l}
+\\max -\\mathbf{b}^{t} \\mathbf{y} \\\\
+\\text { s.t. } \\mathbf{A}^{t} \\mathbf{y}+\\mathbf{c}=\\mathbf{0} \\\\
+\\quad \\mathbf{y} \\geq \\mathbf{0}
+\\end{array}
+$
+is nonempty and unbounded.
+Hint: The feasible set is bounded means that there exists an $ M>0 $ such that $ -M \\mathbf{e} \\leq \\mathbf{x} \\leq \\mathbf{M e} $ when $ \\mathbf{x} $ is feasible. Show that there exists a $ \\mathbf{d} $ such that $ \\mathbf{A}^{t} \\mathbf{d}=\\mathbf{0}, \\mathbf{d} \\geq \\mathbf{0} $ but $ \\mathbf{d} \\neq \\mathbf{0} $, i.e. $ \\mathbf{e}^{t} \\mathbf{d}>\\mathbf{0} $.
+
+## Solution
+
+There exists no $x$ s.t. $Ax < 0$ (or it's unbounded)
+
+Therefore, by Farkas' lemma:
+
+$A^ty=0 , y\\ge0$
+
+has solution, let's say it's $y_0$
+
+let's say $A^ty^* + c = 0$
+
+Then:
+
+$y = y^* + \\lambda y_0$ also satisfies the constraints
+
+therefore it's unbounded`,__vite_glob_0_87=`---
 title: Optimization Theory - Presentation
 category: Notes
 ---
@@ -17871,7 +18490,7 @@ $\\sup _{h \\geq 0, \\alpha \\in \\mathbb{R}} h r+\\alpha+\\theta_{2}-\\theta_{2
 
 - $l_{h,\\theta _1 }(\\hat z ):=\\max_{z\\in\\mathcal Z }h\\cdot l(\\beta ,z)-\\theta _1 \\cdot d(z,\\hat z)$ : the d-trasform of $h\\cdot l(\\beta, \\cdot)$ with the step size $\\theta_1$
 
-`,__vite_glob_0_84=`---
+`,__vite_glob_0_88=`---
 title: Quantum Computation - Week 1
 date: 2025-9-10 
 ---
@@ -17980,7 +18599,7 @@ $\\dfrac{|\\psi'\\rangle}{\\sqrt{\\langle \\psi'|\\psi'\\rangle}} = \\dfrac{(1 +
 
 
 
-`,__vite_glob_0_85=`---
+`,__vite_glob_0_89=`---
 title: Quantum Computation - Week 2
 date: 2025-9-10 
 ---
@@ -18016,7 +18635,7 @@ $=\\langle (|00\\rangle + |11\\rangle) / \\sqrt 2 |(|10\\rangle - |01\\rangle)/\
 $=0 $
 
 ---
-`,__vite_glob_0_86=`---
+`,__vite_glob_0_90=`---
 title: Quantum Computation - Week 3
 date: 2025-9-10 
 ---
@@ -18191,7 +18810,7 @@ $\\rho \\rightarrow U\\rho U^\\dagger$
 $\\rho_m = \\dfrac{M_m\\rho M_m^\\dagger}{tr(M^\\dagger_m M_m \\rho)}$
 
 $\\rho = \\sum_i p_i \\rho_i =\\sum_m M_m \\rho M_m ^\\dagger$
-`,__vite_glob_0_87=`---
+`,__vite_glob_0_91=`---
 title: Quantum Computation - Week 4
 date: 2025-9-10 
 ---
@@ -18296,7 +18915,7 @@ $\\vec r = (0, 0, 0)$
 
 ## (3)
 
-)`,__vite_glob_0_88=`---
+)`,__vite_glob_0_92=`---
 title: Science Create Startup - Week 0
 category: Notes
 date: 2025-9-10 
@@ -18346,7 +18965,7 @@ date: 2025-9-10
 
 
 
-`,__vite_glob_0_89=`---
+`,__vite_glob_0_93=`---
 title: Science Create Startup - Week 1
 category: Notes
 date: 2025-9-10 
@@ -18396,7 +19015,7 @@ date: 2025-9-10
 
 
 
-`,__vite_glob_0_90=`---
+`,__vite_glob_0_94=`---
 title: Science Create Startup - Week 2
 category: Notes
 date: 2025-9-10 
@@ -18409,7 +19028,7 @@ date: 2025-9-10
 - 创新：企业存在。产品、工艺、市场、组织、原材料创新
 - 创业：企业不存在，通过技术经济过程让企业能生存
 
-`,__vite_glob_0_91=`---
+`,__vite_glob_0_95=`---
 title: Stochastic Operation - Week 1
 category: Notes
 ---
@@ -18554,7 +19173,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_92=`---
+`,__vite_glob_0_96=`---
 title: Stochastic Operation - Week 2
 category: Notes
 ---
@@ -18611,7 +19230,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_93=`---
+`,__vite_glob_0_97=`---
 title: Stochastic Optimization - Assignment - Week 3
 category: Assignments
 ---
@@ -18722,7 +19341,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_94=`---
+`,__vite_glob_0_98=`---
 title: Stochasitc Operation - Assignment - Week 1
 category: Assignments
 ---
@@ -18837,7 +19456,7 @@ $ P\\left(q_{n+1}=j \\mid q_{n}=i, q_{n-1}, \\ldots, q_{0}\\right)=P\\left(q_{n+
 
 
 
-`,__vite_glob_0_95=`# 4
+`,__vite_glob_0_99=`# 4
 
 ## Problem
 
@@ -19057,7 +19676,7 @@ $ \\rho_{1}=\\frac{\\lambda_{1}}{\\mu_{1}}=\\frac{18}{20}=0.9, \\quad \\rho_{2}=
 假设你是该公司运营经理，发现系统在高优先级任务处理方面存在瓶颈。除了简单增加车辆外，请提出至少三种其他可能的优化策略，并简要说明其原理和预期效果。（提示：可以从排队系统的各个组成部分着手思考，不局限于单一模型）。
 
 
-`,__vite_glob_0_96=`---
+`,__vite_glob_0_100=`---
 title: Stochastic Operation - Assignment - Week 6
 category: Assignments
 ---
@@ -19253,7 +19872,7 @@ $
 －若在每个阶段 $ n $ 和状态 $ i $ 中，决策 $ f_{n}^{*}(i) $ 都能取到最优方程中的上确界，则策略 $ \\pi^{*}= \\left(f_{0}^{*}, f_{1}^{*}, \\ldots, f_{N}^{*}\\right) $ 是最优策路。
 
 
-`,__vite_glob_0_97=`---
+`,__vite_glob_0_101=`---
 title: Stochastic Operation - Assignment - Week 7
 category: Assignments
 ---
@@ -19395,7 +20014,7 @@ $ p_H w_H - p_S w_S + (p_S - p_H) p_B w_B > 0 $
 **最终策略:**
 运动员的最优策略是比较发硬球直接得分的概率 $ (p_H w_H) $ 和发软球直接得分的概率 $ (p_S w_S) $，然后两次发球都采用概率较高的那种。
 *   若 $ p_H w_H > p_S w_S $，则最优策略是**两次都发硬球 (HH)**。
-*   若 $ p_S w_S > p_H w_H $，则最优策略是**两次都发软球 (SS)**。`,__vite_glob_0_98=`---
+*   若 $ p_S w_S > p_H w_H $，则最优策略是**两次都发软球 (SS)**。`,__vite_glob_0_102=`---
 title: Stochastic Progress - Special 1
 category: Notes
 date: 2025-9-10 
@@ -19594,7 +20213,7 @@ $$
 - 三维随机游走的“内部”可以看作一个空间内的一个球（如 $x^2+y^2+z^2 = 1$）
 
 可以发现：维度越高，“内部” 相对于“外部” 所占的 “比例” 会更小，因此也更难返回
-`,__vite_glob_0_99=`---
+`,__vite_glob_0_103=`---
 title: Stochastic Progress - Week 2
 category: Notes
 date: 2025-9-10 
@@ -19667,7 +20286,7 @@ $k = \\dfrac{n-1}{e}$
 
 
 
-`,__vite_glob_0_100=`---
+`,__vite_glob_0_104=`---
 title: Stochastic Progress - Assignment - Week 2
 category: Assignments
 date: 2025-9-10 
@@ -20122,7 +20741,7 @@ Answer is No.
 We have:
 
 $ P^{n}(i, j)=\\sum_{k} P^{r}(i, k) P^{n-r}(k, j)>0 $
-`,__vite_glob_0_101=`---
+`,__vite_glob_0_105=`---
 title: Stochastic Progress - Week 3
 category: Notes
 date: 2025-9-10 
@@ -20333,7 +20952,7 @@ $\\{Z_n\\}$ Non-negative Martingale, then:
 $ \\lim_{n\\to\\infty}Z_n \\overset{\\text{w.p. 1}}{\\to} a$
 
 
-`,__vite_glob_0_102=`---
+`,__vite_glob_0_106=`---
 title: Stochastic Progress - Assignment - Week 3
 category: Assignments
 date: 2025-9-10 
@@ -20919,7 +21538,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_103=`---
+placeholder`,__vite_glob_0_107=`---
 title: Stochastic Progress - Week 4
 category: Notes
 date: 2025-9-10 
@@ -20972,7 +21591,7 @@ $$
 
 
 
-`,__vite_glob_0_104=`---
+`,__vite_glob_0_108=`---
 title: Stochastic Progress - Assignment - Week 4
 category: Assignments
 date: 2025-9-10 
@@ -21442,7 +22061,7 @@ $ \\operatorname{Var}(X(t))=\\lambda t \\mathrm{E}\\left[Y^{2}\\right]=\\lambda 
 
 $ P(X(15)<6000)=P\\left(Z<\\dfrac{6000-5400}{782.30}\\right)=P(Z<0.767)\\approx 0.778 $
 
-`,__vite_glob_0_105=`---
+`,__vite_glob_0_109=`---
 title: Stochastic Progress - Week 5
 category: Notes
 date: 2025-9-10 
@@ -21509,7 +22128,7 @@ it is **Recurrent** if $f_i = 1$
 
 
 
-`,__vite_glob_0_106=`---
+`,__vite_glob_0_110=`---
 title: Stochastic Progress - Assignment - Week 5
 category: Assignments
 date: 2025-9-10 
@@ -22047,7 +22666,7 @@ $$
 
 ## Solution (b)
 
-$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_107=`---
+$ P( $ customer gets a taxi $ )=P(n \\geq 1)=1-P(n=0)=1-\\pi_{0}=1-\\dfrac{1}{2}=\\dfrac{1}{2} $`,__vite_glob_0_111=`---
 title: Stochastic Progress - Week 6
 category: Notes
 date: 2025-9-10 
@@ -22179,7 +22798,7 @@ placeholder
 placeholder
 
 
-`,__vite_glob_0_108=`---
+`,__vite_glob_0_112=`---
 title: Stochastic Progress - Assignment - Week 6
 category: Assignments
 date: 2025-9-10 
@@ -23025,7 +23644,7 @@ $$
 \\text { Long-run average cost }=\\frac{K+\\frac{c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}{\\frac{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}}{\\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)}}=\\frac{K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{2} \\lambda_{1} \\lambda_{2}+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)}{\\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2}} \\text {. }
 $$
 
-The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_109=`---
+The denominator is $ \\lambda_{1}^{2}+\\lambda_{1} \\lambda_{2}+\\lambda_{2}^{2} $, and the numerator is $ K \\lambda_{1} \\lambda_{2}\\left(\\lambda_{1}+\\lambda_{2}\\right)+c_{1}\\left(\\lambda_{1}^{2}+\\lambda_{2}^{2}\\right)+ $ $ c_{2} \\lambda_{1} \\lambda_{2} $`,__vite_glob_0_113=`---
 title: Stochastic Progress - Week 7
 category: Notes
 date: 2025-9-10 
@@ -23156,7 +23775,7 @@ E[L_{-k}]\\\\
 \\end{array}
 $$
 
-`,__vite_glob_0_110=`---
+`,__vite_glob_0_114=`---
 title: Stochastic Progress - Week 8
 category: Notes
 date: 2025-9-10 
@@ -23496,7 +24115,7 @@ placeholder
 placeholder  
 
 
-`,__vite_glob_0_111=`---
+`,__vite_glob_0_115=`---
 title: Stochastic Progress - Special 8
 category: Notes
 date: 2025-9-10 
@@ -23653,7 +24272,7 @@ where $ (X-y)^{+}=\\max (X-y, 0) $.
 
 
 
-`,__vite_glob_0_112=`---
+`,__vite_glob_0_116=`---
 title: Stochastic Progress - Week 9
 category: Notes
 date: 2025-9-10 
@@ -23765,7 +24384,7 @@ A counting process $ \\{N(t), t \\geq 0\\} $ is called a conditional Poisson pro
 $ \\begin{array}{c}E[N(t)]=t E[L] \\\\ \\operatorname{Var}[N(t)]=E[L t]+\\operatorname{Var}[L t]=t E[L]+t^{2} \\operatorname{Var}[L]\\end{array} $
 
 
-`,__vite_glob_0_113=`---
+`,__vite_glob_0_117=`---
 title: Stochastic Progress - Week 1
 category: Notes
 date: 2025-9-10 
@@ -24395,7 +25014,7 @@ placeholder
 
 placeholder
 
-`,__vite_glob_0_114=`---
+`,__vite_glob_0_118=`---
 title: Stochastic Progress - Week 10
 category: Notes
 date: 2025-9-10 
@@ -24658,7 +25277,7 @@ $
 
 
 
-`,__vite_glob_0_115=`---
+`,__vite_glob_0_119=`---
 title: Stochastic Progress - Week 11
 category: Notes
 date: 2025-9-10 
@@ -24889,7 +25508,7 @@ P_{i j}^{\\prime}(t)=\\sum_{k \\neq j} q_{k j} P_{i k}(t)-\\left(\\lambda_{j}+\\
 $$
 
 
-`,__vite_glob_0_116=`---
+`,__vite_glob_0_120=`---
 title: Stochastic Progress - Week 12
 category: Notes
 date: 2025-9-10 
@@ -24925,7 +25544,7 @@ $P_{n}=\\dfrac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{
 
 $P_{0}=\\dfrac{1}{1+\\sum_{n=1}^{\\infty} \\frac{\\lambda_{n-1} \\lambda_{n-2} \\ldots \\lambda_{1} \\lambda_{0}}{\\mu_{n} \\mu_{n-1} \\ldots \\mu_{2} \\mu_{1}}} $
 
-`,__vite_glob_0_117=`---
+`,__vite_glob_0_121=`---
 title: Stochastic Progress - Week 13
 category: Notes
 date: 2025-9-10 
@@ -25026,7 +25645,7 @@ $ E\\left[\\sum_{n=1}^{N} X_{n}\\right]=E[N] E[X] $
 
  $ E\\left[S_{N(t)+1}\\right]=\\mu[m(t)+1] $
 
- `,__vite_glob_0_118=`---
+ `,__vite_glob_0_122=`---
 title: Stochastic Progress - Assignment - Week 1
 category: Assignments
 date: 2025-9-10 
@@ -25765,7 +26384,7 @@ $
 \\end{aligned}$
 
 
-`,__vite_glob_0_119=`---
+`,__vite_glob_0_123=`---
 title: Stochastic Progress - Cheatsheet
 category: Cheatsheets
 date: 2025-9-10 
@@ -26179,7 +26798,7 @@ placeholder
 placeholder
 
 placeholder
-`,__vite_glob_0_120=`---
+`,__vite_glob_0_124=`---
 title: Strategic Manaement - Week 1
 category: Notes
 ---
@@ -26224,7 +26843,7 @@ Corporate level - Diversificaton, Vertical Integration, Internationalization
 2. Strategy is to **gain and sustain competitive advantage **
 3. Strategy is both at the **business ** level and the **corporate ** level
 
-`,__vite_glob_0_121=`---
+`,__vite_glob_0_125=`---
 title: Strategic Management
 category: Notes
 ---
@@ -26269,7 +26888,7 @@ placeholder
 
 placeholder
 
-placeholder`,__vite_glob_0_122=`---
+placeholder`,__vite_glob_0_126=`---
 title: Supply Chain Management - Week 1
 category: Notes
 date: 2025-9-10 
@@ -26308,7 +26927,7 @@ Developing triangle
 
 ## KYCash - Know your Cash 
 
-$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_123=`---
+$\\sum_{n=0}^\\infty na_nx^{n-1} = \\dfrac{1}{x+2},x = 1:\\dfrac{1}{3}$`,__vite_glob_0_127=`---
 title: Supply Chain Management - Week 2
 category: Notes
 date: 2025-9-10 
@@ -26372,7 +26991,7 @@ Buy material - sell - pay - get money
 - DSO stands for Days Sales Outstanding
 - DPO stands for Days Payable Outstanding
 
-`,__vite_glob_0_124=`---
+`,__vite_glob_0_128=`---
 title: Supply Chain Management - Week 4
 category: Notes
 date: 2025-9-10 
@@ -26398,7 +27017,7 @@ date: 2025-9-10
 Risk sharing 
 - global optimization 
 - local optimization 
-`,__vite_glob_0_125=`---
+`,__vite_glob_0_129=`---
 title: Supply Chain Management - Week 5
 category: Notes
 date: 2025-9-10 
@@ -26413,7 +27032,7 @@ date: 2025-9-10
 - legal
 - compliance 
 
-`,__vite_glob_0_126=`---
+`,__vite_glob_0_130=`---
 title: Supply Chain Management - Week 6
 category: Notes
 date: 2025-9-10 
@@ -26478,7 +27097,7 @@ $Q^* = \\sqrt{\\dfrac{2K\\cdot AVG}{h}}$: best quantity
 
 
 
-`,__vite_glob_0_127=`---
+`,__vite_glob_0_131=`---
 title: Supply Chain Management - Cheatsheet
 category: Cheatsheets
 date: 2025-9-10 
@@ -26690,7 +27309,7 @@ return `+str.trim()+`;
 `?e+`
 `:e}const defaults$2=defaults$4;var excerpt$1=function(e,a){const o=defaults$2(a);if(e.data==null&&(e.data={}),typeof o.excerpt=="function")return o.excerpt(e,o);const c=e.data.excerpt_separator||o.excerpt_separator;if(c==null&&(o.excerpt===!1||o.excerpt==null))return e;const d=typeof o.excerpt=="string"?o.excerpt:c||o.delimiters[0],$=e.content.indexOf(d);return $!==-1&&(e.excerpt=e.content.slice(0,$)),e};const typeOf$1=kindOf,stringify$3=stringify$4,utils$2=utils$4;var toFile$1=function(e){return typeOf$1(e)!=="object"&&(e={content:e}),typeOf$1(e.data)!=="object"&&(e.data={}),e.contents&&e.content==null&&(e.content=e.contents),utils$2.define(e,"orig",utils$2.toBuffer(e.content)),utils$2.define(e,"language",e.language||""),utils$2.define(e,"matter",e.matter||""),utils$2.define(e,"stringify",function(a,o){return o&&o.language&&(e.language=o.language),stringify$3(e,a,o)}),e.content=utils$2.toString(e.content),e.isEmpty=!1,e.excerpt="",e};const getEngine=engine,defaults$1=defaults$4;var parse$4=function(e,a,o){const c=defaults$1(o),d=getEngine(e,c);if(typeof d.parse!="function")throw new TypeError('expected "'+e+'.parse" to be a function');return d.parse(a,c)};const fs=require$$0,sections=sectionMatter,defaults=defaults$4,stringify$2=stringify$4,excerpt=excerpt$1,engines=enginesExports,toFile=toFile$1,parse$3=parse$4,utils$1=utils$4;function matter(e,a){if(e==="")return{data:{},content:e,excerpt:"",orig:e};let o=toFile(e);const c=matter.cache[o.content];if(!a){if(c)return o=Object.assign({},c),o.orig=c.orig,o;matter.cache[o.content]=o}return parseMatter(o,a)}function parseMatter(e,a){const o=defaults(a),c=o.delimiters[0],d=`
 `+o.delimiters[1];let $=e.content;o.language&&(e.language=o.language);const b=c.length;if(!utils$1.startsWith($,c,b))return excerpt(e,o),e;if($.charAt(b)===c.slice(-1))return e;$=$.slice(b);const g=$.length,_=matter.language($,o);_.name&&(e.language=_.name,$=$.slice(_.raw.length));let j=$.indexOf(d);return j===-1&&(j=g),e.matter=$.slice(0,j),e.matter.replace(/^\s*#[^\n]+/gm,"").trim()===""?(e.isEmpty=!0,e.empty=e.content,e.data={}):e.data=parse$3(e.language,e.matter,o),j===g?e.content="":(e.content=$.slice(j+d.length),e.content[0]==="\r"&&(e.content=e.content.slice(1)),e.content[0]===`
-`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01A.md":__vite_glob_0_23,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_24,"../posts/Econometrics/EE_02A.md":__vite_glob_0_25,"../posts/Econometrics/EE_03.md":__vite_glob_0_26,"../posts/Econometrics/EE_04.md":__vite_glob_0_27,"../posts/Econometrics/EE_05.md":__vite_glob_0_28,"../posts/Econometrics/EE_06.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_30,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_31,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_32,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_33,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_34,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_35,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_36,"../posts/Financial Statement Analysis/FSA_01.md":__vite_glob_0_37,"../posts/Game Theory/GT_02.md":__vite_glob_0_38,"../posts/Game Theory/GT_03A.md":__vite_glob_0_39,"../posts/Game Theory/GT_03P.md":__vite_glob_0_40,"../posts/Game Theory/GT_04.md":__vite_glob_0_41,"../posts/Game Theory/GT_04A.md":__vite_glob_0_42,"../posts/Game Theory/GT_04P.md":__vite_glob_0_43,"../posts/Game Theory/GT_05A.md":__vite_glob_0_44,"../posts/Game Theory/GT_05P.md":__vite_glob_0_45,"../posts/Game Theory/GT_06A.md":__vite_glob_0_46,"../posts/Game Theory/GT_07A.md":__vite_glob_0_47,"../posts/Game Theory/GT_08A.md":__vite_glob_0_48,"../posts/Game Theory/GT_09A.md":__vite_glob_0_49,"../posts/Game Theory/GT_1.md":__vite_glob_0_50,"../posts/Game Theory/GT_10A.md":__vite_glob_0_51,"../posts/Game Theory/GT_10P.md":__vite_glob_0_52,"../posts/Game Theory/GT_11A.md":__vite_glob_0_53,"../posts/Game Theory/GT_A02.md":__vite_glob_0_54,"../posts/Game Theory/GT_A1.md":__vite_glob_0_55,"../posts/Game Theory/GT_P1.md":__vite_glob_0_56,"../posts/Game Theory/GT_P2.md":__vite_glob_0_57,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_58,"../posts/International Business Management/IBM_01A.md":__vite_glob_0_59,"../posts/International Business Management/IBM_03A.md":__vite_glob_0_60,"../posts/International Business Management/IBM_04A.md":__vite_glob_0_61,"../posts/International Business Management/IBM_05.md":__vite_glob_0_62,"../posts/International Business Management/IBM_05A.md":__vite_glob_0_63,"../posts/Misc/MA_1.md":__vite_glob_0_64,"../posts/Misc/MU_01.md":__vite_glob_0_65,"../posts/Misc/Nethack.md":__vite_glob_0_66,"../posts/Misc/SGD_02.md":__vite_glob_0_67,"../posts/Misc/Shortcut.md":__vite_glob_0_68,"../posts/Misc/Vimium.md":__vite_glob_0_69,"../posts/Misc/diary.md":__vite_glob_0_70,"../posts/Misc/post1.md":__vite_glob_0_71,"../posts/Misc/temp.md":__vite_glob_0_72,"../posts/Optimization Theory/OT_01.md":__vite_glob_0_73,"../posts/Optimization Theory/OT_01A.md":__vite_glob_0_74,"../posts/Optimization Theory/OT_02.md":__vite_glob_0_75,"../posts/Optimization Theory/OT_02A.md":__vite_glob_0_76,"../posts/Optimization Theory/OT_02_Detail.md":__vite_glob_0_77,"../posts/Optimization Theory/OT_03.md":__vite_glob_0_78,"../posts/Optimization Theory/OT_03A.md":__vite_glob_0_79,"../posts/Optimization Theory/OT_04.md":__vite_glob_0_80,"../posts/Optimization Theory/OT_04A.md":__vite_glob_0_81,"../posts/Optimization Theory/OT_05.md":__vite_glob_0_82,"../posts/Optimization Theory/OT_Presentation.md":__vite_glob_0_83,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_84,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_85,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_86,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_87,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_88,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_89,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_90,"../posts/Stochastic Operation/SO_01.md":__vite_glob_0_91,"../posts/Stochastic Operation/SO_02.md":__vite_glob_0_92,"../posts/Stochastic Operation/SO_03A.md":__vite_glob_0_93,"../posts/Stochastic Operation/SO_04A.md":__vite_glob_0_94,"../posts/Stochastic Operation/SO_05A.md":__vite_glob_0_95,"../posts/Stochastic Operation/SO_06A.md":__vite_glob_0_96,"../posts/Stochastic Operation/SO_07A.md":__vite_glob_0_97,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_98,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_99,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_100,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_101,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_102,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_103,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_104,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_105,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_106,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_107,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_108,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_109,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_110,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_111,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_112,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_113,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_114,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_115,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_116,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_117,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_118,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_119,"../posts/Strategic Management/SM_01.md":__vite_glob_0_120,"../posts/Strategic Management/SM_02.md":__vite_glob_0_121,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_122,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_123,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_124,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_125,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_126,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_127}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let b=1;for(const g in markdownFiles){const _=markdownFiles[g],j=g.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:b++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(g=>g.contentKey)),a(d.sort((g,_)=>new Date(_.date).getTime()-new Date(g.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(rt=>rt.category))),[$,b]=reactExports.useState(!1),[g,_]=reactExports.useState("");reactExports.useEffect(()=>{const rt=lt=>{lt.key==="/"&&!$&&(lt.preventDefault(),b(!0)),lt.key==="Escape"&&$&&b(!1)};return document.addEventListener("keydown",rt),()=>document.removeEventListener("keydown",rt)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const rt=localStorage.getItem("sidebarExpanded");return rt?JSON.parse(rt):!1}),nt=c&&c!=="All"?e.filter(rt=>rt.category===c):e,ot=Math.ceil(nt.length/ITEMS_PER_PAGE),st=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),ct=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
+`&&(e.content=e.content.slice(1))),excerpt(e,o),(o.sections===!0||typeof o.section=="function")&&sections(e,o.section),e}matter.engines=engines;matter.stringify=function(e,a,o){return typeof e=="string"&&(e=matter(e,o)),stringify$2(e,a,o)};matter.read=function(e,a){const o=fs.readFileSync(e,"utf8"),c=matter(o,a);return c.path=e,c};matter.test=function(e,a){return utils$1.startsWith(e,defaults(a).delimiters[0])};matter.language=function(e,a){const c=defaults(a).delimiters[0];matter.test(e)&&(e=e.slice(c.length));const d=e.slice(0,e.search(/\r?\n/));return{raw:d,name:d?d.trim():""}};matter.cache={};matter.clearCache=function(){matter.cache={}};var grayMatter=matter;const matter$1=getDefaultExportFromCjs(grayMatter),toTitleCase=e=>e.replace(/[-_]/g," ").replace(/\w\S*/g,a=>a.charAt(0).toUpperCase()+a.substr(1).toLowerCase()),markdownFiles=Object.assign({"../posts/Algebra Chapter 0/A0_1.md":__vite_glob_0_0,"../posts/Algebra Chapter 0/A0_2.md":__vite_glob_0_1,"../posts/Business English/BE_01.md":__vite_glob_0_2,"../posts/Business English/BE_02.md":__vite_glob_0_3,"../posts/Business English/BE_06A.md":__vite_glob_0_4,"../posts/Business English/BE_08.md":__vite_glob_0_5,"../posts/Business English/BE_09.md":__vite_glob_0_6,"../posts/Business English/BE_Cheatsheet.md":__vite_glob_0_7,"../posts/Business Paper/EC_09.md":__vite_glob_0_8,"../posts/Business Paper/EC_1.md":__vite_glob_0_9,"../posts/Business Paper/EC_2.md":__vite_glob_0_10,"../posts/Business Paper/EC_3.md":__vite_glob_0_11,"../posts/Business Paper/EC_4.md":__vite_glob_0_12,"../posts/Business Paper/EC_5.md":__vite_glob_0_13,"../posts/Business Paper/EC_6.md":__vite_glob_0_14,"../posts/Business Paper/EC_7.md":__vite_glob_0_15,"../posts/Business Paper/EC_8.md":__vite_glob_0_16,"../posts/Cure Dolly/CD_1.md":__vite_glob_0_17,"../posts/Cure Dolly/CD_2.md":__vite_glob_0_18,"../posts/Cure Dolly/CD_3.md":__vite_glob_0_19,"../posts/Cure Dolly/CD_4.md":__vite_glob_0_20,"../posts/Cure Dolly/CD_5.md":__vite_glob_0_21,"../posts/Econometrics/EE_01.md":__vite_glob_0_22,"../posts/Econometrics/EE_01A.md":__vite_glob_0_23,"../posts/Econometrics/EE_01SP.md":__vite_glob_0_24,"../posts/Econometrics/EE_02A.md":__vite_glob_0_25,"../posts/Econometrics/EE_03.md":__vite_glob_0_26,"../posts/Econometrics/EE_04.md":__vite_glob_0_27,"../posts/Econometrics/EE_05.md":__vite_glob_0_28,"../posts/Econometrics/EE_06.md":__vite_glob_0_29,"../posts/Financial Engineer/FE_02.md":__vite_glob_0_30,"../posts/Financial Engineer/FE_02A.md":__vite_glob_0_31,"../posts/Financial Engineer/FE_04.md":__vite_glob_0_32,"../posts/Financial Engineer/FE_05.md":__vite_glob_0_33,"../posts/Financial Engineer/FE_1.md":__vite_glob_0_34,"../posts/Financial Engineer/FE_9.md":__vite_glob_0_35,"../posts/Financial Engineer/FE_Cheatsheet.md":__vite_glob_0_36,"../posts/Financial Statement Analysis/FSA_01.md":__vite_glob_0_37,"../posts/Financial Statement Analysis/FSA_01A.md":__vite_glob_0_38,"../posts/Game Theory/GT_02.md":__vite_glob_0_39,"../posts/Game Theory/GT_03A.md":__vite_glob_0_40,"../posts/Game Theory/GT_03P.md":__vite_glob_0_41,"../posts/Game Theory/GT_04.md":__vite_glob_0_42,"../posts/Game Theory/GT_04A.md":__vite_glob_0_43,"../posts/Game Theory/GT_04P.md":__vite_glob_0_44,"../posts/Game Theory/GT_05A.md":__vite_glob_0_45,"../posts/Game Theory/GT_05P.md":__vite_glob_0_46,"../posts/Game Theory/GT_06A.md":__vite_glob_0_47,"../posts/Game Theory/GT_07A.md":__vite_glob_0_48,"../posts/Game Theory/GT_08A.md":__vite_glob_0_49,"../posts/Game Theory/GT_09A.md":__vite_glob_0_50,"../posts/Game Theory/GT_1.md":__vite_glob_0_51,"../posts/Game Theory/GT_10A.md":__vite_glob_0_52,"../posts/Game Theory/GT_10P.md":__vite_glob_0_53,"../posts/Game Theory/GT_11A.md":__vite_glob_0_54,"../posts/Game Theory/GT_A02.md":__vite_glob_0_55,"../posts/Game Theory/GT_A1.md":__vite_glob_0_56,"../posts/Game Theory/GT_P1.md":__vite_glob_0_57,"../posts/Game Theory/GT_P2.md":__vite_glob_0_58,"../posts/Game Theory/GT_Paper.md":__vite_glob_0_59,"../posts/International Business Management/IBM_01A.md":__vite_glob_0_60,"../posts/International Business Management/IBM_03A.md":__vite_glob_0_61,"../posts/International Business Management/IBM_04A.md":__vite_glob_0_62,"../posts/International Business Management/IBM_05.md":__vite_glob_0_63,"../posts/International Business Management/IBM_05A.md":__vite_glob_0_64,"../posts/Misc/Japanese_Diff.md":__vite_glob_0_65,"../posts/Misc/MA_1.md":__vite_glob_0_66,"../posts/Misc/MU_01.md":__vite_glob_0_67,"../posts/Misc/Nethack.md":__vite_glob_0_68,"../posts/Misc/SGD_02.md":__vite_glob_0_69,"../posts/Misc/Shortcut.md":__vite_glob_0_70,"../posts/Misc/Vimium.md":__vite_glob_0_71,"../posts/Misc/WhatIsIs.md":__vite_glob_0_72,"../posts/Misc/diary.md":__vite_glob_0_73,"../posts/Misc/post1.md":__vite_glob_0_74,"../posts/Misc/temp.md":__vite_glob_0_75,"../posts/Optimization Theory/OT_01.md":__vite_glob_0_76,"../posts/Optimization Theory/OT_01A.md":__vite_glob_0_77,"../posts/Optimization Theory/OT_02.md":__vite_glob_0_78,"../posts/Optimization Theory/OT_02A.md":__vite_glob_0_79,"../posts/Optimization Theory/OT_02_Detail.md":__vite_glob_0_80,"../posts/Optimization Theory/OT_03.md":__vite_glob_0_81,"../posts/Optimization Theory/OT_03A.md":__vite_glob_0_82,"../posts/Optimization Theory/OT_04.md":__vite_glob_0_83,"../posts/Optimization Theory/OT_04A.md":__vite_glob_0_84,"../posts/Optimization Theory/OT_05.md":__vite_glob_0_85,"../posts/Optimization Theory/OT_05A.md":__vite_glob_0_86,"../posts/Optimization Theory/OT_Presentation.md":__vite_glob_0_87,"../posts/Quantum Computattion/QC_1.md":__vite_glob_0_88,"../posts/Quantum Computattion/QC_2.md":__vite_glob_0_89,"../posts/Quantum Computattion/QC_3.md":__vite_glob_0_90,"../posts/Quantum Computattion/QC_4.md":__vite_glob_0_91,"../posts/Science Create Startup/NOTE_SCS_1.md":__vite_glob_0_92,"../posts/Science Create Startup/SCS_01.md":__vite_glob_0_93,"../posts/Science Create Startup/SCS_02.md":__vite_glob_0_94,"../posts/Stochastic Operation/SO_01.md":__vite_glob_0_95,"../posts/Stochastic Operation/SO_02.md":__vite_glob_0_96,"../posts/Stochastic Operation/SO_03A.md":__vite_glob_0_97,"../posts/Stochastic Operation/SO_04A.md":__vite_glob_0_98,"../posts/Stochastic Operation/SO_05A.md":__vite_glob_0_99,"../posts/Stochastic Operation/SO_06A.md":__vite_glob_0_100,"../posts/Stochastic Operation/SO_07A.md":__vite_glob_0_101,"../posts/Stochastic Progress/SP_01SP.md":__vite_glob_0_102,"../posts/Stochastic Progress/SP_02.md":__vite_glob_0_103,"../posts/Stochastic Progress/SP_02A.md":__vite_glob_0_104,"../posts/Stochastic Progress/SP_03.md":__vite_glob_0_105,"../posts/Stochastic Progress/SP_03A.md":__vite_glob_0_106,"../posts/Stochastic Progress/SP_04.md":__vite_glob_0_107,"../posts/Stochastic Progress/SP_04A.md":__vite_glob_0_108,"../posts/Stochastic Progress/SP_05.md":__vite_glob_0_109,"../posts/Stochastic Progress/SP_05A.md":__vite_glob_0_110,"../posts/Stochastic Progress/SP_06.md":__vite_glob_0_111,"../posts/Stochastic Progress/SP_06A.md":__vite_glob_0_112,"../posts/Stochastic Progress/SP_07.md":__vite_glob_0_113,"../posts/Stochastic Progress/SP_08.md":__vite_glob_0_114,"../posts/Stochastic Progress/SP_08_Detail.md":__vite_glob_0_115,"../posts/Stochastic Progress/SP_09.md":__vite_glob_0_116,"../posts/Stochastic Progress/SP_1.md":__vite_glob_0_117,"../posts/Stochastic Progress/SP_10.md":__vite_glob_0_118,"../posts/Stochastic Progress/SP_11.md":__vite_glob_0_119,"../posts/Stochastic Progress/SP_12.md":__vite_glob_0_120,"../posts/Stochastic Progress/SP_13.md":__vite_glob_0_121,"../posts/Stochastic Progress/SP_A1.md":__vite_glob_0_122,"../posts/Stochastic Progress/SP_Cheatsheet.md":__vite_glob_0_123,"../posts/Strategic Management/SM_01.md":__vite_glob_0_124,"../posts/Strategic Management/SM_02.md":__vite_glob_0_125,"../posts/Supply Chain Management/SCM_01.md":__vite_glob_0_126,"../posts/Supply Chain Management/SCM_02.md":__vite_glob_0_127,"../posts/Supply Chain Management/SCM_04.md":__vite_glob_0_128,"../posts/Supply Chain Management/SCM_05.md":__vite_glob_0_129,"../posts/Supply Chain Management/SCM_06.md":__vite_glob_0_130,"../posts/Supply Chain Management/SCM_Cheatsheet.md":__vite_glob_0_131}),usePosts=()=>{const[e,a]=reactExports.useState([]),[o,c]=reactExports.useState({});return reactExports.useEffect(()=>{const d=[],$={};let b=1;for(const g in markdownFiles){const _=markdownFiles[g],j=g.match(/\/posts\/(.*)\.md$/);if(j){const _e=j[1],{data:et,content:tt}=matter$1(_);$[_e]=tt,d.push({id:b++,title:et.title||toTitleCase(_e.split("/").pop()||_e),date:et.date||new Date().toISOString().split("T")[0],excerpt:et.excerpt||tt.slice(0,150)+"...",contentKey:_e,author:et.author||"Anonymous",category:et.category||_e.split("/")[0]||"Uncategorized"})}}console.log("Available content keys:",d.map(g=>g.contentKey)),a(d.sort((g,_)=>new Date(_.date).getTime()-new Date(g.date).getTime())),c($)},[]),{posts:e,contents:o}},ITEMS_PER_PAGE=5,Home=()=>{const{posts:e}=usePosts(),a=useLocation(),c=new URLSearchParams(a.search).get("category"),d=Array.from(new Set(e.map(rt=>rt.category))),[$,b]=reactExports.useState(!1),[g,_]=reactExports.useState("");reactExports.useEffect(()=>{const rt=lt=>{lt.key==="/"&&!$&&(lt.preventDefault(),b(!0)),lt.key==="Escape"&&$&&b(!1)};return document.addEventListener("keydown",rt),()=>document.removeEventListener("keydown",rt)},[$]),reactExports.useEffect(()=>{_e(1)},[c]);const[j,_e]=reactExports.useState(1),[et,tt]=reactExports.useState(()=>{const rt=localStorage.getItem("sidebarExpanded");return rt?JSON.parse(rt):!1}),nt=c&&c!=="All"?e.filter(rt=>rt.category===c):e,ot=Math.ceil(nt.length/ITEMS_PER_PAGE),st=nt.slice((j-1)*ITEMS_PER_PAGE,j*ITEMS_PER_PAGE),ct=nt.length>0;return jsxRuntimeExports.jsxs("div",{className:"container mx-auto mt-10",children:[jsxRuntimeExports.jsx("h1",{className:`font-bold mb-8 text-center text-sky-100
       text-5xl
       sm:text-5xl
       lg:text-6xl
