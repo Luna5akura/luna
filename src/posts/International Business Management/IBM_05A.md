@@ -1,3 +1,8 @@
+---
+title: International Business Management - Assignment - Week 5
+category: Assignments 
+---
+
 ### 1. 什么是跨国公司？
 
 首先，我们需要明确跨国公司的基本定义和特征。
