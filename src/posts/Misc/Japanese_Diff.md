@@ -3,7 +3,7 @@
 | だから | Result | dakara
 | ところが | Unexpected Oral | tokoroga
 | ですが | Unexpected Formal | desuga
-| もっとも | Contrast | mottomo
+| もっとも | a small exception | mottomo
 | それでも | Even if | soredemo
 
 |||
@@ -13,10 +13,11 @@
 
 |||
 |-|-|
-| そう | Hear Will |
-| よう | Formal Inference |
-| みたい | Oral Inference |
-| みえる | See |
+| そう | Hear Will | sou
+| よう | Formal Inference by hear| you
+| みたい | Oral Inference by hear| mitai
+| みえる | See | mieru
+| らしい | Inference by seeing | rashii
 
 |||
 |-|-|
@@ -65,3 +66,15 @@
 |-|-|
 | でも | An example | demo
 | さえ | The least possibility | sae
+
+|||
+|-|-|
+| ごと | time interval | goto
+| ずつ | number of every time | zutsu
+| おきに |  | okini
+
+||| 
+|-|-|
+| だけ | some fact | dake
+| さえ | even this is negative | sae
+| っきり | only this | kkiri
