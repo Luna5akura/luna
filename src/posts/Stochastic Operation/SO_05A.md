@@ -1,3 +1,8 @@
+---
+title: Stochastic Operation - Assignment - Week 5
+category: Assignments 
+---
+
 # 4
 
 ## Problem

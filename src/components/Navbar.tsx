@@ -1,131 +1,65 @@
+// src/components/Navbar.tsx
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { motion, useAnimation } from 'framer-motion';
-import { Switch } from "@/components/ui/switch";
-import { useFontToggle } from "@/context/FontToggleContext";
-
-// Create animated Link component
-const MotionRouterLink = motion(RouterLink);
+import { NavLink, useLocation } from 'react-router-dom';
+// import { motion } from 'framer-motion';
 
 const Navbar: React.FC = () => {
-  const { fontToggle, setFontToggle } = useFontToggle();
-  const controls = useAnimation();
-
-  // Container variants for staggered animations
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { 
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-        when: "beforeChildren"
-      }
-    }
-  };
-
-  // Link variants with more dynamic animation
-  const linkVariants = {
-    hidden: { x: -100, opacity: 0, scale: 0.8 },
-    visible: { 
-      x: 0, 
-      opacity: 1, 
-      scale: 1,
-      transition: { 
-        type: "spring", 
-        stiffness: 100,
-        damping: 10,
-        duration: 0.5 
-      } 
-    },
-    hover: {
-      scale: 1.05,
-      transition: { duration: 0.2 }
-    }
-  };
-
-  // Background variants for hover effect
-  const bgVariants = {
-    rest: { width: 0 },
-    hover: { 
-      width: "100%",
-      transition: { 
-        type: "spring", 
-        bounce: 0.25,
-        stiffness: 130,
-        damping: 9,
-        duration: 0.3 
-      }
-    }
-  };
-
-  React.useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.toggle('alt-font', fontToggle);
-    
-    // Play animation when component mounts
-    controls.start("visible");
-  }, [fontToggle, controls]);
+  const location = useLocation();
 
   return (
-    <nav className="bg-sky-100 shadow-lg">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <RouterLink 
-            to="/" 
-            className="text-xl font-bold text-sky-900 hover:text-sky-600 relative"
-          >
-            <span className="relative z-10">Luna</span>
-            <motion.span
-              className="absolute bottom-0 left-0 h-full bg-gradient-to-r from-blue-900 to-purple-600 -z-10 rounded-md"
-              initial={{ width: 0 }}
-              whileHover={{ width: "100%" }}
-              transition={{ type: "spring", bounce: 0.25, stiffness: 130, damping: 9 }}
-            />
-          </RouterLink>
-        </motion.div>
-
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          animate={controls}
-          className="flex items-center gap-6"
-        >
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Switch
-              checked={fontToggle}
-              onCheckedChange={setFontToggle}
-            />
-          </motion.div>
-
-          {['Warp', 'World', 'About'].map((item) => (
-            <MotionRouterLink 
-              key={item}
-              to={`/${item.toLowerCase()}`}
-              variants={linkVariants}
-              className="font-semibold text-sky-900 hover:text-sky-600 px-2 py-1 relative overflow-hidden"
-              whileHover="hover"
-            >
-              <span className="relative z-10">{item}</span>
-              <motion.span
-                className="absolute bottom-0 left-0 h-full bg-gradient-to-r from-blue-900/20 to-purple-600/20 -z-10 rounded-md"
-                variants={bgVariants}
-                initial="rest"
-                whileHover="hover"
-              />
-            </MotionRouterLink>
-          ))}
-        </motion.div>
+    <>
+      {/* 左上角：Logo / 代号 */}
+      <div className="fixed top-8 left-8 z-50 mix-blend-difference cursor-hover">
+        <NavLink to="/" className="text-2xl font-bold tracking-tighter hover:tracking-widest transition-all duration-500">
+          LUNA_PROTOCOL
+        </NavLink>
+        <div className="text-[10px] opacity-60 mt-1">v.2.0.24 // SYSTEM_ONLINE</div>
       </div>
-    </nav>
+
+      {/* 右上角：状态 / 时间 / 装饰 */}
+      <div className="fixed top-8 right-8 z-50 text-right mix-blend-difference hidden md:block">
+        <div className="flex flex-col items-end gap-1">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#00ff00]"></span>
+          <span className="text-xs font-mono">{new Date().getFullYear()} / EARTH</span>
+          <span className="text-xs font-mono opacity-50">{location.pathname}</span>
+        </div>
+      </div>
+
+      {/* 底部中央：主导航坞 (Dock) */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <nav className="
+          flex items-center gap-1
+          bg-white/5 backdrop-blur-md 
+          border border-white/10 px-2 py-2 rounded-full
+        ">
+          {['World', 'Warp', 'About', 'Skill'].map((item) => {
+            const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
+            return (
+              <NavLink
+                key={item}
+                to={path}
+                className={({ isActive }) => `
+                  relative px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest cursor-hover
+                  transition-all duration-300 overflow-hidden group
+                  ${isActive ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}
+                `}
+              >
+                <span className="relative z-10">{item}</span>
+                {/* 悬停时的扫描线效果 */}
+                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* 左侧竖排装饰文字 */}
+      <div className="fixed left-8 bottom-8 z-40 hidden md:block mix-blend-difference">
+         <div className="writing-vertical-rl text-[10px] tracking-[0.3em] opacity-30">
+            LOVE IS MURDEROUS UTOPIA
+         </div>
+      </div>
+    </>
   );
 };
 
