@@ -38,7 +38,7 @@ const CustomCursor = () => {
         // 所以我们需要手动维护 transform 字符串
         // 既然是在 mouseover，此时鼠标位置还没变，我们暂时不更新位置，等待下一次 mousemove 
         // 或者我们添加一个 class 来控制颜色，但 scale 必须在 JS 里一起控制
-        cursor.style.transition = 'transform 0.15s ease-out'; // 悬浮时加一点过渡让变大更平滑
+        cursor.style.transition = 'transform 0.05s ease-out'; // 悬浮时加一点过渡让变大更平滑
       } else if (!isLink && isHoveredRef.current) {
         isHoveredRef.current = false;
         cursor.style.transition = 'none'; // 恢复移动时无延迟
