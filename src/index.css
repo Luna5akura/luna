@@ -8,15 +8,18 @@
   --accent-cyan: #00f0ff;
 }
 
-body {
+body, html   {
   background-color: var(--bg-void);
   color: #e0e0e0;
   font-family: 'Courier Prime', 'JetBrains Mono', monospace; /* 强制使用等宽字体营造机械感 */
-  cursor: none; /* 隐藏默认鼠标 */
   overflow-x: hidden;
 }
 
-/* 自定义反色光标 */
+* {
+  cursor: none !important;
+  /* 保留选择功能但隐藏选择时光标 */
+}
+
 .custom-cursor {
   position: fixed;
   top: 0;
@@ -27,13 +30,21 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference; /* 核心：遇到白色变黑，遇到黑色变白 */
-  transition: transform 0.1s ease;
-  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  
+  /* 核心优化 1: 使用 GPU 合成层 */
+  will-change: transform; 
+  
+  /* 初始位置移出屏幕 */
+  transform: translate3d(-100px, -100px, 0);
 }
 
+/* 核心优化 2: 只对 transform 中的 scale 进行过渡，而不是所有 transform 变化 */
+/* 我们将在 JS 中手动控制 translate，CSS 只负责 scale 动画 */
 .custom-cursor.hovered {
-  transform: translate(-50%, -50%) scale(4);
+  /* 注意：具体的 scale 逻辑我们也会移到 JS 中以避免 transform 冲突，
+     或者在 JS 中同时写入 translate 和 scale */
+  background: var(--accent-glitch);
 }
 
 /* 隐藏滚动条但允许滚动 */
