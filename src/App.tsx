@@ -8,40 +8,9 @@ import Skill from "@/pages/Skill";
 import PostDetails from "@/pages/PostDetails";
 import Warp from "@/pages/Warp";
 import { FontToggleProvider } from "@/context/FontToggleContext";
-import { useEffect, useState } from 'react';
+import CustomCursor from "@/components/CustomCursor";
 
-const CustomCursor = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-    };
-    // 监听所有可点击元素的 hover
-    const onMouseOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).tagName === 'A' || (e.target as HTMLElement).tagName === 'BUTTON' || (e.target as HTMLElement).closest('.cursor-hover')) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
-      }
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseover', onMouseOver);
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseover', onMouseOver);
-    };
-  }, []);
-
-  return (
-    <div 
-      className={`custom-cursor ${isHovered ? 'hovered' : ''}`}
-      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-    />
-  );
-};
 
 function App() {
   return (
