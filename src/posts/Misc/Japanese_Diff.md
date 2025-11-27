@@ -25,6 +25,7 @@
 | うちに | Within |
 | ながら | as... as... |
 | ている | One thing, doing |
+| ちゅう | busy, status |
 
 |||
 |-|-|
@@ -78,3 +79,17 @@
 | だけ | some fact | dake
 | さえ | even this is negative | sae
 | っきり | only this | kkiri
+
+||| 
+|-|-|
+| ことだ | advice | kotoda 
+| ものだ  | truth, history | monoda 
+|  |   | 
+
+
+|  |   | 
+| ときに  | staement truth  | tokini
+| ところに  | coincidence interrupt   | tokoroni
+| ついでに  | main-sub by the way   | tsuideni
+| うちに  |  urgent now or never  | uchini 
+| あいだに  | inside a period of time | aidani  

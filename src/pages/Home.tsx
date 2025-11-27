@@ -50,7 +50,6 @@ const Home: React.FC = () => {
   return (
     // 【修改点 1】移除 bg-[#050505]，让底层的 PerspectiveGrid 透出来
     <div className="min-h-screen w-full relative overflow-x-hidden">
-      
       {/* 背景组件 */}
       <PerspectiveGrid />
       <CyberHero />

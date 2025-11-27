@@ -9,7 +9,6 @@ export const CyberHero: React.FC = () => {
     // 2. inset-0: 占满整个屏幕
     // 3. flex items-center justify-center: 确保内部的球体始终垂直水平居中
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 flex items-center justify-center">
-      
       {/* 3D 容器 */}
       <div className="relative w-[500px] h-[500px] md:w-[700px] md:h-[700px] [perspective:1000px]">
         
@@ -24,7 +23,7 @@ export const CyberHero: React.FC = () => {
             {[...Array(8)].map((_, i) => (
                 <div 
                     key={`long-${i}`}
-                    className="absolute inset-0 border-[1px] border-cyan-500/30 rounded-full"
+                    className="absolute inset-0 border-[1px] border-cyan-500/50 rounded-full"
                     style={{ transform: `rotateY(${i * 22.5}deg)` }}
                 />
             ))}
@@ -33,7 +32,7 @@ export const CyberHero: React.FC = () => {
             {[...Array(6)].map((_, i) => (
                 <div 
                     key={`lat-${i}`}
-                    className="absolute border-[1px] border-cyan-500/30 rounded-full"
+                    className="absolute border-[1px] border-cyan-500/80 rounded-full"
                     style={{ 
                         top: '50%', left: '50%',
                         width: `${Math.cos((i + 1) * 0.2) * 100}%`,

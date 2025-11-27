@@ -19,32 +19,54 @@ body, html   {
   cursor: none !important;
   /* 保留选择功能但隐藏选择时光标 */
 }
-
+/* 默认光标样式 */
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
-  background-color: white;
+  width: 10px;
+  height: 10px;
+  background-color: white; /* 默认实心白点 */
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
-  
-  /* 核心优化 1: 使用 GPU 合成层 */
-  will-change: transform; 
-  
-  /* 初始位置移出屏幕 */
-  transform: translate3d(-100px, -100px, 0);
+  mix-blend-mode: difference; /* 保持反色效果，在深色背景很明显 */
+  transition: width 0.1s, height 0.1s, background-color 0.1s, border-radius 0.1s;
 }
 
-/* 核心优化 2: 只对 transform 中的 scale 进行过渡，而不是所有 transform 变化 */
-/* 我们将在 JS 中手动控制 translate，CSS 只负责 scale 动画 */
-.custom-cursor.hovered {
-  /* 注意：具体的 scale 逻辑我们也会移到 JS 中以避免 transform 冲突，
-     或者在 JS 中同时写入 translate 和 scale */
-  background: var(--accent-glitch);
+/* 准星模式 (Scope Mode) */
+.custom-cursor.is-scope {
+  width: 40px;  /* 准星大小 */
+  height: 40px;
+  background-color: transparent !important; /* 变空心 */
+  border: 2px solid white; /* 边框颜色，这里用了 Tailwind 的 cyan-500，你可以改 */
+  border-radius: 50%; /* 圆形 */
+  mix-blend-mode: difference; /* 准星模式下建议取消反色，直接用高亮色，更像HUD */
+  box-shadow: 0 0 10px white; /* 加一点发光 */
+}
+
+/* 利用伪元素画十字 */
+.custom-cursor.is-scope::before,
+.custom-cursor.is-scope::after {
+  content: '';
+  position: absolute;
+  background-color: white; /* 十字颜色 */
+  top: 50%;
+  left: 50%;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+}
+
+/* 横线 */
+.custom-cursor.is-scope::before {
+  width: 60%; /* 十字长度比例 */
+  height: 2px;
+}
+
+/* 竖线 */
+.custom-cursor.is-scope::after {
+  width: 2px;
+  height: 60%;
 }
 
 /* 隐藏滚动条但允许滚动 */
