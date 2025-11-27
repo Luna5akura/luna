@@ -172,7 +172,7 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
                                                 "cursor-hover w-8 h-8 rounded-none border transition-all duration-300",
                                                 currentPage === page
                                                     ? "bg-cyan-500 text-black border-cyan-500 font-bold" // 选中态也改为青色系以匹配整体
-                                                    : "bg-transparent text-gray-500 border-white/10 hover:border-cyan-500 hover:text-cyan-500"
+                                                    : "bg-transparent text-gray-500 border-white/10 hover:border-cyan-500 hover:text-cyan-950 hover:bg-cyan-500"
                                             )}
                                         >
                                             {page}

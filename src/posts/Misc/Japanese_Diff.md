@@ -72,7 +72,9 @@
 |-|-|
 | ごと | time interval | goto
 | ずつ | number of every time | zutsu
-| おきに |  | okini
+| おきに | interval  | okini
+| あたり | per person  | atari
+
 
 ||| 
 |-|-|
@@ -93,3 +95,14 @@
 | ついでに  | main-sub by the way   | tsuideni
 | うちに  |  urgent now or never  | uchini 
 | あいだに  | inside a period of time | aidani  
+
+|  |   | 
+| のくせに  | strong, unlikable   | nokuseni 
+| でも  | but, neural   | demo
+
+
+|  |   | 
+| すこしも  | not at all   | sukoshimo 
+| せめて | at least   | semete
+
+
