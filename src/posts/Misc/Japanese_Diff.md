@@ -15,7 +15,7 @@
 |-|-|
 | そう | Hear Will | sou
 | よう | Formal Inference by hear| you
-| みたい | Oral Inference by hear| mitai
+| みたい | Oral Inference by hear similar to | mitai
 | みえる | See | mieru
 | らしい | Inference by seeing | rashii
 
@@ -67,6 +67,8 @@
 |-|-|
 | でも | An example | demo
 | さえ | The least possibility | sae
+| きり | critical point | kiri
+| とおり | according | toori
 
 |||
 |-|-|
@@ -74,6 +76,7 @@
 | ずつ | number of every time | zutsu
 | おきに | interval  | okini
 | あたり | per person  | atari
+| につき | every | nitsuki
 
 
 ||| 
