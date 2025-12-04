@@ -15580,7 +15580,7 @@ CAGE框架帮助我们理解，麦当劳的全球成功并非简单的复制粘�
 | ごと | time interval | goto
 | ずつ | number of every time | zutsu
 | おきに | interval  | okini
-| あたり | per person  | atari
+| あたり | per | atari
 | につき | every | nitsuki
 
 
@@ -15598,13 +15598,17 @@ CAGE框架帮助我们理解，麦当劳的全球成功并非简单的复制粘�
 
 
 |  |   | 
-| ときに  | staement truth  | tokini
-| ところに  | coincidence interrupt   | tokoroni
-| ついでに  | main-sub by the way   | tsuideni
-| うちに  |  urgent now or never  | uchini 
+| ときに  | truth  | tokini
+| ところに  | interrupt   | tokoroni
+| ついでに  | by the way   | tsuideni
+| うちに  | now or never  | uchini 
 | あいだに  | inside a period of time | aidani  
+| にあたる | inprecise preparation | niataru
+|　にさいして | precise preparation | nisaishite
+| いらい | long time | irai
+| つつ | parallel | tsutsu
 
-|  |   | 
+| |   | 
 | のくせに  | strong, unlikable   | nokuseni 
 | でも  | but, neural   | demo
 
@@ -15614,6 +15618,15 @@ CAGE框架帮助我们理解，麦当劳的全球成功并非简单的复制粘�
 | せめて | at least   | semete
 
 
+|  |   | 
+| そして  | after | soshite 
+| そこで | therefore | sokode
+| それに  | moreover | soreni 
+| また  | again | mata
+| なお  | furthermore | nao
+
+| とうとう  |   | toutou 
+| ついに  |   | tsuini
 `,__vite_glob_0_68=`---
 title: Math
 date: 2025-9-10 
