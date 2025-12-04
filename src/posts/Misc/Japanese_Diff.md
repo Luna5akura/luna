@@ -75,7 +75,7 @@
 | ごと | time interval | goto
 | ずつ | number of every time | zutsu
 | おきに | interval  | okini
-| あたり | per person  | atari
+| あたり | per | atari
 | につき | every | nitsuki
 
 
@@ -93,13 +93,17 @@
 
 
 |  |   | 
-| ときに  | staement truth  | tokini
-| ところに  | coincidence interrupt   | tokoroni
-| ついでに  | main-sub by the way   | tsuideni
-| うちに  |  urgent now or never  | uchini 
+| ときに  | truth  | tokini
+| ところに  | interrupt   | tokoroni
+| ついでに  | by the way   | tsuideni
+| うちに  | now or never  | uchini 
 | あいだに  | inside a period of time | aidani  
+| にあたる | inprecise preparation | niataru
+|　にさいして | precise preparation | nisaishite
+| いらい | long time | irai
+| つつ | parallel | tsutsu
 
-|  |   | 
+| |   | 
 | のくせに  | strong, unlikable   | nokuseni 
 | でも  | but, neural   | demo
 
@@ -109,3 +113,12 @@
 | せめて | at least   | semete
 
 
+|  |   | 
+| そして  | after | soshite 
+| そこで | therefore | sokode
+| それに  | moreover | soreni 
+| また  | again | mata
+| なお  | furthermore | nao
+
+| とうとう  |   | toutou 
+| ついに  |   | tsuini
