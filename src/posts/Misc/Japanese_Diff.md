@@ -122,3 +122,8 @@
 
 | とうとう  |   | toutou 
 | ついに  |   | tsuini
+
+
+|  |   | 
+| そうもない  | low   | soumonai 
+| っこない  | zero   | kkonai

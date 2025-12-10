@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
               >
                 <span className="relative z-10">{item}</span>
                 {/* 悬停时的扫描线效果 */}
-                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <span className="absolute inset-0 bg-cyan-500/50 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </NavLink>
             );
           })}
