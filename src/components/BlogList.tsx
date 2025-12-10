@@ -13,7 +13,6 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { useScrambleText } from '@/hooks/useScrambleText';
 
 interface BlogListProps {
   posts: Post[];
@@ -46,11 +45,7 @@ const itemVariants = {
 
 // 在 ListItem 组件内部
 const ListItem = ({ post }: { post: Post }) => {
-    // 我们需要知道 hover 状态传给 PulseText
-    // 如果你还需要乱码效果作为初始展示，可以保留 useScrambleText
-    // 但为了脉冲效果清晰，建议二选一，或者让 PulseText 只负责脉冲
-    // 这里我们直接用原始 post.title，让 PulseText 负责动画
-    
+
     return (
         <motion.div variants={itemVariants} className="w-full">
             <Link 
@@ -69,23 +64,12 @@ const ListItem = ({ post }: { post: Post }) => {
                             #{post.id.toString().padStart(3, '0')}
                         </span>
 
-                        <div className="relative transition-transform duration-300 group-hover:translate-x-2">
+                        <div className="relative transition-transform duration-300 group-hover:translate-x-2 pr-3">
                             <h2 className="text-xl md:text-3xl font-bold uppercase tracking-tight text-gray-500 group-hover:text-cyan-500 transition-colors">
-                                {/* 使用 PulseText 替代普通文本
-                                <PulseText 
-                                    text={post.title} 
-                                    isHovered={isHovered}
-                                    pulseWidth={5}   // 每次亮 2 个字符
-                                    duration={800}   // 250ms 跑完全程，极速
-                                    repeatDelay={100} // 跑完后几乎不停顿立即开始下一次
-                                /> */}
-                                {useScrambleText(post.title, 40)}
+                                {(post.title)}
                             </h2>
                             
                             {/* 装饰文字 */}
-                            <span className="absolute -bottom-4 left-0 text-[10px] text-cyan-500/70 opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 font-mono">
-                                :: READ_PACKET_DATA ::
-                            </span>
                         </div>
                     </div>
 
@@ -94,7 +78,7 @@ const ListItem = ({ post }: { post: Post }) => {
                         <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 transition-colors">
                             [{post.date}]
                         </span>
-                        <div className="hidden md:flex items-center overflow-hidden w-0 group-hover:w-24 transition-all duration-300 justify-end">
+                        <div className="hidden md:flex items-center overflow-hidden w-0 group-hover:w-16 transition-all duration-300 justify-end">
                             <span className="text-xs font-mono text-cyan-500 whitespace-nowrap">
                                 &lt;&lt; ACCESS
                             </span>

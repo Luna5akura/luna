@@ -5,7 +5,6 @@ import BlogList from '@/components/BlogList';
 import Sidebar from '@/components/Sidebar';
 import SearchModal from '@/components/SearchModal';
 import { usePosts } from '@/hooks/usePosts';
-import { useScrambleText } from '@/hooks/useScrambleText';
 import { CyberHero, PerspectiveGrid } from '@/components/CyberHero'; 
 import { RotatingQuotes } from '@/components/RotatingQuotes';
 
@@ -20,7 +19,7 @@ const Home: React.FC = () => {
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const titleText = useScrambleText("LUNA WORLD", 40);
+  const titleText = ("LUNA WORLD");
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => { setCurrentPage(1); }, [selectedCategory]);
