@@ -7,6 +7,7 @@ import SearchModal from '@/components/SearchModal';
 import { usePosts } from '@/hooks/usePosts';
 import { CyberHero, PerspectiveGrid } from '@/components/CyberHero'; 
 import { RotatingQuotes } from '@/components/RotatingQuotes';
+import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -19,9 +20,9 @@ const Home: React.FC = () => {
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const titleText = ("LUNA WORLD");
   const [currentPage, setCurrentPage] = useState(1);
 
+  // 当分类改变时重置页码
   useEffect(() => { setCurrentPage(1); }, [selectedCategory]);
 
   const filteredPosts = selectedCategory && selectedCategory !== 'All'
@@ -34,6 +35,7 @@ const Home: React.FC = () => {
     currentPage * ITEMS_PER_PAGE
   );
 
+  // 快捷键监听
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '/' && !isSearchVisible) {
@@ -47,54 +49,83 @@ const Home: React.FC = () => {
   }, [isSearchVisible]);
 
   return (
-    // 【修改点 1】移除 bg-[#050505]，让底层的 PerspectiveGrid 透出来
-    <div className="min-h-screen w-full relative overflow-x-hidden">
-      {/* 背景组件 */}
-      <PerspectiveGrid />
-      <CyberHero />
+    <div className="min-h-screen w-full relative bg-[#0a0a0a] text-white selection:bg-cyan-500 selection:text-black overflow-x-hidden">
+            <style>{`
+        @property --from-color {
+          syntax: '<color>';
+          initial-value: white;
+          inherits: false;
+        }
+        @property --to-color {
+          syntax: '<color>';
+          initial-value: white;
+          inherits: false;
+        }
+      `}</style>
+      
+      {/* --- 背景层 --- */}
+      <div className="fixed inset-0 z-0">
+         {/* 降低 CyberHero 的不透明度，确保它只是背景纹理 */}
+         <div className="opacity-60"> 
+            <PerspectiveGrid />
+            <CyberHero />
+         </div>
+         {/* 添加噪点或扫描线叠加层，增加质感 */}
+         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
+      </div>
 
+      {/* --- 主内容容器 --- */}
       <div className="relative z-10 pt-32 pb-20 px-6 md:px-12 w-full max-w-7xl mx-auto">
         
-        {/* Hero 标题区 */}
+        {/* --- Hero 区域：风格统一化 --- */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-16 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-end gap-4"
+          className="mb-24 flex flex-col md:flex-row justify-between items-end gap-8"
         >
-          <div>
-             <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></span>
-                <span className="text-[10px] font-mono text-cyan-500 tracking-widest">ONLINE</span>
+          <div className="relative group cursor-default">
+             {/* 装饰性的小标题 */}
+             <div className="flex items-center gap-3 mb-2 text-xs font-mono text-cyan-500/80 tracking-[0.5em] uppercase">
+                <span className="w-4 h-[1px] bg-cyan-500" />
+                System_Online
              </div>
-             {/* 巨大的标题，叠加在月球上 */}
-             <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white mix-blend-difference select-none relative z-20">
-              {titleText}
+
+             <h1 className="text-6xl md:text-9xl font-bold uppercase tracking-tight            text-transparent bg-clip-text bg-gradient-to-r from-[var(--from-color,white)] to-[var(--to-color,white)] group-hover:[--from-color:theme(colors.cyan.300)] group-hover:[--to-color:white] cursor-hover transition-[--from-color,--to-color] duration-500 ease-in-out">
+              LUNA WORLD
             </h1>
 
-            <div className="pl-1 mt-4">
+            {/* 引用组件位置调整 */}
+            <div className="pl-1 ml-3">
                 <RotatingQuotes />
             </div>
           </div>
           
-          <div className="text-right font-mono text-s text-gray-500 space-y-1">
-            <p>// DATA_STREAM: ACTIVE</p>
-            <p>// ENTRIES_DETECTED: {filteredPosts.length}</p>
+          {/* 右侧数据面板：增加边框和精密感 */}
+          <div className="hidden md:block text-right font-mono text-xs text-gray-500 space-y-2 border-r border-white/20 pr-6 py-2">
+            <p className="flex justify-end gap-4">
+                <span>STATUS</span> 
+                <span className="text-cyan-400">ACTIVE</span>
+            </p>
+            <p className="flex justify-end gap-4">
+                <span>ENTRIES</span> 
+                <span className="text-white">{filteredPosts.length.toString().padStart(3, '0')}</span>
+            </p>
           </div>
         </motion.div>
 
-        {/* 主内容区 */}
+        {/* --- 双栏布局 --- */}
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
           
-          {/* 左侧：Sidebar (已移除装饰) */}
+          {/* 左侧栏：Sidebar */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="lg:w-48 shrink-0 z-20"
+            className="lg:w-64 shrink-0 z-20"
           >
+            {/* sticky 定位确保滚动时侧边栏跟随 */}
             <div className="sticky top-32">
-               {/* 【修改点 2】只保留 Sidebar，删除了 Dashboard Widget */}
                <Sidebar 
                  categories={allCategories} 
                  isExpanded={true} 
@@ -103,25 +134,33 @@ const Home: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* 右侧：文章列表 */}
+          {/* 右侧栏：BlogList */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className="flex-1 min-w-0 w-full"
           >
-            {filteredPosts.length > 0 ? (
-              <BlogList
-                posts={paginatedPosts}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            ) : (
-              <div className="py-32 flex flex-col items-center justify-center border border-dashed border-white/10 text-gray-600 font-mono">
-                <span>[NO_DATA_FOUND_IN_SECTOR]</span>
-              </div>
-            )}
+            {/* 这里直接使用你已经写好的 BlogList，它现在的风格已经完美 */}
+            <div className="relative">
+                {/* 给列表加一个顶部装饰线头，呼应 Sidebar */}
+                <div className="absolute -top-8 left-0 text-[10px] font-mono text-gray-600 tracking-[0.2em] uppercase">
+                    &gt;&gt; Data_Logs // Recent
+                </div>
+                
+                {filteredPosts.length > 0 ? (
+                <BlogList
+                    posts={paginatedPosts}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+                ) : (
+                <div className="py-32 flex flex-col items-center justify-center border-y border-dashed border-white/10 text-gray-600 font-mono">
+                    <span className="animate-pulse">[ NO_DATA_FOUND_IN_SECTOR ]</span>
+                </div>
+                )}
+            </div>
           </motion.div>
         </div>
 
