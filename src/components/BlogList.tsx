@@ -13,15 +13,12 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-
 interface BlogListProps {
   posts: Post[];
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
-
-
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
@@ -32,77 +29,69 @@ const containerVariants = {
     }
   }
 };
-
 const itemVariants = {
   hidden: { opacity: 0, x: -20, filter: 'blur(10px)' },
-  show: { 
-    opacity: 1, 
-    x: 0, 
+  show: {
+    opacity: 1,
+    x: 0,
     filter: 'blur(0px)',
     transition: { type: 'spring', stiffness: 50 }
   }
 };
-
-// 在 ListItem 组件内部
 const ListItem = ({ post }: { post: Post }) => {
-
     return (
-        <motion.div variants={itemVariants} className="w-full">
-            <Link 
+        <motion.div variants={itemVariants} className="w-full mb-8">
+            <Link
                 to={`/posts/${post.contentKey}`}
-                className="group relative block w-full cursor-hover overflow-hidden"
+                className="group relative block w-full cursor-pointer"
             >
-                {/* 背景和装饰层保持不变... */}
-                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.02] transition-colors duration-300" />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_14px]" />
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
-
-                <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between py-6 md:py-8 px-4 md:px-6 border-b border-white/5 group-hover:border-white/20 transition-colors duration-300">
-                    
-                    <div className="flex items-baseline gap-6 overflow-hidden">
-                        <span className="text-xs font-mono text-gray-700 group-hover:text-cyan-500 transition-colors duration-300">
-                            #{post.id.toString().padStart(3, '0')}
-                        </span>
-
-                        <div className="relative transition-transform duration-300 group-hover:translate-x-2 pr-3">
-                            <h2 className="text-xl md:text-3xl font-bold uppercase tracking-tight text-gray-500 group-hover:text-cyan-500 transition-colors">
-                                {(post.title)}
-                            </h2>
-                            
-                            {/* 装饰文字 */}
+                {/* 只有一条底线，悬停时变宽或变色 */}
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/20 group-hover:bg-cyan-400 group-hover:h-[2px] transition-all duration-300 ease-out" />
+               
+                <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between py-6 group-hover:pl-4 transition-all duration-500 ease-[0.22,1,0.36,1]">
+                   
+                    <div className="flex flex-col gap-2">
+                        {/* 顶部元数据：极小字号，增加精密感 */}
+                        <div className="flex items-center gap-3 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                            <span>No.{post.id.toString().padStart(3, '0')}</span>
+                            <span>— {post.category}</span>
                         </div>
+                        <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 from-0% via-white via-50% to-white bg-[size:200%_100%] bg-[position:100%_0] group-hover:bg-[position:0%_0] cursor-hover transition-all duration-300 ease-in-out">
+                            {post.title}
+                        </h2>
                     </div>
-
-                    {/* 右侧部分保持不变... */}
-                    <div className="flex items-center gap-4 mt-2 md:mt-0">
-                        <span className="text-xs font-mono text-gray-600 group-hover:text-gray-400 transition-colors">
-                            [{post.date}]
-                        </span>
-                        <div className="hidden md:flex items-center overflow-hidden w-0 group-hover:w-16 transition-all duration-300 justify-end">
-                            <span className="text-xs font-mono text-cyan-500 whitespace-nowrap">
-                                &lt;&lt; ACCESS
-                            </span>
-                        </div>
+                    {/* 日期：右对齐，单色风格 */}
+                    <div className="mt-4 md:mt-0 text-right">
+                         <span className="block text-4xl md:text-6xl font-thin text-white/10 group-hover:text-white/80 transition-colors duration-500 font-mono">
+                            {post.date.split('-')[2]} {/* 只显示日期号，例如 '24' */}
+                         </span>
+                         <span className="text-xs font-mono text-gray-600 group-hover:text-cyan-500">
+                            {post.date}
+                         </span>
                     </div>
+                </div>
+                {/* 前卫特效：悬停时在背景出现巨大的淡入文字或条纹 */}
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none whitespace-nowrap overflow-hidden">
+                    <span className="text-[100px] font-black italic text-white tracking-tighter translate-x-10 group-hover:translate-x-0 transition-transform duration-700">
+                        |||||||||| &gt;&gt;&gt;
+                    </span>
                 </div>
             </Link>
         </motion.div>
     )
 }
 const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onPageChange }) => {
-    
+   
     const getVisiblePages = () => {
-        const delta = 1; 
+        const delta = 1;
         const range = [];
         const rangeWithDots = [];
         let l;
-
         for (let i = 1; i <= totalPages; i++) {
             if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
                 range.push(i);
             }
         }
-
         for (const i of range) {
             if (l) {
                 if (i - l === 2) rangeWithDots.push(l + 1);
@@ -113,11 +102,10 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
         }
         return rangeWithDots;
     };
-
     return (
         <div className="relative w-full">
-            <motion.div 
-                key={currentPage} 
+            <motion.div
+                key={currentPage}
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
@@ -129,7 +117,6 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
                         <ListItem key={post.id} post={post} />
                     ))}
                 </div>
-
                 {/* 分页区域 */}
                 <div className="flex justify-center md:justify-start pt-8">
                     <Pagination>
@@ -143,7 +130,6 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
                                     )}
                                 />
                             </PaginationItem>
-
                             {getVisiblePages().map((page, index) => (
                                 <PaginationItem key={index}>
                                     {page === '...' ? (
@@ -164,7 +150,6 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
                                     )}
                                 </PaginationItem>
                             ))}
-
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
@@ -181,5 +166,4 @@ const BlogList: React.FC<BlogListProps> = ({ posts, currentPage, totalPages, onP
         </div>
     );
 };
-
 export default BlogList;
