@@ -56,7 +56,7 @@ const ListItem = ({ post }: { post: Post }) => {
                             <span>No.{post.id.toString().padStart(3, '0')}</span>
                             <span>— {post.category}</span>
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 from-0% via-white via-50% to-white bg-[size:200%_100%] bg-[position:100%_0] group-hover:bg-[position:0%_0] cursor-hover transition-all duration-300 ease-in-out">
+                        <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 from-0% via-white via-50% to-white bg-[size:200%_100%] bg-[position:100%_0] group-hover:bg-[position:0%_0] cursor-hover transition-all duration-300 ease-in-out">
                             {post.title}
                         </h2>
                     </div>
