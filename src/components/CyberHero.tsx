@@ -29,7 +29,7 @@ export const CyberHero: React.FC = () => {
             ))}
             
             {/* 纬线 (Latitudes) */}
-            {[...Array(6)].map((_, i) => (
+            {[...Array(9)].map((_, i) => (
                 <div 
                     key={`lat-${i}`}
                     className="absolute border-[1px] border-cyan-500/80 rounded-full"
@@ -43,7 +43,7 @@ export const CyberHero: React.FC = () => {
             ))}
 
             {/* 核心光晕 */}
-            <div className="absolute inset-0 bg-cyan-500/5 rounded-full blur-[80px]" />
+            <div className="absolute inset-0 bg-cyan-300/5 rounded-full blur-[80px]" />
         </motion.div>
       </div>
       

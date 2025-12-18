@@ -1,6 +1,6 @@
 ---
 title: International Business Management - Assignment - Week 4
-category: Assignment
+category: Assignments
 ---
 
 ## 数字化浪潮下的中国企业全球化：机遇、挑战与管理策略

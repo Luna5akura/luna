@@ -34,41 +34,6 @@ body, html   {
   transition: width 0.1s, height 0.1s, background-color 0.1s, border-radius 0.1s;
 }
 
-/* 准星模式 (Scope Mode) */
-.custom-cursor.is-scope {
-  width: 40px;  /* 准星大小 */
-  height: 40px;
-  background-color: transparent !important; /* 变空心 */
-  border: 2px solid white; /* 边框颜色，这里用了 Tailwind 的 cyan-500，你可以改 */
-  border-radius: 50%; /* 圆形 */
-  mix-blend-mode: difference; /* 准星模式下建议取消反色，直接用高亮色，更像HUD */
-  box-shadow: 0 0 10px white; /* 加一点发光 */
-}
-
-/* 利用伪元素画十字 */
-.custom-cursor.is-scope::before,
-.custom-cursor.is-scope::after {
-  content: '';
-  position: absolute;
-  background-color: white; /* 十字颜色 */
-  top: 50%;
-  left: 50%;
-  mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
-}
-
-/* 横线 */
-.custom-cursor.is-scope::before {
-  width: 60%; /* 十字长度比例 */
-  height: 2px;
-}
-
-/* 竖线 */
-.custom-cursor.is-scope::after {
-  width: 2px;
-  height: 60%;
-}
-
 /* 隐藏滚动条但允许滚动 */
 ::-webkit-scrollbar {
   width: 0px;
