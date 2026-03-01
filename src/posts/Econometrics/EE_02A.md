@@ -1,6 +1,6 @@
 ---
-title: Econometrics Assignment - Week 2
-category: Assignments
+title: econometrics assignment - week 2
+category: assignments
 ---
 
 # Chapter 2 Problem 7
