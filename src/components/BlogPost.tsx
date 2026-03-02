@@ -1,116 +1,206 @@
-import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+// src/components/BlogPost.tsx
+import React, { useRef, useEffect, useState } from 'react';
 import { Post } from '@/types';
-import { ArrowUpRight } from "lucide-react";
-import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
+import { Scan, TerminalSquare } from "lucide-react";
+import { 
+  motion, 
+  useMotionValue, 
+  useSpring, 
+  useMotionTemplate, 
+  useTransform,
+  useAnimationFrame
+} from 'framer-motion';
+import { useTransitionNavigate } from '@/hooks/useTransitionNavigate';
 
+// ==========================================
+// 【顶级炫技点 1：传感器融合低通滤波器 (Low-Pass Filter)】
+// 过滤移动端陀螺仪的物理硬件抖动，提供极度丝滑的 3D 倾斜反馈
+// ==========================================
+const useHardwareAttitude = (rotateX: any, rotateY: any) => {
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.DeviceOrientationEvent) return;
+
+    // 低通滤波系数 (0~1)，越小越平滑但延迟越高
+    const LPF_ALPHA = 0.15; 
+    let smoothedBeta = 0;
+    let smoothedGamma = 0;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+      
+      const targetBeta = Math.max(-30, Math.min(30, e.beta - 45)); 
+      const targetGamma = Math.max(-30, Math.min(30, e.gamma));
+
+      // 一阶低通滤波算法核心
+      smoothedBeta = smoothedBeta + LPF_ALPHA * (targetBeta - smoothedBeta);
+      smoothedGamma = smoothedGamma + LPF_ALPHA * (targetGamma - smoothedGamma);
+
+      rotateX.set(-(smoothedBeta / 1.5));
+      rotateY.set(smoothedGamma / 1.5);
+    };
+
+    const requestAccess = async () => {
+      if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+        try {
+          const permission = await (DeviceOrientationEvent as any).requestPermission();
+          if (permission === 'granted') window.addEventListener('deviceorientation', handleOrientation);
+        } catch (error) { console.warn("Gyro scope permission rejected."); }
+      } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    };
+
+    window.addEventListener('touchstart', requestAccess, { once: true });
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener('touchstart', requestAccess);
+    };
+  }, [rotateX, rotateY]);
+};
+
+// ==========================================
+// 【顶级炫技点 2：零重绘量子态数据解密引擎】
+// 突破 React 性能瓶颈，直接操作底层 DOM 渲染 60FPS 密码爆破
+// ==========================================
+const ZeroRenderDecryptor = ({ text, isHovered }: { text: string, isHovered: boolean }) => {
+  const displayText = useMotionValue("");
+
+  useEffect(() => {
+    // 未激活时，将文本转换为等长的十六进制乱码掩码
+    if (!isHovered) {
+      const hexMask = Array.from(text).map(c => c === ' ' ? ' ' : Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
+      displayText.set(hexMask);
+      return;
+    }
+
+    let frameId: number;
+    let iteration = 0;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    
+    const animate = () => {
+      const currentText = text.split("").map((char, index) => {
+        if (index < iteration) return char;
+        if (char === " ") return " ";
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join("");
+
+      displayText.set(currentText);
+
+      if (iteration < text.length) {
+        iteration += text.length / 20; // 控制解密速度
+        frameId = requestAnimationFrame(animate);
+      } else {
+        displayText.set(text);
+      }
+    };
+    
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [text, isHovered, displayText]);
+
+  return <motion.span>{displayText}</motion.span>;
+};
+
+// ==========================================
+// 主组件：物理黑曜石数据板
+// ==========================================
 interface BlogPostProps {
   post: Post;
 }
 
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const transitionNavigate = useTransitionNavigate(); 
+  const[isHovered, setIsHovered] = useState(false);
 
-  // ==========================================
-  // 【炫技点 1 & 3：3D 物理引擎 & 光线追踪坐标】
-  // ==========================================
+  // 物理坐标与动能弹簧
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const cardWidth = useMotionValue(0);
+  const cardHeight = useMotionValue(0);
 
-  // 用于计算 3D 翻转的物理值 (加入弹簧阻尼，让回弹如丝般顺滑)
-  const rotateX = useSpring(useMotionValue(0), { damping: 20, stiffness: 150, mass: 0.5 });
-  const rotateY = useSpring(useMotionValue(0), { damping: 20, stiffness: 150, mass: 0.5 });
-
-  // 探照灯的透明度控制
+  const rotateX = useSpring(useMotionValue(0), { damping: 25, stiffness: 200, mass: 0.5 });
+  const rotateY = useSpring(useMotionValue(0), { damping: 25, stiffness: 200, mass: 0.5 });
   const spotlightOpacity = useSpring(0, { stiffness: 300, damping: 30 });
+
+  // 注入硬件级防抖陀螺仪
+  useHardwareAttitude(rotateX, rotateY);
+
+  // ==========================================
+  // 【顶级炫技点 3：Phong 镜面反射光照算法】
+  // ==========================================
+  // 计算光源相对中心点的角度，用于生成玻璃表面的流转高光
+  const lightAngle = useTransform([mouseX, mouseY, cardWidth, cardHeight], ([x, y, w, h]: number[]) => {
+    const cx = w / 2;
+    const cy = h / 2;
+    const angleRad = Math.atan2(y - cy, x - cx);
+    return (angleRad * 180) / Math.PI + 90; // 转换为 CSS 角度
+  });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
     
-    // 计算鼠标在卡片内部的相对坐标
-    const clientX = e.clientX - rect.left;
-    const clientY = e.clientY - rect.top;
-    
-    mouseX.set(clientX);
-    mouseY.set(clientY);
+    mouseX.set(cx);
+    mouseY.set(cy);
+    cardWidth.set(rect.width);
+    cardHeight.set(rect.height);
 
-    // 计算中心偏移量，控制翻转角度 (最大翻转 10 度)
+    // 计算 3D 偏航角
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateXValue = ((clientY - centerY) / centerY) * -10;
-    const rotateYValue = ((clientX - centerX) / centerX) * 10;
-
-    rotateX.set(rotateXValue);
-    rotateY.set(rotateYValue);
+    rotateX.set(((cy - centerY) / centerY) * -12); // 最大倾斜 12 度
+    rotateY.set(((cx - centerX) / centerX) * 12);
   };
 
   const handleMouseEnter = () => {
     spotlightOpacity.set(1);
+    setIsHovered(true);
   };
-
   const handleMouseLeave = () => {
-    // 鼠标离开时，不仅关闭探照灯，还要把 3D 角度完美回弹到 0
     spotlightOpacity.set(0);
+    setIsHovered(false);
     rotateX.set(0);
     rotateY.set(0);
   };
 
-  // 动态生成基于鼠标坐标的探照灯渐变
-  const backgroundSpotlight = useMotionTemplate`
-    radial-gradient(
-      400px circle at ${mouseX}px ${mouseY}px,
-      rgba(236, 72, 153, 0.15),
-      transparent 80%
-    )
-  `;
-
-  // 动态生成追随鼠标的高光边框（极其硬核的 Mask 技巧）
-  const borderSpotlight = useMotionTemplate`
-    radial-gradient(
-      300px circle at ${mouseX}px ${mouseY}px,
-      rgba(236, 72, 153, 0.8),
-      transparent 80%
-    )
-  `;
+  // 生成底层的环境泛光 (Diffuse Light)
+  const backgroundSpotlight = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(34, 211, 238, 0.1), transparent 80%)`;
+  // 生成边框的高强度激光射线 (Laser Edge)
+  const borderSpotlight = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, rgba(34, 211, 238, 0.8), transparent 80%)`;
+  // 生成真实的玻璃表面反射镜面光 (Specular Highlight)
+  const specularHighlight = useMotionTemplate`linear-gradient(${lightAngle}deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.0) 60%)`;
 
   return (
-    // 外部透视容器
-    <div className="group relative w-full mb-12 perspective-[1200px]">
-      <Link to={`/posts/${post.contentKey}`} className="block relative">
-        
+    <div className="group relative w-full mb-12 perspective-[1500px]">
+      <div 
+        onClick={() => transitionNavigate(`/posts/${post.contentKey}`)} 
+        className="block relative cursor-pointer outline-none"
+      >
         <motion.div
           ref={cardRef}
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          style={{
-            rotateX,
-            rotateY,
-            transformStyle: "preserve-3d" // 【核心】开启内部子元素的 3D 空间
-          }}
-          className="
-            relative z-10 w-full rounded-xl
-            border border-slate-800/50 bg-slate-900/20 backdrop-blur-sm
-            p-6 transition-colors duration-500 overflow-hidden
-            will-change-transform
-          "
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="relative z-10 w-full rounded-sm border border-cyan-900/40 bg-[#050505]/90 backdrop-blur-md p-6 md:p-8 transition-colors duration-500 overflow-visible will-change-transform shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)]"
         >
-          {/* 【炫技点 3】鼠标跟随的手电筒背景 */}
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
-            style={{ 
-              background: backgroundSpotlight,
-              opacity: spotlightOpacity
-            }}
-          />
+          {/* Layer -1: 底层全息网格背板 */}
+          <div 
+            className="absolute inset-0 z-0 opacity-20 pointer-events-none rounded-sm overflow-hidden"
+            style={{ transform: "translateZ(-20px)" }}
+          >
+             <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d415_1px,transparent_1px),linear-gradient(to_bottom,#06b6d415_1px,transparent_1px)] bg-[size:20px_20px]" />
+          </div>
 
-          {/* 【炫技点 3】流光边缘追踪：利用 mask-image 裁切出跟随鼠标的高光边框 */}
+          {/* Layer 0: 动态探照灯与边框遮罩引擎 */}
+          <motion.div className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 rounded-sm" style={{ background: backgroundSpotlight, opacity: spotlightOpacity }} />
           <motion.div
-            className="pointer-events-none absolute inset-0 z-0 rounded-xl transition-opacity duration-300 border-[2px] border-transparent"
+            className="pointer-events-none absolute inset-0 z-0 rounded-sm transition-opacity duration-300 border-[2px] border-transparent"
             style={{ 
-              background: borderSpotlight,
-              opacity: spotlightOpacity,
+              background: borderSpotlight, opacity: spotlightOpacity,
               WebkitMaskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -118,72 +208,78 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
             }}
           />
 
-          {/* 内容区：利用 translateZ 实现裸眼 3D 悬浮效果 */}
+          {/* Layer 1: 核心数据展示区 */}
           <div className="relative z-10 flex flex-col h-full transform-gpu" style={{ transform: "translateZ(40px)" }}>
             
-            <div className="flex items-baseline justify-between mb-4" style={{ transform: "translateZ(20px)" }}>
-              <span className="text-xs font-mono text-pink-500/80 tracking-widest uppercase">
-                {post.date}
-              </span>
-              <span className="text-xs font-mono text-slate-500 group-hover:text-pink-400 transition-colors">
-                [ {post.author} ]
+            <div className="flex items-baseline justify-between mb-6 border-b border-cyan-900/30 pb-3" style={{ transform: "translateZ(20px)" }}>
+              <div className="flex items-center gap-2">
+                <TerminalSquare className="w-4 h-4 text-cyan-500" />
+                <span className="text-[10px] font-mono text-cyan-500/80 tracking-[0.2em] uppercase font-bold">
+                  {post.date} // {post.category}
+                </span>
+              </div>
+              <span className="text-[9px] font-mono text-slate-500 group-hover:text-cyan-400 transition-colors tracking-widest uppercase">
+                AUTHOR_{post.author}
               </span>
             </div>
 
-            {/* View Transitions API 注入 */}
             <h2 
-              className="
-                text-3xl md:text-4xl font-serif font-medium text-slate-200 
-                group-hover:text-white transition-all duration-500 ease-out
-                drop-shadow-[0_0_15px_rgba(236,72,153,0)] group-hover:drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]
-              "
+              className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter text-slate-200 group-hover:text-white transition-all duration-500 ease-out group-hover:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] leading-tight"
               style={{ 
-                transform: "translateZ(60px)", // 标题离屏幕最近，浮出最高
+                transform: "translateZ(60px)",
                 viewTransitionName: `post-title-${post.id}` 
               }}
             >
               {post.title}
             </h2>
 
-            <p 
-              className="mt-4 text-slate-500 text-sm leading-relaxed max-w-2xl line-clamp-2 group-hover:text-slate-400 transition-colors"
+            {/* 搭载零重绘解密引擎的摘要块 */}
+            <div 
+              className="mt-6 text-slate-500 text-xs md:text-sm font-mono leading-relaxed max-w-2xl line-clamp-2 group-hover:text-cyan-100/70 transition-colors p-4 bg-cyan-950/20 border-l-2 border-cyan-900/50 group-hover:border-cyan-400" 
               style={{ transform: "translateZ(30px)" }}
             >
-              {post.excerpt}
-            </p>
+              <ZeroRenderDecryptor text={post.excerpt} isHovered={isHovered} />
+            </div>
 
-            {/* 【炫技点 4：弹簧微重力箭头】 */}
-            <div 
-              className="mt-8 flex items-center text-slate-500 group-hover:text-pink-400 transition-colors w-max"
-              style={{ transform: "translateZ(50px)" }}
-            >
-              <span className="text-xs font-bold uppercase tracking-[0.2em] mr-2">
-                Initialize_Read
-              </span>
-              <div className="relative overflow-hidden w-6 h-6 flex items-center justify-center rounded-full bg-slate-800/50 group-hover:bg-pink-500/20 transition-colors">
-                 <motion.div
-                   className="absolute"
-                   // 极致细节：初始状态居中，Hover 时往右上角飞出，同时另一个从左下角飞入
-                   initial={{ x: 0, y: 0 }}
-                   whileHover={{ x: 20, y: -20 }}
-                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                 >
-                    <ArrowUpRight className="w-3 h-3" />
-                 </motion.div>
-                 <motion.div
-                   className="absolute"
-                   initial={{ x: -20, y: 20 }}
-                   whileHover={{ x: 0, y: 0 }}
-                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                 >
-                    <ArrowUpRight className="w-3 h-3 text-pink-400" />
-                 </motion.div>
+            <div className="mt-8 flex items-center justify-between text-slate-500 group-hover:text-cyan-400 transition-colors w-full" style={{ transform: "translateZ(50px)" }}>
+              <div className="flex items-center gap-3">
+                 <div className="relative flex items-center justify-center w-8 h-8 border border-slate-700 group-hover:border-cyan-400 rounded-sm bg-black transition-colors overflow-hidden">
+                    <Scan className="w-4 h-4 absolute" />
+                    {/* 瞄准镜扫描线特效 */}
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-cyan-400 opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.5s_ease-in-out_infinite]" />
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-[0.3em] flex flex-col">
+                   <span>Execute</span>
+                   <span className="text-cyan-800 group-hover:text-cyan-500 transition-colors">Data_Fetch()</span>
+                 </span>
+              </div>
+              
+              <div className="text-[8px] font-mono text-cyan-900 group-hover:text-cyan-500 tracking-widest">
+                ID:0x{post.id.toString(16).padStart(4, '0')}
               </div>
             </div>
-            
           </div>
+
+          {/* Layer 2: 真实的物理玻璃镜面反光层 (Specular Light) */}
+          <motion.div 
+             className="absolute inset-0 z-20 pointer-events-none rounded-sm mix-blend-overlay transition-opacity duration-300"
+             style={{ 
+               background: specularHighlight,
+               opacity: spotlightOpacity,
+               transform: "translateZ(80px)" 
+             }}
+          />
+          
         </motion.div>
-      </Link>
+      </div>
+      
+      <style>{`
+        @keyframes scan {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(32px); }
+          100% { transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
