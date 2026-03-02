@@ -6,29 +6,55 @@ import BlogList from '@/components/BlogList';
 import Sidebar from '@/components/Sidebar';
 import SearchModal from '@/components/SearchModal';
 import { usePosts } from '@/hooks/usePosts';
-import { CyberHero, PerspectiveGrid } from '@/components/CyberHero';
+import { CyberHero } from '@/components/CyberHero';
 import { RotatingQuotes } from '@/components/RotatingQuotes';
 
 const ITEMS_PER_PAGE = 5;
 
 // ==========================================
-// 【炫技点 2：架构级解耦】抽离高级 Custom Hooks
-// 实际开发中可将其移至 src/hooks/useCyberParallax.ts
+// 【顶级炫技点 1：零重绘 (Zero-Render) 高频数据流引擎】
+// 利用 Framer Motion 的 MotionValue 和 rAF，以 60FPS 刷新屏幕上的十六进制乱码，
+// 完美绕过 React 的 Diff 算法和生命周期，极致压榨 V8 引擎性能。
+// ==========================================
+const useHexStream = (length: number = 8, intervalMs: number = 50) => {
+  const hexValue = useMotionValue('');
+
+  useEffect(() => {
+    let lastTime = 0;
+    let frameId: number;
+
+    const update = (time: number) => {
+      if (time - lastTime > intervalMs) {
+        let str = '0x';
+        for (let i = 0; i < length; i++) {
+          str += Math.floor(Math.random() * 16).toString(16).toUpperCase();
+        }
+        hexValue.set(str);
+        lastTime = time;
+      }
+      frameId = requestAnimationFrame(update);
+    };
+    frameId = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(frameId);
+  }, [length, intervalMs, hexValue]);
+
+  return hexValue;
+};
+
+// ==========================================
+// 【炫技点 2：三维物理弹簧与硬件陀螺仪解耦 Hook】
 // ==========================================
 const useCyberParallax = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // 炫技：加入移动端设备陀螺仪支持 (DeviceOrientation API)，跨端降维打击
   useEffect(() => {
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (e.gamma != null && e.beta != null) {
-        // 将陀螺仪数据映射到屏幕坐标系
         mouseX.set((e.gamma + 90) * (window.innerWidth / 180));
         mouseY.set((e.beta + 90) * (window.innerHeight / 180));
       }
     };
-    // 注意: iOS 13+ 需要用户手动触发授权，此处作为基础监听展示
     window.addEventListener('deviceorientation', handleOrientation);
     return () => window.removeEventListener('deviceorientation', handleOrientation);
   }, [mouseX, mouseY]);
@@ -36,24 +62,17 @@ const useCyberParallax = () => {
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     mouseX.set(e.clientX);
     mouseY.set(e.clientY);
-  },[mouseX, mouseY]);
+  }, [mouseX, mouseY]);
 
-  // 3D 倾斜弹簧物理系统
-  const rotateX = useSpring(useTransform(mouseY,[0, typeof window !== 'undefined' ? window.innerHeight : 1000], [15, -15]), { stiffness: 150, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX,[0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-15, 15]), { stiffness: 150, damping: 20 });
+  const rotateX = useSpring(useTransform(mouseY,[0, typeof window !== 'undefined' ? window.innerHeight : 1000], [8, -8]), { stiffness: 200, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX,[0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-8, 8]), { stiffness: 200, damping: 30 });
 
-  const spotlightBackground = useMotionTemplate`
-    radial-gradient(
-      800px circle at ${mouseX}px ${mouseY}px,
-      rgba(34, 211, 238, 0.08),
-      transparent 80%
-    )
-  `;
-
-  return { handleMouseMove, rotateX, rotateY, spotlightBackground };
+  return { handleMouseMove, rotateX, rotateY };
 };
 
-// 【炫技点 2：架构级解耦】全局快捷键监听 Hook
+// ==========================================
+// 【炫技点 3：全局快捷键监听解耦 Hook】
+// ==========================================
 const useGlobalShortcut = (key: string, callback: () => void) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -71,23 +90,6 @@ const useGlobalShortcut = (key: string, callback: () => void) => {
   }, [key, callback]);
 };
 
-// 【炫技点 5：View Transitions API】抽离丝滑路由跳转 Hook
-// 你可以把这个 Hook 传递给 BlogList 里的文章卡片点击事件使用
-export const useSmoothNavigate = () => {
-  const navigate = useNavigate();
-  return useCallback((to: string) => {
-    if (!(document as any).startViewTransition) {
-      navigate(to);
-      return;
-    }
-    (document as any).startViewTransition(() => {
-      flushSync(() => {
-        navigate(to);
-      });
-    });
-  }, [navigate]);
-};
-// ==========================================
 
 const Home: React.FC = () => {
   const { posts, contents } = usePosts();
@@ -95,9 +97,9 @@ const Home: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
 
-  // 使用抽离的 Hooks
-  const { handleMouseMove, rotateX, rotateY, spotlightBackground } = useCyberParallax();
-  const smoothNavigate = useSmoothNavigate(); // 可选：传递给 Sidebar 或子组件
+  const { handleMouseMove, rotateX, rotateY } = useCyberParallax();
+  const memoryAddr1 = useHexStream(8, 30);
+  const memoryAddr2 = useHexStream(4, 80);
 
   const allCategories = useMemo(() => 
     Array.from(new Set(posts.map((post) => post.category))), 
@@ -113,39 +115,34 @@ const Home: React.FC = () => {
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const[currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   
-  // 【炫技点 1：React 18 并发渲染】
+  // 【炫技点 4：React 18 并发渲染与 View Transitions API 的双剑合璧】
   const [isPending, startTransition] = useTransition();
 
-  // 视差滚动
   const contentRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: contentRef, offset:['start end', 'end start'] });
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const { scrollYProgress } = useScroll({ target: contentRef, offset: ['start end', 'end start'] });
+  
+  // 视差数学映射：页面滚动时标题不仅上移，还会向深度 Z 轴坠落
+  const titleY = useTransform(scrollYProgress,[0, 1], [0, -250]);
+  const titleZ = useTransform(scrollYProgress,[0, 1], [0, -100]);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  // 快捷键解耦调用
   useGlobalShortcut('/', () => !isSearchVisible && setIsSearchVisible(true));
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
 
-  // 分页变化结合 View Transitions (炫技点 1 + 5 的究极融合)
   const handlePageChange = useCallback((newPage: number) => {
-    // 检查是否支持原生的 View Transition API
     if (!(document as any).startViewTransition) {
       startTransition(() => setCurrentPage(newPage));
     } else {
-      // 在 View Transition 内强制同步刷新 React 状态 (flushSync)
       (document as any).startViewTransition(() => {
         flushSync(() => setCurrentPage(newPage));
       });
     }
   },[]);
 
-  // 分类切换结合 React 18 并发渲染
   useEffect(() => {
-    startTransition(() => {
-      setCurrentPage(1);
-    });
+    startTransition(() => { setCurrentPage(1); });
   }, [selectedCategory]);
 
   const paginatedPosts = useMemo(() => {
@@ -154,156 +151,171 @@ const Home: React.FC = () => {
 
   return (
     <motion.div 
-      className="min-h-screen w-full relative bg-[#0a0a0a] text-white overflow-x-hidden"
+      className="min-h-screen w-full relative bg-[#050505] text-white overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200"
       onMouseMove={handleMouseMove}
     >
-      {/* 【炫技点 3：极致渲染】添加 willChange 提示浏览器 GPU 加速背景重绘 */}
-      <motion.div 
-        className="pointer-events-none fixed inset-0 z-50 transition-opacity duration-300 will-change-[background]"
-        style={{ background: spotlightBackground }}
-      />
-
       <style>{`
-        @property --luna-c1 { syntax: '<color>'; initial-value: white; inherits: false; }
-        @property --luna-c2 { syntax: '<color>'; initial-value: #9ca3af; inherits: false; }
-
-        .luna-text {
-          --luna-c1: white;
-          --luna-c2: #9ca3af;
-          background-image: linear-gradient(135deg, var(--luna-c1), var(--luna-c2));
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          transition: --luna-c1 0.8s ease, --luna-c2 0.8s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
-        }
-
-        .luna-text:hover {
-          --luna-c1: #67e8f9;
-          --luna-c2: #fff;
-          transform: scale(1.02) translateY(-5px);
-          filter: drop-shadow(0 15px 35px rgba(34, 211, 238, 0.4));
-        }
-
-        /* View Transition 动画的伪元素控制，实现页面跳转/分页如电影般的淡入淡出 */
-        ::view-transition-old(root),
-        ::view-transition-new(root) {
-          animation-duration: 0.5s;
-          animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        /* 【顶级炫技点 5：CSS 硬件级扫描线与色差分离 (Chromatic Aberration) 】 */
+        .glitch-text-container {
+          position: relative;
         }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
+        .glitch-layer {
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 100%;
+          opacity: 0.8;
+          mix-blend-mode: screen;
+        }
+
+        /* 红色通道左移并添加撕裂动画 */
+        .glitch-layer-red {
+          color: #ef4444;
+          transform: translateX(-0.5vw);
+          clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+          animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+        }
+
+        /* 青色通道右移并添加撕裂动画 */
+        .glitch-layer-cyan {
+          color: #06b6d4;
+          transform: translateX(0.5vw);
+          clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%);
+          animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+          0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+          20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+          40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+          60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+          80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+          100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
+        }
+
+        @keyframes glitch-anim-2 {
+          0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+          20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
+          40% { clip-path: inset(70% 0 10% 0); transform: translate(1px, -1px); }
+          60% { clip-path: inset(20% 0 50% 0); transform: translate(-1px, 2px); }
+          80% { clip-path: inset(50% 0 30% 0); transform: translate(2px, -2px); }
+          100% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 1px); }
+        }
+
+        /* CRT 扫描线 */
+        .scanlines {
+          background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+          background-size: 100% 4px;
+        }
       `}</style>
 
-      {/* React 18 并发加载状态 UI */}
+      {/* React 18 并发状态反馈：系统重载动画 */}
       {isPending && (
-        <div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center backdrop-blur-[2px] bg-black/10 transition-all">
-           <span className="text-cyan-500 font-mono text-sm tracking-widest animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">[ SYSTEM_RECALCULATING_MATRIX... ]
-           </span>
+        <div className="fixed inset-0 z-[100] pointer-events-none flex flex-col items-center justify-center backdrop-blur-sm bg-black/40 transition-all">
+           <div className="text-cyan-500 font-mono text-xs tracking-widest animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2">
+             [ MEMORY_PAGE_FAULT ] // FETCHING_NEW_SECTOR...
+           </div>
+           {/* 极简字符进度条 */}
+           <div className="font-mono text-cyan-700 text-xs">[▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░] 0xALLOCATING
+           </div>
         </div>
       )}
 
-      <div className="fixed inset-0 z-0">
-        <div className="opacity-60">
-          <PerspectiveGrid />
-          <CyberHero />
-        </div>
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.04] pointer-events-none mix-blend-overlay animate-pulse" />
-      </div>
+      {/* 底部挂载你在上一步升级的纯血 Data-Sphere */}
+      <CyberHero />
+      <div className="fixed inset-0 pointer-events-none z-10 scanlines opacity-50 mix-blend-overlay" />
 
-      <section className="relative h-screen w-full flex flex-col items-center justify-center z-10 px-6 perspective-[1000px]">
-        {/* 【炫技点 3：极致渲染】加上 transform-gpu 强制硬件加速避免重排 */}
+      {/* 首屏 HUD 抬头显示器 */}
+      <section className="relative h-screen w-full flex flex-col items-center justify-center z-20 px-6 perspective-[1200px] overflow-hidden">
+        
+        {/* 将 3D 陀螺仪坐标绑定给整个系统框 */}
         <motion.div
-          style={{ 
-            y: titleY, 
-            opacity: titleOpacity,
-            rotateX,
-            rotateY,
-            transformStyle: "preserve-3d"
-          }}
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, ease:[0.16, 1, 0.3, 1] }}
-          className="text-center will-change-transform transform-gpu" 
+          style={{ y: titleY, z: titleZ, opacity: titleOpacity, rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="text-center will-change-transform transform-gpu relative"
         >
+          {/* 顶部系统元数据 */}
           <motion.div 
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: '100%' }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="flex items-center justify-center gap-3 mb-4 text-xs font-mono text-cyan-500/80 tracking-[1em] uppercase overflow-hidden"
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="flex items-center justify-center gap-4 mb-6 text-[10px] font-mono text-cyan-600 tracking-[0.4em] uppercase"
+            style={{ transform: "translateZ(20px)" }}
           >
-            <span className="w-8 h-px bg-cyan-500/50 relative overflow-hidden">
-              <motion.span 
-                animate={{ x:["-100%", "100%"] }} 
-                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                className="absolute inset-0 bg-cyan-400"
-              />
+            <span className="w-12 h-[1px] bg-cyan-800" />
+            <span className="flex items-center gap-2">
+              SYS.KERNEL <motion.span>{memoryAddr2}</motion.span>
             </span>
-            System_Online
-            <span className="w-8 h-px bg-cyan-500/50" />
+            <span className="w-12 h-[1px] bg-cyan-800" />
           </motion.div>
 
-          <h1 
-            className="
-              font-bold uppercase tracking-tight leading-none 
-              text-8xl sm:text-9xl md:text-[12rem] lg:text-[14rem] xl:text-[16rem]
-              cursor-crosshair
-              luna-text
-            "
-            style={{ transform: "translateZ(50px)" }}
+          {/* 极客风格主标题：运用色差与数据撕裂技术 */}
+          <div className="relative glitch-text-container group cursor-crosshair inline-block" style={{ transform: "translateZ(60px)" }}>
+            <h1 className="font-mono font-black uppercase tracking-tighter leading-none text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] text-slate-200">
+              LUNA WORLD
+            </h1>
+          </div>
+
+          {/* 高频刷新零渲染 Hex 地址流水线 */}
+          <div 
+            className="absolute -right-8 top-1/2 -translate-y-1/2 writing-vertical-rl text-[9px] font-mono text-cyan-800/80 tracking-widest pointer-events-none select-none"
+            style={{ transform: "translateZ(10px)" }}
           >
-            LUNA
-            <br />
-            WORLD
-          </h1>
+             MEM_PTR: <motion.span>{memoryAddr1}</motion.span>
+          </div>
 
           <motion.div 
-            className="mt-8"
-            style={{ transform: "translateZ(30px)" }}
+            className="mt-12 flex justify-center"
+            style={{ transform: "translateZ(40px)" }}
           >
             <RotatingQuotes />
           </motion.div>
         </motion.div>
       </section>
 
+      {/* 数据日志内容区 (Data Logs) */}
       <div
         ref={contentRef}
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-20 min-h-screen bg-gradient-to-b from-[#0a0a0a]/0 via-[#0a0a0a] to-[#0a0a0a]"
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-20 min-h-screen"
       >
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#0a0a0a] -translate-y-full pointer-events-none" />
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start pt-12">
+        {/* 上半部分边缘虚化，完美融合深邃黑洞背景 */}
+        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[#050505] -translate-y-full pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-[#050505] z-0" /> {/* 实心底座确保内容可读性 */}
+
+        <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-24 items-start pt-12 border-t border-white/5">
+          
+          {/* 左侧控制台边栏 */}
           <div className="lg:w-64 shrink-0 sticky top-32">
             <Sidebar categories={allCategories} isExpanded={true} onExpandedChange={() => {}} />
           </div>
 
-          {/* 【炫技点 3：极致渲染】使用 content-visibility 和 contain-intrinsic-size 截断视口外渲染 */}
+          {/* 右侧数据阵列区：运用 CSS content-visibility 极致截断渲染优化 */}
           <div 
             className="flex-1 min-w-0 w-full"
-            style={{ 
-              contentVisibility: 'auto', 
-              containIntrinsicSize: '1000px' // 设定预估高度，避免滚动条抖动
-            }}
+            style={{ contentVisibility: 'auto', containIntrinsicSize: '1000px' }}
           >
             <div className="relative">
-              <div className="absolute -top-12 left-0 text-[10px] font-mono text-gray-500 tracking-[0.2em] uppercase flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
-                &gt;&gt; Data_Logs // Recent_Entries
+              {/* HUD 界面装饰 */}
+              <div className="absolute -top-16 left-0 text-[10px] font-mono text-slate-500 tracking-[0.2em] uppercase flex items-center gap-3 w-full border-b border-white/5 pb-2">
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-sm bg-cyan-500 animate-pulse" />
+                  <span className="w-2 h-2 rounded-sm bg-cyan-900" />
+                  <span className="w-2 h-2 rounded-sm bg-cyan-900" />
+                </span>
+                &gt;&gt; QUERY_DATA_LOGS // RECENT_ALLOCATIONS
               </div>
               
-              {/* 利用 opacity 的微弱变化来配合并发渲染视觉反馈 */}
-              <div className={`transition-opacity duration-300 ${isPending ? 'opacity-50' : 'opacity-100'}`}>
+              <div className={`transition-opacity duration-300 ease-out mt-8 ${isPending ? 'opacity-30 blur-sm' : 'opacity-100 blur-0'}`}>
                 {filteredPosts.length > 0 ? (
                   <BlogList
                     posts={paginatedPosts}
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    onPageChange={handlePageChange} // 注入带有 View Transitions 的翻页控制
+                    onPageChange={handlePageChange}
                   />
                 ) : (
-                  <div className="py-32 flex flex-col items-center justify-center border-y border-dashed border-white/10 text-gray-600 font-mono">
-                    <span className="animate-pulse">[ NO_DATA_FOUND_IN_SECTOR ]</span>
+                  <div className="py-32 flex flex-col items-center justify-center border border-dashed border-cyan-900/30 bg-cyan-950/5 text-cyan-700 font-mono text-sm relative overflow-hidden group">
+                    <span className="animate-pulse absolute top-4 left-4 text-[10px]">WARN: 404</span>
+                    [ NULL_POINTER_EXCEPTION : NO_DATA_IN_SECTOR ]
+                    <div className="absolute bottom-0 left-0 h-[1px] w-full bg-cyan-800 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
                   </div>
                 )}
               </div>
