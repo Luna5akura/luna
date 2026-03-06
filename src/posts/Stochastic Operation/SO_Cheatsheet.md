@@ -1,3 +1,8 @@
+---
+title: Stochastic Optimization - Cheatsheet
+category: Cheatsheets
+---
+
 ## 第二章：排队论
 - **系统组成**：到达（λ，M/G）、服务（μ，M/G）、服务器K、容量、纪律（FCFS）。
 - **性能指标**：L_s = λW_s, L_q = λW_q (Little定律)；ρ = λ/(Kμ) <1。
