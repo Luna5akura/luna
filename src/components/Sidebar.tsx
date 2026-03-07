@@ -219,13 +219,6 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         /* 隐藏原生丑陋的滚动条 */
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
-
-        /* 【顶级炫技点 4：硬件级视口遮罩 (CSS Mask)】 */
-        /* PC端：上下渐隐发虚，仿佛数据融入了黑暗深渊 */
-        .mask-y { mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%); }
-        
-        /* 移动端：左右渐隐发虚，防止文字生硬切断 */
-        .mask-x { mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%); }
       `}</style>
 
       <div 
