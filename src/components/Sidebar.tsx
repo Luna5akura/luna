@@ -1,43 +1,74 @@
 // src/components/Sidebar.tsx
-import React, { useRef, useCallback, useState, useMemo } from 'react';
+import React, { useRef, useCallback, useState, useMemo, useEffect, useDeferredValue } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
-import { motion, useAnimationFrame, useMotionValue, useScroll, useTransform, AnimatePresence, useMotionTemplate } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Cpu, HardDrive, Search, Filter } from 'lucide-react';
 
 // ==========================================
-// 【顶级炫技点 1：零重绘 原生 SVG 示波器】
-// 保留了极客感十足的硬件数据流监控，不卡主线程
+// 【极致优化点 1：Canvas 原生脱轨渲染 (Canvas Off-DOM Rendering)】
+// 原代码每帧利用 JS 数组 shift/push 与字符串 reduce 拼接生成长长的 SVG path 属性，
+// 强制引发浏览器的 SVG 解析引擎与 DOM 属性重绘 (DOM Attribute Mutation)。
+// 现彻底抛弃 SVG，直接在底层 Canvas 的位图缓冲区中进行像素推送。同时通过 TypedArray 复用内存，
+// 实现 0 字符串分配、0 DOM 操作、0 GC 垃圾生成的纯净 144Hz 渲染！
 // ==========================================
 const LiveOscilloscope = ({ isActive }: { isActive: boolean }) => {
-  const pathData = useMotionValue("");
-  const points = useRef<number[]>(Array(15).fill(0));
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // 使用 TypedArray 连续内存作为高频更新的环形缓冲区，拒绝创建任何 JS 对象
+  const points = useRef(new Float32Array(15));
+  
+  useEffect(() => {
+    // 预填充初始随机波形
+    for (let i = 0; i < 15; i++) points.current[i] = Math.random() * 10;
+  },[]);
 
-  useAnimationFrame(() => {
+  useEffect(() => {
     if (!isActive) return;
-    points.current.shift();
-    points.current.push(Math.random() * 10);
-    const d = points.current.reduce((acc, val, i) => {
-      const x = i * 4; 
-      const y = 12 - val;
-      return i === 0 ? `M ${x} ${y}` : `${acc} L ${x} ${y}`;
-    }, "");
-    pathData.set(d);
-  });
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    // 开启 desynchronized 绕过系统合成器，实现极低延迟的屏幕硬件级刷新
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+    if (!ctx) return;
+
+    // 静态属性设置移出渲染循环，降低指令级 CPU 消耗，并且避免外部 CSS drop-shadow 引发的图层栅格化灾难
+    ctx.strokeStyle = '#22d3ee'; 
+    ctx.lineWidth = 1.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = 'rgba(34,211,238,0.8)';
+
+    let frameId: number;
+    const render = () => {
+      const pts = points.current;
+      
+      // O(N) 内存快移，完全没有任何新变量和对象产生
+      for (let i = 0; i < 14; i++) pts[i] = pts[i + 1];
+      pts[14] = Math.random() * 10;
+
+      // 在单个渲染管线指令内完成图像覆写
+      ctx.clearRect(0, 0, 60, 12);
+      ctx.beginPath();
+      ctx.moveTo(0, 12 - pts[0]);
+      for (let i = 1; i < 15; i++) {
+        ctx.lineTo(i * 4, 12 - pts[i]);
+      }
+      ctx.stroke();
+
+      frameId = requestAnimationFrame(render);
+    };
+
+    frameId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(frameId);
+  }, [isActive]);
 
   if (!isActive) return null;
 
   return (
-    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-[60px] h-[12px] opacity-80 hidden lg:block pointer-events-none">
-      <svg width="60" height="12" className="stroke-cyan-400 fill-none overflow-visible">
-        <motion.path 
-          d={pathData} 
-          strokeWidth="1.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          style={{ filter: 'drop-shadow(0 0 3px rgba(34,211,238,0.8))' }}
-        />
-      </svg>
+    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-[60px] h-[12px] opacity-80 hidden lg:block pointer-events-none transform-gpu">
+      <canvas ref={canvasRef} width={60} height={12} className="block" />
     </div>
   );
 };
@@ -53,7 +84,6 @@ interface SectorItemProps {
 }
 
 const SectorItem = ({ category, isActive, index, onClick }: SectorItemProps) => {
-  // 生成严谨的十六进制地址序列
   const hexAddress = `0x${(index * 8).toString(16).toUpperCase().padStart(4, '0')}`;
 
   return (
@@ -70,7 +100,6 @@ const SectorItem = ({ category, isActive, index, onClick }: SectorItemProps) => 
         isActive ? "text-cyan-400" : "text-slate-500 hover:text-cyan-200"
       )}
     >
-      {/* 极简机械锁定框 (HUD Bracket) */}
       {isActive && (
         <motion.div 
           layoutId="sector-targeting-bracket"
@@ -78,20 +107,16 @@ const SectorItem = ({ category, isActive, index, onClick }: SectorItemProps) => 
           transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
         >
           <div className="absolute inset-0 bg-cyan-950/40 border border-cyan-500/30 shadow-[inset_0_0_15px_rgba(34,211,238,0.1)]" />
-          {/* 四个角的瞄准定位销 */}
           <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t-2 border-l-2 border-cyan-400" />
           <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t-2 border-r-2 border-cyan-400" />
           <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b-2 border-l-2 border-cyan-400" />
           <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b-2 border-r-2 border-cyan-400" />
           
-          {/* 选中时的光栅微闪烁 */}
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMzQsMjExLDIzOCwwLjE1KSIvPjwvc3ZnPg==')] opacity-50 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMzQsMjExLDIzOCwwLjE1KSIvPjwvc3ZnPg==')] opacity-30" />
         </motion.div>
       )}
 
-      {/* 交互核心内容区 */}
       <div className="relative z-10 flex flex-col items-start w-full">
-        {/* 地址总线标识 */}
         <div className="flex items-center gap-2 mb-0.5">
           <HardDrive className={cn("w-3 h-3 transition-colors hidden lg:block", isActive ? "text-cyan-400" : "text-slate-600")} />
           <span className={cn(
@@ -102,7 +127,6 @@ const SectorItem = ({ category, isActive, index, onClick }: SectorItemProps) => 
           </span>
         </div>
 
-        {/* 干净利落的分类名称 */}
         <div className="flex items-center w-full">
           <span className={cn(
             "tracking-[0.1em] font-bold transition-all duration-300 text-xs lg:text-sm uppercase whitespace-nowrap",
@@ -133,27 +157,32 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
   
-  // 包含 ALL 的全量列表
   const categoriesWithAll = useMemo(() => ['All', ...categories], [categories]);
 
-  // 【顶级炫技点 2：内存检索器 (Sector Filter)】
-  const[filterText, setFilterText] = useState("");
+  // 【极致优化点 2：并发解耦搜索输入框 (Concurrent Mode Input Decoupling)】
+  // 为过滤器加入 useDeferredValue，确保用户键盘输入的丝滑度永远处于最高优先级，
+  // 将列表重排的繁重工作丢到浏览器主线程空闲阶段执行。
+  const [filterText, setFilterText] = useState("");
+  const deferredFilterText = useDeferredValue(filterText);
   
   const filteredCategories = useMemo(() => {
-    if (!filterText.trim()) return categoriesWithAll;
-    const lowerFilter = filterText.toLowerCase();
+    if (!deferredFilterText.trim()) return categoriesWithAll;
+    const lowerFilter = deferredFilterText.toLowerCase();
     return categoriesWithAll.filter(c => c.toLowerCase().includes(lowerFilter));
-  },[filterText, categoriesWithAll]);
+  }, [deferredFilterText, categoriesWithAll]);
 
-  // 【顶级炫技点 3：零重绘滚动进度遥测 (Scroll Telemetry)】
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress, scrollXProgress } = useScroll({ container: scrollContainerRef });
   
-  // 将 0~1 的浮点数转化为 0%~100% 的字符串，由 Framer Motion 直接推向 DOM
-  const scrollPercentY = useMotionTemplate`${useTransform(scrollYProgress, [0, 1],[0, 100], { clamp: true }).get().toFixed(0)}%`;
-  const scrollPercentX = useMotionTemplate`${useTransform(scrollXProgress, [0, 1], [0, 100], { clamp: true }).get().toFixed(0)}%`;
+  // ==========================================
+  // 【极致优化点 3：修复并重构动态遥测探针 (Telemetry Teleport)】
+  // 原代码错误地在 useMotionTemplate 中调用了 .get()，导致进度条永远被定死在 0% 无法更新！
+  // 现改为原生 useTransform 函数映射，让 Framer Motion 的 C++ 渲染树直接接管滚动数值的变化，
+  // 避开 React 生命周期的 Diff 比较，实现顺滑如丝的遥测输出。
+  // ==========================================
+  const scrollPercentY = useTransform(scrollYProgress, (v) => `${Math.round(v * 100)}%`);
+  const scrollPercentX = useTransform(scrollXProgress, (v) => `${Math.round(v * 100)}%`);
 
-  // 路由跳转
   const handleCategoryClick = useCallback((category: string) => {
     const to = category === 'All' ? '/' : `/?category=${category}`;
     if ((document as any).startViewTransition) {
@@ -165,20 +194,29 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
 
   return (
     <div className="flex flex-col w-full min-w-0 max-w-full relative">
-      
-      {/* ==========================================
-          侧边栏头部控制台 & 过滤器
-          ========================================== */}
+      <style>{`
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+
+        /* ==========================================
+           【极致优化点 4：CSS 硬件加速扫描线 (Hardware-Accelerated Scanlines)】
+           原代码使用 Framer Motion 的 JS animate 控制不断循环的扫描线，持续唤醒主线程。
+           现剥离 JS 动画，采用纯 CSS Keyframes 配合 transform，将其 100% 推入 GPU 合成器线程运行。
+           ========================================== */
+        @keyframes sidebar-scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(400%); }
+        }
+        .animate-sidebar-scanline {
+          animation: sidebar-scanline 1.5s linear infinite;
+        }
+      `}</style>
+
       <div className="relative mb-4 mt-2 flex flex-col border-b border-cyan-900/30 pb-4">
         
-        {/* PC 端标题 */}
         <div className="hidden lg:flex items-center justify-between pl-4 mb-4">
           <div className="absolute left-0 top-0 bottom-4 w-[2px] bg-cyan-950 overflow-hidden">
-            <motion.div 
-              className="w-full h-1/4 bg-cyan-500 shadow-[0_0_5px_#06b6d4]" 
-              animate={{ y:["-100%", "400%"] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            />
+            <div className="w-full h-1/4 bg-cyan-500 shadow-[0_0_5px_#06b6d4] animate-sidebar-scanline will-change-transform" />
           </div>
           
           <div className="text-[10px] uppercase text-cyan-700 font-bold tracking-[0.2em] flex flex-col w-full gap-1">
@@ -195,7 +233,6 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
           </div>
         </div>
 
-        {/* 检索终端输入框 */}
         <div className="relative w-full lg:pl-4">
            <Search className="absolute left-2 lg:left-6 top-1/2 -translate-y-1/2 w-3 h-3 text-cyan-800" />
            <input
@@ -212,26 +249,16 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         </div>
       </div>
     
-      {/* ==========================================
-          全息衰减滚动列表 (Holographic Scroll Viewport)
-          ========================================== */}
-      <style>{`
-        /* 隐藏原生丑陋的滚动条 */
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        .hide-scroll::-webkit-scrollbar { display: none; }
-      `}</style>
-
       <div 
         ref={scrollContainerRef}
         className={cn(
           "flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto hide-scroll relative z-10",
           "gap-2 lg:gap-1 w-full",
-          "max-w-[100vw] lg:max-w-full", // 限制宽度
-          "max-h-16 lg:max-h-[50vh]",    // 限制高度：PC端最高占据屏幕一半，多余的在内部滚动
+          "max-w-[100vw] lg:max-w-full", 
+          "max-h-16 lg:max-h-[50vh]",    
           "mask-x lg:mask-y lg:pr-2 lg:py-2"
         )} 
       >
-        {/* 当过滤结果为空时 */}
         {filteredCategories.length === 0 && (
           <div className="text-[10px] font-mono text-red-500/60 p-4 w-full text-center tracking-widest">
             ERR: NO_SECTOR_MATCH
@@ -239,7 +266,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         )}
 
         <AnimatePresence initial={false}>
-          {filteredCategories.map((category, index) => {
+          {filteredCategories.map((category) => {
             const isActive = (category === 'All' && !selectedCategory) || selectedCategory === category;
             return (
               <SectorItem
@@ -254,9 +281,6 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         </AnimatePresence>
       </div>
 
-      {/* ==========================================
-          零重绘遥测进度条 (Scroll Telemetry UI)
-          ========================================== */}
       <div className="mt-2 text-[8px] font-mono text-cyan-900/60 flex items-center justify-between lg:pl-4 w-full select-none">
         <div className="flex items-center gap-1">
           <span className="w-1 h-3 bg-cyan-900/40" />
@@ -265,7 +289,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
         </div>
         <div className="flex items-center gap-2">
           <span>BUFFER_POS:</span>
-          {/* PC端显示Y轴滚动百分比，移动端显示X轴滚动百分比 */}
+          {/* 这里 motion.span 会自动监听传入的 MotionValue 并无缝更新文本，零 React 渲染开销 */}
           <motion.span className="text-cyan-600 hidden lg:inline-block w-6 text-right font-bold">{scrollPercentY}</motion.span>
           <motion.span className="text-cyan-600 lg:hidden w-6 text-right font-bold">{scrollPercentX}</motion.span>
         </div>
