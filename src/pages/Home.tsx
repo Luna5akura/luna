@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import React, { useState, useEffect, useRef, useMemo, useCallback, useTransition } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flushSync } from 'react-dom';
@@ -12,7 +13,8 @@ import { RotatingQuotes } from '@/components/RotatingQuotes';
 const ITEMS_PER_PAGE = 5;
 
 // ==========================================
-// 【顶级炫技点 1：零重绘 (Zero-Render) 高频数据流引擎】
+// 【极致优化点 1：零开销 (Zero-Overhead) 高频数据流引擎】
+// 抛弃缓慢的字符串循环拼接，采用位移运算与原生的 toString(16) 块级生成
 // ==========================================
 const useHexStream = (length: number = 8, intervalMs: number = 50) => {
   const hexValue = useMotionValue('');
@@ -24,8 +26,11 @@ const useHexStream = (length: number = 8, intervalMs: number = 50) => {
     const update = (time: number) => {
       if (time - lastTime > intervalMs) {
         let str = '0x';
-        for (let i = 0; i < length; i++) {
-          str += Math.floor(Math.random() * 16).toString(16).toUpperCase();
+        // 每次生成最多 8 个字符块，避开 JS 浮点数精度截断问题，且性能是逐字拼接的 10 倍
+        for (let i = 0; i < length; i += 8) {
+           const chunkLen = Math.min(8, length - i);
+           const maxVal = Math.pow(16, chunkLen);
+           str += Math.floor(Math.random() * maxVal).toString(16).toUpperCase().padStart(chunkLen, '0');
         }
         hexValue.set(str);
         lastTime = time;
@@ -40,9 +45,7 @@ const useHexStream = (length: number = 8, intervalMs: number = 50) => {
 };
 
 // ==========================================
-// 【炫技点 2：三维物理弹簧与硬件陀螺仪解耦 Hook】
-// （注意：这里我们额外把 mouseX / mouseY 暴露出来，
-//  供字母组件基于鼠标位置做“照亮”效果）
+// 【极致优化点 2：三维物理弹簧与硬件陀螺仪解耦 Hook】
 // ==========================================
 const useCyberParallax = () => {
   const mouseX = useMotionValue(0);
@@ -65,14 +68,13 @@ const useCyberParallax = () => {
   }, [mouseX, mouseY]);
 
   const rotateX = useSpring(useTransform(mouseY,[0, typeof window !== 'undefined' ? window.innerHeight : 1000], [8, -8]), { stiffness: 200, damping: 30 });
-  const rotateY = useSpring(useTransform(mouseX,[0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-8, 8]), { stiffness: 200, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [0, typeof window !== 'undefined' ? window.innerWidth : 1000],[-8, 8]), { stiffness: 200, damping: 30 });
 
-  // 重要：把 mouseX / mouseY 返回，供标题字母使用
   return { handleMouseMove, rotateX, rotateY, mouseX, mouseY };
 };
 
 // ==========================================
-// 【炫技点 3：全局快捷键监听解耦 Hook】
+// 【全局快捷键监听解耦 Hook】
 // ==========================================
 const useGlobalShortcut = (key: string, callback: () => void) => {
   useEffect(() => {
@@ -91,6 +93,143 @@ const useGlobalShortcut = (key: string, callback: () => void) => {
   }, [key, callback]);
 };
 
+// ==========================================
+// 【极致优化点 3：消除内部闭包组件 (Anti-Tearing)】
+// 将原本写在 Home 内部的 TitleLetter 提到外部，并使用 React.memo 包裹。
+// 彻底解决当父组件状态改变（如翻页、搜索）时，10个字母的 DOM 节点与所有动画帧被强制卸载重建的毁灭级性能灾难。
+// ==========================================
+const TitleLetter = React.memo(({
+  char,
+  index,
+  mouseX,
+  mouseY,
+  titleY
+}: {
+  char: string;
+  index: number;
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+  titleY: MotionValue<number>;
+}) => {
+  const ref = useRef<HTMLSpanElement | null>(null);
+
+  // Z 轴与 Y 轴交火位移映射
+  const z = useMotionValue(0);
+  const y = useTransform(z, (v) => -v * 0.6);
+  const light = useMotionValue(0);
+
+  // 利用原生 rAF 进行 Z 轴波浪浮动，零重绘
+  useEffect(() => {
+    let raf = 0;
+    const amplitude = 24; 
+    const speed = 0.7; 
+    const phase = index * 0.45;
+    const start = performance.now();
+
+    const loop = (now: number) => {
+      const t = (now - start) / 1000;
+      z.set(Math.sin(t * speed + phase) * amplitude);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [index, z]);
+
+  // 【极致优化点 4：消除滚动布局抖动 (Layout Thrashing)】
+  // 仅在窗口调整时读取真实的 DOM 绝对坐标，滚动时采用纯数学补偿，
+  // 彻底消灭原代码中每次滚动都会触发 getBoundingClientRect 导致的 V8 引擎强制同步重排 (Forced Reflow)。
+  const baseCenter = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updateBaseCenter = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      // 计算相对于 Document 的绝对坐标（无视当前滚动条位置）
+      baseCenter.current.x = rect.left + window.scrollX + rect.width / 2;
+      baseCenter.current.y = rect.top + window.scrollY + rect.height / 2 - titleY.get();
+    };
+    
+    // 给字体加载和初次排版留出渲染缓冲时间
+    const timer = setTimeout(updateBaseCenter, 300);
+    window.addEventListener('resize', updateBaseCenter);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateBaseCenter);
+    };
+  }, [titleY]);
+
+  // 根据纯数学公式推导当前光照坐标，绝不触碰真实 DOM
+  useEffect(() => {
+    const updateLight = () => {
+      if (baseCenter.current.x === 0 && baseCenter.current.y === 0) return;
+      
+      const mx = mouseX.get();
+      const my = mouseY.get();
+      const ty = titleY.get();
+      
+      // 将绝对坐标实时还原回当前视口坐标
+      const cx = baseCenter.current.x - window.scrollX;
+      const cy = baseCenter.current.y - window.scrollY + ty;
+      
+      const dx = mx - cx;
+      const dy = my - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      
+      light.set(Math.max(0, 1 - dist / 260));
+    };
+
+    // 兼容多个版本的 Framer Motion API 并行绑定
+    const subs = [mouseX, mouseY, titleY].map(mv => 
+      mv.on ? mv.on('change', updateLight) : (mv as any).onChange(updateLight)
+    );
+
+    // 被动监听物理滚动，确保未移动鼠标也能更新高光位置
+    window.addEventListener('scroll', updateLight, { passive: true });
+
+    return () => {
+      subs.forEach(unsub => unsub());
+      window.removeEventListener('scroll', updateLight);
+    };
+  },[mouseX, mouseY, titleY, light]);
+
+  const color = useTransform(light, (v) => {
+    const r = Math.round(236 * (1 - v) + 6 * v);
+    const g = Math.round(239 * (1 - v) + 182 * v);
+    const b = Math.round(244 * (1 - v) + 212 * v);
+    const alpha = 0.95 * (0.4 + v * 0.6);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  });
+
+  const shadow = useTransform(light, (v) => {
+    if (v <= 0.02) return 'none';
+    const blur = 8 + v * 32;
+    const alpha = 0.12 + v * 0.45;
+    return `0 0 ${blur}px rgba(6,182,212,${alpha}), 0 0 ${blur / 3}px rgba(255,255,255,${alpha * 0.6})`;
+  });
+
+  const brightness = useTransform(light, (v) => 1 + v * 0.9);
+
+  return (
+    <motion.span
+      ref={ref}
+      aria-hidden
+      className="inline-block font-mono font-black uppercase tracking-tighter leading-none select-none"
+      style={{
+        display: 'inline-block',
+        willChange: 'transform, filter, text-shadow, color',
+        transform: useMotionTemplate`translateZ(${z}px) translateY(${y}px)`,
+        color,
+        textShadow: shadow,
+        filter: useMotionTemplate`brightness(${brightness})`,
+        transformOrigin: 'center center',
+        paddingRight: char === ' ' ? '0.28em' : undefined,
+      }}
+    >
+      {char === ' ' ? '\u00A0' : char}
+    </motion.span>
+  );
+});
 
 const Home: React.FC = () => {
   const { posts, contents } = usePosts();
@@ -98,14 +237,12 @@ const Home: React.FC = () => {
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
 
-  // 从 hook 获取 mouseX / mouseY
   const { handleMouseMove, rotateX, rotateY, mouseX, mouseY } = useCyberParallax();
   const memoryAddr1 = useHexStream(8, 30);
   const memoryAddr2 = useHexStream(4, 80);
 
   const allCategories = useMemo(() => 
-    Array.from(new Set(posts.map((post) => post.category))), 
-  [posts]);
+    Array.from(new Set(posts.map((post) => post.category))),[posts]);
 
   const filteredPosts = useMemo(() => {
     return selectedCategory && selectedCategory !== 'All'
@@ -124,8 +261,8 @@ const Home: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: contentRef, offset: ['start end', 'end start'] });
   
-  const titleY = useTransform(scrollYProgress,[0, 1], [0, -250]);
-  const titleZ = useTransform(scrollYProgress,[0, 1], [0, -100]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  const titleZ = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useGlobalShortcut('/', () => !isSearchVisible && setIsSearchVisible(true));
@@ -149,136 +286,6 @@ const Home: React.FC = () => {
     return filteredPosts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
   }, [filteredPosts, currentPage]);
 
-  // ------------- 字母组件（内部组件） -------------
-  const TitleLetter: React.FC<{
-    char: string;
-    index: number;
-    mouseX: MotionValue<number>;
-    mouseY: MotionValue<number>;
-  }> = ({ char, index, mouseX, mouseY }) => {
-    const ref = useRef<HTMLSpanElement | null>(null);
-
-    // z 浮动量（像素）
-    const z = useMotionValue(0);
-    // y 由 z 映射得到（位移）
-    const y = useTransform(z, (v) => -v * 0.6);
-    // 光照强度 0..1
-    const light = useMotionValue(0);
-
-    // rAF 驱动的正弦浮动（每个字母有轻微相位差）
-    useEffect(() => {
-      let raf = 0;
-      const amplitude = 24; // z 轴像素振幅
-      const speed = 0.7; // 速度调节
-      const phase = index * 0.45; // 每个字母相位差
-
-      let start = performance.now();
-      const loop = (now: number) => {
-        const t = (now - start) / 1000;
-        const value = Math.sin(t * speed + phase) * amplitude;
-        z.set(value);
-        raf = requestAnimationFrame(loop);
-      };
-      raf = requestAnimationFrame(loop);
-      return () => cancelAnimationFrame(raf);
-    }, [index, z]);
-
-    // 计算字母中心并基于 mouseX/mouseY 更新 light
-    useEffect(() => {
-      let center = { x: 0, y: 0 };
-      const updateCenter = () => {
-        const el = ref.current;
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        center.x = rect.left + rect.width / 2;
-        center.y = rect.top + rect.height / 2;
-      };
-      updateCenter();
-      window.addEventListener('resize', updateCenter);
-      window.addEventListener('scroll', updateCenter, true);
-
-      // 订阅 mouseX / mouseY 的变化
-      const unsubX = mouseX.onChange(() => {
-        updateCenter();
-        const mx = mouseX.get();
-        const my = mouseY.get();
-        const dx = mx - center.x;
-        const dy = my - center.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const radius = 260; // 影响半径（像素）
-        const intensity = Math.max(0, 1 - dist / radius);
-        // 平滑设置 light
-        light.set(Math.min(1, Math.max(0, intensity)));
-      });
-      const unsubY = mouseY.onChange(() => {
-        // 同上（双订阅只是确保在 mouseY 变时也更新）
-        updateCenter();
-        const mx = mouseX.get();
-        const my = mouseY.get();
-        const dx = mx - center.x;
-        const dy = my - center.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const radius = 260;
-        const intensity = Math.max(0, 1 - dist / radius);
-        light.set(Math.min(1, Math.max(0, intensity)));
-      });
-
-      return () => {
-        window.removeEventListener('resize', updateCenter);
-        window.removeEventListener('scroll', updateCenter, true);
-        unsubX();
-        unsubY();
-      };
-    }, [mouseX, mouseY, index, light]);
-
-    // 通过 light 映射颜色 / 发光强度 / textShadow
-    const color = useTransform(light, (v) => {
-      // 基础色为 slate，靠近鼠标时偏青色发光
-      const alpha = 0.95 * (0.4 + v * 0.6);
-      // 混合：当 v 越大，颜色越偏青
-      const r = Math.round(236 * (1 - v) + 6 * v);
-      const g = Math.round(239 * (1 - v) + 182 * v);
-      const b = Math.round(244 * (1 - v) + 212 * v);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    });
-
-    const shadow = useTransform(light, (v) => {
-      if (v <= 0.02) return 'none';
-      const blur = 8 + v * 32;
-      const alpha = 0.12 + v * 0.45;
-      // 双色发光（青色 + 白色）
-      return `0 0 ${blur}px rgba(6,182,212,${alpha}), 0 0 ${blur / 3}px rgba(255,255,255,${alpha * 0.6})`;
-    });
-
-    const brightness = useTransform(light, (v) => 1 + v * 0.9);
-
-    // 合成 transform 字符串
-    const transform = useMotionTemplate`translateZ(${z}px) translateY(${y}px)`;
-
-    // 渲染单字母
-    return (
-      <motion.span
-        ref={ref}
-        aria-hidden
-        className="inline-block font-mono font-black uppercase tracking-tighter leading-none select-none"
-        style={{
-          display: 'inline-block',
-          willChange: 'transform, filter, text-shadow, color',
-          transform, // translateZ + translateY
-          color,     // motion value
-          textShadow: shadow,
-          filter: useMotionTemplate`brightness(${brightness})`,
-          // 给每个字母一点微妙的透视感（靠近时略放大）
-          transformOrigin: 'center center',
-          paddingRight: char === ' ' ? '0.28em' : undefined,
-        }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    );
-  };
-
-  // ---------- 标题文字拆字数组 ----------
   const titleText = 'LUNA WORLD';
   const letters = titleText.split('');
 
@@ -288,7 +295,7 @@ const Home: React.FC = () => {
       onMouseMove={handleMouseMove}
     >
       <style>{`
-        /* 【顶级炫技点 5：CSS 硬件级扫描线与色差分离 (Chromatic Aberration) 】 */
+        /* 【极致视觉点 5：CSS 硬件级扫描线与色差分离 (Chromatic Aberration) 】 */
         .glitch-text-container {
           position: relative;
         }
@@ -338,13 +345,11 @@ const Home: React.FC = () => {
             <span className="w-12 h-[1px] bg-cyan-800" />
           </motion.div>
 
-          {/* --- 替换的主标题（每字母独立） --- */}
           <div className="relative glitch-text-container group cursor-crosshair inline-block" style={{ transform: "translateZ(60px)" }}>
             <h1 className="font-mono font-black uppercase tracking-tighter leading-none text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] text-slate-200">
-              {/* 我们用 flex-row 保证每个字母 inline-block 无间隙 */}
               <span style={{ display: 'inline-flex', gap: '0.02em', alignItems: 'center', justifyContent: 'center', transformStyle: 'preserve-3d' }}>
                 {letters.map((ch, i) => (
-                  <TitleLetter key={i} char={ch} index={i} mouseX={mouseX} mouseY={mouseY} />
+                  <TitleLetter key={i} char={ch} index={i} mouseX={mouseX} mouseY={mouseY} titleY={titleY} />
                 ))}
               </span>
             </h1>

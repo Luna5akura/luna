@@ -46,7 +46,7 @@ const CustomCursor = () => {
     };
 
     // 逆向运动学 (Inverse Kinematics) 尾迹节点
-    const trail = new Array(15).fill(0).map(() => ({ x: width / 2, y: height / 2 }));
+    const trail = new Array(10).fill(0).map(() => ({ x: width / 2, y: height / 2 }));
     
     let hoverTarget: HTMLElement | null = null;
     let isHidden = false;
