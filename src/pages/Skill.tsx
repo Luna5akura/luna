@@ -1,13 +1,25 @@
 // src/pages/Skill.tsx
-import React, { useEffect, useRef, useMemo } from 'react';
-import { motion, useScroll, useVelocity, useSpring, useTransform, useMotionValue, useAnimationFrame, useMotionTemplate } from 'framer-motion';
-import { Cpu, Database, Globe, Layers, Zap, Terminal as TerminalIcon, Code2, Network, Crosshair, AlertTriangle } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useVelocity, useSpring, useTransform, useMotionValue, useAnimationFrame } from 'framer-motion';
+import { Cpu, Database, Globe, Layers, Zap, Terminal as TerminalIcon, Code2, Network, Crosshair, Hexagon } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 // ==========================================
-// 【顶级炫技点 1：多普勒效应动能粒子 (Doppler Scroll Particles)】
-// 不仅使用 TypedArray 榨取极限性能，更在 Canvas 的原生渲染循环中直接读取 window.scrollY！
-// 当用户发生物理滚动时，粒子会被拉拽产生速度残影，并根据滚动方向发生红移（Redshift）或蓝移（Blueshift），零 React 开销！
+// 数据模型
+// ==========================================
+const SKILLS_DATA =[
+  { id: "front", title: "FRONTEND_CORE", hex: "00A1", icon: Globe, color: "#22d3ee", stats:[0.95, 0.40, 0.85, 0.60, 0.90, 0.50], desc: "Manipulating the DOM at the speed of thought. Advanced React concurrency, Fiber architecture, and WebAssembly integration.", subs:[{ n: "React/Next.js", v: 98 }, { n: "Vue/Nuxt", v: 85 }] },
+  { id: "sys", title: "SYSTEM_ARCH", hex: "00B2", icon: Database, color: "#a855f7", stats:[0.50, 0.95, 0.40, 0.90, 0.80, 0.85], desc: "Designing highly available, distributed microservices. Fault tolerance, gRPC communication, and message queuing algorithms.", subs:[{ n: "Microservices", v: 92 }, { n: "Kafka/Redis", v: 88 }] },
+  { id: "webgl", title: "GRAPHICS_API", hex: "00C3", icon: Layers, color: "#ec4899", stats:[0.85, 0.30, 0.98, 0.40, 0.70, 0.30], desc: "Bypassing the CPU to communicate directly with the GPU. Custom GLSL shaders, rasterization math, and matrix transformations.", subs:[{ n: "Three.js/WebGL", v: 95 }, { n: "GLSL Shaders", v: 80 }] },
+  { id: "perf", title: "OPTIMIZATION", hex: "00D4", icon: Zap, color: "#eab308", stats:[0.90, 0.80, 0.80, 0.70, 0.99, 0.60], desc: "Obsessive latency reduction. V8 engine heuristics, memory leak tracing, and hardware-accelerated rendering pathways.", subs:[{ n: "Lighthouse 100", v: 99 }, { n: "Mem Profiling", v: 90 }] },
+  { id: "backend", title: "NODE_&_RUST", hex: "00E5", icon: TerminalIcon, color: "#10b981", stats:[0.60, 0.90, 0.50, 0.85, 0.80, 0.70], desc: "Low-level system programming meets scalable event-driven backends. Memory safety and high-throughput thread management.", subs:[{ n: "Node.js Core", v: 95 }, { n: "Rust (Actix)", v: 75 }] },
+  { id: "type", title: "TYPE_SYSTEMS", hex: "00F6", icon: Code2, color: "#3b82f6", stats:[0.85, 0.70, 0.50, 0.60, 0.85, 0.40], desc: "Strict structural typing. Turing-complete generic metaprogramming to ensure zero runtime type exceptions.", subs:[{ n: "TypeScript", v: 96 }, { n: "Type Gymnastics", v: 85 }] },
+];
+const RADAR_LABELS =["FRONTEND", "BACKEND", "WEBGL", "SYS_ARCH", "PERFORMANCE", "DEVOPS"];
+
+// ==========================================
+// 【回归炫技：多普勒动能粒子背景 (Doppler Scroll Particles)】
+// 读取真实 window.scrollY 物理速度，产生红移蓝移残影
 // ==========================================
 const NeuralMatrixCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,31 +65,28 @@ const NeuralMatrixCanvas = () => {
 
     let rAF: number;
     const render = () => {
-      // 获取真实的滚动物理动量
       const currentScrollY = window.scrollY;
       const dy = currentScrollY - lastScrollY;
       scrollVelocity = scrollVelocity * 0.9 + dy * 0.1; // 摩擦力平滑
       lastScrollY = currentScrollY;
 
-      // 运动模糊轨迹：用带透明度的黑色填充替代 clearRect
+      // 运动模糊轨迹
       ctx.fillStyle = 'rgba(2, 5, 10, 0.4)';
       ctx.fillRect(0, 0, width, height);
       ctx.lineWidth = 1;
       
       const absVelocity = Math.abs(scrollVelocity);
       
-      // 多普勒颜色插值：向下滚(正)偏红，向上滚(负)偏青，静止偏灰青
-      let r = 6, g = 182, b = 212; // 基础青色
-      if (scrollVelocity > 2) { r = 239; g = 68; b = 68; } // 红移
-      else if (scrollVelocity < -2) { r = 34; g = 211; b = 238; } // 蓝移
+      // 多普勒颜色插值：红移 / 蓝移
+      let r = 6, g = 182, b = 212; 
+      if (scrollVelocity > 2) { r = 239; g = 68; b = 68; } 
+      else if (scrollVelocity < -2) { r = 34; g = 211; b = 238; } 
 
       for (let i = 0; i < PARTICLE_COUNT; i++) {
-        // 叠加滚动速度到 Y 轴
         const totalVy = vy[i] - scrollVelocity * 0.5;
         px[i] += vx[i];
         py[i] += totalVy;
 
-        // 无缝穿透边界
         if (px[i] < 0) px[i] = width; else if (px[i] > width) px[i] = 0;
         if (py[i] < 0) py[i] = height; else if (py[i] > height) py[i] = 0;
 
@@ -89,7 +98,6 @@ const NeuralMatrixCanvas = () => {
         }
 
         ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-        // 当有滚动速度时，将粒子拉伸成线条展现速度感 (Squash & Stretch)
         if (absVelocity > 1) {
            ctx.fillRect(px[i] - 1, py[i] - absVelocity, 2, absVelocity * 2 + 2);
         } else {
@@ -114,7 +122,6 @@ const NeuralMatrixCanvas = () => {
           }
         }
       }
-
       rAF = requestAnimationFrame(render);
     };
     rAF = requestAnimationFrame(render);
@@ -131,44 +138,137 @@ const NeuralMatrixCanvas = () => {
 };
 
 // ==========================================
-// 【顶级炫技点 2：终端内核日志硬件级推流 (Kernel Log Streamer)】
+// 【物理弹簧游标】 (修复鼠标消失问题)
 // ==========================================
-const KernelLogStreamer = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const DUMMY_LOGS = [
-    "SYS_INIT: Loading neural weights [0x00A1F]...",
-    "WARN: Bypassing security protocol in Sector 7G...",
-    "ALLOCATING MEMORY: 1024TB Dedicated VRAM...",
-    "SUCCESS: React Fiber Tree fully decoupled.",
-    "COMPILING: shaders/hologram.glsl (Opt Level: O3)...",
-    "HOOK: IntersectionObserver attached to viewport.",
-    "MOUNT: Cybernetic implants initialized.",
-    "ERR_WARN: Cognitive overload imminent. Injecting coolant...",
-    "SYNC: Mainframe connection established. Ping: 1ms."
-  ];
+const QuantumCursor = () => {
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+  const ringX = useSpring(mouseX, { stiffness: 400, damping: 25 });
+  const ringY = useSpring(mouseY, { stiffness: 400, damping: 25 });
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
-    let rAF: number;
-    let lastTime = performance.now();
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
-    const render = (time: number) => {
-      if (time - lastTime > 120) {
-        lastTime = time;
-        const log = DUMMY_LOGS[Math.floor(Math.random() * DUMMY_LOGS.length)];
-        const hex = Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-        
-        const line = document.createElement('div');
-        line.className = "text-cyan-600/80 mb-1 leading-none";
-        line.innerHTML = `<span class="text-cyan-800 mr-2">[0x${hex}]</span>${log}`;
-        
-        container.appendChild(line);
-        if (container.childElementCount > 25) {
-          container.removeChild(container.firstElementChild!);
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[99999]">
+      <motion.div 
+        className="absolute top-0 left-0 w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_10px_#22d3ee] mix-blend-screen"
+        style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
+      />
+      <motion.div 
+        className="absolute top-0 left-0 w-8 h-8 border border-cyan-500/50 rounded-full mix-blend-screen flex items-center justify-center"
+        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
+      >
+        <Crosshair className="w-4 h-4 text-cyan-400/30 opacity-50" />
+      </motion.div>
+    </div>
+  );
+};
+
+// ==========================================
+// 【乱码解密与动态流体雷达】
+// ==========================================
+const GlitchText = ({ text, isActive }: { text: string, isActive: boolean }) => {
+  const [display, setDisplay] = useState(text);
+  useEffect(() => {
+    if (!isActive) return;
+    let iter = 0; const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    const interval = setInterval(() => {
+      setDisplay(text.split("").map((c, i) => (i < iter ? text[i] : chars[Math.floor(Math.random() * chars.length)])).join(""));
+      if (iter >= text.length) clearInterval(interval);
+      iter += 1 / 2;
+    }, 30);
+    return () => clearInterval(interval);
+  }, [text, isActive]);
+  return <span className="font-mono">{display}</span>;
+};
+
+const MorphingRadar = ({ targetStats, color }: { targetStats: number[], color: string }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const currentStats = useRef([...targetStats]); 
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true }); if (!ctx) return;
+    let rAF: number; let time = 0; const sides = 6;
+    const render = () => {
+      time += 0.05;
+      const width = canvas.width = canvas.offsetWidth; const height = canvas.height = canvas.offsetHeight;
+      const cx = width / 2; const cy = height / 2; const radius = Math.min(width, height) * 0.35;
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineWidth = 1;
+      for (let step = 1; step <= 4; step++) {
+        const r = radius * (step / 4); ctx.beginPath();
+        for (let i = 0; i <= sides; i++) {
+          const a = (Math.PI * 2 * i) / sides - Math.PI / 2;
+          const px = cx + Math.cos(a) * r; const py = cy + Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
         }
-        container.scrollTop = container.scrollHeight;
+        ctx.strokeStyle = `rgba(34, 211, 238, ${step === 4 ? 0.4 : 0.1})`; ctx.stroke();
       }
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '10px "JetBrains Mono", monospace';
+      for (let i = 0; i < sides; i++) {
+        const a = (Math.PI * 2 * i) / sides - Math.PI / 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius);
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.2)'; ctx.stroke();
+        ctx.fillStyle = '#64748b'; ctx.fillText(RADAR_LABELS[i], cx + Math.cos(a) * (radius + 25), cy + Math.sin(a) * (radius + 25));
+      }
+      ctx.beginPath();
+      for (let i = 0; i <= sides; i++) {
+        const idx = i % sides;
+        currentStats.current[idx] += (targetStats[idx] - currentStats.current[idx]) * 0.15;
+        const pulse = Math.sin(time + idx) * 0.03; const val = currentStats.current[idx] + pulse;
+        const a = (Math.PI * 2 * idx) / sides - Math.PI / 2;
+        const px = cx + Math.cos(a) * radius * val; const py = cy + Math.sin(a) * radius * val;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.fillStyle = `${color}33`; ctx.fill(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      rAF = requestAnimationFrame(render);
+    };
+    render(); return () => cancelAnimationFrame(rAF);
+  }, [targetStats, color]);
+  return <canvas ref={canvasRef} className="w-full h-full transform-gpu" style={{ minHeight: '300px' }} />;
+};
+
+// ==========================================
+// 【3D 动态轨道核心】
+// ==========================================
+const OrbitalSkillMatrix = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeSkill = SKILLS_DATA[activeIndex];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const timeRef = useRef(0);
+  const isHovered = useRef(false);
+
+  useEffect(() => {
+    let rAF: number;
+    const render = () => {
+      const targetSpeed = isHovered.current ? 0.001 : 0.005;
+      timeRef.current += targetSpeed;
+      const items = itemsRef.current; const total = items.length;
+      const rect = containerRef.current?.getBoundingClientRect();
+      const radiusX = rect ? rect.width * 0.35 : 180; const radiusZ = rect ? rect.width * 0.25 : 120;
+
+      items.forEach((el, i) => {
+        if (!el) return;
+        const angle = (i / total) * Math.PI * 2 + timeRef.current;
+        const x = Math.cos(angle) * radiusX; const z = Math.sin(angle) * radiusZ;
+        const y = Math.sin(angle * 2) * 20; 
+        const scale = (z + radiusZ) / (radiusZ * 2) * 0.6 + 0.5; 
+        const opacity = (z + radiusZ) / (radiusZ * 2) * 0.8 + 0.2;
+        const zIndex = Math.round(z + radiusZ);
+
+        el.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
+        el.style.opacity = opacity.toString();
+        el.style.zIndex = zIndex.toString();
+        el.style.filter = `brightness(${scale * 1.2})`;
+      });
       rAF = requestAnimationFrame(render);
     };
     rAF = requestAnimationFrame(render);
@@ -176,134 +276,240 @@ const KernelLogStreamer = () => {
   },[]);
 
   return (
-    <div className="w-full h-48 bg-[#02050A] border border-cyan-900/50 p-4 font-mono text-[10px] sm:text-xs overflow-hidden relative shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] rounded-sm">
-      <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_4px] pointer-events-none z-10" />
-      <div ref={containerRef} className="relative z-0 h-full w-full flex flex-col justify-end" />
-      <div className="absolute bottom-4 right-4 text-cyan-500 animate-pulse font-bold text-xs">_</div>
+    <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center min-h-[600px] w-full">
+      <div 
+        ref={containerRef}
+        className="relative flex-1 w-full h-[400px] lg:h-[600px] flex items-center justify-center group"
+        onMouseEnter={() => isHovered.current = true} onMouseLeave={() => isHovered.current = false}
+      >
+        <div className="absolute w-32 h-32 rounded-full border border-cyan-500/30 flex items-center justify-center shadow-[inset_0_0_50px_rgba(6,182,212,0.2)]">
+           <div className="w-16 h-16 rounded-full bg-[#05050A] shadow-[0_0_30px_rgba(0,0,0,1)] border border-cyan-900/50 flex items-center justify-center overflow-hidden">
+              <Hexagon className="w-8 h-8 text-cyan-500/50 animate-[spin_10s_linear_infinite]" />
+           </div>
+           <div className="absolute w-[80%] h-[80%] scale-[2.5] rounded-[50%] border-[1px] border-dashed border-cyan-900/40 transform rotate-x-60 pointer-events-none" />
+        </div>
+
+        {SKILLS_DATA.map((skill, i) => {
+          const Icon = skill.icon; const isActive = activeIndex === i;
+          return (
+            <div
+              key={skill.id} ref={(el) => (itemsRef.current[i] = el)}
+              onMouseEnter={() => setActiveIndex(i)}
+              className={cn(
+                "absolute flex flex-col items-center justify-center p-4 cursor-crosshair transition-colors duration-300 will-change-transform",
+                "bg-[#02050A]/80 backdrop-blur-md border rounded-lg",
+                isActive ? `border-[${skill.color}] shadow-[0_0_30px_${skill.color}40]` : "border-cyan-900/50 hover:border-cyan-700"
+              )}
+              style={{ width: '100px', height: '100px', transformOrigin: 'center center' }}
+            >
+              <Icon size={28} color={isActive ? skill.color : '#64748b'} className={isActive ? "animate-pulse" : ""} />
+              <div className="mt-2 text-[10px] font-mono tracking-widest text-center" style={{ color: isActive ? skill.color : '#64748b' }}>
+                {skill.hex}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex-1 w-full max-w-md bg-[#050505]/90 border border-cyan-900/50 relative p-1 pb-6 shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-md" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)' }}>
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
+        <div className="p-6 border-b border-cyan-900/30">
+           <div className="flex justify-between items-start mb-4">
+              <div className="text-[10px] font-mono text-cyan-600 tracking-widest flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: activeSkill.color }} />
+                 DATALINK_ESTABLISHED
+              </div>
+              <div className="text-[10px] font-mono text-slate-500">PING: 1ms</div>
+           </div>
+           <h3 className="text-3xl font-black font-mono tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ color: activeSkill.color }}>
+             <GlitchText text={activeSkill.title} isActive={true} />
+           </h3>
+           <p className="mt-4 text-xs font-mono text-slate-400 leading-relaxed min-h-[60px]">{activeSkill.desc}</p>
+        </div>
+        <div className="w-full h-[280px] p-4 relative bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05)_0%,transparent_70%)]">
+           <MorphingRadar targetStats={activeSkill.stats} color={activeSkill.color} />
+        </div>
+        <div className="px-6 flex flex-col gap-3">
+           {activeSkill.subs.map((sub, i) => (
+             <div key={i} className="w-full">
+                <div className="flex justify-between text-[10px] font-mono text-cyan-500 mb-1"><span>{sub.n}</span><span>{sub.v}%</span></div>
+                <div className="w-full h-1 bg-cyan-950/50 overflow-hidden relative">
+                   <motion.div 
+                     className="absolute top-0 left-0 h-full shadow-[0_0_10px_currentcolor]" style={{ backgroundColor: activeSkill.color }}
+                     initial={{ width: 0 }} animate={{ width: `${sub.v}%` }} transition={{ duration: 0.8, type: "spring" }} key={activeSkill.id + i} 
+                   />
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
     </div>
   );
 };
 
 // ==========================================
-// 【顶级炫技点 3：物理光照 3D 技能卡片 (Holographic Datapad)】
+// 【等距视角全息核心爆炸图 (Isometric Blueprint Unpack)】
 // ==========================================
-const HolographicSkillCard = ({ title, category, icon, hex }: any) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const rectRef = useRef<{left: number, top: number, width: number, height: number} | null>(null);
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+const IsometricCoreUnpack = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  const rotateX = useSpring(useMotionValue(0), { damping: 25, stiffness: 200, mass: 0.5 });
-  const rotateY = useSpring(useMotionValue(0), { damping: 25, stiffness: 200, mass: 0.5 });
-  const glareOpacity = useSpring(0, { stiffness: 300, damping: 30 });
+  const { scrollYProgress } = useScroll({ 
+    target: containerRef, 
+    offset: ["start start", "end end"] 
+  });
 
-  const handleMouseEnter = () => {
-    if (cardRef.current) rectRef.current = cardRef.current.getBoundingClientRect();
-    glareOpacity.set(1);
-  };
+  const topLayerZ = useTransform(scrollYProgress, [0.1, 0.4, 0.8],[0, 160, 200]);
+  const bottomLayerZ = useTransform(scrollYProgress,[0.1, 0.4, 0.8],[0, -160, -200]);
+  const coreRotateZ = useTransform(scrollYProgress, [0, 1], [-45, 45]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!rectRef.current) return;
-    const { left, top, width, height } = rectRef.current;
-    const cx = e.clientX - left;
-    const cy = e.clientY - top;
-    
-    mouseX.set(cx);
-    mouseY.set(cy);
+  const hud1Opacity = useTransform(scrollYProgress, [0.2, 0.3],[0, 1]);
+  const hud1X = useTransform(scrollYProgress,[0.2, 0.3], [-50, 0]);
 
-    rotateX.set(((cy - height / 2) / (height / 2)) * -15);
-    rotateY.set(((cx - width / 2) / (width / 2)) * 15);
-  };
+  const hud2Opacity = useTransform(scrollYProgress,[0.4, 0.5],[0, 1]);
+  const hud2X = useTransform(scrollYProgress,[0.4, 0.5], [50, 0]);
 
-  const handleMouseLeave = () => {
-    glareOpacity.set(0);
-    rotateX.set(0);
-    rotateY.set(0);
-    rectRef.current = null;
-  };
+  const hud3Opacity = useTransform(scrollYProgress,[0.6, 0.7], [0, 1]);
+  const hud3X = useTransform(scrollYProgress, [0.6, 0.7],[-50, 0]);
 
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(34, 211, 238, 0.2) 0%, transparent 60%)`;
+  const scannerY = useTransform(scrollYProgress,[0, 1],["-20%", "120%"]);
 
   return (
-    <motion.div
-      ref={cardRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="group relative w-full h-48 bg-[#05050A]/80 border border-cyan-900/40 rounded-sm p-5 cursor-crosshair will-change-transform transform-gpu shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-cyan-500/50 transition-colors"
-    >
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d410_1px,transparent_1px),linear-gradient(to_bottom,#06b6d410_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none z-0" style={{ transform: "translateZ(-10px)" }} />
+    // 注意：去除了 bg-[#02050A] ，让底层的物理多普勒粒子能透射出来！
+    <div ref={containerRef} className="relative h-[300vh] w-full bg-transparent">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden perspective-[2000px]">
+        
+        {/* 背景扫描网格（叠加在粒子层之上） */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05)_0%,transparent_50%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none[mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_10%,transparent_100%)]" />
+        
+        <motion.div 
+          className="absolute left-0 w-full h-[2px] bg-cyan-400 shadow-[0_0_20px_#22d3ee] z-50 pointer-events-none"
+          style={{ top: scannerY }}
+        />
 
-      <motion.div 
-        className="absolute inset-0 z-10 pointer-events-none mix-blend-screen will-change-transform transform-gpu"
-        style={{ background: glareBackground, opacity: glareOpacity }}
-      />
+        {/* 核心 3D 解体结构 */}
+        <motion.div 
+          className="relative w-64 h-64 md:w-80 md:h-80"
+          style={{ rotateX: 60, rotateZ: coreRotateZ, transformStyle: "preserve-3d" }}
+        >
+          {/* 【第 3 层】 底部硬件基座 */}
+          <motion.div 
+            className="absolute inset-0 bg-[#050B14]/90 border-2 border-slate-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9)] flex items-center justify-center backdrop-blur-md"
+            style={{ translateZ: bottomLayerZ, transformStyle: "preserve-3d" }}
+          >
+            <div className="absolute inset-2 border border-slate-700 rounded-xl bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.05)_50%,transparent_51%)] bg-[size:20px_20px]" />
+            <div className="w-24 h-24 bg-slate-950 border border-slate-800 rounded-full shadow-[inset_0_0_20px_rgba(0,0,0,1)] flex items-center justify-center">
+               <Database className="w-10 h-10 text-slate-500" />
+            </div>
+          </motion.div>
 
-      <div className="relative z-20 flex flex-col justify-between h-full transform-gpu" style={{ transform: "translateZ(30px)" }}>
-        <div className="flex justify-between items-start">
-          <div className="p-2 bg-cyan-950/40 border border-cyan-900/50 rounded-sm text-cyan-400 group-hover:text-cyan-300 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all">
-            {icon}
-          </div>
-          <div className="text-[9px] font-mono text-cyan-800 tracking-widest uppercase">
-            SECTOR_{hex}
-          </div>
+          {/* 【第 2 层】 中间逻辑主板 */}
+          <motion.div 
+            className="absolute inset-0 bg-[#02050A]/80 border-2 border-cyan-700/50 rounded-2xl backdrop-blur-xl shadow-[0_0_30px_rgba(6,182,212,0.2)] flex items-center justify-center overflow-hidden"
+            style={{ translateZ: 0, transformStyle: "preserve-3d" }}
+          >
+             <div className="absolute w-32 h-32 bg-cyan-500/20 blur-2xl rounded-full animate-pulse" />
+             <div className="w-20 h-20 bg-cyan-950/80 border border-cyan-400/50 rounded-lg transform rotate-45 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+                <Cpu className="w-8 h-8 text-cyan-300 transform -rotate-45" />
+             </div>
+             <div className="absolute inset-4 border border-cyan-900/40 rounded-xl" />
+          </motion.div>
+
+          {/* 【第 1 层】 顶部 UI 玻璃盖板 */}
+          <motion.div 
+            className="absolute inset-0 bg-cyan-400/5 border border-cyan-300/30 rounded-2xl backdrop-blur-md shadow-[inset_0_0_30px_rgba(255,255,255,0.1)] flex items-center justify-center"
+            style={{ translateZ: topLayerZ, transformStyle: "preserve-3d" }}
+          >
+             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-100/10 to-transparent opacity-50 rounded-2xl" />
+             <div className="w-full h-full p-4 grid grid-cols-3 grid-rows-3 gap-2 opacity-80">
+                {[...Array(9)].map((_, i) => (
+                  <div key={i} className="w-full h-full border border-cyan-200/20 rounded-sm bg-cyan-500/10" />
+                ))}
+             </div>
+             <Globe className="absolute w-12 h-12 text-cyan-200/80 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+          </motion.div>
+
+          {/* 中轴发光能量柱 */}
+          <motion.div 
+            className="absolute left-1/2 top-1/2 w-[2px] bg-gradient-to-b from-cyan-300 via-cyan-500 to-transparent -translate-x-1/2 -translate-y-1/2 shadow-[0_0_15px_#22d3ee]"
+            style={{ height: useTransform(topLayerZ, (z) => `${Number(z) * 2 + 10}px`), rotateX: -90 }} 
+          />
+        </motion.div>
+
+        {/* HUD 平面数据浮窗 */}
+        <motion.div 
+          className="absolute top-[20%] left-[5%] md:left-[15%] w-64 bg-[#02050A]/70 border-l-2 border-cyan-400 p-4 backdrop-blur-md shadow-lg"
+          style={{ opacity: hud1Opacity, x: hud1X }}
+        >
+          <div className="text-[10px] text-cyan-500 font-mono tracking-widest mb-2 border-b border-cyan-900/50 pb-1">LAYER_01 // PRESENTATION</div>
+          <h4 className="text-xl font-black text-white uppercase tracking-tight mb-2">Cognitive Glass</h4>
+          <p className="text-xs text-slate-400 font-mono leading-relaxed">
+            Ultra-responsive DOM execution. Resolving complex UI states through React Fiber tree diffing algorithms.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          className="absolute top-[45%] right-[5%] md:right-[15%] w-64 bg-[#02050A]/70 border-r-2 border-cyan-500 p-4 backdrop-blur-md text-right shadow-lg"
+          style={{ opacity: hud2Opacity, x: hud2X }}
+        >
+          <div className="text-[10px] text-cyan-600 font-mono tracking-widest mb-2 border-b border-cyan-900/50 pb-1 justify-end flex">LAYER_02 // LOGIC_CORE</div>
+          <h4 className="text-xl font-black text-white uppercase tracking-tight mb-2">V8 Execution Engine</h4>
+          <p className="text-xs text-slate-400 font-mono leading-relaxed">
+            Asynchronous event loops. Memory allocation and garbage collection management.
+          </p>
+        </motion.div>
+
+        <motion.div 
+          className="absolute bottom-[20%] left-[5%] md:left-[15%] w-64 bg-[#02050A]/70 border-l-2 border-slate-500 p-4 backdrop-blur-md shadow-lg"
+          style={{ opacity: hud3Opacity, x: hud3X }}
+        >
+          <div className="text-[10px] text-slate-500 font-mono tracking-widest mb-2 border-b border-slate-800 pb-1">LAYER_03 // HARDWARE</div>
+          <h4 className="text-xl font-black text-slate-200 uppercase tracking-tight mb-2">Metal Infrastructure</h4>
+          <p className="text-xs text-slate-400 font-mono leading-relaxed">
+            Bare-metal container orchestration. Persistent database clusters and TCP/UDP socket telemetry streams.
+          </p>
+        </motion.div>
+
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[10px] font-mono text-cyan-600 tracking-widest uppercase">
+          <span>SCROLL_TO_DISSECT</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-cyan-400 to-transparent animate-pulse" />
         </div>
 
-        <div>
-          <div className="text-[10px] font-mono text-slate-500 mb-1 tracking-widest uppercase flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 group-hover:bg-cyan-400 group-hover:animate-pulse" />
-            {category}
-          </div>
-          <h3 className="text-xl md:text-2xl font-black text-slate-200 group-hover:text-white uppercase tracking-tighter drop-shadow-[0_0_8px_transparent] group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] transition-all">
-            {title}
-          </h3>
-        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 // ==========================================
-// 【顶级炫技点 4：动能文本流 (Kinetic Velocity Typography)】
+// 辅助动能横幅 
 // ==========================================
-const wrap = (min: number, max: number, v: number) => {
-  const rangeSize = max - min;
-  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
-};
-
 const KineticBanner = () => {
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
+  const { scrollY } = useScroll(); const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], { clamp: false });
-  const skewFactor = useTransform(smoothVelocity, [-1000, 1000],[10, -10]);
-  
-  const baseX = useMotionValue(0);
-  const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`);
-  const directionFactor = useRef<number>(1);
+  const velocityFactor = useTransform(smoothVelocity,[0, 1000],[0, 5], { clamp: false });
+  const skewFactor = useTransform(smoothVelocity,[-1000, 1000],[10, -10]);
+  const baseX = useMotionValue(0); const directionFactor = useRef<number>(1);
 
   useAnimationFrame((t, delta) => {
-    let moveBy = directionFactor.current * -2 * (delta / 1000);
+    let safeDelta = delta > 50 ? 16 : delta; 
+    let moveBy = directionFactor.current * -2 * (safeDelta / 1000);
     const vf = velocityFactor.get();
-    if (vf < 0) directionFactor.current = -1;
-    else if (vf > 0) directionFactor.current = 1;
+    if (vf < 0) directionFactor.current = -1; else if (vf > 0) directionFactor.current = 1;
     moveBy += directionFactor.current * moveBy * vf;
     baseX.set(baseX.get() + moveBy);
   });
+  
+  const wrap = (min: number, max: number, v: number) => {
+    const rangeSize = max - min; return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+  };
+  const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`);
 
   return (
-    <div className="w-full overflow-hidden border-y border-cyan-900/30 bg-cyan-950/10 py-6 my-24 relative">
-      <motion.div 
-        className="flex whitespace-nowrap flex-nowrap w-[400vw] relative will-change-transform transform-gpu"
-        style={{ x, skewX: skewFactor }}
-      >
-        <span className="block px-8 text-3xl md:text-5xl font-black font-mono tracking-tighter text-cyan-900/40 uppercase">
-          FULL_STACK_MASTERY // PERFORMANCE_EXTREMIST // 144HZ_ADDICT // HARDWARE_ACCELERATED // 
-          FULL_STACK_MASTERY // PERFORMANCE_EXTREMIST // 144HZ_ADDICT // HARDWARE_ACCELERATED // 
-          FULL_STACK_MASTERY // PERFORMANCE_EXTREMIST // 144HZ_ADDICT // HARDWARE_ACCELERATED // 
-          FULL_STACK_MASTERY // PERFORMANCE_EXTREMIST // 144HZ_ADDICT // HARDWARE_ACCELERATED // 
+    <div className="w-full overflow-hidden border-y border-cyan-900/30 bg-[#02050A]/50 backdrop-blur-sm py-8 my-24 relative shadow-[0_0_50px_rgba(6,182,212,0.05)] mix-blend-lighten">
+      <motion.div className="flex whitespace-nowrap flex-nowrap w-[400vw] relative will-change-transform transform-gpu" style={{ x, skewX: skewFactor }}>
+        <span className="block px-8 text-4xl md:text-6xl font-black font-mono tracking-tighter text-cyan-900/40 uppercase">
+          FULL_STACK_MASTERY // ZERO_RUNTIME_ERRORS // HARDWARE_ACCELERATED // PERFORMANCE_EXTREMIST // 
+          FULL_STACK_MASTERY // ZERO_RUNTIME_ERRORS // HARDWARE_ACCELERATED // PERFORMANCE_EXTREMIST //
         </span>
       </motion.div>
     </div>
@@ -311,344 +517,54 @@ const KineticBanner = () => {
 };
 
 // ==========================================
-// 【新增炫技点 5：Z轴透视空间深潜 (Z-Axis Data Dive)】
-// 高达 300vh 的物理占位空间。随着向下滚动，监听 scrollYProgress 并将其映射到
-// 多个 3D 数据面板的 translateZ 和 opacity 上，产生极具压迫感的视觉穿梭感！
-// ==========================================
-const ZAxisDataDive = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  // 获取该区域内的相对滚动进度 (0 to 1)
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
-
-  // 预生成 5 个面板的动画映射
-  const panels = [0, 1, 2, 3, 4].map((i) => {
-    // 每个面板有不同的触发区间，越靠后的面板越晚迎面扑来
-    const start = i * 0.15;
-    const peak = start + 0.2;
-    const end = peak + 0.2;
-
-    // Z 轴从深远处的 -1000px 冲向相机的 500px（穿过屏幕）
-    const z = useTransform(scrollYProgress,[start, peak, end], [-1000, 0, 800]);
-    // 渐显 -> 最亮 -> 淡出
-    const opacity = useTransform(scrollYProgress, [start, peak, end],[0, 1, 0]);
-    // 物理缩放加强压迫感
-    const scale = useTransform(scrollYProgress, [start, peak, end], [0.5, 1, 1.5]);
-
-    return { z, opacity, scale, index: i };
-  });
-
-  return (
-    <div ref={containerRef} className="relative h-[300vh] w-full">
-      {/* 粘性容器：将其钉在屏幕视口中，直到 300vh 滚动完毕 */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center perspective-[800px]">
-        
-        {/* 背景辅助网格线，产生隧道感 */}
-        <div className="absolute inset-0 border border-cyan-900/20 m-12 md:m-24 pointer-events-none opacity-30 flex items-center justify-center">
-          <div className="w-[1px] h-full bg-cyan-900/40 absolute left-1/3" />
-          <div className="w-[1px] h-full bg-cyan-900/40 absolute right-1/3" />
-          <div className="h-[1px] w-full bg-cyan-900/40 absolute top-1/3" />
-          <div className="h-[1px] w-full bg-cyan-900/40 absolute bottom-1/3" />
-          <div className="absolute w-32 h-32 border border-cyan-500/50 rounded-full flex items-center justify-center">
-            <Crosshair className="w-8 h-8 text-cyan-500/50" />
-          </div>
-        </div>
-
-        {panels.map(({ z, opacity, scale, index }) => (
-          <motion.div
-            key={index}
-            className="absolute flex flex-col items-center justify-center w-[80vw] max-w-2xl p-8 border border-cyan-500/30 bg-[#050505]/90 backdrop-blur-md shadow-[0_0_50px_rgba(6,182,212,0.1)] will-change-transform transform-gpu"
-            style={{ 
-              z, 
-              opacity, 
-              scale,
-              rotateX: (index % 2 === 0 ? 5 : -5), // 轻微的物理随机偏航
-              rotateY: (index % 2 !== 0 ? 5 : -5)
-            }}
-          >
-             <div className="w-full flex justify-between text-[10px] font-mono text-cyan-500 mb-4 border-b border-cyan-900/50 pb-2">
-                <span>PROTOCOL_LAYER_{index + 1}</span>
-                <span>STATUS: OVERRIDDEN</span>
-             </div>
-             <h2 className="text-4xl md:text-6xl font-black font-mono tracking-tighter text-white uppercase text-center w-full drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">
-               {["Neural Mapping", "Memory Allocation", "Thread Dispatcher", "V8 Engine Hooks", "Kernel Panic"][index]}
-             </h2>
-             <div className="mt-4 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
-             <div className="mt-4 text-xs font-mono text-slate-400 text-center uppercase tracking-[0.2em]">
-                Bypassing security node 0x{(index * 1337).toString(16).toUpperCase()}...
-             </div>
-          </motion.div>
-        ))}
-
-        {/* 屏幕下方的指示器 */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[9px] font-mono text-cyan-600 tracking-widest uppercase">
-          <span>SCROLL_TO_DECRYPT</span>
-          <div className="w-[1px] h-8 bg-gradient-to-b from-cyan-500 to-transparent animate-pulse" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ==========================================
-// 【新增炫技点 6：量子雷达极客图 (Quantum Radar Canvas)】
-// 纯数学驱动的多边形能力雷达图。0 React State，0 对象分配，
-// 直接利用 requestAnimationFrame 和正余弦矩阵重绘。
-// ==========================================
-const QuantumRadarCanvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-    if (!ctx) return;
-
-    let rAF: number;
-    let time = 0;
-    // 技能六维数值 (0-1)
-    const stats =[0.95, 0.85, 0.9, 0.75, 0.98, 0.88];
-    const labels =["FRONTEND", "BACKEND", "WEBGL", "SYS_ARCH", "PERFORMANCE", "DEVOPS"];
-    const sides = 6;
-
-    const render = () => {
-      time += 0.05;
-      const width = canvas.width = canvas.offsetWidth;
-      const height = canvas.height = canvas.offsetHeight;
-      const cx = width / 2;
-      const cy = height / 2;
-      const radius = Math.min(width, height) * 0.35;
-
-      ctx.clearRect(0, 0, width, height);
-      
-      // 绘制底层背景网格 (雷达的环)
-      ctx.lineWidth = 1;
-      for (let step = 1; step <= 4; step++) {
-        const r = radius * (step / 4);
-        ctx.beginPath();
-        for (let i = 0; i <= sides; i++) {
-          const angle = (Math.PI * 2 * i) / sides - Math.PI / 2;
-          const px = cx + Math.cos(angle) * r;
-          const py = cy + Math.sin(angle) * r;
-          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.strokeStyle = `rgba(8, 145, 178, ${step === 4 ? 0.5 : 0.2})`;
-        ctx.stroke();
-      }
-
-      // 绘制轴线和文字
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '10px "JetBrains Mono", monospace';
-      
-      for (let i = 0; i < sides; i++) {
-        const angle = (Math.PI * 2 * i) / sides - Math.PI / 2;
-        const px = cx + Math.cos(angle) * radius;
-        const py = cy + Math.sin(angle) * radius;
-        
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(px, py);
-        ctx.strokeStyle = 'rgba(8, 145, 178, 0.3)';
-        ctx.stroke();
-
-        // 文字
-        const textOffset = 25;
-        const tx = cx + Math.cos(angle) * (radius + textOffset);
-        const ty = cy + Math.sin(angle) * (radius + textOffset);
-        ctx.fillStyle = '#22d3ee';
-        ctx.fillText(labels[i], tx, ty);
-      }
-
-      // 绘制技能多边形
-      ctx.beginPath();
-      for (let i = 0; i <= sides; i++) {
-        const idx = i % sides;
-        // 赋予雷达边缘轻微的呼吸脉冲感
-        const pulse = Math.sin(time + idx) * 0.02; 
-        const val = stats[idx] + pulse;
-        const angle = (Math.PI * 2 * idx) / sides - Math.PI / 2;
-        const px = cx + Math.cos(angle) * radius * val;
-        const py = cy + Math.sin(angle) * radius * val;
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      
-      ctx.fillStyle = 'rgba(34, 211, 238, 0.15)';
-      ctx.fill();
-      ctx.strokeStyle = '#06b6d4';
-      ctx.lineWidth = 2;
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = '#06b6d4';
-      ctx.stroke();
-      ctx.shadowBlur = 0; // 重置阴影防止污染下一帧
-
-      rAF = requestAnimationFrame(render);
-    };
-
-    render();
-    return () => cancelAnimationFrame(rAF);
-  },[]);
-
-  return <canvas ref={canvasRef} className="w-full h-full transform-gpu" style={{ minHeight: '400px' }} />;
-};
-
-// ==========================================
-// 【新增炫技点 7：系统级核心转储 (Intersection Core Dump)】
-// 使用 IntersectionObserver 监听底部区域，一旦滑入视口，
-// 瞬间用纯粹的 DOM Node 写入产生海量的 Hex 乱码，模拟机器崩溃的数据转储效果。
-// ==========================================
-const CoreDumpSection = () => {
-  const containerRef = useRef<HTMLPreElement>(null);
-  
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        // 生成 5000 字符的 Hex 数据流
-        let dump = "";
-        for (let i = 0; i < 500; i++) {
-          dump += Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0') + " ";
-          if (i % 12 === 0) dump += "\n";
-        }
-        containerRef.current!.textContent = dump;
-        containerRef.current!.classList.add('animate-glitch');
-        observer.disconnect(); // 触发一次后销毁
-      }
-    });
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  },[]);
-
-  return (
-    <div className="relative w-full border border-red-900/50 bg-red-950/10 p-6 mt-32 overflow-hidden group">
-      <div className="absolute top-0 left-0 w-full h-1 bg-red-600 animate-pulse" />
-      <div className="flex items-center gap-3 text-red-500 mb-4 font-mono font-bold text-sm tracking-widest uppercase">
-        <AlertTriangle className="w-5 h-5" />
-        FATAL_SYS_ERROR // CORE_DUMP_INITIATED
-      </div>
-      <pre 
-        ref={containerRef}
-        className="text-[8px] sm:text-[10px] text-red-700/60 font-mono leading-tight break-all whitespace-pre-wrap select-none h-64 overflow-hidden mask-y"
-      >
-        AWAITING_INTERSECTION...
-      </pre>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent pointer-events-none" />
-    </div>
-  );
-};
-
-
-// ==========================================
-// 主页面：Skill
+// 主页面组合
 // ==========================================
 export default function Skill() {
-  const skills =[
-    { title: "React & Next.js", category: "Frontend Core", hex: "00A1", icon: <Globe className="w-5 h-5" /> },
-    { title: "TypeScript", category: "Type System", hex: "00B2", icon: <Code2 className="w-5 h-5" /> },
-    { title: "WebGL & Canvas", category: "Graphics API", hex: "00C3", icon: <Layers className="w-5 h-5" /> },
-    { title: "Node.js & Rust", category: "Backend / CLI", hex: "00D4", icon: <TerminalIcon className="w-5 h-5" /> },
-    { title: "Performance", category: "Optimization", hex: "00E5", icon: <Zap className="w-5 h-5" /> },
-    { title: "System Arch", category: "Infrastructure", hex: "00F6", icon: <Database className="w-5 h-5" /> },
-  ];
-
   return (
-    <div className="min-h-screen w-full bg-[#02050A] text-slate-300 relative overflow-x-hidden selection:bg-cyan-500/30">
+    <div className="min-h-screen w-full bg-[#02050A] text-slate-300 relative overflow-x-clip selection:bg-cyan-500/50 cursor-none">
       
-      <NeuralMatrixCanvas />
-      
-      {/* 页面全局遮罩与扫描线 */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] pointer-events-none z-50 mix-blend-overlay opacity-50" />
+      {/* 确保自定义游标在绝对最顶层 */}
+      <QuantumCursor />
 
-      <main className="relative z-10 w-full mx-auto">
+      {/* 恢复并置于最底层的全局动能粒子系统 (多普勒效应背景) */}
+      <NeuralMatrixCanvas />
+
+      {/* 全局CRT遮罩，压在背景粒子之上，提升赛博质感 */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_4px] pointer-events-none z-10 mix-blend-overlay opacity-50" />
+
+      {/* 主体内容，必须浮于背景之上 */}
+      <main className="relative z-20 w-full mx-auto pb-32">
         
-        {/* 常规宽度区域容器 */}
+        {/* 头部标题区域 */}
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-12">
-          {/* 头部标题区 */}
-          <header className="mb-24 perspective-[1000px]">
-            <div className="flex items-center gap-4 mb-6 text-[10px] font-mono text-cyan-600 tracking-[0.4em] uppercase">
-              <span className="w-12 h-[1px] bg-cyan-800" />
-              SYS.CAPABILITIES // OVERVIEW
+          <header className="mb-24">
+            <div className="flex items-center gap-4 mb-6 text-[10px] font-mono text-cyan-500 tracking-[0.4em] uppercase">
+              <span className="w-16 h-[2px] bg-cyan-600 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+              SYS.CORE // DIAGNOSTICS
             </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-slate-100 drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-              NEURAL<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-700 filter drop-shadow-[0_0_10px_rgba(34,211,238,0.4)]">
-                RESONANCE
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-slate-100">
+              NEURAL <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-700">
+                ARCHITECTURE
               </span>
             </h1>
-            <p className="mt-6 max-w-2xl font-mono text-sm text-cyan-900/80 leading-relaxed border-l-2 border-cyan-900/50 pl-4 py-1">
-              Proficiency matrices loaded into active memory. Utilizing hardware-accelerated pathways to map cognitive paradigms and execution frameworks. Scroll down to initiate system dive.
-            </p>
           </header>
-
-          {/* 终端推流展示区 */}
-          <div className="mb-24">
-            <div className="flex items-center justify-between mb-4 text-[10px] font-mono text-cyan-700 tracking-[0.2em] uppercase">
-              <span className="flex items-center gap-2">
-                <Network className="w-3 h-3 text-cyan-500" />
-                COMPILER_OUTPUT
-              </span>
-              <span className="animate-pulse">V8_ENGINE_ACTIVE</span>
-            </div>
-            <KernelLogStreamer />
-          </div>
         </div>
 
-        {/* ======================= 超长滚动物理炫技区 ======================= */}
-        
-        {/* 横幅打破网格 */}
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="flex items-center justify-between mb-8 text-[10px] font-mono text-cyan-600 tracking-[0.2em] uppercase border-b border-cyan-900/50 pb-4">
+            <span className="flex items-center gap-2">
+              <Network className="w-4 h-4 text-cyan-500" />
+              ORBITAL_MATRIX_ACTIVE
+            </span>
+            <span className="animate-pulse">AWAITING_INTERACTION...</span>
+          </div>
+          <OrbitalSkillMatrix />
+        </div>
+
         <KineticBanner />
 
-        {/* Z轴数据深潜隧道 */}
-        <ZAxisDataDive />
-
-        {/* 恢复常规宽度区域 */}
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-24">
-          
-          <div className="flex flex-col lg:flex-row gap-16 items-center">
-             {/* 核心技能全息卡片网格 */}
-             <div className="flex-1 w-full">
-               <div className="flex items-center justify-between mb-8 text-[10px] font-mono text-cyan-700 tracking-[0.2em] uppercase border-b border-cyan-900/30 pb-4">
-                 <span className="flex items-center gap-2">
-                   <Cpu className="w-3 h-3 text-cyan-500" />
-                   ALLOCATED_SECTORS
-                 </span>
-                 <span>MEMORY_BANK_0X</span>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                 {skills.map((skill, i) => (
-                   <HolographicSkillCard 
-                     key={i}
-                     title={skill.title}
-                     category={skill.category}
-                     hex={skill.hex}
-                     icon={skill.icon}
-                   />
-                 ))}
-               </div>
-             </div>
-
-             {/* 量子雷达可视化表盘 */}
-             <div className="w-full lg:w-1/3 flex flex-col items-center">
-                <div className="flex items-center justify-between w-full mb-8 text-[10px] font-mono text-cyan-700 tracking-[0.2em] uppercase border-b border-cyan-900/30 pb-4">
-                   <span>RADAR_TELEMETRY</span>
-                   <span className="text-cyan-500 animate-ping">●</span>
-                </div>
-                <div className="w-full aspect-square border border-cyan-900/30 bg-[#050505]/50 backdrop-blur-sm rounded-sm p-4 relative shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
-                  {/* 四角装饰 */}
-                  <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-500" />
-                  <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-500" />
-                  <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-500" />
-                  <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-500" />
-                  
-                  <QuantumRadarCanvas />
-                </div>
-             </div>
-          </div>
-
-          {/* 页面底部：内核崩溃转储 */}
-          <CoreDumpSection />
-
-        </div>
+        <IsometricCoreUnpack />
 
       </main>
     </div>

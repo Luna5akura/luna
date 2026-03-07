@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 const QUOTES =[
   "Love is murderous utopia.",
   "Live fast, die young.",
+  "You only live once.",
   "Think more, speak less.",
-  "Trust yourself, trust now.",
-  "Be no one, be very one.",
+  "Make it exist, refine it later.",
 ];
 
 const CYBER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}!~?";
