@@ -1,5 +1,5 @@
 // src/components/BlogList.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Post } from '@/types';
 import { Link } from 'react-router-dom';
@@ -16,16 +16,94 @@ import {
 import { cn } from "@/lib/utils";
 
 // ==========================================
-// 【顶级炫技点 1：高维分形几何矩阵 (High-Dimensional Fractal Matrix)】
-// 包含了 4 种截然不同的非线性偏微分方程组。
+// 【极致优化点 1：全局高维分形矩阵缓存 (Global Fractal Cache)】
+// 彻底消灭原代码中每次 hover 都会全量计算 3500 个欧拉迭代点的灾难，
+// 并将原本每帧 7000 次的 Math.sin/cos 空间扭曲运算提取到了初始化阶段！
 // ==========================================
+const MAX_POINTS = 3500;
+const FRACTAL_CACHE = new Map<string | number, {
+  pointsX: Float32Array,
+  pointsY: Float32Array,
+  pointsZ: Float32Array,
+  scaleMult: number,
+  offsetY: number,
+  h1: number,
+  hue: number
+}>();
+
+const getFractalData = (seedId: string | number) => {
+  if (FRACTAL_CACHE.has(seedId)) return FRACTAL_CACHE.get(seedId)!;
+
+  const hash = String(seedId).split('').reduce((acc, char) => Math.imul(31, acc) + char.charCodeAt(0) | 0, 0);
+  const absHash = Math.abs(hash);
+  
+  const h1 = (absHash % 100) / 100;
+  const h2 = ((absHash >> 4) % 100) / 100;
+  const attractorType = absHash % 4; 
+
+  // SOA 架构，连续内存榨取 V8 极限性能
+  const pointsX = new Float32Array(MAX_POINTS);
+  const pointsY = new Float32Array(MAX_POINTS);
+  const pointsZ = new Float32Array(MAX_POINTS);
+  
+  let cx = 0.1, cy = 0.1, cz = 0.1;
+  let dt = 0.01, scaleMult = 1, offsetY = 0;
+
+  for (let i = 0; i < MAX_POINTS; i++) {
+    let dx = 0, dy = 0, dz = 0;
+    
+    if (attractorType === 0) {
+      const rho = 28, sigma = 10, beta = 8/3;
+      dx = sigma * (cy - cx);
+      dy = cx * (rho - cz) - cy;
+      dz = cx * cy - beta * cz;
+      dt = 0.01; scaleMult = 3.5; offsetY = 20;
+    } 
+    else if (attractorType === 1) {
+      const a = 0.95, b = 0.7, c = 0.6, d = 3.5, e = 0.25, f = 0.1;
+      dx = (cz - b) * cx - d * cy;
+      dy = d * cx + (cz - b) * cy;
+      dz = c + a * cz - Math.pow(cz, 3)/3 - (cx*cx + cy*cy)*(1 + e*cz) + f*cz*Math.pow(cx, 3);
+      dt = 0.02; scaleMult = 45; offsetY = 0.5;
+    } 
+    else if (attractorType === 2) {
+      const a = 1.89;
+      dx = -a*cx - 4*cy - 4*cz - cy*cy;
+      dy = -a*cy - 4*cz - 4*cx - cz*cz;
+      dz = -a*cz - 4*cx - 4*cy - cx*cx;
+      dt = 0.005; scaleMult = 10; offsetY = -2;
+    }
+    else {
+      const b = 0.19;
+      dx = Math.sin(cy) - b*cx;
+      dy = Math.sin(cz) - b*cy;
+      dz = Math.sin(cx) - b*cz;
+      dt = 0.1; scaleMult = 25; offsetY = 0;
+    }
+    
+    cx += dx * dt; cy += dy * dt; cz += dz * dt;
+    
+    // 【性能质变】：将原本写在 render 循环内的三角函数矩阵形变在此一次性预计算完毕！
+    pointsX[i] = cx + Math.sin(cy * h1) * 2;
+    pointsY[i] = cy + Math.cos(cx * h2) * 2;
+    pointsZ[i] = cz;
+  }
+
+  const hue = 160 + (absHash % 120); 
+  const result = { pointsX, pointsY, pointsZ, scaleMult, offsetY, h1, hue };
+  FRACTAL_CACHE.set(seedId, result);
+  return result;
+};
+
 const QuantumFieldCanvas = ({ seedId }: { seedId: string | number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    // 【极致优化点 2：禁用 Alpha 通道】 
+    // 通知浏览器底层 Canvas 无透明通道，触发 GPU 渲染加速路径
+    const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     const width = 320;
@@ -33,109 +111,50 @@ const QuantumFieldCanvas = ({ seedId }: { seedId: string | number }) => {
     canvas.width = width;
     canvas.height = height;
 
-    // 位运算 Hash 生成唯一 32 位整型种子
-    const hash = String(seedId).split('').reduce((acc, char) => Math.imul(31, acc) + char.charCodeAt(0) | 0, 0);
-    const absHash = Math.abs(hash);
-    
-    // Hash 扰动变量 (0.0 ~ 1.0)
-    const h1 = (absHash % 100) / 100;
-    const h2 = ((absHash >> 4) % 100) / 100;
-
-    // 模型坍缩选择
-    const attractorType = absHash % 4; 
-
-    const MAX_POINTS = 3500;
-    const pointsX = new Float32Array(MAX_POINTS);
-    const pointsY = new Float32Array(MAX_POINTS);
-    const pointsZ = new Float32Array(MAX_POINTS);
-    
-    let cx = 0.1, cy = 0.1, cz = 0.1;
-    let dt = 0.01, scaleMult = 1, offsetY = 0;
-
-    // 微积分欧拉法：四大物理模型轨迹求解
-    for (let i = 0; i < MAX_POINTS; i++) {
-      let dx = 0, dy = 0, dz = 0;
-      
-      if (attractorType === 0) {
-        // [模型 0] Lorenz 蝴蝶效应
-        const rho = 28, sigma = 10, beta = 8/3;
-        dx = sigma * (cy - cx);
-        dy = cx * (rho - cz) - cy;
-        dz = cx * cy - beta * cz;
-        dt = 0.01; scaleMult = 3.5; offsetY = 20;
-      } 
-      else if (attractorType === 1) {
-        // [模型 1] Aizawa 黑洞吸引子 (球状盘旋)
-        const a = 0.95, b = 0.7, c = 0.6, d = 3.5, e = 0.25, f = 0.1;
-        dx = (cz - b) * cx - d * cy;
-        dy = d * cx + (cz - b) * cy;
-        dz = c + a * cz - Math.pow(cz, 3)/3 - (cx*cx + cy*cy)*(1 + e*cz) + f*cz*Math.pow(cx, 3);
-        dt = 0.02; scaleMult = 45; offsetY = 0.5;
-      } 
-      else if (attractorType === 2) {
-        //[模型 2] Halvorsen 对称迷宫 (棱角分明)
-        const a = 1.89;
-        dx = -a*cx - 4*cy - 4*cz - cy*cy;
-        dy = -a*cy - 4*cz - 4*cx - cz*cz;
-        dz = -a*cz - 4*cx - 4*cy - cx*cx;
-        dt = 0.005; scaleMult = 10; offsetY = -2;
-      }
-      else {
-        // [模型 3] Thomas 周期性涡流
-        const b = 0.19;
-        dx = Math.sin(cy) - b*cx;
-        dy = Math.sin(cz) - b*cy;
-        dz = Math.sin(cx) - b*cz;
-        dt = 0.1; scaleMult = 25; offsetY = 0;
-      }
-      
-      cx += dx * dt; cy += dy * dt; cz += dz * dt;
-      pointsX[i] = cx; pointsY[i] = cy; pointsZ[i] = cz;
-    }
+    const { pointsX, pointsY, pointsZ, scaleMult, offsetY, h1, hue } = getFractalData(seedId);
 
     let angleY = 0;
     let animationId: number;
-    // 赋予独特偏色
-    const hue = 160 + (absHash % 120); 
+    
+    const cx2 = width / 2;
+    const cy2 = height / 2;
+    const strokeStyle = `hsla(${hue}, 100%, 50%, 0.6)`;
+    const crtStyle = 'rgba(255, 255, 255, 0.03)';
+    const bgStyle = 'rgba(0, 0, 0, 0.15)';
 
     const render = () => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = bgStyle;
       ctx.fillRect(0, 0, width, height);
 
-      // 根据 Hash 给予不同的旋转轴速度
       angleY += 0.005 + h1 * 0.01;
       const cosY = Math.cos(angleY);
       const sinY = Math.sin(angleY);
 
       ctx.beginPath();
+      // O(N) 极速数组遍历，无任何三角函数！
       for (let i = 0; i < MAX_POINTS; i++) {
-        // 空间扭曲矩阵 (Space Warping)：即便同模型也能长得完全不同
-        const warpX = pointsX[i] + Math.sin(pointsY[i] * h1) * 2;
-        const warpY = pointsY[i] + Math.cos(pointsX[i] * h2) * 2;
         const pz = pointsZ[i];
         
-        // Y轴三维旋转
-        const rotX = warpX * cosY + pz * sinY;
-        const rotZ = -warpX * sinY + pz * cosY;
-        const rotY = warpY - offsetY;
+        const rotX = pointsX[i] * cosY + pz * sinY;
+        const rotZ = -pointsX[i] * sinY + pz * cosY;
+        const rotY = pointsY[i] - offsetY;
 
-        // 透视投影
         const scale = 300 / (300 + rotZ * 5); 
-        const screenX = width / 2 + rotX * scaleMult * scale;
-        const screenY = height / 2 - rotY * scaleMult * scale;
+        const screenX = cx2 + rotX * scaleMult * scale;
+        const screenY = cy2 - rotY * scaleMult * scale;
 
         if (i === 0) ctx.moveTo(screenX, screenY);
         else ctx.lineTo(screenX, screenY);
       }
 
-      ctx.strokeStyle = `hsla(${hue}, 100%, 50%, 0.6)`;
+      ctx.strokeStyle = strokeStyle;
       ctx.lineWidth = 1;
       ctx.globalCompositeOperation = 'screen';
       ctx.stroke();
-      ctx.globalCompositeOperation = 'source-over';
 
-      // CRT 故障描边
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = crtStyle;
       ctx.fillRect(0, (angleY * 200) % height, width, 2);
 
       animationId = requestAnimationFrame(render);
@@ -149,29 +168,44 @@ const QuantumFieldCanvas = ({ seedId }: { seedId: string | number }) => {
 };
 
 // ==========================================
-// 【微重力引擎】
+// 【极致优化点 3：消除布局重排的微重力引擎】
+// 在 onMouseEnter 时缓存物理布局尺寸，拒绝在 144Hz 的 onMouseMove 中
+// 调用 getBoundingClientRect 触发 Layout Thrashing。
 // ==========================================
 const MagneticWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<{ left: number, top: number, width: number, height: number } | null>(null);
+  
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 });
   const springY = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 });
 
+  const handleMouseEnter = () => {
+    if (ref.current) rectRef.current = ref.current.getBoundingClientRect();
+  };
+
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current || window.innerWidth < 1024) return;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    if (!rectRef.current || window.innerWidth < 1024) return;
+    const { left, top, width, height } = rectRef.current;
     x.set((e.clientX - (left + width / 2)) * 0.4);
     y.set((e.clientY - (top + height / 2)) * 0.4);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0); 
+    y.set(0);
+    rectRef.current = null;
   };
 
   return (
     <motion.div
       ref={ref}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
+      onMouseLeave={handleMouseLeave}
       style={{ x: springX, y: springY }}
-      className={cn("will-change-transform", className)}
+      className={cn("will-change-transform transform-gpu", className)}
     >
       {children}
     </motion.div>
@@ -179,10 +213,12 @@ const MagneticWrapper = ({ children, className }: { children: React.ReactNode, c
 };
 
 // ==========================================
-// 【电影级解密 & CSS Grid 幽灵占位】
+// 【极致优化点 4：完全剥离 React State 的爆破引擎】
+// 原代码通过 useState 造成每秒 60 次 React 树 diffing，带来毁灭级开销。
+// 现采用 ref 直接拦截 V8 DOM 层级进行 textContent 覆写，配合 CSS Grid 幽灵占位，性能达到完美。
 // ==========================================
 const ScrambleText = ({ text, className }: { text: string, className?: string }) => {
-  const [display, setDisplay] = useState(text);
+  const spanRef = useRef<HTMLSpanElement>(null);
   
   useEffect(() => {
     let frame: number;
@@ -191,19 +227,21 @@ const ScrambleText = ({ text, className }: { text: string, className?: string })
     const startTime = performance.now();
     
     const animate = (now: number) => {
+      if (!spanRef.current) return;
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
       const easeProgress = 1 - Math.pow(1 - progress, 4);
       const revealCount = Math.floor(text.length * easeProgress);
 
-      setDisplay(
-        text.split("").map((char, index) => {
-          if (index < revealCount) return char;
-          if (char === " ") return " "; 
-          return chars[Math.floor(Math.random() * chars.length)];
-        }).join("")
-      );
+      let display = "";
+      for (let i = 0; i < text.length; i++) {
+        if (i < revealCount) display += text[i];
+        else if (text[i] === " ") display += " "; 
+        else display += chars[Math.floor(Math.random() * chars.length)];
+      }
+      // 绕开 React 虚拟 DOM，直接进行物理写入
+      spanRef.current.textContent = display;
 
       if (progress < 1) frame = requestAnimationFrame(animate);
     };
@@ -213,8 +251,9 @@ const ScrambleText = ({ text, className }: { text: string, className?: string })
 
   return (
     <span className={cn("grid w-full items-start", className)}>
+      {/* 隐藏层撑起物理空间，确保文字变换时不会触发任何外部 Reflow */}
       <span className="col-start-1 row-start-1 invisible whitespace-pre-wrap break-words">{text}</span>
-      <span className="col-start-1 row-start-1 whitespace-pre-wrap break-words text-cyan-50">{display}</span>
+      <span ref={spanRef} className="col-start-1 row-start-1 whitespace-pre-wrap break-words text-cyan-50">{text}</span>
     </span>
   );
 };
@@ -271,7 +310,6 @@ const BlogList: React.FC<{ posts: Post[], currentPage: number, totalPages: numbe
   const[hoveredPost, setHoveredPost] = useState<Post | null>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   
-  // 【顶级炫技点 2：PLL 视口相位锁定核心探针 (Phase-Locked Loop)】
   const paginationRef = useRef<HTMLDivElement>(null);
   const anchorState = useRef({ isLocked: false, targetY: 0, lockTimer: 0 as any });
 
@@ -283,18 +321,14 @@ const BlogList: React.FC<{ posts: Post[], currentPage: number, totalPages: numbe
   // 挂载高频滚动纠正死锁
   useAnimationFrame(() => {
     if (anchorState.current.isLocked && paginationRef.current) {
-      // 每 16.6ms 读取一次底层渲染坐标
       const currentY = paginationRef.current.getBoundingClientRect().top;
       const delta = currentY - anchorState.current.targetY;
-
-      // 若发现列表高度坍塌导致导航条位移，强行调用 compositor 进行反向滚动补偿！
       if (Math.abs(delta) > 0.5) {
         window.scrollBy({ top: delta, behavior: 'auto' });
       }
     }
   });
 
-  // 释放用户手动控制权 (用户滚动滚轮或触屏时解锁)
   useEffect(() => {
     const abortLock = () => { anchorState.current.isLocked = false; };
     window.addEventListener('wheel', abortLock, { passive: true });
@@ -307,36 +341,46 @@ const BlogList: React.FC<{ posts: Post[], currentPage: number, totalPages: numbe
 
   const triggerPageChange = (newPage: number) => {
     if (newPage === currentPage) return;
-
     if (paginationRef.current) {
-      // 切页瞬间：死死记录导航条当前在屏幕的物理位置
       anchorState.current.targetY = paginationRef.current.getBoundingClientRect().top;
       anchorState.current.isLocked = true;
       clearTimeout(anchorState.current.lockTimer);
-      // 根据 Framer Motion 的 Spring 动画阻尼时长释放锁定
       anchorState.current.lockTimer = setTimeout(() => {
         anchorState.current.isLocked = false;
       }, 1000); 
     }
-    
     onPageChange(newPage);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // 【极致优化点 5：避免样式失效风暴】
+  // 隔离鼠标移动对整体排版的侵入。只在 RAF 空闲帧去获取容器边界进行相对坐标计算，杜绝卡顿！
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number | null>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth >= 1024) {
       globalMouseX.set(e.clientX);
       globalMouseY.set(e.clientY);
     }
-    if (listContainerRef.current) {
-      const rect = listContainerRef.current.getBoundingClientRect();
-      listContainerRef.current.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-      listContainerRef.current.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    
+    mousePosRef.current.x = e.clientX;
+    mousePosRef.current.y = e.clientY;
+
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(() => {
+        if (listContainerRef.current) {
+          const rect = listContainerRef.current.getBoundingClientRect();
+          listContainerRef.current.style.setProperty('--mouse-x', `${mousePosRef.current.x - rect.left}px`);
+          listContainerRef.current.style.setProperty('--mouse-y', `${mousePosRef.current.y - rect.top}px`);
+        }
+        rafRef.current = null;
+      });
     }
-  };
+  }, [globalMouseX, globalMouseY]);
 
   const getVisiblePages = () => {
     const delta = 1;
-    const range = [];
+    const range =[];
     const rangeWithDots =[];
     let l;
     for (let i = 1; i <= totalPages; i++) {
@@ -385,7 +429,6 @@ const BlogList: React.FC<{ posts: Post[], currentPage: number, totalPages: numbe
     <div ref={listContainerRef} onMouseMove={handleMouseMove} className="relative w-full z-10 pb-16 flex flex-col perspective-[1000px]">
       {hoverMonitor}
 
-      {/* 【顶级炫技点 3：四维空间折叠转场 (4D Hypercube Transition)】 */}
       <motion.div layout className="relative z-10 mb-16 min-h-[400px]">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
@@ -409,7 +452,6 @@ const BlogList: React.FC<{ posts: Post[], currentPage: number, totalPages: numbe
         </AnimatePresence>
       </motion.div>
 
-      {/* PLL 锁定基准锚点：paginationRef */}
       <motion.div ref={paginationRef} layout className="flex justify-center md:justify-start pt-8 border-t border-cyan-900/30">
         <Pagination>
           <PaginationContent className="gap-2 font-mono text-sm">

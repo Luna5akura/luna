@@ -13,41 +13,38 @@ const QUOTES =[
 const CYBER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}!~?";
 
 // ==========================================
-// 【顶级炫技点 1：零重绘密码学爆破引擎 (Zero-Render Bruteforce)】
-// 完全摒弃 useState。利用原生 DOM 的 innerHTML 与 performance.now()
-// 实现 144Hz 级别的帧率，且不触发任何 React 生命周期开销。
+// 【极致优化点 1：剔除 HTML Parser (DOM 节点池化)】
+// 原代码在 requestAnimationFrame 中高频调用 innerHTML，强迫浏览器每秒执行 60 次昂贵的 C++ 级 HTML 词法解析与 DOM 树重建。
+// 现改为一次性挂载静态 DOM 结构，通过提取独立的 textContent 引用进行 O(1) 物理内存覆写！
 // ==========================================
 const CryptographicText = ({ text }: { text: string }) => {
-  const containerRef = useRef<HTMLSpanElement>(null);
+  const lockedRef = useRef<HTMLSpanElement>(null);
+  const scrambledRef = useRef<HTMLSpanElement>(null);
+  const cursorRef = useRef<HTMLSpanElement>(null);
   const ptrRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     let rAF: number;
     const startTime = performance.now();
-    // 整个爆破过程耗时 2000 毫秒
     const duration = 2000; 
+    const len = text.length;
 
     const animate = (time: number) => {
-      if (!containerRef.current) return;
-
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
       let lockedStr = "";
       let scrambledStr = "";
       
-      // 阶段 1 & 2：计算当前有多少字符已经被“破解锁定”
-      const lockedCharsCount = Math.floor(progress * text.length);
+      const lockedCharsCount = Math.floor(progress * len);
 
-      for (let i = 0; i < text.length; i++) {
+      for (let i = 0; i < len; i++) {
         if (i < lockedCharsCount) {
           lockedStr += text[i];
         } else {
-          // 阶段 3：未锁定的字符
           if (text[i] === " ") {
             scrambledStr += " ";
           } else {
-            // 前 20% 的时间展示十六进制转储 (Hex Dump)，之后展示乱码
             if (progress < 0.2) {
               scrambledStr += Math.random() > 0.5 ? '0' : '1';
             } else {
@@ -57,23 +54,20 @@ const CryptographicText = ({ text }: { text: string }) => {
         }
       }
 
-      // 【神级优化】使用原生 innerHTML 拼接 DOM 节点，精确分离已解锁与未解锁的样式
-      // 完全脱离 React 的虚拟 DOM 对比机制，将字符串操作推给 V8 引擎底层
-      const htmlOutput = `
-        <span class="text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">${lockedStr}</span>
-        <span class="text-slate-600">${scrambledStr}</span>
-        <span class="inline-block w-[0.6em] h-[1em] bg-cyan-400 ml-1 translate-y-[0.15em] ${progress === 1 ? 'animate-pulse' : ''}"></span>
-      `;
-      
-      containerRef.current.innerHTML = htmlOutput;
+      // 直接跨过 React 和 HTML 解释器，触达 V8 底层修改节点文本
+      if (lockedRef.current) lockedRef.current.textContent = lockedStr;
+      if (scrambledRef.current) scrambledRef.current.textContent = scrambledStr;
 
-      // 动态更新旁边的内存地址指针，增强极客感
+      if (progress === 1 && cursorRef.current) {
+        cursorRef.current.classList.add('animate-pulse');
+      }
+
       if (ptrRef.current && progress < 1) {
          if (Math.random() > 0.7) {
-            ptrRef.current.innerText = `0x${Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
+            ptrRef.current.textContent = `0x${Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0')}`;
          }
       } else if (ptrRef.current && progress === 1) {
-         ptrRef.current.innerText = "0xALLOC";
+         ptrRef.current.textContent = "0xALLOC";
          ptrRef.current.className = "text-cyan-500 font-bold";
       }
 
@@ -88,31 +82,25 @@ const CryptographicText = ({ text }: { text: string }) => {
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
-      {/* 系统提示符与内存指针 */}
       <div className="flex items-center gap-2 text-[10px] md:text-xs font-mono text-cyan-800 shrink-0 select-none">
         <span className="text-red-500/80">root@LUNA:~#</span>
         <span className="border border-cyan-900/50 px-1 py-0.5" ref={ptrRef}>0x0000</span>
         <span className="text-cyan-600">&gt;</span>
       </div>
       
-      {/* 零重绘挂载点，必须使用 whitespace-pre-wrap 保证空格不被吞掉 */}
-      <span 
-        ref={containerRef} 
-        className="font-mono text-sm md:text-xl tracking-[0.15em] uppercase whitespace-pre-wrap break-all" 
-      />
+      <span className="font-mono text-sm md:text-xl tracking-[0.15em] uppercase whitespace-pre-wrap break-all flex items-center">
+        <span ref={lockedRef} className="text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span>
+        <span ref={scrambledRef} className="text-slate-600"></span>
+        <span ref={cursorRef} className="inline-block w-[0.6em] h-[1em] bg-cyan-400 ml-1 translate-y-[0.15em]"></span>
+      </span>
     </div>
   );
 };
 
-// ==========================================
-// 主组件：RotatingQuotes
-// ==========================================
 export const RotatingQuotes: React.FC = () => {
   const [index, setIndex] = useState(0);
 
-  // 【顶级炫技点 2：真实节点拓扑与时区侦测】
   const systemInfo = useMemo(() => {
-    // 强制使用 Tokyo 时区生成高逼格的系统时间戳
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: 'Asia/Tokyo',
       hour12: false,
@@ -125,7 +113,7 @@ export const RotatingQuotes: React.FC = () => {
       loc: "AP-NORTHEAST-1 [TYO]",
       time: formatter.format(new Date())
     };
-  }, [index]); // 每次轮换引言时更新一次快照
+  }, [index]); 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -136,7 +124,7 @@ export const RotatingQuotes: React.FC = () => {
         }
         return next;
       });
-    }, 6000); // 留出 2秒爆破，4秒阅读的时间
+    }, 6000); 
 
     return () => clearInterval(interval);
   },[]);
@@ -145,8 +133,6 @@ export const RotatingQuotes: React.FC = () => {
     <div className="relative w-full max-w-3xl mx-auto flex flex-col items-start perspective-[1000px] mt-8">
       
       <style>{`
-        /* 【顶级炫技点 3：CSS RGB色差物理断电分离】 */
-        /* 仅在退出动画时，通过 framer-motion 触发这个 class 的呈现 */
         .crt-shutdown {
           animation: crt-glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
@@ -160,7 +146,6 @@ export const RotatingQuotes: React.FC = () => {
         }
       `}</style>
 
-      {/* 极简系统 HUD 面板头部 */}
       <div className="w-full flex justify-between items-end border-b border-cyan-900/40 pb-2 mb-4 text-[9px] font-mono text-cyan-700/60 uppercase tracking-widest select-none">
         <div className="flex items-center gap-2">
            <span className="w-1.5 h-1.5 bg-cyan-500 animate-pulse" />
@@ -175,7 +160,6 @@ export const RotatingQuotes: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
-            // 进入时：从极度模糊和拉伸中恢复，模拟硬件启动
             initial={{ 
               opacity: 0, 
               scaleY: 0.1, 
@@ -188,17 +172,16 @@ export const RotatingQuotes: React.FC = () => {
               scaleX: 1, 
               filter: 'blur(0px) brightness(1)',
             }}
-            // 退出时：调用纯 CSS 的色差撕裂类名，配合 Framer 的 Y 轴极致压缩
             exit={{ 
               opacity: 0, 
               scaleY: 0.02, 
               scaleX: 2, 
               filter: 'blur(4px) brightness(3)',
-              className: "crt-shutdown" // 注入 CSS 物理撕裂动画
+              className: "crt-shutdown" 
             }}
             transition={{ 
               duration: 0.4, 
-              ease: [0.16, 1, 0.3, 1] // Apple 级平滑阻尼贝塞尔曲线
+              ease:[0.16, 1, 0.3, 1] 
             }}
             className="w-full transform-gpu will-change-transform flex items-center"
           >
@@ -207,7 +190,6 @@ export const RotatingQuotes: React.FC = () => {
         </AnimatePresence>
       </div>
       
-      {/* 底部装饰线与刻度 */}
       <div className="w-full h-1 border-l border-r border-cyan-900/40 mt-2 flex justify-between px-1">
         {[...Array(20)].map((_, i) => (
           <div key={i} className="w-[1px] h-full bg-cyan-900/20" />
