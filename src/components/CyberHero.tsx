@@ -3,23 +3,24 @@ import React, { useEffect, useRef, useMemo } from 'react';
 import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 
 // ==========================================
-// 【极致优化点 1：预计算色彩空间字典 (Color Dictionary Cache)】
+// 【极致下沉：深海级色彩空间 (Stealth Tech Palette)】
+// 彻底弃用任何白色和明亮的青色，转而使用极深的幽蓝色系
 // ==========================================
 const FRONT_COLORS = new Array(101);
 const BACK_COLORS = new Array(101);
 for (let i = 0; i <= 100; i++) {
   const d = i / 100;
-  FRONT_COLORS[i] = `rgba(34, 211, 238, ${d})`; // cyan-400
-  BACK_COLORS[i] = `rgba(100, 116, 139, ${d * 0.6})`; // slate-500
+  // 使用 Deep Cyan (青色偏深) 和 Slate (暗灰)，最大透明度控制在 0.4
+  FRONT_COLORS[i] = `rgba(14, 116, 144, ${d * 0.9})`; // 深青色 #0e7490
+  BACK_COLORS[i] = `rgba(30, 41, 59, ${d * 0.9})`; // 暗灰 #1e293b
 }
 
-const FRONT_FONT = 'bold 12px "JetBrains Mono", monospace';
-const BACK_FONT = '10px "JetBrains Mono", monospace';
-const CHAR_SET =['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '1', '0', 'X', 'Z']; // 加入少量异常字符
+const FRONT_FONT = 'bold 10px "JetBrains Mono", monospace';
+const BACK_FONT = '9px "JetBrains Mono", monospace';
+const CHAR_SET =['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '1', '0', 'X', 'Z'];
 
 // ==========================================
-// 【高超技术 1：Direct-DOM 文本解密引擎】
-// 绕过 React 渲染周期，直接操作真实 DOM，实现 60fps 零开销文字闪烁
+// 【Direct-DOM 文本解密引擎】保持极低开销
 // ==========================================
 const useCyberGlitch = (text: string, delay: number = 0) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,7 +42,7 @@ const useCyberGlitch = (text: string, delay: number = 0) => {
           .join('');
         
         if (iterations >= text.length) clearInterval(interval);
-        iterations += 1 / 3; // 控制解密速度
+        iterations += 1 / 3;
       }, 30);
     }, delay);
 
@@ -49,10 +50,9 @@ const useCyberGlitch = (text: string, delay: number = 0) => {
       clearTimeout(timeout);
       clearInterval(interval);
     };
-  }, [text, delay]);
+  },[text, delay]);
   return ref;
 };
-
 
 // ==========================================
 // 【底层 3D 图形学数学引擎 & 视觉后处理】
@@ -71,10 +71,10 @@ const DataSphere: React.FC = () => {
     canvas.width = width;
     canvas.height = height;
 
-    const POINTS_COUNT = 900;
-    let sphereRadius = Math.min(width, height) * 0.35;
+    // 粒子数稍微降低，让整体更干净
+    const POINTS_COUNT = 500;
+    let sphereRadius = Math.min(width, height) * 0.28;
     
-    // SOA (Structure of Arrays) 内存结构
     const x = new Float32Array(POINTS_COUNT);
     const y = new Float32Array(POINTS_COUNT);
     const z = new Float32Array(POINTS_COUNT);
@@ -102,16 +102,15 @@ const DataSphere: React.FC = () => {
     let angleY = 0;
     let animationId: number;
     
-    let targetVelocityX = 0.002;
-    let targetVelocityY = 0.002;
+    let targetVelocityX = 0.001;
+    let targetVelocityY = 0.001;
     
-    // 【高超技术 2：记录屏幕坐标系下的真实鼠标位置】
     let mouseX = -1000;
     let mouseY = -1000;
 
     const onMouseMove = (e: MouseEvent) => {
-      targetVelocityY = ((e.clientX / width) - 0.5) * 0.06;
-      targetVelocityX = ((e.clientY / height) - 0.5) * 0.06;
+      targetVelocityY = ((e.clientX / width) - 0.5) * 0.015;
+      targetVelocityX = ((e.clientY / height) - 0.5) * 0.015;
       mouseX = e.clientX;
       mouseY = e.clientY;
     };
@@ -122,19 +121,17 @@ const DataSphere: React.FC = () => {
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      sphereRadius = Math.min(width, height) * 0.35;
+      sphereRadius = Math.min(width, height) * 0.28;
     };
     window.addEventListener('resize', resize, { passive: true });
 
     const animate = () => {
-      // 【高超技术 3：时序动态模糊 (Temporal Motion Blur)】
-      // 放弃 clearRect，使用带有 Alpha 的纯黑底色覆盖，保留上一帧的残影
+      // 完全放弃 Screen (发光) 混合模式，使用基础叠加，消除所有刺眼的高光
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.7)'; 
+      
+      // 使用极深的背景底色来清除上一帧，产生微弱的残影
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.95)'; // Tailwind slate-950
       ctx.fillRect(0, 0, width, height);
-
-      // 切换为屏幕混合模式，让文字发光叠加
-      ctx.globalCompositeOperation = 'screen';
 
       angleX += targetVelocityX;
       angleY += targetVelocityY;
@@ -144,7 +141,6 @@ const DataSphere: React.FC = () => {
       const cosY = Math.cos(angleY);
       const sinY = Math.sin(angleY);
 
-      // 1. 矩阵变换
       for (let i = 0; i < POINTS_COUNT; i++) {
         const y1 = y[i] * cosX - z[i] * sinX;
         const z1 = y[i] * sinX + z[i] * cosX;
@@ -157,7 +153,6 @@ const DataSphere: React.FC = () => {
         indices[i] = i; 
       }
 
-      // 2. 画家算法：V8 快排
       indices.sort((a, b) => projectedZ[a] - projectedZ[b]);
 
       ctx.textAlign = 'center';
@@ -169,8 +164,10 @@ const DataSphere: React.FC = () => {
 
       let currentFont = '';
       let currentColor = '';
+      
+      // 用于绘制连线的激活节点数组
+      const activeNodes: {x: number, y: number}[] =[];
 
-      // 3. 渲染管线
       for (let i = 0; i < POINTS_COUNT; i++) {
         const idx = indices[i];
         const pz = projectedZ[idx];
@@ -182,37 +179,35 @@ const DataSphere: React.FC = () => {
         let screenX = cx + projectedX[idx] * sphereRadius * scale;
         let screenY = cy + projectedY[idx] * sphereRadius * scale;
 
-        // 【高超技术 4：Screen-Space Repulsion 屏幕空间引力/斥力场】
-        // 当鼠标靠近某个字符时，将其向外推开，并触发过载发光
         const dx = screenX - mouseX;
         const dy = screenY - mouseY;
         const distSq = dx * dx + dy * dy;
-        const repulseRadius = 150;
+        const repulseRadius = 120;
         let isOverloaded = false;
 
+        // 鼠标排斥逻辑
         if (distSq < repulseRadius * repulseRadius) {
           const dist = Math.sqrt(distSq);
           const force = (repulseRadius - dist) / repulseRadius;
-          screenX += (dx / dist) * force * 40; // 斥力推演
-          screenY += (dy / dist) * force * 40;
+          screenX += (dx / dist) * force * 10; 
+          screenY += (dy / dist) * force * 10;
           isOverloaded = true;
-          // 极小概率字符发生物理变异
-          if (Math.random() < 0.05) chars[idx] = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
+          activeNodes.push({x: screenX, y: screenY}); // 记录受影响的节点
+          if (Math.random() < 0.02) chars[idx] = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
         }
 
         const isFront = depthNormalized > 0.85;
         let targetFont = isFront ? FRONT_FONT : BACK_FONT;
-        if (isOverloaded) targetFont = 'bold 16px "JetBrains Mono", monospace'; // 局部放大
 
         if (currentFont !== targetFont) {
           ctx.font = targetFont;
           currentFont = targetFont;
         }
 
-        // 颜色解析
         let targetColor = '';
         if (isOverloaded) {
-          targetColor = '#ffffff'; // 纯白高光过载
+          // 过载时不再用白色，而是稍微实心一点的深水绿 (Teal)
+          targetColor = 'rgba(13, 148, 136, 0.4)'; 
         } else {
           const colorIdx = Math.min(100, Math.max(0, Math.floor(depthNormalized * 100)));
           targetColor = isFront ? FRONT_COLORS[colorIdx] : BACK_COLORS[colorIdx];
@@ -226,17 +221,45 @@ const DataSphere: React.FC = () => {
         ctx.fillText(chars[idx], screenX, screenY);
       }
 
-      // 【高超技术 5：Hardware-Accelerated Glitch (硬件级像素撕裂)】
-      // 随机对 Canvas 的某几行像素进行直接平移，模拟信号干扰
-      if (Math.random() < 0.015) {
+      // 【新增特效 1：微弱的神经网络连线 (Plexus)】
+      // 将被鼠标干扰的节点用极其微弱的细线连接起来，显得极其高科技
+      if (activeNodes.length > 1) {
+        ctx.beginPath();
+        for (let i = 0; i < activeNodes.length; i++) {
+          for (let j = i + 1; j < activeNodes.length; j++) {
+            const dx = activeNodes[i].x - activeNodes[j].x;
+            const dy = activeNodes[i].y - activeNodes[j].y;
+            if (dx * dx + dy * dy < 10000) { // 约 100px 距离内相连
+              ctx.moveTo(activeNodes[i].x, activeNodes[i].y);
+              ctx.lineTo(activeNodes[j].x, activeNodes[j].y);
+            }
+          }
+        }
+        ctx.strokeStyle = 'rgba(13, 148, 136, 0.25)'; // 极暗的水绿色
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // 【新增特效 2：几何星轨环 (Orbital Rings)】
+      // 在球体外围增加两圈缓缓旋转的断断续续的细线，增加工业感
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, sphereRadius * 1.15, angleX, angleX + Math.PI * 0.6);
+      ctx.strokeStyle = 'rgba(14, 116, 144, 0.35)'; // 极弱的深青
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, sphereRadius * 1.25, -angleY, -angleY + Math.PI * 0.4);
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.25)'; // 极弱的暗灰
+      ctx.stroke();
+
+      // 隐秘的干扰线
+      if (Math.random() < 0.005) {
         const sliceY = Math.random() * height;
-        const sliceH = Math.random() * 30 + 5; // 撕裂高度
-        const shiftX = (Math.random() - 0.5) * 50; // 水平偏移
-        // 利用 Canvas 自身的 drawImage 实现极低开销的像素移动
+        const sliceH = Math.random() * 20 + 5; 
+        const shiftX = (Math.random() - 0.5) * 15; 
         ctx.drawImage(canvas, 0, sliceY, width, sliceH, shiftX, sliceY, width, sliceH);
-        
-        // 色差模拟 (Chromatic Aberration fake)
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+        ctx.fillStyle = 'rgba(14, 116, 144, 0.33)'; // 去除红色，改用幽暗蓝
         ctx.fillRect(shiftX, sliceY, width, sliceH);
       }
 
@@ -252,12 +275,12 @@ const DataSphere: React.FC = () => {
     };
   },[]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10" />;
+  // 加上一点模糊，让它更像背景景深
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10 opacity-75 blur-[0.8px]" />;
 };
 
-
 // ==========================================
-// 【十六进制内存阵列：极致去 DOM 化】
+// 【十六进制内存阵列】
 // ==========================================
 const HexMemoryGrid: React.FC = () => {
   const mouseX = useMotionValue(-1000);
@@ -278,7 +301,7 @@ const HexMemoryGrid: React.FC = () => {
   const maskImage = useMotionTemplate`radial-gradient(400px circle at ${smoothX}px ${smoothY}px, black 0%, transparent 100%)`;
 
   const hexString = useMemo(() => {
-    const count = 1200;
+    const count = 1500;
     let str = '';
     for (let i = 0; i < count; i += 4) {
       str += Math.floor(Math.random() * 0xFFFFFFFF)
@@ -291,12 +314,16 @@ const HexMemoryGrid: React.FC = () => {
   },[]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-30 mix-blend-screen">
+    // 移除了 mix-blend-screen，使用基础透明度
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-15">
       <motion.div 
         className="absolute inset-0 flex items-start justify-center p-8"
         style={{ WebkitMaskImage: maskImage, maskImage }}
+        // 【新增细节】：让背景矩阵极其缓慢地向上漂移，像数据瀑布
+        animate={{ translateY: ['0%', '-5%'] }}
+        transition={{ duration: 20, ease: "linear", repeat: Infinity }}
       >
-        <div className="text-[10px] font-mono text-cyan-800/50 select-none leading-[2.5] w-full break-words text-center">
+        <div className="text-[10px] font-mono text-[#0e7490] opacity-40 select-none leading-[2.5] w-full break-words text-center">
           {hexString}
         </div>
       </motion.div>
@@ -304,29 +331,39 @@ const HexMemoryGrid: React.FC = () => {
   );
 };
 
-
 // ==========================================
 // 【终极组合：主导出组件】
 // ==========================================
-
 export const CyberHero: React.FC = () => {
   const metricRef = useCyberGlitch('[ SYSTEM METRICS ONLINE ]', 1200);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#050505] font-mono">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808010_1px,transparent_1px),linear-gradient(to_bottom,#80808010_1px,transparent_1px)] bg-[size:60px_60px] opacity-20 mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,#000_20%,transparent_100%)]" />
+    // 底色改为了更极致纯粹的黑蓝 #020617 (slate-950)
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#020617] font-mono">
+      
+      {/* 坐标系网格也变得更暗淡，彻底退居幕后 */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:60px_60px] opacity-10 mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,#000_20%,transparent_100%)]" />
+      
       <HexMemoryGrid />
       <DataSphere />
       
+      {/* 幽灵扫描线：完全移除了原本发白的切割感，改成深青色宽频雷达扫过 */}
       <motion.div 
-        className="absolute top-0 left-0 w-full h-[2px] bg-cyan-400/50 shadow-[0_0_20px_2px_rgba(34,211,238,0.5)] z-20"
-        animate={{ translateY: ['0vh', '100vh'] }}
-        transition={{ duration: 6, ease: "linear", repeat: Infinity }}
+        className="absolute top-0 left-0 w-full h-[2px] bg-[#0e7490] opacity-20 shadow-[0_0_20px_2px_rgba(14,116,144,0.15)] z-20"
+        animate={{ translateY:['0vh', '100vh'] }}
+        transition={{ duration: 12, ease: "linear", repeat: Infinity }}
       />
-      <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.6)_100%)]" />
-      <div className="absolute inset-0 z-30 pointer-events-none opacity-[0.03] bg-[repeating-linear-gradient(0deg,transparent,transparent_1px,#fff_1px,#fff_2px)]" />
+      
+      {/* 超级暗角：进一步压暗四周边缘 */}
+      <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(2,6,23,0.95)_100%)]" />
+      
+      {/* 【神来之笔：负向扫描线 CRT Lines】
+          抛弃白色的线，改用全屏覆盖的纯黑色半透明扫描线。它不会增加任何亮度，反而会切碎下方的光线，产生极佳的复古显示器质感。
+       */}
+      <div className="absolute inset-0 z-30 pointer-events-none opacity-40 bg-[repeating-linear-gradient(0deg,transparent,transparent_1px,#000000_1px,#000000_2px)]" />
 
-      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent z-40" />
+      {/* 底部渐变遮罩 */}
+      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[#020617] via-[#020617]/90 to-transparent z-40" />
     </div>
   );
 };
