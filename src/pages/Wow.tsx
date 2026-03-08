@@ -519,7 +519,7 @@ const KineticBanner = () => {
 // ==========================================
 // 主页面组合
 // ==========================================
-export default function Skill() {
+export default function Wow() {
   return (
     <div className="min-h-screen w-full bg-[#02050A] text-slate-300 relative overflow-x-clip selection:bg-cyan-500/50 cursor-none">
       

@@ -321,7 +321,7 @@ const QuantumDock = ({ navItems }: { navItems: string[] }) => {
 
 const Navbar: React.FC = () => {
   const location = useLocation();
-  const navItems =['World', 'Warp', 'About', 'Skill'];
+  const navItems =['World', 'Warp', 'Wit', 'Wow'];
   
   const scrambledPath = location.pathname === '/' ? '/ROOT' : location.pathname.toUpperCase();
   const { battery, net } = useHardwareStatus();

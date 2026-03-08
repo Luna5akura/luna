@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useAnimationFrame, useSpring, useTransform } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';import { motion, useMotionValue, useAnimationFrame, useSpring, useTransform } from 'framer-motion';
 import { Fingerprint, Activity, MapPin, BrainCircuit, TerminalSquare } from 'lucide-react';
 
 // ==========================================
@@ -207,7 +206,7 @@ const ClassifiedText = ({ text }: { text: string }) => {
 // ==========================================
 // 主组件：Subject Dossier
 // ==========================================
-const About: React.FC = () => {
+const Wit: React.FC = () => {
   // 3D 悬浮物理卡片控制
   const rotateX = useSpring(0, { damping: 20, stiffness: 100 });
   const rotateY = useSpring(0, { damping: 20, stiffness: 100 });
@@ -335,4 +334,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default Wit;
