@@ -1,95 +1,64 @@
 // src/pages/Spark/index.tsx
 
 import React, { useState, useEffect } from 'react';
-import { BACKGROUNDS, SUBJECTS, OVERLAYS, HUD_LAYERS } from './registry';
-import { Palette } from './types';
-import { randomInt, shuffle } from './utils';
+import { PVKeyframes } from './styles';
+import { SCENES } from './scenes';
 
-const PALETTES: Palette[] =[
-  { bg: '#050505', fg1: '#ffffff', fg2: '#ff003c', accent: '#00e5ff' }, // 赛博朋克
-  { bg: '#e0e0e0', fg1: '#111111', fg2: '#ff4500', accent: '#0000ff' }, // 瑞士国际主义/粗野主义
-  { bg: '#1a0b2e', fg1: '#ff007f', fg2: '#7f00ff', accent: '#00ffff' }, // 蒸汽波/合成器
-  { bg: '#d4ed31', fg1: '#000000', fg2: '#ffffff', accent: '#ff00ff' }, // 酸性设计 (Acid Graphics)
-  { bg: '#000000', fg1: '#ffffff', fg2: '#444444', accent: '#ffffff' }, // 极简黑白
-  { bg: '#0a192f', fg1: '#64ffda', fg2: '#ccd6f6', accent: '#8892b0' }, // 极客终端
+const PALETTES =[
+  { bg: '#050505', fg1: '#FFFFFF', fg2: '#222222', accent: '#FF003C' }, // 黑红
+  { bg: '#EFEFEF', fg1: '#0F0F0F', fg2: '#CCCCCC', accent: '#0044FF' }, // 灰蓝
+  { bg: '#0D1117', fg1: '#E94560', fg2: '#161B22', accent: '#00E5FF' }, // 极客暗黑
+  { bg: '#FACC15', fg1: '#000000', fg2: '#EAB308', accent: '#FFFFFF' }, // 警戒黄
 ];
 
 const SparkEngine = () => {
-  const [combo, setCombo] = useState({
-    bg: 0,
-    subs: [] as number[], // 现在允许叠加多个主体
-    ov: 0,
-    hud: 0,
-    color: 0
-  });
-  const[triggerKey, setTriggerKey] = useState(0);
+  const [paletteIndex, setPaletteIndex] = useState(0);
+  const [phase, setPhase] = useState<'ENTER' | 'EXIT'>('ENTER');
+  const [triggerKey, setTriggerKey] = useState(0);
 
-  const randomize = () => {
-    // 随机挑选 1 到 3 个不重复的主体，制造丰富的层次
-    const subjectCount = randomInt(1, 3); 
-    const availableSubs = Array.from({ length: SUBJECTS.length }, (_, i) => i);
-    const selectedSubs = shuffle(availableSubs).slice(0, subjectCount);
+  // 核心时间轴自动化循环
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
 
-    setCombo({
-      bg: Math.floor(Math.random() * BACKGROUNDS.length),
-      subs: selectedSubs,
-      ov: Math.floor(Math.random() * OVERLAYS.length),
-      hud: Math.floor(Math.random() * HUD_LAYERS.length),
-      color: Math.floor(Math.random() * PALETTES.length),
-    });
-    setTriggerKey(prev => prev + 1);
-  };
+    if (phase === 'ENTER') {
+      // 动画入场耗时约 0.8s + 0.3s字符间距 = 1.1s。
+      // 加上“停留半秒”，因此在 1600ms 后触发退场 (EXIT)
+      timer = setTimeout(() => {
+        setPhase('EXIT');
+      }, 1600);
+    } else {
+      // 退场动画耗时约 0.6s + 0.3s字符间距 = 0.9s。
+      // 退场结束后，重置状态，换下一组配色，触发下一次循环！
+      timer = setTimeout(() => {
+        setPaletteIndex(Math.floor(Math.random() * PALETTES.length));
+        setTriggerKey(prev => prev + 1); // 重新生成全新的词组
+        setPhase('ENTER');
+      }, 1000);
+    }
 
-  useEffect(() => { randomize(); },[]);
+    return () => clearTimeout(timer);
+  }, [phase, triggerKey]);
 
-  if (combo.subs.length === 0) return null;
-
-  const currentPalette = PALETTES[combo.color];
-  const BgComponent = BACKGROUNDS[combo.bg];
-  const OvComponent = OVERLAYS[combo.ov];
-  const HudComponent = HUD_LAYERS[combo.hud];
+  const currentPalette = PALETTES[paletteIndex];
+  const CurrentScene = SCENES[0];
 
   return (
-    <div 
-      className="relative w-full h-[calc(100vh-80px)] overflow-hidden transition-colors duration-700" 
-      style={{ backgroundColor: currentPalette.bg, color: currentPalette.fg1 }}
-    >
-      {/* 0. 背景层 */}
-      <div className="absolute inset-0 z-0">
-        <BgComponent palette={currentPalette} triggerKey={triggerKey} />
-      </div>
+    <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden font-sans bg-black selection:bg-white selection:text-black">
+      <PVKeyframes />
       
-      {/* 1. 主体混合层 (支持多个主体叠加) */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        {combo.subs.map((subIndex, idx) => {
-          const SubComponent = SUBJECTS[subIndex];
-          return (
-            <div key={`${triggerKey}-${idx}`} className="absolute inset-0 flex items-center justify-center mix-blend-difference">
-               <SubComponent palette={currentPalette} triggerKey={triggerKey} />
-            </div>
-          );
-        })}
+      {/* triggerKey 只在完整循环结束后更新，因此可以在不刷新 DOM 的情况下，触发同一组文字的 ENTER 和 EXIT */}
+      <div key={triggerKey} className="w-full h-full absolute inset-0">
+        <CurrentScene palette={currentPalette} phase={phase} />
+        
+        {/* 全局噪点 */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.25] mix-blend-overlay z-[99]"
+             style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
       </div>
 
-      {/* 2. HUD/排版UI层 (让画面看起来有设计感) */}
-      <div className="absolute inset-0 z-30 pointer-events-none">
-        <HudComponent palette={currentPalette} triggerKey={triggerKey} />
-      </div>
-      
-      {/* 3. 后期特效滤镜层 (噪点、扫描线、色差等) */}
-      <div className="absolute inset-0 z-40 pointer-events-none">
-        <OvComponent palette={currentPalette} triggerKey={triggerKey} />
-      </div>
-
-      {/* 交互控制 */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group">
-        <button 
-          onClick={randomize}
-          className="px-8 py-3 bg-white text-black font-black tracking-widest uppercase 
-                     hover:bg-black hover:text-white border-2 border-white
-                     transition-all duration-300 active:scale-90"
-        >[ Generate / {triggerKey} ]
-        </button>
+      {/* 底部 HUD 指示器 */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-4 opacity-50 font-mono text-[10px] uppercase text-white mix-blend-difference pointer-events-none">
+        <div className={`w-2 h-2 rounded-full ${phase === 'ENTER' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+        <span>AUTO SEQUENCE // {phase} MODE // CUT: {triggerKey}</span>
       </div>
     </div>
   );
