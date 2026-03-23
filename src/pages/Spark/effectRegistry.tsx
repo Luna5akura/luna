@@ -13,6 +13,143 @@ export interface EffectDef {
 }
 
 
+const cyberPopKeyframes = `
+  @keyframes foldLeft { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(30deg); } }
+  @keyframes foldRight { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(-30deg); } }
+  @keyframes pop3DExtrude { 
+    0% { transform: scale(0) translateZ(-500px); opacity: 0; } 
+    50% { transform: scale(1.2) translateZ(100px); opacity: 1; } 
+    100% { transform: scale(1) translateZ(0); opacity: 1; } 
+  }
+  @keyframes pan3DCamera {
+    0% { transform: translate(-10vw, 10vh) rotateX(10deg) rotateY(15deg); }
+    100% { transform: translate(10vw, -10vh) rotateX(-5deg) rotateY(-10deg); }
+  }
+  @keyframes flashPixelStar {
+    0%, 10% { opacity: 0; transform: scale(0); }
+    15% { opacity: 1; transform: scale(1.5) rotate(45deg); filter: invert(1); }
+    20%, 100% { opacity: 0; transform: scale(0); }
+  }
+`;
+
+// ★ 黑科技：动态生成纯 CSS 3D 等距投影阴影
+// 通过堆叠数十层 text-shadow，制造出极其真实的 3D 挤压厚度！
+const generateIsometricShadow = (depth: number, extrudeColor: string, outlineColor: string) => {
+  let shadow = ``;
+  // 第 1 层：黑色描边
+  shadow += `-2px -2px 0 ${outlineColor}, 2px -2px 0 ${outlineColor}, -2px 2px 0 ${outlineColor}, 2px 2px 0 ${outlineColor}, `;
+  // 中间层：挤压厚度
+  for (let i = 1; i <= depth; i++) {
+    shadow += `${i * 2}px ${i * 2}px 0 ${extrudeColor}, `;
+  }
+  // 最底层：挤压体的黑色描边与投影
+  shadow += `${depth * 2 + 2}px ${depth * 2}px 0 ${outlineColor}, ${depth * 2}px ${depth * 2 + 2}px 0 ${outlineColor}, ${depth * 2 + 4}px ${depth * 2 + 4}px 0px rgba(0,0,0,0.5)`;
+  return shadow;
+};
+
+// ==========================================
+// 1. ISOMETRIC_3D_BLOCKS (等距 3D 积木排版 - 对应 0:11)
+// ==========================================
+export const Isometric3DBlocks = {
+  id: 'ISOMETRIC_3D', name: 'CYBER (等距 3D 积木)',
+  keyframes: cyberPopKeyframes,
+  maxLines: 1, hideSubtext: true,
+  getCharEnterStyle: () => ({}),
+  renderCustom: (wordObj: any, palette: any, isExiting: boolean) => {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ perspective: '1000px', ...isExiting ? wordObj.characters[0].exitStyle : {} }}>
+        
+        {/* 摄像机全局缓慢运镜，展现 3D 纵深感 */}
+        <div className="relative flex flex-col items-center justify-center gap-2"
+             style={{ transformStyle: 'preserve-3d', animation: 'pan3DCamera 4s ease-in-out infinite alternate' }}>
+          
+          {wordObj.characters.map((charData: any, i: number) => {
+            // 每行字的倾斜度和位移不同，产生俄罗斯方块的错落感
+            const rotate = i % 2 === 0 ? '-5deg' : '5deg';
+            const offset = i % 2 === 0 ? '-4vw' : '4vw';
+            
+            return (
+              <div key={i} className="font-black uppercase tracking-tighter"
+                   style={{
+                     fontSize: 'min(18vw, 22vh)', 
+                     color: palette.fg1, // 表面颜色
+                     // ★ 调用黑科技，生成 15 层的 3D 阴影！白色侧边，黑色描边
+                     textShadow: generateIsometricShadow(15, palette.fg2, palette.accent),
+                     transform: `rotate(${rotate}) translateX(${offset})`,
+                     animation: `pop3DExtrude 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${i * 0.1}s both`
+                   }}>
+                {charData.char}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+};
+
+// ==========================================
+// 2. FOLDED_CYLINDER_TEXT (折叠空间镜像排版 - 对应 0:04)
+// ==========================================
+export const FoldedCylinderText = {
+  id: 'FOLDED_TEXT', name: 'CYBER (空间折叠排版)',
+  keyframes: cyberPopKeyframes, maxLines: 1, hideSubtext: true, getCharEnterStyle: () => ({}),
+  renderCustom: (wordObj: any, palette: any, isExiting: boolean) => {
+    const text = wordObj.characters.map((c: any) => c.char).join('');
+    return (
+      <div className="absolute inset-0 flex bg-transparent" style={{ perspective: '800px', ...isExiting ? wordObj.characters[0].exitStyle : {} }}>
+        {/* 左半屏幕文本：向内旋转 30 度，并裁剪只显示左半边 */}
+        <div className="w-1/2 h-full flex items-center justify-center relative overflow-hidden"
+             style={{ transformOrigin: 'right center', animation: 'foldLeft 2s ease-out infinite alternate' }}>
+           <div className="absolute left-[50vw] -translate-x-1/2 font-black whitespace-nowrap drop-shadow-[5px_5px_0_#000]"
+                style={{ fontSize: 'min(20vw, 30vh)', color: palette.fg1, clipPath: 'inset(0 50% 0 0)' }}>
+             {text}
+           </div>
+        </div>
+        {/* 右半屏幕文本：向内旋转 -30 度，并裁剪只显示右半边 */}
+        <div className="w-1/2 h-full flex items-center justify-center relative overflow-hidden"
+             style={{ transformOrigin: 'left center', animation: 'foldRight 2s ease-out infinite alternate' }}>
+           <div className="absolute right-[50vw] translate-x-1/2 font-black whitespace-nowrap drop-shadow-[5px_5px_0_#000]"
+                style={{ fontSize: 'min(20vw, 30vh)', color: palette.fg2, clipPath: 'inset(0 0 0 50%)' }}>
+             {text}
+           </div>
+        </div>
+      </div>
+    );
+  }
+};
+
+// ==========================================
+// 3. PIXEL_STAR_FLASH (像素星芒闪烁排版 - 对应 0:09)
+// ==========================================
+export const PixelStarFlash = {
+  id: 'PIXEL_STAR', name: 'CYBER (像素星芒闪烁)',
+  keyframes: cyberPopKeyframes, maxLines: 1, hideSubtext: true, getCharEnterStyle: () => ({}),
+  renderCustom: (wordObj: any, palette: any, isExiting: boolean) => {
+    const chars = wordObj.characters;
+    return (
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={isExiting ? wordObj.characters[0].exitStyle : {}}>
+        <div className="relative flex flex-wrap justify-center gap-[4vw] px-[10vw]">
+          {chars.map((charData: any, i: number) => (
+            <div key={i} className="relative">
+              {/* 突然闪烁反色的巨型像素四角星 (SVG) */}
+              <svg viewBox="0 0 100 100" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[15vw] h-[15vw] z-20 mix-blend-difference"
+                   style={{ fill: palette.fg1, animation: `flashPixelStar 2s steps(2) ${i * 0.3}s infinite` }}>
+                 <polygon points="50,0 60,40 100,50 60,60 50,100 40,60 0,50 40,40" />
+              </svg>
+              
+              <div className="font-black mix-blend-difference relative z-10"
+                   style={{ fontSize: 'min(15vw, 20vh)', color: palette.fg1, WebkitTextStroke: `4px ${palette.accent}` }}>
+                {charData.char}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+};
+
 
 const webcoreKeyframes = `
   @keyframes drop3DTV {
@@ -784,6 +921,10 @@ export const EFFECT_REGISTRY: EffectDef[] =[
   GenkoDrop,
   LiquidRipple,
   RetroTV3D,
+
+  Isometric3DBlocks,
+  FoldedCylinderText,
+  PixelStarFlash,
 ];
 
 export const EFFECTS = EFFECT_REGISTRY.map(e => e.id);
@@ -794,5 +935,6 @@ export const EffectStyles = () => (
     ${kawaiiKeyframes}
     ${y2kKeyframes}
     ${webcoreKeyframes}
+    ${cyberPopKeyframes}
   `}</style>
 );

@@ -341,6 +341,47 @@ const BgConcentricTunnel = ({ palette }: BGProps) => (
     ))}
   </div>
 );
+export const BgCylinderRoom = ({ palette }: any) => (
+  <div className="absolute inset-0 bg-black overflow-hidden flex" style={{ perspective: '800px' }}>
+    {/* 左侧向内折叠 */}
+    <div className="w-1/2 h-full border-r-[10px] border-black flex items-center justify-center relative overflow-hidden"
+         style={{ backgroundColor: palette.bg, transformOrigin: 'right center', animation: 'foldLeft 2s ease-out infinite alternate' }}>
+       {/* 内部的放射性纹理 */}
+       <div className="absolute w-[200%] h-[200%] opacity-30" style={{ backgroundImage: `repeating-conic-gradient(from 0deg, ${palette.fg1} 0deg 10deg, transparent 10deg 20deg)`, animation: 'spinCircular 20s linear infinite' }} />
+    </div>
+    {/* 右侧向内折叠 */}
+    <div className="w-1/2 h-full border-l-[10px] border-black flex items-center justify-center relative overflow-hidden"
+         style={{ backgroundColor: palette.fg2, transformOrigin: 'left center', animation: 'foldRight 2s ease-out infinite alternate' }}>
+       <div className="absolute w-[200%] h-[200%] opacity-30" style={{ backgroundImage: `repeating-conic-gradient(from 0deg, ${palette.accent} 0deg 10deg, transparent 10deg 20deg)`, animation: 'spinCircular 20s linear infinite reverse' }} />
+    </div>
+  </div>
+);
+
+// ==========================================
+// 背景 12: FLOATING CROSSES (浮动 3D 十字架 - 对应 0:08)
+// 调用了上一版的 Scene3D 引擎，直接在 3D 空间内画十字架
+// ==========================================
+export const BgFloatingCrosses = ({ palette }: any) => {
+  const crosses = Array.from({ length: 6 });
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: palette.bg }}>
+      {/* 极细的网格线 */}
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(${palette.accent} 2px, transparent 2px), linear-gradient(90deg, ${palette.accent} 2px, transparent 2px)`, backgroundSize: '5vw 5vw' }} />
+      
+      {crosses.map((_, i) => (
+        <div key={i} className="absolute" style={{ left: `${Math.random() * 80 + 10}vw`, top: `${Math.random() * 80 + 10}vh`, animation: `floatUI ${Math.random() * 2 + 2}s ease-in-out ${Math.random()}s infinite alternate` }}>
+          <Scene3D cameraAngle={`rotateX(${Math.random() * 360}deg) rotateY(${Math.random() * 360}deg) scale(${Math.random() * 0.5 + 0.5})`}>
+            {/* 3D 十字架实体 (通过极粗的边框和阴影伪造 3D) */}
+            <div className="relative flex items-center justify-center">
+              <div className="absolute w-[4vw] h-[15vw] border-[4px] border-black" style={{ backgroundColor: palette.fg1, boxShadow: '10px 10px 0px rgba(0,0,0,1)' }} />
+              <div className="absolute w-[15vw] h-[4vw] border-[4px] border-black" style={{ backgroundColor: palette.fg1, boxShadow: '10px 10px 0px rgba(0,0,0,1)' }} />
+            </div>
+          </Scene3D>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export const BACKGROUND_REGISTRY =[
   { id: 'WASTELAND', name: 'BG: 废墟 (Wasteland)', component: BgWasteland },
@@ -356,6 +397,8 @@ export const BACKGROUND_REGISTRY =[
   { id: 'SHATTERED', name: 'BG: 碎裂镜面 (Shattered Glass)', component: BgShatteredGlass },
   { id: 'TUNNEL', name: 'BG: 同心圆隧道 (Concentric Tunnel)', component: BgConcentricTunnel },
   { id: 'GENKO', name: 'BG: 原稿纸 (Genko Yoshi)', component: BgGenkoYoshi },
+  { id: 'CYLINDER_ROOM', name: 'BG: 折叠空间 (Cylinder)', component: BgCylinderRoom },
+  { id: 'CROSSES', name: 'BG: 3D 十字架 (Crosses)', component: BgFloatingCrosses },
 ];
 
 export const SceneAEMaster: React.FC<SceneProps> = ({ palette, phase, effect, bgIndex, textPool }) => {

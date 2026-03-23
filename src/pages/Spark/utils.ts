@@ -27,6 +27,11 @@ export const PALETTES =[
   { bg: '#FF3385', fg1: '#FFE6F0', fg2: '#2A0826', accent: '#000000' }, // 玫红底 + 浅粉字
   { bg: '#FFE6F0', fg1: '#FF3385', fg2: '#000000', accent: '#2A0826' }, // 浅粉底 + 玫红字
   { bg: '#2A0826', fg1: '#FF3385', fg2: '#FFE6F0', accent: '#FFFFFF' }, // 深紫底 + 玫红字
+
+  // ★ カサネテク (Kasaneteku) / Cyber Pop 专属配色
+  { bg: '#38C1C1', fg1: '#FF33B5', fg2: '#FFFFFF', accent: '#000000' }, // 青底 + 粉字
+  { bg: '#FF33B5', fg1: '#FFFFFF', fg2: '#38C1C1', accent: '#000000' }, // 粉底 + 白字
+  { bg: '#000000', fg1: '#38C1C1', fg2: '#FF33B5', accent: '#FFFFFF' }, // 黑底 + 青字
 ];
 export const POP_PALETTES =[
   { bg: '#0033FF', fg1: '#FFFFFF', fg2: '#000000', accent: '#FFCC00' }, // 高管蓝 + 明黄
