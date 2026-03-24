@@ -7,30 +7,30 @@ const CommissionBoardNeon: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
-  }, []);
+  },[]);
 
   const worksList =[
-    '(株)バンダイナムコゲームス 様「太鼓の達人」',
-    '(株)コナミアミューズメント 様「BEMANIシリーズ」',
-    '(株)SEGA 様「CHUNITHM、maimai」',
-    '(株)タイトー 様「GROOVECOASER」',
-    '(株)カプコン 様「CROSS×BEATS」',
-    '(株)AXTORM 様「MASH VP! Re:VISION」',
-    '(株)トイロジック 様「Warlander」',
-    '(株)HIKKY 様「VketSummer、VketWinter」',
-    '(株)5bp. 様「Memories Offシリーズ」',
-    'HTC NIPPON(株) 様「VRショッピングモール」',
-    'Rayark.Inc 様「DEEMO、Cytus、VOEZ」',
-    'lowiro limited 様「Arcaea」',
-    'TunerGames 様「Paradigm: Reboot」',
-    'ホロライブ「レクトシティ feat.アキ・ローゼンタール」',
-    '朝ノ姉妹ぷろじぇくと「忍」',
-    'Tatsh&NAOKI「REDRAVE」',
-    'アイドルマスター「Day of the future」',
-    'アニメ ひだまりスケッチ×365「?でわっしょい」',
-    'アニメ 11eyes「Arrival of Tears」',
-    'OVA AIKa ZERO「Dream Hunter」',
-    'アニメ はぐれ勇者の鬼畜美学「Realization」'
+    '万代南梦宫游戏株式会社《太鼓之达人》',
+    '科乐美数码娱乐株式会社《BEMANI系列》',
+    '世嘉株式会社《CHUNITHM》《maimai》',
+    '太东株式会社《GROOVE COASTER》',
+    '卡普空株式会社《CROSS×BEATS》',
+    'AXTORM株式会社《MASH VP! Re:VISION》',
+    'Toylogic株式会社《Warlander》',
+    'HIKKY株式会社《Vket Summer》《Vket Winter》',
+    '5bp.株式会社《秋之回忆（Memories Off）系列》',
+    'HTC NIPPON株式会社“VR购物中心型商店”',
+    '雷亚游戏（Rayark.Inc）《DEEMO》《Cytus》《VOEZ》',
+    'lowiro limited《Arcaea》',
+    'TunerGames《Paradigm: Reboot》（律动轨迹）',
+    'Hololive《レクトシティ feat. Aki Rosenthal》',
+    '朝之姐妹Project《忍》',
+    'Tatsh&NAOKI《REDRAVE》',
+    '偶像大师《Day of the future》',
+    'TV动画 向阳素描×365《?でわっしょい》',
+    'TV动画 11eyes《Arrival of Tears》',
+    'OVA AIKa ZERO《Dream Hunter》',
+    'TV动画 无赖勇者的鬼畜美学《Realization》'
   ];
 
   return (
@@ -81,8 +81,8 @@ const CommissionBoardNeon: React.FC = () => {
           className="relative text-center pt-10 mb-16"
         >
           {/* 超大空心背景字 */}
-          <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 text-[120px] md:text-[180px] font-black whitespace-nowrap pointer-events-none z-[-1] font-jp tracking-tighter opacity-10 text-transparent text-stroke-purple">
-            楽曲制作
+          <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 text-[120px] md:text-[180px] font-black whitespace-nowrap pointer-events-none z-[-1] font-zh tracking-tighter opacity-10 text-transparent text-stroke-purple">
+            乐曲制作
           </div>
 
           <div className="flex justify-between items-center border-b border-purple-500/20 pb-4 mb-10">
@@ -132,13 +132,13 @@ const CommissionBoardNeon: React.FC = () => {
           <div className="absolute -right-20 -top-20 w-64 h-64 border-[1px] border-purple-500/10 rounded-full"></div>
           <div className="absolute -right-10 -top-10 w-48 h-48 border-[1px] border-purple-500/20 rounded-full"></div>
           
-          <div className="p-8 md:p-10 text-[15px] leading-relaxed text-purple-100/80 relative z-10 font-jp">
+          <div className="p-8 md:p-10 text-[15px] leading-relaxed text-purple-100/80 relative z-10 font-zh">
             <p className="text-2xl font-bold text-white mb-6 flex items-baseline gap-2">
-              中国の皆様、こんにちは！ 
+              中国的朋友们，大家好！我是 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d8b4fe] via-[#a855f7] to-[#00ff9d] font-black text-4xl ml-2">Tatsh</span> 
-              <span className="text-sm font-normal text-purple-400 tracking-widest">です。</span>
+              <span className="text-sm font-normal text-purple-400 tracking-widest">。</span>
             </p>
-            <p className="mb-8 max-w-2xl">多種多様な音楽を制作する作曲家です。現在、オリジナル楽曲の作編曲、作詞の依頼を長期的に受け付けております。ジャンルを問わず、あなたのプロジェクトに最適なサウンドを提供します。</p>
+            <p className="mb-8 max-w-2xl">我是一名创作多种流派音乐的作曲家。目前，我长期接受原创歌曲的作编曲以及作词委托。无论什么曲风，我都能为您的项目提供最合适的声音。</p>
             
             <div className="flex flex-col md:flex-row md:items-stretch gap-0 border border-purple-500/30 rounded-sm overflow-hidden bg-black/40">
               <div className="bg-purple-900/60 p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-500/30">
@@ -170,14 +170,14 @@ const CommissionBoardNeon: React.FC = () => {
             <div className="flex-1 h-[1px] bg-gradient-to-r from-[#ff1493]/50 to-transparent"></div>
           </div>
           
-          <div className="flex flex-col gap-6 font-jp relative">
+          <div className="flex flex-col gap-6 font-zh relative">
             {/* 连接线 */}
             <div className="absolute left-6 top-8 bottom-8 w-[1px] bg-purple-500/20 hidden md:block"></div>
 
             {[
-              { num: '01', title: 'オリジナル楽曲の作編曲・作詞', desc: '作詞可能な言語：日本語・英語（※作詞のみの案件はNGとなります）', color: 'from-[#00ff9d]' },
-              { num: '02', title: '楽曲のリミックス・アレンジ', desc: 'Remix & Arrangement Requests。既存楽曲を新しい次元へ。', color: 'from-[#a855f7]' },
-              { num: '03', title: '日本人ボーカリストの手配・オファー', desc: '楽曲に合わせた最適なボーカリストのキャスティングが可能です。', color: 'from-[#ff1493]' }
+              { num: '01', title: '原创歌曲的作编曲・作词', desc: '可作词语言：日语・英语（※不接受“仅作词”的委托）', color: 'from-[#00ff9d]' },
+              { num: '02', title: '乐曲的Remix・编曲', desc: 'Remix & Arrangement Requests。将现有乐曲提升至新的维度。', color: 'from-[#a855f7]' },
+              { num: '03', title: '日本歌手的安排与邀约', desc: '可以根据乐曲为您匹配并安排最合适的歌手（Vocalist）。', color: 'from-[#ff1493]' }
             ].map((srv, idx) => (
               <div key={idx} className="relative pl-0 md:pl-16 group">
                 <div className="glass-card relative overflow-hidden p-6 md:p-8 hover:-translate-y-1 transition-transform duration-300">
@@ -218,21 +218,21 @@ const CommissionBoardNeon: React.FC = () => {
             <div className="h-8 w-1 bg-[#a855f7]"></div>
           </div>
 
-          <div className="glass-panel p-8 mb-8 font-jp text-[14px] leading-loose text-purple-100/90 border-r-4 border-r-[#a855f7]">
+          <div className="glass-panel p-8 mb-8 font-zh text-[14px] leading-loose text-purple-100/90 border-r-4 border-r-[#a855f7]">
             <p className="mb-4">
-              18歳のときにCM音楽やTV番組の楽曲制作からキャリアをスタート。<br/>
-              その後、<span className="text-black bg-[#00ff9d] px-2 py-0.5 font-bold mx-1 rounded-sm">beatmaniaIIDXのサウンドディレクター</span>を務めた後に、音楽ゲーム、アニメ、コンシューマーゲームやVtuberへの楽曲提供を行いました。
+              18岁时从制作广告音乐和电视节目配乐开始了我的职业生涯。<br/>
+              此后，在担任了<span className="text-black bg-[#00ff9d] px-2 py-0.5 font-bold mx-1 rounded-sm">《beatmania IIDX》的音乐总监</span>之后，我又为音乐游戏、动画、主机游戏以及VTuber提供过乐曲。
             </p>
             <p className="opacity-80">
-              現在は楽曲提供以外にも、音楽講師、ゲームの日本プロモーション、ゲームのサウンドディレクター、楽曲コンテストの審査員も務めています。
+              现在除了提供乐曲外，我还担任音乐讲师、游戏的日本地区推广宣发、游戏音乐总监以及音乐比赛的评委。
             </p>
           </div>
 
           {/* 跑马灯风格的作品展示区 (音游感强) */}
           <div className="bg-[#0a0415] border border-purple-500/20 relative overflow-hidden">
             <div className="bg-purple-900/30 px-6 py-3 border-b border-purple-500/20 flex justify-between items-center">
-              <span className="text-white text-xs font-bold tracking-[0.2em] uppercase">
-                代表作 / 取引先
+              <span className="text-white text-xs font-bold tracking-[0.2em] uppercase font-zh">
+                代表作 / 合作客户
               </span>
               <span className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-[#ff1493] rounded-full"></span>
@@ -242,7 +242,7 @@ const CommissionBoardNeon: React.FC = () => {
             </div>
             
             <div className="p-6 relative">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-[13px] text-purple-200 font-jp relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-[13px] text-purple-200 font-zh relative z-10">
                 {worksList.map((work, idx) => (
                   <div key={idx} className="flex items-start gap-3 group cursor-default border-b border-white/5 pb-2">
                     <span className="text-[#a855f7] font-mono text-xs mt-0.5 group-hover:text-[#00ff9d] transition-colors">{String(idx + 1).padStart(2, '0')}</span>
@@ -276,28 +276,28 @@ const CommissionBoardNeon: React.FC = () => {
 
               <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top,rgba(0,255,157,0.3)_0%,transparent_70%)] pointer-events-none"></div>
               
-              <h3 className="text-3xl font-black text-white mb-8 text-center tracking-widest font-jp drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                ご依頼・ご相談
+              <h3 className="text-3xl font-black text-white mb-8 text-center tracking-widest font-zh drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                委托・咨询
               </h3>
               
-              <div className="text-sm text-purple-100/90 leading-loose mb-10 font-jp text-center max-w-xl">
+              <div className="text-sm text-purple-100/90 leading-loose mb-10 font-zh text-center max-w-xl">
                 <p className="text-[#00ff9d] font-bold text-lg mb-4 border-b border-[#00ff9d]/30 pb-2 inline-block">
-                  企業からの依頼だけでなく、個人からのご依頼も大事にしています。
+                  我不仅承接来自企业的制作委托，也非常重视来自个人的乐曲制作委托。
                 </p>
-                <p className="mb-6 opacity-80">どんなジャンル、用途でもかまいません。一度、相談してもらえれば嬉しいです。<br/>私は過去に経験のない音楽にも、まだまだ挑戦したいと思っております。</p>
+                <p className="mb-6 opacity-80">无论是什么曲风或用途都没关系。如果您能来找我咨询，我将非常高兴。<br/>对于过去没有尝试过的音乐类型，我也依然想不断去挑战。</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left mt-6">
                   <div className="bg-white/5 border border-white/10 p-4 rounded-sm hover:border-[#a855f7]/50 transition-colors">
-                    <p className="text-[#a855f7] font-mono text-xs font-bold mb-1">LANG // 言語</p>
-                    <p className="text-xs text-white/80">翻訳ソフトを介したやり取りでも問題ありません。</p>
+                    <p className="text-[#a855f7] font-mono text-xs font-bold mb-1">LANG // 语言</p>
+                    <p className="text-xs text-white/80">即使是通过翻译软件进行交流也没有问题。</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 p-4 rounded-sm hover:border-[#00ff9d]/50 transition-colors">
-                    <p className="text-[#00ff9d] font-mono text-xs font-bold mb-1">PRICE // 金額</p>
-                    <p className="text-xs text-white/80">案件事に異なります。<br/>詳細はお見積りいたします。</p>
+                    <p className="text-[#00ff9d] font-mono text-xs font-bold mb-1">PRICE // 金额</p>
+                    <p className="text-xs text-white/80">制作金额会因具体项目而异。<br/>详情将另行出具报价单。</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 p-4 rounded-sm hover:border-[#ff1493]/50 transition-colors">
-                    <p className="text-[#ff1493] font-mono text-xs font-bold mb-1">PAY // 支払</p>
-                    <p className="text-xs text-white/80">Paypal もしくは 銀行振り込みでのお支払い。</p>
+                    <p className="text-[#ff1493] font-mono text-xs font-bold mb-1">PAY // 支付</p>
+                    <p className="text-xs text-white/80">请使用PayPal或银行转账进行支付。</p>
                   </div>
                 </div>
               </div>
@@ -318,8 +318,8 @@ const CommissionBoardNeon: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-[11px] text-purple-400 mt-8 font-jp bg-[#1a0b2e]/80 border border-purple-500/30 px-6 py-2 rounded-full">
-                ※1週間経過しても返事がない場合は、再度ご連絡くださいませ。
+              <p className="text-[11px] text-purple-400 mt-8 font-zh bg-[#1a0b2e]/80 border border-purple-500/30 px-6 py-2 rounded-full">
+                ※如果发送后超过一星期仍未收到回复，请您再次联系我。
               </p>
 
             </div>
@@ -343,11 +343,11 @@ const CommissionBoardNeon: React.FC = () => {
 
       {/* ================= 全局自定义 CSS ================= */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Noto+Sans+JP:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Noto+Sans+SC:wght@400;700;900&display=swap');
 
         .font-sans { font-family: 'Orbitron', -apple-system, sans-serif; }
         .font-mono { font-family: 'Share Tech Mono', monospace; }
-        .font-jp { font-family: 'Noto Sans JP', sans-serif; }
+        .font-zh { font-family: 'Noto Sans SC', sans-serif; }
         
         ::-webkit-scrollbar { display: none; }
 
