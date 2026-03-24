@@ -1,6 +1,7 @@
 ---
-title: Optimization Theory - Assignment - Week 2
 category: Assignments
+date: '2025-11-18'
+title: Optimization Theory - Assignment - Week 2
 ---
 
 # 1
@@ -1205,4 +1206,3 @@ Then:
 $y = y^* + \lambda y_0$ also satisfies the constraints
 
 therefore it's unbounded
-

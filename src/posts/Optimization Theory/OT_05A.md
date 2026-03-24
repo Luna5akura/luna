@@ -1,9 +1,8 @@
 ---
-title: Optimization Theory - Assignment - Week 5
 category: Assignments
+date: '2025-12-18'
+title: Optimization Theory - Assignment - Week 5
 ---
-
-
 
 # 1
 

@@ -1,8 +1,8 @@
 ---
-title: Strategic Management - Cheatsheet
 category: Cheatsheets
+date: '2026-03-06'
+title: Strategic Management - Cheatsheet
 ---
-
 
 *   **第一部分：战略分析工具与基础概念**（侧重于解决判断解释题和案例分析的切入点）
 *   **第二部分：公司层战略与国际化战略**（侧重于复杂判断题和案例中的战略选择）

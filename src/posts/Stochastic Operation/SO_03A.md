@@ -1,6 +1,7 @@
 ---
-title: Stochastic Optimization - Assignment - Week 3
 category: Assignments
+date: '2025-09-24'
+title: Stochastic Optimization - Assignment - Week 3
 ---
 
 作业Ch.2-6,11

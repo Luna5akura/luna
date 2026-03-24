@@ -1,8 +1,8 @@
 ---
+category: Notes
+date: '2025-12-31'
 title: Optimization Theory - Cheatsheet
-category: Notes 
 ---
-
 
 # Table of Contents
 1.  **Part I: Modeling & Basics**

@@ -1,9 +1,10 @@
 ---
-title: Financial Statement Analysis - Assignment - Week 2
 category: Assignments
+date: '2026-01-08'
+title: Financial Statement Analysis - Assignment - Week 2
 ---
 
- 1
+1
 
 ## Problem
 

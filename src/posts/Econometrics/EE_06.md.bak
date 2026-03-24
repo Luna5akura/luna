@@ -1,0 +1,88 @@
+---
+title: Econometrics - Week 6
+category: Notes 
+---
+
+## 正态抽样分布
+
+在MLR．1－MLR．6条件下，
+－$ \hat{\beta} $ 基于所有解释变量的条件分布为均值为 $ \beta $ ，协方差为 $ \operatorname{Var}(\hat{\beta})=\sigma^{2}\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1} $ 的多元正态分布。也就是
+$
+\left.\hat{\beta}\right|_{X} \sim N\left(\beta, \sigma^{2}\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1}\right)
+$
+－$ \hat{\beta}_{j} $ 基于所有解释变量的条件分布为均值为 $ \beta_{j} $ ，方差为 $ \operatorname{Var}\left(\hat{\beta}_{j}\right)=\frac{\sigma^{2}}{S S T_{j}\left(1-R_{j}^{2}\right)} $ 的正态分布。也就是
+$
+\left.\hat{\beta}_{j}\right|_{x} \sim N\left(\beta_{j}, \frac{\sigma^{2}}{\operatorname{SST}_{j}\left(1-R_{j}^{2}\right)}\right),
+$
+
+从而 $ \frac{\hat{\beta}_{j}-\beta_{j}}{\operatorname{sd}\left(\hat{\beta}_{j}\right)} $ 服从（无条件的）标准正态分布。
+
+## 标准化估计量的t分布
+
+在MLR．1－MLR． 6 条件下，$ \hat{\beta}_{j} $ 的标准化形式
+$
+\frac{\hat{\beta}_{j}-\beta_{j}}{\operatorname{se}\left(\hat{\beta}_{j}\right)}
+$
+
+服从自由度为 $ n-k-1 $ 的 $ t $ 分布，也就是
+$
+\frac{\hat{\beta}_{j}-\beta_{j}}{\operatorname{se}\left(\hat{\beta}_{j}\right)} \sim t_{n-k-1}
+$
+
+注：此分布为基于解释变量 X 的条件分布。但是由于条件分布 $ t_{n-k-1} $ 与 $ \mathbf{X} $ 无关，所以此分布也是 $ \hat{\beta}_{j} $ 的无条件分布。
+
+## 单样本 t-检验
+
+设 $ Z_{1}, \ldots, Z_{n} $ 为来自正态分布 $ N\left(\mu, \sigma^{2}\right) $ 的简单随机样本，其中 $ \mu \in R, \sigma>0 $ 为未知参数。取显著性水平为 $ \alpha $ ，检验假设：
+$
+H_{0}: \mu=\mu_{0} \text { vs } H_{1}: \mu>\mu_{0}
+$
+－检验统计量 $ T=\frac{\sqrt{n}\left(\bar{Z}-\mu_{0}\right)}{S_{Z}} $ ，其中
+$
+S_{Z}=\sqrt{\frac{1}{n-1} \sum_{i=1}^{n}\left(Z_{i}-\bar{Z}\right)^{2}}
+$
+- 拒绝域 $ \mathcal{R} $ ：当 $ T>t_{\alpha}(n-1) $ 时，拒绝原假设
+- 实际操作：给定数据之后，我们计算 $ T $ 的实现值 $ t $ 。如果 $ t>t_{\alpha}(n-1) $ ，我们拒绝原假设，否则我们不能拒绝原假设。
+
+# 第一类和第二类错误
+
+第一类：弃真
+第二类：取伪
+
+# 多元线性回归默认t-检验
+
+在多元线性回归模型中，其中 $ \beta_{j}, j=1, \ldots, k $ 为我们通常感兴趣的未知参数。取显著性水平为 $ \alpha $ ，检验假设：
+$
+H_{0}: \beta_{j}=0 \text { vs } H_{1}: \beta_{j} \neq 0
+$
+- 检验统计量 $ T_{\hat{\beta}_{j}}=\hat{\beta}_{j} / \operatorname{se}\left(\hat{\beta}_{j}\right) $ 称为 $ \mathrm{t}- $ 统计量
+- 拒绝域 $ \mathcal{R} $ ：当 $ \left|T_{\hat{\beta}_{j}}\right|>t_{\frac{\alpha}{2}}(n-k-1) $ 时，拒绝原假设
+- 假设给定数据之后，我们计算 $ T_{\hat{\beta}_{j}} $ 的实现值为 $ t_{j} $ 。则如果 $ \left|t_{j}\right|>t_{\frac{\alpha}{2}}(n-k-1) $ ，我们拒绝原假设，否则我们不能拒绝原假设。
+－ p －值等于 $ P\left(|t(n-k-1)|>t_{j}\right) $ ，其中 $ t(n-k-1) $ 表示自由度 $ n-k-1 $ 为的t－分布
+－当 p －值小于等于 0.05 时，我们通常说 $ X_{j} $ 对 $ Y $ 的影响是显著的
+
+# 总体显著性的F检验
+
+类似地，我们也可以进行如下的 t －检验，其中 $ b_{j} $ 为已知常数：
+（1）情形1：
+$
+H_{0}: \beta_{j}=b_{j} \text { vs } H_{1}: \beta_{j}>b_{j}
+$
+
+决策规则：当 $ T_{j}>t_{\alpha}(n-k-1) $ 时，拒绝原假设
+（2）情形2：
+$
+H_{0}: \beta_{j}=b_{j} \text { vs } H_{1}: \beta_{j}<b_{j}
+$
+
+决策规则：当 $ T_{j}<-t_{\alpha}(n-k-1) $ 时，拒绝原假设
+（3）情形3：
+$
+H_{0}: \beta_{j}=b_{j} \text { vs } H_{1}: \beta_{j} \neq b_{j}
+$
+
+决策规则：当 $ \left|T_{j}\right|>t_{\frac{\alpha}{2}}(n-k-1) $ 时，拒绝原假设注：在以上三种情况中，
+$
+T_{j}=\frac{\hat{\beta}_{j}-b_{j}}{\operatorname{se}\left(\hat{\beta}_{j}\right)}
+$
+

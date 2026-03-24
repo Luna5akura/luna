@@ -1,6 +1,7 @@
 ---
+category: Assignments
+date: '2025-11-24'
 title: Stochastic Operation - Assignment - Week 5
-category: Assignments 
 ---
 
 # 4
@@ -221,5 +222,3 @@ $ \rho_{1}=\frac{\lambda_{1}}{\mu_{1}}=\frac{18}{20}=0.9, \quad \rho_{2}=\frac{\
 
 **问题四 (25分):**
 假设你是该公司运营经理，发现系统在高优先级任务处理方面存在瓶颈。除了简单增加车辆外，请提出至少三种其他可能的优化策略，并简要说明其原理和预期效果。（提示：可以从排队系统的各个组成部分着手思考，不局限于单一模型）。
-
-

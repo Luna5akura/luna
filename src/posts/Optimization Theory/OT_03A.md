@@ -1,6 +1,7 @@
 ---
-title: Optimization Theory - Assignment - Week 3
 category: Assignments
+date: '2025-10-21'
+title: Optimization Theory - Assignment - Week 3
 ---
 
 # 1

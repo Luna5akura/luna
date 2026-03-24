@@ -1,8 +1,8 @@
 ---
-title: Econometrics - Assignment - Week 5
 category: Assignments
+date: '2026-01-05'
+title: Econometrics - Assignment - Week 5
 ---
-
 
 # Chapter 13 Problem 2
 

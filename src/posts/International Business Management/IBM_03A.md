@@ -1,6 +1,7 @@
 ---
-title: Internation Business Management - Assignment - Week 3
 category: Assignments
+date: '2025-10-21'
+title: Internation Business Management - Assignment - Week 3
 ---
 
 # Problem

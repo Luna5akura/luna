@@ -1,8 +1,8 @@
 ---
-title: Econometrics Assignment - Week 3
 category: Assignments
+date: '2026-01-05'
+title: Econometrics Assignment - Week 3
 ---
-
 
 # Chapter 4 Problem 1
 

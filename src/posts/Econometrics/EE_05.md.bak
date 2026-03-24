@@ -1,0 +1,45 @@
+---
+title: Econometrics - Week 5
+category: Notes
+---
+
+## OLS估计量的方差
+
+假设我们关心的是变量 $ X $ 对 $ Y $ 的影响，我们知道除了 $ X $ 之外，还有 $ Z_{1}, \ldots, Z_{p} $ 也会同时影响 $ Y $ 。这些 $ Z_{1}, \ldots, Z_{p} $ 通常叫做控制变量。
+$
+\begin{aligned}
+Y & =\alpha+\beta X+\gamma_{1} Z_{1}+\cdots+\gamma_{p} Z_{p}+u, \\
+E\left[u \mid X, Z_{1}, \ldots, Z_{p}\right] & =0 .
+\end{aligned}
+$
+
+现在假设 $ X $ 与 $ Z_{1}, \ldots, Z_{p} $ 都不相关。
+
+## $\sigma^2$
+
+线性回归模型的另外一个重要参数是 $ \sigma^{2} $ 。令
+$
+\hat{\sigma}^{2}=\frac{1}{n-k-1} \sum_{i=1}^{n} \hat{u}_{i}^{2}
+$
+
+其中 $ n-k-1 $ 称作是自由度。
+Theorem（定理3．3）
+在Gauss－Markov假设MLR．1－MLR．5都满足的条件下，$ \hat{\sigma}^{2} $ 是 $ \sigma^{2} $ 的无偏估计量：
+$
+E\left[\hat{\sigma}^{2} \mid \mathbb{X}\right]=\sigma^{2} .
+$
+
+## 标准差、标准误
+
+线性回归模型的另外一个重要参数是 $ \sigma^{2} $ 。令
+$
+\hat{\sigma}^{2}=\frac{1}{n-k-1} \sum_{i=1}^{n} \hat{u}_{i}^{2}
+$
+
+其中 $ n-k-1 $ 称作是自由度。
+Theorem（定理3．3）
+在Gauss－Markov假设MLR．1－MLR．5都满足的条件下，$ \hat{\sigma}^{2} $ 是 $ \sigma^{2} $ 的无偏估计量：
+$
+E\left[\hat{\sigma}^{2} \mid \mathbb{X}\right]=\sigma^{2} .
+$
+

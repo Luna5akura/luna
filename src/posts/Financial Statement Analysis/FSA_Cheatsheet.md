@@ -1,8 +1,8 @@
 ---
+category: Cheatsheets
+date: '2026-03-06'
 title: Financial Statement Cheatsheet
-category: Cheatsheets 
 ---
-
 
 # 财务报表分析 (2025版) - 期末速查表
 

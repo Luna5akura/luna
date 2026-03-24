@@ -35,7 +35,11 @@ export const usePosts = () => {
         generatedPosts.push({
           id: nextId++,
           title: data.title || toTitleCase(key.split('/').pop() || key),
-          date: data.date || new Date().toISOString().split('T')[0],
+          date: data.date 
+            ? (data.date instanceof Date 
+                ? data.date.toISOString().split('T')[0]           // "2026-03-24"
+                : String(data.date).trim())
+            : new Date().toISOString().split('T')[0],
           excerpt: data.excerpt || content.slice(0, 150) + '...',
           contentKey: key,
           author: data.author || 'Anonymous',

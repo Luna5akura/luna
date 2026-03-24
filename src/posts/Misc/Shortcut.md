@@ -1,6 +1,7 @@
 ---
+category: null
+date: '2025-10-13'
 title: VSCode Shortcut
-category: 
 ---
 
 | Go to file overview tab | Ctrl + Shift + E |
@@ -9,6 +10,3 @@ category:
 | Split Right | Ctrl + K, Ctrl + Alt + \ |
 | Copy Line Up | Ctrl + Shift + Alt + Up |
 | New file | Ctrl + Shift + Alt + N |
-
-
-
