@@ -1,3 +1,8 @@
+---
+date: '2025-12-04'
+title: Japanese Diff
+---
+
 |       |      |
 |-|-|
 | だから | Result | dakara

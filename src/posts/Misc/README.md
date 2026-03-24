@@ -1,3 +1,8 @@
+---
+date: '2025-11-23'
+title: Readme
+---
+
 # Get Linux Kernel
 
 ```
@@ -279,5 +284,3 @@ disassemble
 p $lx_current().cred <- it's now a new cred, and use ADDR
 x/20gx ADDR <- it's uid 1000, and can be changed
 ```
-
-

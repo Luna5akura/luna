@@ -1,6 +1,7 @@
 ---
-title: Stochastic Operation - Assignment - Week 7
 category: Assignments
+date: '2025-10-27'
+title: Stochastic Operation - Assignment - Week 7
 ---
 
 # 16

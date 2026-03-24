@@ -1,6 +1,7 @@
 ---
-title: Optimization Theory - Presentation
 category: Notes
+date: '2025-10-29'
+title: Optimization Theory - Presentation
 ---
 
 # Model Evaluation Framework
@@ -289,4 +290,3 @@ $\sup _{h \geq 0, \alpha \in \mathbb{R}} h r+\alpha+\theta_{2}-\theta_{2} \mathb
 
 
 - $l_{h,\theta _1 }(\hat z ):=\max_{z\in\mathcal Z }h\cdot l(\beta ,z)-\theta _1 \cdot d(z,\hat z)$ : the d-trasform of $h\cdot l(\beta, \cdot)$ with the step size $\theta_1$
-

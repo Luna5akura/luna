@@ -1,10 +1,8 @@
 ---
+category: Notes
+date: '2025-11-24'
 title: International Business Management - Week 5
-category: Notes 
 ---
-
-
-
 
 # 大变局对国际商务管理的挑战
 
@@ -15,6 +13,3 @@ category: Notes
 人工智能
 
 地缘政治
-
-
-

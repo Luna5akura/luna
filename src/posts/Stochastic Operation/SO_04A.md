@@ -1,6 +1,7 @@
 ---
-title: Stochasitc Operation - Assignment - Week 1
 category: Assignments
+date: '2025-10-13'
+title: Stochasitc Operation - Assignment - Week 1
 ---
 
 作业：第2章习题8, 15。
@@ -108,8 +109,3 @@ $ P\left(q_{n+1}=j \mid q_{n}=i, q_{n-1}, \ldots, q_{0}\right)=P\left(q_{n+1}=j 
 
 因此，给定 $ q_{n}=i, q_{n+1} $ 的概率分布完全由 $ i $ 和 $ A_{n+1} $ 的分布决定。而 $ A_{n+1} $ 的分布与 $ q_{n-1}, \ldots, q_{0} $ 均无关。
 所以，$ q_{n} $ 满足马尔可夫性质，它是一个马尔可夫链。
-
-
-
-
-

@@ -1,8 +1,8 @@
 ---
+category: Cheatsheets
+date: '2026-03-06'
 title: International Business Management - Cheatsheet
-category: Cheatsheets 
 ---
-
 
 这是一份针对《国际企业战略与管理》课程大纲定制的开卷考试预测题库。由于是开卷考试，**题目通常不会直接考察死记硬背的概念，而是侧重于理论框架的应用、案例分析以及对当前国际形势的综合理解。**
 

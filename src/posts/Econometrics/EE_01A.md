@@ -1,6 +1,7 @@
 ---
-title: Econometrics - Assignment - Week 1
 category: Assignments
+date: '2025-10-29'
+title: Econometrics - Assignment - Week 1
 ---
 
 # 1

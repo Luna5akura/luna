@@ -1,6 +1,7 @@
 ---
+category: Assignments
+date: '2025-11-24'
 title: International Business Management - Assignment - Week 5
-category: Assignments 
 ---
 
 ### 1. 什么是跨国公司？

@@ -1,8 +1,8 @@
 ---
-title: Stochastic Operation - Assignment - Week 12
 category: Assignments
+date: '2025-12-01'
+title: Stochastic Operation - Assignment - Week 12
 ---
-
 
 # 4
 ## Problem
@@ -58,4 +58,3 @@ category: Assignments
   对于95%服务水平（单尾），z ≈ 1.64485（从标准正态表或Φ^{-1}(0.95)）。  
   安全库存 ≈ 1.64485 × 73.485 ≈ 120.87单位（约121单位）。  
 - 再订货点 ROP = 保护期平均需求 + 安全库存 = 600 + 121 = 721单位。
-

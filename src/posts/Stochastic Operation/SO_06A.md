@@ -1,8 +1,8 @@
 ---
-title: Stochastic Operation - Assignment - Week 6
 category: Assignments
+date: '2025-10-19'
+title: Stochastic Operation - Assignment - Week 6
 ---
-
 
 # 4.3
 
@@ -192,5 +192,3 @@ $
 
 6．构造最优策略
 －若在每个阶段 $ n $ 和状态 $ i $ 中，决策 $ f_{n}^{*}(i) $ 都能取到最优方程中的上确界，则策略 $ \pi^{*}= \left(f_{0}^{*}, f_{1}^{*}, \ldots, f_{N}^{*}\right) $ 是最优策路。
-
-

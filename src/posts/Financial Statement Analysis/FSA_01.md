@@ -1,6 +1,7 @@
 ---
-title: Financial Statement Analysis
 category: Notes
+date: '2025-09-26'
+title: Financial Statement Analysis
 ---
 
 # 1 财务报告 财务报表分析与概览

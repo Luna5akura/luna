@@ -294,7 +294,9 @@ const ListItem = ({ post, index, setHoveredPost }: { post: Post, index: number, 
             <span className="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-cyan-400 group-hover:animate-pulse" />
             SYS.TIME
           </span>
-          <span className="text-slate-500 tracking-widest">{post.date}</span>
+          <span className="text-slate-500 tracking-widest font-mono">
+            {post.date}
+          </span>
         </div>
       </div>
       

@@ -1,6 +1,7 @@
 ---
-title: Stochastic Optimization - Cheatsheet
 category: Cheatsheets
+date: '2026-03-06'
+title: Stochastic Optimization - Cheatsheet
 ---
 
 ## 第二章：排队论

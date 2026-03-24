@@ -1,8 +1,8 @@
 ---
-title: Strategic Management - Individual
 category: Assignments
+date: '2026-01-08'
+title: Strategic Management - Individual
 ---
-
 
 ### 1. The Argument to Refute
 **The Argument:**

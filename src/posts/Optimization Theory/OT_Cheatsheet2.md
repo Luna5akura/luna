@@ -1,6 +1,7 @@
 ---
+category: Notes
+date: '2025-12-31'
 title: Optimization Theory - Cheatsheet
-category: Notes 
 ---
 
 # Part III: Linear Programming Duality & Simplex Geometry

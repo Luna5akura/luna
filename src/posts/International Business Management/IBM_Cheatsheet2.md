@@ -1,6 +1,7 @@
 ---
+category: Cheatsheets
+date: '2026-03-06'
 title: International Business Management - Cheatsheet2
-category: Cheatsheets 
 ---
 
 针对之前的论述与案例分析题预测，以下是**完整、详细的参考答案**。这些答案是根据你提供的课程大纲（特别是强调的案例和理论框架）编写的。

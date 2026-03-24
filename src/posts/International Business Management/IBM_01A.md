@@ -1,6 +1,7 @@
 ---
-title: International Businerss Management - Assignment - Week 1
 category: Assignments
+date: '2025-10-11'
+title: International Businerss Management - Assignment - Week 1
 ---
 
 # 问题
