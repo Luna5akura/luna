@@ -1,134 +1,141 @@
 ---
 date: '2025-12-04'
-title: Japanese Diff
+title: Japanese Grammar Differences
 ---
 
-|       |      |
-|-|-|
-| だから | Result | dakara
-| ところが | Unexpected Oral | tokoroga
-| ですが | Unexpected Formal | desuga
-| もっとも | a small exception | mottomo
-| それでも | Even if | soredemo
+## 1. 接续词：因果与转折 (Conjunctions)
 
-|||
-|-|-|
-| だけ | neural objective |
-| きり | Subjective |
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| だから | dakara | **Result**: 必然的因果结果 (So/Therefore) | 雨が降った。**だから**、休んだ。 |
+| ところが | tokoroga | **Unexpected Oral**: 口语，结果与预期完全相反 (However) | 晴れると思った。**ところが**、雨が降った。 |
+| ですが | desuga | **Unexpected Formal**: 礼貌书面语，转折语气较弱 (But) | 行きたい**ですが**、時間がありません。 |
+| もっとも | mottomo | **A small exception**: 补充说明一个小例外或前提 (Though) | 明日行きます。**もっとも**、雨なら行きません。 |
+| それでも | soredemo | **Even if**: 即使承认前项，后项依然成立 (Still) | 雨が降っている。**それでも**、彼は出かけた。 |
 
-|||
-|-|-|
-| そう | Hear Will | sou
-| よう | Formal Inference by hear| you
-| みたい | Oral Inference by hear similar to | mitai
-| みえる | See | mieru
-| らしい | Inference by seeing | rashii
+---
 
-|||
-|-|-|
-| しだい | Sequencial |
-| うちに | Within |
-| ながら | as... as... |
-| ている | One thing, doing |
-| ちゅう | busy, status |
+## 2. 推测与传闻 (Inference & Hearsay)
 
-|||
-|-|-|
-| にかぎる | |
-| ばかりだ | |
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 接续提示 |
+| :--- | :--- | :--- | :--- |
+| そう | sou | **Appearance / Hearsay**: 视觉看起来像 / 听别人说 | V-masu + そう (看起来) / 普通体 + そう (听说) |
+| よう | you | **Formal Inference**: 书面，基于某些线索的客观推测 | 名词 + の + よう |
+| みたい | mitai | **Oral Inference**: 口语，基于感觉的推测 (similar to) | 名词直接 + みたい |
+| みえる (見える) | mieru | **See**: 视觉上直观看起来的样子 | 形容词去i + く + 見える |
+| らしい | rashii | **Objective Inference**: 传闻或基于客观事实的推测 | 名词直接 + らしい (典型特征) |
 
-|||
-|-|-|
-| ことになった | Passive |
-| のはきめた | Not Passive |
+---
 
-|||
-|-|-|
-| もし | If |
-| いちおう | In case |
+## 3. 时间与顺序 (Time & Sequence)
 
-|||
-|-|-|
-| について | Just a side evidence |
-| にあたる | A and B has relationship |
-| にたいして | |
+### 3.1 期间与状态
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 区别记忆 |
+| :--- | :--- | :--- | :--- |
+| しだい (次第) | shidai | **Sequential**: 一…立刻就… | 强调动作紧接着发生 |
+| うちに (内に) | uchini | **Within / Now or never**: 趁着…的时候 | 强调错过就没有机会了 |
+| ながら | nagara | **Simultaneous**: 一边…一边… | 强调主要动作在后半句 |
+| ている | teiru | **Status**: 正在进行 / 状态延续 | - |
+| ちゅう (中) | chuu | **Busy Status**: 正在进行某活动中 | 多接名词，如“営業中” |
 
-|||
-|-|-|
-| ついに | good result, waiting|
-| とうとう | can't avoid |
+### 3.2 瞬间与节点
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 区别记忆 |
+| :--- | :--- | :--- | :--- |
+| ときに (時に) | tokini | **Time**: 某个明确的时间点 | 泛用性广 |
+| ところに (所に) | tokoroni | **Interrupt**: 某动作正要发生/进行时被介入 | 强调画面的“切入点” |
+| ついでに | tsuideni | **By the way**: 顺便做某事 | A是主要目的，B是顺带 |
+| あいだに (間に) | aidani | **Inside a period**: 在某段时间内发生了一次动作 | 区别于「あいだ」(一直持续) |
+| とたんに (途端に) | totan ni | **Instant / Unexpected**: 一…就… (瞬间发生，带有意外感) | 窓を開けた**とたん**、強い風が吹いてきた。<br>(刚一开窗，立刻刮进一阵强风。) |
+| すえに (末に) | sue ni | **Result of a long process**: 经过漫长的…之后，最终… | 1年考えた**末に**、会社を辞めることにした。<br>(考虑了1年之后，最终决定辞职。) |
+| さいに (際に) | sai ni | **Formal Occasion**: 正式场合的“在…时/之际” (常用于说明书、官方广播) | 降車の**際に**、お忘れ物にご注意ください。<br>(下车之际，请注意不要遗忘物品。) |
+| にさいして (に際して) | ni saishite | **Special/Big Event**: 面临重大事件、特殊节点（开业、结婚等）前的准备或致辞 | 開店**に際して**、ご挨拶を申し上げます。<br>(值此开业之际，向大家致辞。) |
+| にあたって (に当たって) | ni atatte | **Precise Preparation**: 积极面对某个重要阶段的“准备” (与に際して近义，但更偏积极) | 新しい年を迎える**にあたって**、目標を立てた。<br>(在迎接新年到来之际，定下了目标。) |
 
-|||
-|-|-|
-| それに | Parallel |
-| そのうえ | On top of that |
+---
 
-|||
-|-|-|
-| くらい | | kurai
-| ごろ | Date time | goro
+## 4. 限定与程度 (Limit & Degree)
 
-|||
-|-|-|
-| でも | An example | demo
-| さえ | The least possibility | sae
-| きり | critical point | kiri
-| とおり | according | toori
+### 4.1 只有 / 仅仅
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 感情色彩 |
+| :--- | :--- | :--- | :--- |
+| だけ | dake | **Neutral objective**: 客观上的“仅仅/只有” | 中立 |
+| きり | kiri | **Subjective / Critical**: 仅此一次，之后再无 | 主观，常带消极/遗憾 |
+| っきり | kkiri | **Only this**: 「きり」的口语强调版 | 口语化 |
+| たった | tatta | **Only**: 仅仅（强调数量极少） | 常接数量词 |
 
-|||
-|-|-|
-| ごと | time interval | goto
-| ずつ | number of every time | zutsu
-| おきに | interval  | okini
-| あたり | per | atari
-| につき | every | nitsuki
+### 4.2 极端与举例
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句场景 |
+| :--- | :--- | :--- | :--- |
+| でも | demo | **An example**: 举个极端的例子（哪怕是...） | 子供**でも**わかる (连小孩都懂) |
+| さえ | sae | **The least possibility**: 连最低限度都... | 水**さえ**飲めない (连水都喝不了) |
+| すこしも | sukoshimo | **Not at all**: 一点也不 (接否定) | **少しも**寒くない (一点也不冷) |
+| せめて | semete | **At least**: 哪怕是...也好 (表愿望) | **せめて**声だけでも聞きたい |
 
+---
 
-||| 
-|-|-|
-| だけ | some fact | dake
-| さえ | even this is negative | sae
-| っきり | only this | kkiri
+## 5. 频率与间隔 (Intervals)
 
-||| 
-|-|-|
-| ことだ | advice | kotoda 
-| ものだ  | truth, history | monoda 
-|  |   | 
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 |
+| :--- | :--- | :--- | :--- |
+| ごと (毎) | goto | **Time interval**: 每隔… (不包含起点) | 4年**ごと** (每4年，即第4,8,12年) |
+| おきに (置きに) | okini | **Interval**: 间隔… (中间空出多少) | 1日**おきに** (每隔1天 = 每2天) |
+| ずつ | zutsu | **Number every time**: 每次均等分配的数量 | 1人2個**ずつ** (每人2个) |
+| あたり (当たり) | atari | **Per**: 平均每… | 1キロ**あたり** (每公里) |
+| につき | nitsuki | **Every (Formal)**: 每… (多用于公文/告示) | 1回**につき**500円 (每次500日元) |j
 
+## 6. 结论、传闻与常识 (Conclusion, Hearsay & Truth)
 
-|  |   | 
-| ときに  | truth  | tokini
-| ところに  | interrupt   | tokoroni
-| ついでに  | by the way   | tsuideni
-| うちに  | now or never  | uchini 
-| あいだに  | inside a period of time | aidani  
-| にあたる | inprecise preparation | niataru
-|　にさいして | precise preparation | nisaishite
-| いらい | long time | irai
-| つつ | parallel | tsutsu
+💡 **核心记忆法：**
+* **こと (事)**：侧重于“事件、信息、逻辑规律”，因此多用于**客观传递信息**或**推导逻辑结论**。
+* **もの (物)**：侧重于“事物的本质、人情世故”，因此多用于**感叹、社会常理**或**强烈的主观评价**。
 
-| |   | 
-| のくせに  | strong, unlikable   | nokuseni 
-| でも  | but, neural   | demo
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| ということだ | to iu koto da | **Hearsay / Conclusion**: <br>1. **传闻**（听说…）<br>2. **客观结论/换言之**（也就是说…） | 【传闻】ニュースによると、明日は雨**ということだ**。<br>【结论】つまり、彼は来ない**ということだ**。 |
+| というものだ | to iu mono da | **Truth / Strong Emotion**: <br>1. **社会常识/真理**（…就是这么回事）<br>2. **强烈主观评价**（简直是…） | 【常识】思い通りにいかないのが、人生**というものだ**。<br>【评价】1時間も待たせるのは、失礼**というものだ**。 |
+
+### 📌 顺带复习：基础的 ことだ vs ものだ
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| ことだ | koto da | **Advice / Suggestion**: 建议、忠告（你应该…） | 合格したければ、毎日勉強する**ことだ**。 |
+| ものだ | mono da | **Truth / History / Emotion**: <br>1. **普遍真理/性质** <br>2. **回忆过去**（经常做…）<br>3. **深切感叹** | 【回忆】子供のころ、よく川で遊んだ**ものだ**。<br>【感叹】時間が経つのは早い**ものだ**。 |
+
+## 7. 既然…就… (Since / Now that... & Determination)
 
 
-|  |   | 
-| すこしも  | not at all   | sukoshimo 
-| せめて | at least   | semete
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| からには | kara niwa | **Strong Will**: 泛用性最广，主观意志最强（口语/书面皆可） | やる**からには**、最後までやりたい。<br>(既然要做，就想做到最后。) |
+| いじょうは (以上は) | ijou wa | **Objective Fact**: 偏正式，强调基于“客观前提/事实”的理所当然 | 学生である**以上**、勉強するのは当然だ。<br>(既然是学生，学习是理所当然的。) |
+| うえは (上は) | ue wa | **Formal Resolution**: 最正式/生硬，带有“背水一战、别无选择”的觉悟感 | 契約を結んだ**上は**、条件を守らなければならない。<br>(既然签订了合约，就必须遵守条件。) |
+
+## 8. 逆接与让步 (Although / Despite)
 
 
-|  |   | 
-| そして  | after | soshite 
-| そこで | therefore | sokode
-| それに  | moreover | soreni 
-| また  | again | mata
-| なお  | furthermore | nao
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| ながらも | nagara mo | **Despite (State)**: 承认某个状态，但却有好的/不同的结果（常接形/名/状态动词） | 狭い**ながらも**、楽しい我が家。<br>(虽然家很小，但很温馨。) |
+| つつも | tsutsu mo | **Psychological Contradiction**: 心里明明知道，行动上却…（带有懊悔、矛盾感） | 悪いと知り**つつも**、また嘘をついてしまった。<br>(明明知道不好，却又撒了谎。) |
+| ものの | mono no | **Fact but unexpected**: 承认前项是事实，但后项与预期不符 | 買った**ものの**、一度も使っていない。<br>(虽然买了，但一次也没用过。) |
+| にもかかわらず | ni mo kakawarazu | **Despite conditions**: 不顾前项的客观条件（带有意外、责备或赞叹） | 大雨**にもかかわらず**、試合は行われた。<br>(尽管下大雨，比赛还是进行了。) |
+| くせに | kuse ni | **Strong Blame/Contempt**: 明明…却…（强烈的非难、鄙视，不能用于自己） | 知っている**くせに**、教えてくれない。<br>(明明知道却不告诉我！) |
 
-| とうとう  |   | toutou 
-| ついに  |   | tsuini
+## 9. 特殊原因：强调与遗憾 (Emphasized Reasons & Regrets)
 
 
-|  |   | 
-| そうもない  | low   | soumonai 
-| っこない  | zero   | kkonai
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| からこそ | kara koso | **Precisely because**: 正因为…（强调原因的唯一性，多为积极或强烈的主张） | 愛している**からこそ**、厳しくするんだ。<br>(**正因为**爱你，所以才对你严格。) |
+| ばかりに | bakari ni | **Simply because (Regret)**: 仅仅因为…（导致了糟糕的结局，带有强烈的后悔/遗憾） | お金がない**ばかりに**、大学を諦めた。<br>(**就因为**没钱，放弃了读大学。) |
+| おかげで (お陰で) | okage de | **Thanks to**: 托…的福（原因带来了**好结果**，带有感谢的心情） | 先生の**おかげで**、合格できました。<br>(**多亏了**老师，我才能及格。) |
+| せいで (所為で) | sei de | **Due to / Fault**: 都怪…（原因带来了**坏结果**，带有责备、抱怨的心情） | 雨の**せいで**、試合が中止になった。<br>(**都怪**下雨，比赛被取消了。) |
+
+## 10. 动作的阶段与完成度 (Action Phases & Completion)
+
+
+| 语法 (汉字) | Romaji | 核心辨析 (Nuance) | 例句 / 场景提示 |
+| :--- | :--- | :--- | :--- |
+| かける / かけの | kakeru | **Half-done / Almost**: <br>1. **做了一半，未完结**（进行到中途被打断）<br>2. **差点儿就…**（临近某种状态） | 【一半】テーブルに飲み**かけの**お茶がある。<br>(桌子上有喝了一半的茶。)<br>【差点】病気で死に**かけた**。<br>(差点病死。) |
+| たて (立て) | tate | **Freshly done**: **刚刚完成，状态最新鲜**（带有积极、美味、崭新的语感） | 焼き**たての**パンは美味しい。<br>(刚烤出来的面包很好吃。) |
+| きる (切る) | kiru | **Completely done**: **彻底做完，做到极限**（毫无保留） | 長い小説を一日で読み**きった**。<br>(一天之内把长篇小说彻底读完了。) |
+| ぬく (抜く) | nuku | **Through to the end**: **克服困难，坚持到底**（比「きる」更有克服艰辛的语感） | マラソンを走り**ぬいた**。<br>(跑完了马拉松全程。) |
