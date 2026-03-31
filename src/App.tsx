@@ -12,6 +12,7 @@ import Spark from "@/pages/Spark";
 
 import { FontToggleProvider } from "@/context/FontToggleContext";
 import CustomCursor from "@/components/CustomCursor";
+import RandomFont from "./pages/RandomFont";
 
 const DynamicCursor = () => {
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
             <Route path="/wit" element={<Wit />} />
             <Route path="/lifecode" element={<Lifecode />} />
             <Route path="/spark" element={<Spark />} /> 
+            <Route path="/random-font" element={<RandomFont />} />
             
             <Route path="/posts/*" element={<PostDetails />} /> 
           </Routes>
