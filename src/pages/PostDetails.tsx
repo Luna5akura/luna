@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm'; // 【新增】GFM 表格支持
 import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
 import TableOfContents from '@/components/TableOfContents';
@@ -239,7 +240,7 @@ const PostDetails: React.FC = () => {
           ">
               <MarkdownContent content={markdownContent}>
                 <ReactMarkdown
-                  remarkPlugins={[remarkMath, remarkWrapSections]}
+                  remarkPlugins={[remarkGfm, remarkMath, remarkWrapSections]}  // ← remarkGfm 置于首位
                   rehypePlugins={[rehypeKatex, rehypeSlug]}
                 >
                   {markdownContent}
