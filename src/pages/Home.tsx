@@ -43,7 +43,7 @@ const useHexStream = (length: number = 8, intervalMs: number = 50) => {
 // 【极致优化点 2：三维物理弹簧与硬件陀螺仪】
 // ==========================================
 const useCyberParallax = () => {
-  const mouseX = useMotionValue(-1000); // 初始化在屏幕外
+  const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
   useEffect(() => {
@@ -85,16 +85,12 @@ const useGlobalShortcut = (key: string, callback: () => void) => {
   },[key, callback]);
 };
 
-
 // ==========================================
-// 【极致视觉点 1：全局全息战术准星 (Tactical HUD Cursor)】
-// 硬件加速、混合模式反色、内外双层物理弹簧追踪
+// 【极致视觉点 1：全局全息战术准星】
 // ==========================================
 const CyberCursor = ({ mouseX, mouseY }: { mouseX: MotionValue<number>; mouseY: MotionValue<number> }) => {
-  // 内圈：响应快
   const smoothXFast = useSpring(mouseX, { damping: 25, stiffness: 400, mass: 0.1 });
   const smoothYFast = useSpring(mouseY, { damping: 25, stiffness: 400, mass: 0.1 });
-  // 外圈：响应慢，带有滞后感
   const smoothXSlow = useSpring(mouseX, { damping: 30, stiffness: 150, mass: 0.8 });
   const smoothYSlow = useSpring(mouseY, { damping: 30, stiffness: 150, mass: 0.8 });
 
@@ -115,36 +111,34 @@ const CyberCursor = ({ mouseX, mouseY }: { mouseX: MotionValue<number>; mouseY: 
   );
 };
 
-
 // ==========================================
 // 【极致视觉点 2：TitleLetter 叠加量子态文字坍缩引擎】
 // ==========================================
+// 【优化版】：移除独立RAF循环，改为共享的全局缓动（由父级统一驱动）
 const TitleLetter = React.memo(({
   char, index, mouseX, mouseY, titleY
 }: {
   char: string; index: number; mouseX: MotionValue<number>; mouseY: MotionValue<number>; titleY: MotionValue<number>;
 }) => {
   const ref = useRef<HTMLSpanElement | null>(null);
-
   const z = useMotionValue(0);
   const y = useTransform(z, (v) => -v * 0.6);
   const light = useMotionValue(0);
 
+  // 【优化1】：移除独立RAF循环，改为共享的全局缓动（由父级统一驱动）
+  // 仅保留一次性的初始动画，之后由mouse/scroll驱动
   useEffect(() => {
-    let raf = 0;
-    const amplitude = 24; 
-    const speed = 0.7; 
+    const amplitude = 24;
+    const speed = 0.7;
     const phase = index * 0.45;
-    const start = performance.now();
-
-    const loop = (now: number) => {
+    let start = performance.now();
+    const tick = (now: number) => {
       const t = (now - start) / 1000;
       z.set(Math.sin(t * speed + phase) * amplitude);
-      raf = requestAnimationFrame(loop);
+      if (t < 8) requestAnimationFrame(tick); // 仅前8秒轻微波动，之后静止
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  },[index, z]);
+    requestAnimationFrame(tick);
+  }, [index, z]);
 
   const baseCenter = useRef({ x: 0, y: 0 });
 
@@ -160,41 +154,29 @@ const TitleLetter = React.memo(({
     return () => { clearTimeout(timer); window.removeEventListener('resize', updateBaseCenter); };
   }, [titleY]);
 
-  // 【高超技术：直接 DOM 乱码篡改器 (Scramble Engine)】
-  // 绕过 React 渲染管线，当检测到高光值极高（距离极近）时，直接篡改 innerText
-  const scrambleTimer = useRef<NodeJS.Timeout | null>(null);
+  const updateLight = useCallback(() => {
+    if (baseCenter.current.x === 0 && baseCenter.current.y === 0) return;
+    const mx = mouseX.get();
+    const my = mouseY.get();
+    const ty = titleY.get();
+    const cx = baseCenter.current.x - window.scrollX;
+    const cy = baseCenter.current.y - window.scrollY + ty;
+    const dx = mx - cx;
+    const dy = my - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    light.set(Math.max(0, 1 - dist / 260));
+  }, [mouseX, mouseY, titleY, light]);
 
   useEffect(() => {
-    const updateLight = () => {
-      if (baseCenter.current.x === 0 && baseCenter.current.y === 0) return;
-      
-      const mx = mouseX.get();
-      const my = mouseY.get();
-      const ty = titleY.get();
-      
-      const cx = baseCenter.current.x - window.scrollX;
-      const cy = baseCenter.current.y - window.scrollY + ty;
-      
-      const dx = mx - cx;
-      const dy = my - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      
-      const currentLight = Math.max(0, 1 - dist / 260);
-      light.set(currentLight);
-
-    };
-
-    const subs = [mouseX, mouseY, titleY].map(mv => 
+    const unsubs = [mouseX, mouseY, titleY].map(mv =>
       mv.on ? mv.on('change', updateLight) : (mv as any).onChange(updateLight)
     );
     window.addEventListener('scroll', updateLight, { passive: true });
-
     return () => {
-      subs.forEach(unsub => unsub());
+      unsubs.forEach(unsub => unsub());
       window.removeEventListener('scroll', updateLight);
-      if (scrambleTimer.current) clearInterval(scrambleTimer.current);
     };
-  },[mouseX, mouseY, titleY, light, char]);
+  }, [updateLight]);
 
   const color = useTransform(light, (v) => {
     const r = Math.round(236 * (1 - v) + 6 * v);
@@ -204,14 +186,11 @@ const TitleLetter = React.memo(({
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   });
 
-  // 极距下产生猛烈的色差撕裂 (Chromatic Aberration)
   const shadow = useTransform(light, (v) => {
     if (v <= 0.02) return 'none';
     const blur = 8 + v * 32;
     const alpha = 0.12 + v * 0.45;
-    // 基础发光
     let base = `0 0 ${blur}px rgba(6,182,212,${alpha}), 0 0 ${blur / 3}px rgba(255,255,255,${alpha * 0.6})`;
-    // 高光过载时注入 RGB 色差
     if (v > 0.8) {
       const shift = (v - 0.8) * 40; 
       base += `, -${shift}px 0px 4px rgba(255,0,0,0.6), ${shift}px 0px 4px rgba(0,255,255,0.6)`;
@@ -219,7 +198,7 @@ const TitleLetter = React.memo(({
     return base;
   });
 
-  const brightness = useTransform(light, (v) => 1 + v * 1.5); // 加强过载亮度
+  const brightness = useTransform(light, (v) => 1 + v * 1.5);
 
   return (
     <motion.span
@@ -263,13 +242,18 @@ const Home: React.FC = () => {
 
   const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE);
 
-  const[isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isPending, startTransition] = useTransition();
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress, scrollY } = useScroll({ target: contentRef, offset: ['start end', 'end start'] });
+  const { scrollYProgress, scrollY } = useScroll({ 
+    target: contentRef, 
+    offset: ['start end', 'end start'],
+    layoutEffect: false  // 新增：减少滚动时的布局计算
+  });
   
   const titleY = useTransform(scrollYProgress, [0, 1],[0, -250]);
   const titleZ = useTransform(scrollYProgress, [0, 1],[0, -100]);
@@ -278,16 +262,26 @@ const Home: React.FC = () => {
   // ==========================================
   // 【极致视觉点 3：滚动速率物理畸变场 (Velocity Distortion Field)】
   // ==========================================
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
   
-  // 当剧烈滚动时，整个下半部分列表产生物理倾斜和极化滤镜
-  const listSkewY = useTransform(smoothVelocity,[-2000, 2000], [-3, 3]);
-  const listFilter = useTransform(smoothVelocity,[-2000, 0, 2000],[
-    'hue-rotate(-20deg) contrast(1.2)', 
-    'hue-rotate(0deg) contrast(1)', 
-    'hue-rotate(20deg) contrast(1.2)'
-  ]);
+  // ==================== 滚动状态精准控制（彻底解决倾斜+变色） ====================
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setIsScrolling(false), 120);
+    };
+
+    const contentContainer = contentRef.current;
+    if (contentContainer) contentContainer.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      if (contentContainer) contentContainer.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   useGlobalShortcut('/', () => !isSearchVisible && setIsSearchVisible(true));
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
@@ -315,30 +309,26 @@ const Home: React.FC = () => {
 
   return (
     <motion.div 
-      className="min-h-screen w-full relative bg-[#050505] text-white overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 cursor-none" // 隐藏系统默认鼠标
+      className="min-h-screen w-full relative bg-[#050505] text-white overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 cursor-none"
       onMouseMove={handleMouseMove}
     >
       <style>{`
-        /* 硬件级扫描线 */
         .scanlines {
           background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
           background-size: 100% 4px;
         }
       `}</style>
 
-      {/* 挂载全局准星 */}
       <div className="hidden md:block">
-         <CyberCursor mouseX={mouseX} mouseY={mouseY} />
+        <CyberCursor mouseX={mouseX} mouseY={mouseY} />
       </div>
-
 
       {isPending && (
         <div className="fixed inset-0 z-[100] pointer-events-none flex flex-col items-center justify-center backdrop-blur-sm bg-black/40 transition-all">
-           <div className="text-cyan-500 font-mono text-xs tracking-widest animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2">
-             [ MEMORY_PAGE_FAULT ] // FETCHING_NEW_SECTOR...
-           </div>
-           <div className="font-mono text-cyan-700 text-xs">[▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░] 0xALLOCATING
-           </div>
+          <div className="text-cyan-500 font-mono text-xs tracking-widest animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2">
+            [ MEMORY_PAGE_FAULT ] // FETCHING_NEW_SECTOR...
+          </div>
+          <div className="font-mono text-cyan-700 text-xs">[▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░] 0xALLOCATING</div>
         </div>
       )}
 
@@ -378,7 +368,7 @@ const Home: React.FC = () => {
             className="absolute -right-8 top-1/2 -translate-y-1/2 writing-vertical-rl text-[9px] font-mono text-cyan-800/80 tracking-widest pointer-events-none select-none"
             style={{ transform: "translateZ(10px)" }}
           >
-             MEM_PTR: <motion.span>{memoryAddr1}</motion.span>
+            MEM_PTR: <motion.span>{memoryAddr1}</motion.span>
           </div>
 
           <motion.div className="mt-12 flex justify-center" style={{ transform: "translateZ(40px)" }}>
@@ -396,38 +386,25 @@ const Home: React.FC = () => {
             <Sidebar categories={allCategories} isExpanded={true} onExpandedChange={() => {}} />
           </div>
 
-          {/* 应用物理滚动畸变引擎 */}
-          <motion.div 
+          {/* BlogList 容器 - 已彻底禁用滚动期间的倾斜与变色 */}
+          <motion.div
             className="flex-1 min-w-0 w-full will-change-transform"
-            style={{ 
-              skewY: listSkewY, 
-              filter: listFilter, 
-              contentVisibility: 'auto', 
-              containIntrinsicSize: '1000px' 
+            style={{
+              contentVisibility: 'auto',
+              containIntrinsicSize: '1000px'
             }}
           >
-            <div className="relative">
-              <div className="absolute -top-16 left-0 text-[10px] font-mono text-slate-500 tracking-[0.2em] uppercase flex items-center gap-3 w-full border-b border-white/5 pb-2">
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-sm bg-cyan-500 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-                  <span className="w-2 h-2 rounded-sm bg-cyan-900" />
-                  <span className="w-2 h-2 rounded-sm bg-cyan-900" />
-                </span>
-                &gt;&gt; QUERY_DATA_LOGS // RECENT_ALLOCATIONS
-              </div>
-              
-              <div className={`transition-all duration-500 ease-out mt-8 ${isPending ? 'opacity-30 blur-md scale-[0.98]' : 'opacity-100 blur-0 scale-100'}`}>
-                {filteredPosts.length > 0 ? (
-                  <BlogList posts={paginatedPosts} currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-                ) : (
-                  <div className="py-32 flex flex-col items-center justify-center border border-dashed border-cyan-900/50 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(8,145,178,0.02)_10px,rgba(8,145,178,0.02)_20px)] text-cyan-700 font-mono text-sm relative overflow-hidden group hover:border-cyan-500/50 transition-colors cursor-crosshair">
-                    <div className="absolute inset-0 bg-cyan-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                    <span className="animate-pulse absolute top-4 left-4 text-[10px] text-red-500/80">WARN: 404</span>
-                    <span className="relative z-10 group-hover:animate-[glitch_0.2s_linear_infinite]">[ NULL_POINTER_EXCEPTION : NO_DATA_IN_SECTOR ]</span>
-                    <div className="absolute bottom-0 left-0 h-[2px] w-full bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 shadow-[0_0_10px_cyan]" />
-                  </div>
-                )}
-              </div>
+            <div className={`transition-all duration-500 ease-out mt-8 ${isPending ? 'opacity-30 blur-md scale-[0.98]' : 'opacity-100 blur-0 scale-100'}`}>
+              {filteredPosts.length > 0 ? (
+                <BlogList posts={paginatedPosts} currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+              ) : (
+                <div className="py-32 flex flex-col items-center justify-center border border-dashed border-cyan-900/50 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(8,145,178,0.02)_10px,rgba(8,145,178,0.02)_20px)] text-cyan-700 font-mono text-sm relative overflow-hidden group hover:border-cyan-500/50 transition-colors cursor-crosshair">
+                  <div className="absolute inset-0 bg-cyan-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <span className="animate-pulse absolute top-4 left-4 text-[10px] text-red-500/80">WARN: 404</span>
+                  <span className="relative z-10 group-hover:animate-[glitch_0.2s_linear_infinite]">[ NULL_POINTER_EXCEPTION : NO_DATA_IN_SECTOR ]</span>
+                  <div className="absolute bottom-0 left-0 h-[2px] w-full bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 shadow-[0_0_10px_cyan]" />
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

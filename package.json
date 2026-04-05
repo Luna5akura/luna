@@ -35,6 +35,7 @@
     "rehype-katex": "^7.0.1",
     "rehype-math": "^0.2.0",
     "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "remark-slug": "^8.0.0",
     "styled-components": "^6.3.12",

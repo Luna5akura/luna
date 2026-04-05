@@ -80,10 +80,12 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
     });
   }, [content]);
 
-  // 段落揭示（升级为更柔和的数据流效果）
+  // 段落揭示（升级为更柔和的数据流效果，包含表格支持）
   useEffect(() => {
     if (!containerRef.current) return;
-    const elements = containerRef.current.querySelectorAll('p, h1, h2, h3, h4, li, blockquote, img');
+    const elements = containerRef.current.querySelectorAll(
+      'p, h1, h2, h3, h4, li, blockquote, img, table, th, td'
+    );
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -193,7 +195,10 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
         .markdown-sys-container h4:not(.sys-reveal-visible),
         .markdown-sys-container li:not(.sys-reveal-visible),
         .markdown-sys-container blockquote:not(.sys-reveal-visible),
-        .markdown-sys-container img:not(.sys-reveal-visible) {
+        .markdown-sys-container img:not(.sys-reveal-visible),
+        .markdown-sys-container table:not(.sys-reveal-visible),
+        .markdown-sys-container th:not(.sys-reveal-visible),
+        .markdown-sys-container td:not(.sys-reveal-visible) {
           opacity: 0;
           transform: translateY(24px) skewX(-3deg);
           filter: blur(4px);
@@ -227,6 +232,55 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
           border-bottom-style: solid;
           text-shadow: 0 0 12px #22d3ee;
           background: rgba(14, 165, 233, 0.08);
+        }
+
+        /* ==================== 表格赛博终端风格 ==================== */
+        .markdown-sys-container table {
+          width: 100%;
+          border-collapse: collapse;
+          background: #02040a !important;
+          border: 1px solid rgba(14, 165, 233, 0.25);
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow:
+            0 10px 30px -10px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          margin: 2.5rem 0;
+        }
+
+        .markdown-sys-container th,
+        .markdown-sys-container td {
+          padding: 1rem 1.25rem;
+          border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+          text-align: left;
+          vertical-align: top;
+          font-size: 1.02rem;
+          line-height: 1.7;
+        }
+
+        .markdown-sys-container th {
+          background: rgba(14, 165, 233, 0.08);
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: 600;
+          color: #f1f5f9;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-size: 0.95rem;
+        }
+
+        .markdown-sys-container tr:last-child td {
+          border-bottom: none;
+        }
+
+        .markdown-sys-container tr:hover {
+          background: rgba(14, 165, 233, 0.06);
+        }
+
+        /* 表格内多行 <br> 增强可读性 */
+        .markdown-sys-container td br {
+          display: block;
+          margin: 0.4em 0;
+          content: '';
         }
       `}</style>
 
