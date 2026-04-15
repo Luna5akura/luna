@@ -298,9 +298,15 @@ const OrbitalSkillMatrix = () => {
               className={cn(
                 "absolute flex flex-col items-center justify-center p-4 cursor-crosshair transition-colors duration-300 will-change-transform",
                 "bg-[#02050A]/80 backdrop-blur-md border rounded-lg",
-                isActive ? `border-[${skill.color}] shadow-[0_0_30px_${skill.color}40]` : "border-cyan-900/50 hover:border-cyan-700"
+                isActive ? "" : "border-cyan-900/50 hover:border-cyan-700"
               )}
-              style={{ width: '100px', height: '100px', transformOrigin: 'center center' }}
+              style={{
+                width: '100px',
+                height: '100px',
+                transformOrigin: 'center center',
+                borderColor: isActive ? skill.color : undefined,
+                boxShadow: isActive ? `0 0 30px ${skill.color}40` : undefined,
+              }}
             >
               <Icon size={28} color={isActive ? skill.color : '#64748b'} className={isActive ? "animate-pulse" : ""} />
               <div className="mt-2 text-[10px] font-mono tracking-widest text-center" style={{ color: isActive ? skill.color : '#64748b' }}>

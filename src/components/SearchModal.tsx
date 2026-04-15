@@ -22,6 +22,7 @@ interface SearchModalProps {
   onClose: () => void;
   posts: Post[];
   contents: Record<string, string>;
+  contentsStatus: 'idle' | 'loading' | 'ready';
 }
 
 interface SearchResult {
@@ -72,7 +73,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
   onSearchTermChange,
   onClose,
   posts,
-  contents
+  contents,
+  contentsStatus
 }) => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -155,6 +157,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
     // 在这里应用 Top-K 截断原则，只在内存中排序，物理上仅暴露并渲染前 15 条高价值权重的结果。
     return results.sort((a, b) => b.score - a.score).slice(0, 15);
   }, [deferredTerm, searchIndex]);
+
+  const isContentIndexReady = contentsStatus === 'ready';
 
   useEffect(() => {
     setFocusedIndex(-1);
@@ -292,6 +296,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
         {searchTerm !== deferredTerm && (
            <div className="absolute top-16 left-0 w-full h-[1px] bg-cyan-500 animate-[pulse_0.5s_infinite] z-50" />
+        )}
+
+        {!isContentIndexReady && (
+          <div className="border-b border-cyan-900/20 bg-cyan-950/10 px-6 py-2 text-[10px] font-mono uppercase tracking-[0.24em] text-cyan-600">
+            Content index warming up. Title search is ready now; full-text results are still loading.
+          </div>
         )}
         
         <div className="overflow-y-auto p-2 terminal-scrollbar bg-transparent relative z-40">

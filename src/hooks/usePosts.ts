@@ -1,59 +1,86 @@
-// src/hooks/usePosts.ts
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import matter from 'gray-matter';
 import { Post } from '@/types';
-
-const toTitleCase = (str: string) => {
-  return str.replace(/[-_]/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-};
+import { posts as generatedPosts } from '@/data/posts.generated';
 
 const markdownFiles = import.meta.glob('../posts/**/*.md', {
   query: '?raw',
   import: 'default',
-  eager: true,
 });
 
-export const usePosts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [contents, setContents] = useState<{ [key: string]: string }>({});
+const contentCache: Record<string, string> = {};
+let allContentsPromise: Promise<Record<string, string>> | null = null;
 
-  useEffect(() => {
-    const generatedPosts: Post[] = [];
-    const newContents: { [key: string]: string } = {};
-    let nextId = 1;
+const pathToKey = (path: string) => path.replace('../posts/', '').replace(/\.md$/, '');
 
-    for (const path in markdownFiles) {
-      const rawContent = markdownFiles[path] as string;
-      const match = path.match(/\/posts\/(.*)\.md$/);
-      
-      if (match) {
-        const key = match[1]; // 例如: 'Misc/post1'
-        const { data, content } = matter(rawContent);
+const loadContentFromPath = async (path: string): Promise<string> => {
+  const key = pathToKey(path);
+  if (contentCache[key]) return contentCache[key];
 
-        newContents[key] = content;
+  const loader = markdownFiles[path];
+  if (!loader) {
+    throw new Error(`Markdown loader not found for ${path}`);
+  }
 
-        generatedPosts.push({
-          id: nextId++,
-          title: data.title || toTitleCase(key.split('/').pop() || key),
-          date: data.date 
-            ? (data.date instanceof Date 
-                ? data.date.toISOString().split('T')[0]           // "2026-03-24"
-                : String(data.date).trim())
-            : new Date().toISOString().split('T')[0],
-          excerpt: data.excerpt || content.slice(0, 150) + '...',
-          contentKey: key,
-          author: data.author || 'Anonymous',
-          category: data.category || key.split('/')[0] || 'Uncategorized',
-        });
-      }
+  const raw = (await loader()) as string;
+  const { content } = matter(raw);
+  contentCache[key] = content;
+  return content;
+};
+
+const loadAllContentsInternal = async () => {
+  if (allContentsPromise) return allContentsPromise;
+
+  allContentsPromise = Promise.all(
+    Object.keys(markdownFiles).map(async (path) => {
+      const content = await loadContentFromPath(path);
+      return [pathToKey(path), content] as const;
+    })
+  ).then((entries) => Object.fromEntries(entries));
+
+  return allContentsPromise;
+};
+
+export const usePosts = ({ preloadContents = false }: { preloadContents?: boolean } = {}) => {
+  const [contents, setContents] = useState<Record<string, string>>(contentCache);
+  const [contentsStatus, setContentsStatus] = useState<'idle' | 'loading' | 'ready'>(
+    Object.keys(contentCache).length > 0 ? 'ready' : 'idle'
+  );
+
+  const loadContent = useCallback(async (contentKey: string) => {
+    if (contentCache[contentKey]) {
+      setContents((prev) => (prev[contentKey] ? prev : { ...prev, [contentKey]: contentCache[contentKey] }));
+      return contentCache[contentKey];
     }
 
-    // 调试输出
-    console.log('Available content keys:', generatedPosts.map(p => p.contentKey));
-    
-    setPosts(generatedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-    setContents(newContents);
+    setContentsStatus((prev) => (prev === 'ready' ? prev : 'loading'));
+    const content = await loadContentFromPath(`../posts/${contentKey}.md`);
+    setContents((prev) => ({ ...prev, [contentKey]: content }));
+    setContentsStatus(Object.keys(contentCache).length === generatedPosts.length ? 'ready' : 'idle');
+    return content;
   }, []);
 
-  return { posts, contents };
+  const loadAllContents = useCallback(async () => {
+    if (contentsStatus === 'ready') return contentCache;
+
+    setContentsStatus('loading');
+    const loaded = await loadAllContentsInternal();
+    setContents(loaded);
+    setContentsStatus('ready');
+    return loaded;
+  }, [contentsStatus]);
+
+  useEffect(() => {
+    if (preloadContents) {
+      void loadAllContents();
+    }
+  }, [loadAllContents, preloadContents]);
+
+  return {
+    posts: generatedPosts as Post[],
+    contents,
+    contentsStatus,
+    loadContent,
+    loadAllContents,
+  };
 };

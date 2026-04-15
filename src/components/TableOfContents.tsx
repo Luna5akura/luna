@@ -309,12 +309,13 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
       {/* 拓扑雷达主面板 */}
       <div
         className={cn(
-          "fixed z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border border-cyan-900/40 shadow-[0_0_40px_rgba(0,0,0,0.9)] flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform transform-gpu",
+          "fixed z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border border-cyan-900/40 shadow-[0_0_40px_rgba(0,0,0,0.9)] flex flex-col transition-all duration-500 will-change-transform transform-gpu",
           isMobile 
              ? "inset-x-0 bottom-0 rounded-t-xl border-b-0 h-[65vh]" 
              : "top-32 right-12 rounded-sm w-72 max-h-[70vh]"
         )}
         style={{
+          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
           transform: isOpen 
             ? "translateY(0) translateX(0)" 
             : isMobile ? "translateY(100%)" : "translateX(120%)",

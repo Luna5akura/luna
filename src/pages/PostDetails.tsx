@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
-import remarkGfm from 'remark-gfm'; // 【新增】GFM 表格支持
+import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
 import TableOfContents from '@/components/TableOfContents';
@@ -81,18 +81,31 @@ const KernelPanic404 = () => {
   );
 };
 
+const LoadingArticle = () => (
+  <div className="min-h-screen bg-[#050505] px-6 py-24 text-slate-300">
+    <div className="mx-auto max-w-4xl border border-cyan-900/40 bg-[#060a12]/85 p-8 font-mono shadow-[0_0_40px_rgba(0,0,0,0.45)]">
+      <div className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-600">Archive Link Established</div>
+      <div className="text-sm uppercase tracking-[0.2em] text-slate-500">Streaming markdown payload...</div>
+      <div className="mt-6 h-px w-full overflow-hidden bg-cyan-950/60">
+        <div className="h-full w-1/3 animate-[pulse_1s_linear_infinite] bg-cyan-400/80" />
+      </div>
+    </div>
+  </div>
+);
+
 // ==========================================
 // 主组件：机密档案终端阅读器
 // ==========================================
 const PostDetails: React.FC = () => {
   const { '*' : slug } = useParams<{ '*': string }>();
   const navigate = useNavigate();
-  const { posts, contents } = usePosts();
+  const { posts, loadContent } = usePosts();
   
   const [post, setPost] = useState<Post | undefined>(undefined);
   const [markdownContent, setMarkdownContent] = useState<string | undefined>(undefined);
   const [isTocOpen, setIsTocOpen] = useState(false);
   const[isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -102,14 +115,47 @@ const PostDetails: React.FC = () => {
   },[]);
 
   useEffect(() => {
-    if (posts.length > 0 && slug) {
-      const foundPost = posts.find((p) => p.contentKey === slug);
-      if (foundPost) {
-        setPost(foundPost);
-        setMarkdownContent(contents[foundPost.contentKey]);
+    let isMounted = true;
+
+    const loadPost = async () => {
+      if (!slug || posts.length === 0) {
+        if (isMounted) setIsLoading(false);
+        return;
       }
-    }
-  }, [posts, contents, slug]);
+
+      const foundPost = posts.find((p) => p.contentKey === slug);
+      if (!foundPost) {
+        if (isMounted) {
+          setPost(undefined);
+          setMarkdownContent(undefined);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (isMounted) {
+        setPost(foundPost);
+        setIsLoading(true);
+      }
+
+      try {
+        const content = await loadContent(foundPost.contentKey);
+        if (isMounted) {
+          setMarkdownContent(content);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadPost();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [posts, slug, loadContent]);
 
   // 计算硬核元数据
   const metaData = useMemo(() => {
@@ -122,8 +168,11 @@ const PostDetails: React.FC = () => {
     };
   }, [markdownContent]);
 
+  if (isLoading) {
+    return <LoadingArticle />;
+  }
+
   if (!post || !markdownContent) {
-    // 若 1 秒后仍无数据，展示红屏内核恐慌
     return <KernelPanic404 />;
   }
 
@@ -146,11 +195,13 @@ const PostDetails: React.FC = () => {
     >
       <ReadingTelemetry />
 
-      <div className="pt-24 pb-32 px-6 max-w-4xl mx-auto relative z-10">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_0_26%),linear-gradient(180deg,rgba(4,7,13,1),rgba(2,4,10,1))]" />
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(148,163,184,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.18) 1px, transparent 1px)', backgroundSize: '96px 96px' }} />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-32 pt-24">
         
-        {/* ==========================================
-            控制台指令返回键
-            ========================================== */}
         <div className="mb-12">
           <a 
             href="/" 
@@ -167,65 +218,67 @@ const PostDetails: React.FC = () => {
           </a>
         </div>
 
-        {/* ==========================================
-            【顶级炫技点 3：View Transitions 跨页物理锚点】
-            与 BlogPost.tsx 严格对应的 viewTransitionName！
-            ========================================== */}
-        <h1 
-          className="text-4xl md:text-5xl lg:text-7xl font-black mb-12 text-slate-100 uppercase tracking-tighter leading-[1.1] drop-shadow-[0_0_15px_rgba(34,211,238,0.15)]"
-          style={{ viewTransitionName: `post-title-${post.id}` }} // ⚠️ 跨页面飞跃绝对核心
-        >
-          {post.title}
-        </h1>
+        <div className="relative mb-16 overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(7,14,24,0.86),rgba(4,8,16,0.58))] px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-8 md:py-10">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),transparent_36%),radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_0_32%)]" />
+          <div className="pointer-events-none absolute inset-x-6 top-6 h-px bg-gradient-to-r from-transparent via-cyan-400/35 to-transparent" />
 
-        {/* ==========================================
-            战术级数据档案表头 (Tactical Metadata Header)
-            ========================================== */}
-        <div className="mb-16 border border-cyan-900/40 bg-[#0a0a0a]/80 backdrop-blur-md p-6 font-mono text-[10px] md:text-xs text-slate-400 relative overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-          <div className="absolute top-0 left-0 w-full h-1 bg-cyan-300 opacity-50" />
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 uppercase tracking-[0.15em]">
-             <div className="flex flex-col gap-1.5">
-               <span className="flex items-center gap-1.5 opacity-50"><Database className="w-3 h-3"/> SECTOR</span>
-               <span className="text-cyan-300 font-bold">{post.category}</span>
-             </div>
-             <div className="flex flex-col gap-1.5">
-               <span className="flex items-center gap-1.5 opacity-50"><Cpu className="w-3 h-3"/> MEM_ALLOC</span>
-               <span className="text-cyan-300 font-bold">{metaData.hexSize} BYTES</span>
-             </div>
-             <div className="flex flex-col gap-1.5">
-               <span className="flex items-center gap-1.5 opacity-50"><Terminal className="w-3 h-3"/> TIMESTAMP</span>
-               <span className="text-cyan-300 font-bold">{post.date}</span>
-             </div>
-             <div className="flex flex-col gap-1.5">
-               <span className="flex items-center gap-1.5 opacity-50"><Activity className="w-3 h-3"/> EST_DECRYPT</span>
-               <span className="text-cyan-300 font-bold">{metaData.time} MIN_CYCLES</span>
-             </div>
+          <div className="relative z-10">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.34em] text-cyan-700">
+              <span>Archive Entry</span>
+              <span className="text-slate-500">Sector / {post.category}</span>
+            </div>
+
+            <h1 
+              className="mb-8 max-w-4xl text-4xl font-black uppercase leading-[1.02] tracking-[-0.05em] text-slate-100 drop-shadow-[0_0_15px_rgba(34,211,238,0.12)] md:text-6xl lg:text-7xl"
+              style={{ viewTransitionName: `post-title-${post.id}` }}
+            >
+              {post.title}
+            </h1>
+
+            <p className="mb-10 max-w-3xl text-sm leading-7 text-slate-400 md:text-base">
+              Structured as a reading terminal, treated like a publication. The chrome stays cybernetic, but the typography and spacing should let the content feel carefully edited instead of merely decorated.
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 md:grid-cols-5">
+               <div className="border border-white/5 bg-black/20 p-4">
+                 <span className="mb-2 flex items-center gap-1.5 opacity-50"><Database className="w-3 h-3"/> Sector</span>
+                 <span className="text-cyan-300 font-bold">{post.category}</span>
+               </div>
+               <div className="border border-white/5 bg-black/20 p-4">
+                 <span className="mb-2 flex items-center gap-1.5 opacity-50"><Cpu className="w-3 h-3"/> Mem_Alloc</span>
+                 <span className="text-cyan-300 font-bold">{metaData.hexSize}</span>
+               </div>
+               <div className="border border-white/5 bg-black/20 p-4">
+                 <span className="mb-2 flex items-center gap-1.5 opacity-50"><Terminal className="w-3 h-3"/> Timestamp</span>
+                 <span className="text-cyan-300 font-bold">{post.date}</span>
+               </div>
+               <div className="border border-white/5 bg-black/20 p-4">
+                 <span className="mb-2 flex items-center gap-1.5 opacity-50"><Activity className="w-3 h-3"/> Est_Read</span>
+                 <span className="text-cyan-300 font-bold">{metaData.time} min</span>
+               </div>
+               <div className="border border-white/5 bg-black/20 p-4">
+                 <span className="mb-2 flex items-center gap-1.5 opacity-50"><Database className="w-3 h-3"/> Author</span>
+                 <span className="text-cyan-300 font-bold">{post.author}</span>
+               </div>
+            </div>
           </div>
         </div>
 
-        {/* ==========================================
-            【顶级炫技点 4：激光扫描数据清洗动画 (Scanline Reveal Wipe)】
-            利用 clip-path 实现从上至下的科幻级展开
-            ========================================== */}
         <motion.div 
           initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', filter: 'brightness(2) blur(10px)' }}
           animate={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', filter: 'brightness(1) blur(0px)' }}
           transition={{ duration: 1.2, ease:[0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="relative"
+          className="relative overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(5,8,15,0.9),rgba(4,7,13,0.72))] px-5 py-8 shadow-[0_30px_90px_rgba(0,0,0,0.34)] md:px-8 md:py-10"
         >
-          {/* 动画执行时的扫描高光线 */}
           <motion.div 
             initial={{ top: '0%', opacity: 1 }}
             animate={{ top: '100%', opacity: 0 }}
             transition={{ duration: 1.2, ease:[0.16, 1, 0.3, 1], delay: 0.2 }}
             className="absolute left-0 w-full h-[2px] bg-cyan-400 shadow-[0_0_20px_#06b6d4] z-50 pointer-events-none"
           />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-cyan-500/8 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
 
-          {/* 
-            极致黑客风 Markdown 渲染核心层 
-            利用 Tailwind Prose 配合我们在 MarkdownContent 里的重构，达到双剑合璧
-          */}
           <div className="
               prose prose-invert prose-lg max-w-none
               prose-headings:font-bold prose-headings:tracking-tighter prose-headings:uppercase
@@ -240,7 +293,7 @@ const PostDetails: React.FC = () => {
           ">
               <MarkdownContent content={markdownContent}>
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkMath, remarkWrapSections]}  // ← remarkGfm 置于首位
+                  remarkPlugins={[remarkGfm, remarkMath, remarkWrapSections]}
                   rehypePlugins={[rehypeKatex, rehypeSlug]}
                 >
                   {markdownContent}
