@@ -147,10 +147,13 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
     <>
       <style>{`
         .markdown-sys-container {
-          font-family: 'Inter', system-ui, sans-serif;
+          font-family: 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
           color: #cbd5e1;
           line-height: 1.85;
           font-size: 1.05rem;
+        }
+        .markdown-sys-container > * + * {
+          margin-top: 1.45rem;
         }
         .markdown-sys-container h1,
         .markdown-sys-container h2,
@@ -162,6 +165,16 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
           position: relative;
           padding-left: 1.75rem;
         }
+        .markdown-sys-container h1,
+        .markdown-sys-container h2 {
+          margin-top: 3.4rem;
+          margin-bottom: 1.2rem;
+        }
+        .markdown-sys-container h3,
+        .markdown-sys-container h4 {
+          margin-top: 2.4rem;
+          margin-bottom: 0.9rem;
+        }
         .markdown-sys-container h2::before,
         .markdown-sys-container h3::before {
           content: '◉';
@@ -172,6 +185,20 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
           font-size: 0.85em;
         }
         .markdown-sys-container h1::before { content: '◆'; }
+        .markdown-sys-container p,
+        .markdown-sys-container li {
+          letter-spacing: 0.01em;
+        }
+        .markdown-sys-container ul,
+        .markdown-sys-container ol {
+          padding-left: 1.25rem;
+        }
+        .markdown-sys-container hr {
+          border: none;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.35), transparent);
+          margin: 3rem 0;
+        }
 
         /* 代码块增强 */
         .sys-code-block {

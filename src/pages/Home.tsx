@@ -18,24 +18,19 @@ const ITEMS_PER_PAGE = 5;
 const useHexStream = (length: number = 8, intervalMs: number = 50) => {
   const hexValue = useMotionValue('');
   useEffect(() => {
-    let lastTime = 0;
-    let frameId: number;
-    const update = (time: number) => {
-      if (time - lastTime > intervalMs) {
-        let str = '0x';
-        for (let i = 0; i < length; i += 8) {
-           const chunkLen = Math.min(8, length - i);
-           const maxVal = Math.pow(16, chunkLen);
-           str += Math.floor(Math.random() * maxVal).toString(16).toUpperCase().padStart(chunkLen, '0');
-        }
-        hexValue.set(str);
-        lastTime = time;
+    const update = () => {
+      let str = '0x';
+      for (let i = 0; i < length; i += 8) {
+        const chunkLen = Math.min(8, length - i);
+        const maxVal = Math.pow(16, chunkLen);
+        str += Math.floor(Math.random() * maxVal).toString(16).toUpperCase().padStart(chunkLen, '0');
       }
-      frameId = requestAnimationFrame(update);
+      hexValue.set(str);
     };
-    frameId = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(frameId);
-  },[length, intervalMs, hexValue]);
+    update();
+    const intervalId = window.setInterval(update, intervalMs);
+    return () => window.clearInterval(intervalId);
+  }, [length, intervalMs, hexValue]);
   return hexValue;
 };
 
@@ -222,7 +217,7 @@ const TitleLetter = React.memo(({
 });
 
 const Home: React.FC = () => {
-  const { posts, contents } = usePosts();
+  const { posts, contents, contentsStatus, loadAllContents } = usePosts();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
@@ -283,7 +278,7 @@ const Home: React.FC = () => {
     };
   }, []);
 
-  useGlobalShortcut('/', () => !isSearchVisible && setIsSearchVisible(true));
+  useGlobalShortcut('/', () => !isSearchVisible && openSearch());
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
 
   const handlePageChange = useCallback((newPage: number) => {
@@ -306,6 +301,10 @@ const Home: React.FC = () => {
 
   const titleText = 'LUNA WORLD';
   const letters = titleText.split('');
+  const openSearch = useCallback(() => {
+    setIsSearchVisible(true);
+    void loadAllContents();
+  }, [loadAllContents]);
 
   return (
     <motion.div 
@@ -323,6 +322,12 @@ const Home: React.FC = () => {
         <CyberCursor mouseX={mouseX} mouseY={mouseY} />
       </div>
 
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(6,182,212,0.12),transparent_0_32%),radial-gradient(circle_at_80%_16%,rgba(59,130,246,0.08),transparent_0_28%),linear-gradient(180deg,rgba(4,7,13,0.98)_0%,rgba(2,4,10,1)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-[55vh] bg-[linear-gradient(180deg,rgba(10,20,32,0.32),transparent)]" />
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(148,163,184,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.18) 1px, transparent 1px)', backgroundSize: '120px 120px' }} />
+      </div>
+
       {isPending && (
         <div className="fixed inset-0 z-[100] pointer-events-none flex flex-col items-center justify-center backdrop-blur-sm bg-black/40 transition-all">
           <div className="text-cyan-500 font-mono text-xs tracking-widest animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2">
@@ -335,10 +340,10 @@ const Home: React.FC = () => {
       <CyberHero />
       <div className="fixed inset-0 pointer-events-none z-10 scanlines opacity-50 mix-blend-overlay" />
 
-      <section className="relative h-screen w-full flex flex-col items-center justify-center z-20 px-6 perspective-[1400px] overflow-hidden">
+      <section className="relative min-h-screen w-full flex flex-col items-center justify-center z-20 px-6 pb-12 pt-28 perspective-[1400px] overflow-hidden">
         <motion.div
           style={{ y: titleY, z: titleZ, opacity: titleOpacity, rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="text-center will-change-transform transform-gpu relative"
+          className="text-center will-change-transform transform-gpu relative w-full max-w-6xl"
         >
           <motion.div 
             initial={{ opacity: 0, width: 0 }}
@@ -377,18 +382,18 @@ const Home: React.FC = () => {
         </motion.div>
       </section>
 
-      <div ref={contentRef} className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-20 min-h-screen">
+      <div ref={contentRef} className="relative z-20 w-full max-w-7xl mx-auto overflow-visible px-6 md:px-12 pt-16 pb-20 min-h-screen">
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[#050505] -translate-y-full pointer-events-none z-0" />
         <div className="absolute inset-0 bg-[#050505] z-0" />
 
-        <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-24 items-start pt-12 border-t border-white/5">
-          <div className="lg:w-64 shrink-0 sticky top-32">
+        <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-24 items-start pt-12 border-t border-white/5 overflow-visible">
+          <div className="relative z-30 overflow-visible shrink-0 sticky top-32 lg:w-[21.5rem] lg:pr-10 lg:-mr-10 xl:w-[22rem] xl:pr-12 xl:-mr-12">
             <Sidebar categories={allCategories} isExpanded={true} onExpandedChange={() => {}} />
           </div>
 
           {/* BlogList 容器 - 已彻底禁用滚动期间的倾斜与变色 */}
           <motion.div
-            className="flex-1 min-w-0 w-full will-change-transform"
+            className="relative z-10 flex-1 min-w-0 w-full overflow-visible will-change-transform lg:pr-6 xl:pr-10"
             style={{
               contentVisibility: 'auto',
               containIntrinsicSize: '1000px'
@@ -410,7 +415,14 @@ const Home: React.FC = () => {
         </div>
         
         {isSearchVisible && (
-          <SearchModal searchTerm={searchTerm} onSearchTermChange={setSearchTerm} onClose={() => { setIsSearchVisible(false); setSearchTerm(''); }} posts={posts} contents={contents} />
+          <SearchModal
+            searchTerm={searchTerm}
+            onSearchTermChange={setSearchTerm}
+            onClose={() => { setIsSearchVisible(false); setSearchTerm(''); }}
+            posts={posts}
+            contents={contents}
+            contentsStatus={contentsStatus}
+          />
         )}
       </div>
     </motion.div>

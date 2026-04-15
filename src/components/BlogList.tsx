@@ -1,9 +1,8 @@
 // src/components/BlogList.tsx
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { createPortal } from 'react-dom';
 import { Post } from '@/types';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence, useTransform } from 'framer-motion';
 import {
   Pagination,
   PaginationContent,
@@ -14,152 +13,6 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-
-// ==========================================
-// 【全局分形缓存 - 已预计算】
-// ==========================================
-const MAX_POINTS = 680;
-const FRACTAL_CACHE = new Map<string | number, {
-  pointsX: Float32Array;
-  pointsY: Float32Array;
-  pointsZ: Float32Array;
-  scaleMult: number;
-  offsetY: number;
-  h1: number;
-  hue: number;
-}>();
-
-const getFractalData = (seedId: string | number) => {
-  if (FRACTAL_CACHE.has(seedId)) return FRACTAL_CACHE.get(seedId)!;
-  
-  const hash = String(seedId).split('').reduce((acc, char) => Math.imul(31, acc) + char.charCodeAt(0) | 0, 0);
-  const absHash = Math.abs(hash);
-  const h1 = (absHash % 100) / 100;
-  const h2 = ((absHash >> 4) % 100) / 100;
-  const attractorType = absHash % 4;
-
-  const pointsX = new Float32Array(MAX_POINTS);
-  const pointsY = new Float32Array(MAX_POINTS);
-  const pointsZ = new Float32Array(MAX_POINTS);
-
-  let cx = 0.1, cy = 0.1, cz = 0.1;
-  let dt = 0.01, scaleMult = 1, offsetY = 0;
-  
-  for (let i = 0; i < MAX_POINTS; i++) {
-    let dx = 0, dy = 0, dz = 0;
-    if (attractorType === 0) {
-      const sigma = 10, rho = 28, beta = 8/3;
-      dx = sigma * (cy - cx);
-      dy = cx * (rho - cz) - cy;
-      dz = cx * cy - beta * cz;
-      scaleMult = 12;
-      offsetY = -8;
-    } else if (attractorType === 1) {
-      const a = 0.2, b = 0.2, c = 5.7;
-      dx = -cy - cz;
-      dy = cx + a * cy;
-      dz = b + cz * (cx - c);
-      scaleMult = 18;
-      offsetY = 0;
-    } else if (attractorType === 2) {
-      const a = 35, b = 3, c = 28;
-      dx = a * (cy - cx);
-      dy = (c - a) * cx - cx * cz + c * cy;
-      dz = cx * cy - b * cz;
-      scaleMult = 22;
-      offsetY = 5;
-    } else {
-      dx = cy;
-      dy = -cx + cy * cz;
-      dz = 1 - cy * cy;
-      scaleMult = 20;
-      offsetY = 0;
-    }
-    cx += dx * dt;
-    cy += dy * dt;
-    cz += dz * dt;
-    pointsX[i] = cx + Math.sin(cy * h1) * 2;
-    pointsY[i] = cy + Math.cos(cx * h2) * 2;
-    pointsZ[i] = cz;
-  }
-  
-  const hue = 160 + (absHash % 120);
-  const result = { pointsX, pointsY, pointsZ, scaleMult, offsetY, h1, hue };
-  FRACTAL_CACHE.set(seedId, result);
-  return result;
-};
-
-// ==========================================
-// 【轻量化 Canvas - 支持滚动暂停（强化版）】
-// ==========================================
-const QuantumFieldCanvas = memo(({ seedId, paused = false, isScrolling = false }: { seedId: string | number; paused?: boolean; isScrolling?: boolean }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false });
-    if (!ctx) return;
-
-    const width = 320;
-    const height = 220;
-    canvas.width = width;
-    canvas.height = height;
-
-    const { pointsX, pointsY, pointsZ, scaleMult, offsetY, h1, hue } = getFractalData(seedId);
-    let angleY = 0;
-    let animationId: number;
-
-    const cx2 = width / 2;
-    const cy2 = height / 2;
-    const strokeStyle = `hsla(${hue}, 100%, 50%, 0.6)`;
-    const crtStyle = 'rgba(255, 255, 255, 0.03)';
-    const bgStyle = 'rgba(0, 0, 0, 0.15)';
-
-    const render = () => {
-      // 滚动时彻底暂停 Canvas 重绘
-      if (paused || isScrolling) {
-        animationId = requestAnimationFrame(render);
-        return;
-      }
-      
-      ctx.fillStyle = bgStyle;
-      ctx.fillRect(0, 0, width, height);
-      angleY += 0.005 + h1 * 0.01;
-      const cosY = Math.cos(angleY);
-      const sinY = Math.sin(angleY);
-
-      ctx.beginPath();
-      for (let i = 0; i < MAX_POINTS; i++) {
-        const pz = pointsZ[i];
-        const rotX = pointsX[i] * cosY + pz * sinY;
-        const rotZ = -pointsX[i] * sinY + pz * cosY;
-        const rotY = pointsY[i] - offsetY;
-        const scale = 300 / (300 + rotZ * 5);
-        const screenX = cx2 + rotX * scaleMult * scale;
-        const screenY = cy2 - rotY * scaleMult * scale;
-        if (i === 0) ctx.moveTo(screenX, screenY);
-        else ctx.lineTo(screenX, screenY);
-      }
-      ctx.strokeStyle = strokeStyle;
-      ctx.lineWidth = 1;
-      ctx.globalCompositeOperation = 'screen';
-      ctx.stroke();
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = crtStyle;
-      ctx.fillRect(0, (angleY * 200) % height, width, 2);
-
-      animationId = requestAnimationFrame(render);
-    };
-    render();
-
-    return () => cancelAnimationFrame(animationId);
-  }, [seedId, paused, isScrolling]);
-
-  return <canvas ref={canvasRef} className="w-full h-full object-cover mix-blend-screen" />;
-});
-QuantumFieldCanvas.displayName = 'QuantumFieldCanvas';
 
 // ==========================================
 // 【优化后的 MagneticWrapper（滚动时完全禁用）】
@@ -247,53 +100,240 @@ ScrambleText.displayName = 'ScrambleText';
 interface ListItemProps {
   post: Post;
   index: number;
+  isHovered: boolean;
+  hasHoveredPeer: boolean;
   disabled?: boolean;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
 }
 
-const ListItem = memo(({ post, index, disabled = false, onMouseEnter, onMouseLeave }: ListItemProps) => {
+const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = false, onHoverStart, onHoverEnd }: ListItemProps) => {
   const hexIndex = `0x${(index + 1).toString(16).toUpperCase().padStart(2, '0')}`;
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const depthShiftX = useMotionValue(0);
+  const depthShiftY = useMotionValue(0);
+  const smoothTiltX = useSpring(tiltX, { stiffness: 220, damping: 26, mass: 0.8 });
+  const smoothTiltY = useSpring(tiltY, { stiffness: 220, damping: 26, mass: 0.8 });
+  const smoothDepthX = useSpring(depthShiftX, { stiffness: 200, damping: 24, mass: 0.85 });
+  const smoothDepthY = useSpring(depthShiftY, { stiffness: 200, damping: 24, mass: 0.85 });
+  const layerShiftX = useTransform(smoothDepthX, [-1, 1], [-12, 12]);
+  const layerShiftY = useTransform(smoothDepthY, [-1, 1], [-10, 10]);
+  const metaShiftX = useTransform(smoothDepthX, [-1, 1], [-8, 8]);
+  const metaShiftY = useTransform(smoothDepthY, [-1, 1], [-6, 6]);
+  const dateShiftX = useTransform(smoothDepthX, [-1, 1], [-18, 18]);
+  const dateShiftY = useTransform(smoothDepthY, [-1, 1], [-12, 12]);
+  const reticleX = useTransform(smoothDepthX, [-1, 1], [-22, 22]);
+  const reticleY = useTransform(smoothDepthY, [-1, 1], [-18, 18]);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.setProperty('--mouse-x', '50%');
+    el.style.setProperty('--mouse-y', '50%');
+  }, []);
+
+  const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (disabled || !cardRef.current || window.innerWidth < 1024) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+    const normalizedX = (localX / rect.width) * 2 - 1;
+    const normalizedY = (localY / rect.height) * 2 - 1;
+
+    tiltX.set(-normalizedY * 6);
+    tiltY.set(normalizedX * 8);
+    depthShiftX.set(normalizedX);
+    depthShiftY.set(normalizedY);
+    cardRef.current.style.setProperty('--mouse-x', `${localX}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${localY}px`);
+  }, [depthShiftX, depthShiftY, disabled, tiltX, tiltY]);
+
+  const resetCardMouse = useCallback(() => {
+    tiltX.set(0);
+    tiltY.set(0);
+    depthShiftX.set(0);
+    depthShiftY.set(0);
+    if (cardRef.current) {
+      cardRef.current.style.setProperty('--mouse-x', '50%');
+      cardRef.current.style.setProperty('--mouse-y', '50%');
+    }
+  }, [depthShiftX, depthShiftY, tiltX, tiltY]);
+
+  const cardState = isHovered
+    ? {
+        scale: 1.055,
+        x: 20,
+        y: -6,
+        z: 108,
+        opacity: 1,
+        filter: 'brightness(1.16) saturate(1.12)',
+        boxShadow: '0 32px 58px rgba(2,12,27,0.56), 0 0 24px rgba(34,211,238,0.14)',
+      }
+    : hasHoveredPeer
+      ? {
+          scale: 0.965,
+          x: -10,
+          y: 2,
+          z: -44,
+          opacity: 0.46,
+          filter: 'brightness(0.56) saturate(0.72)',
+          boxShadow: '0 14px 24px rgba(2,12,27,0.24)',
+        }
+      : {
+          scale: 1,
+          x: 0,
+          y: 0,
+          z: 0,
+          opacity: 0.95,
+          filter: 'brightness(1)',
+          boxShadow: '0 18px 32px rgba(2,12,27,0.24)',
+        };
 
   return (
-    <Link
-      to={`/posts/${post.contentKey}`}
-      className="group relative block w-full cursor-none overflow-hidden rounded-lg border border-white/5 bg-transparent p-6 lg:p-8 transition-colors duration-500 hover:border-cyan-500/30"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+    <motion.div
+      layout
+      animate={cardState}
+      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
+      className={cn("relative transform-gpu", isHovered ? "z-30" : hasHoveredPeer ? "z-10" : "z-20")}
+      style={{ transformStyle: 'preserve-3d', transformPerspective: 1400 }}
     >
-      {!disabled && (
-        <div 
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 z-0"
-          style={{ 
-            background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(34,211,238,0.08), transparent 40%)` 
-          }} 
+      <motion.div
+        className="relative transform-gpu"
+        style={{
+          rotateX: smoothTiltX,
+          rotateY: smoothTiltY,
+          transformStyle: 'preserve-3d',
+          perspective: 1400,
+        }}
+      >
+        <Link
+          ref={cardRef}
+          to={`/posts/${post.contentKey}`}
+          onMouseMove={handleCardMouseMove}
+          onMouseEnter={() => {
+            if (!disabled) onHoverStart();
+          }}
+          onMouseLeave={() => {
+            resetCardMouse();
+            onHoverEnd();
+          }}
+          className="group relative block w-full cursor-none overflow-visible bg-transparent outline-none transition-colors duration-500 focus:outline-none focus-visible:outline-none focus-visible:ring-0"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+        <div
+          className="pointer-events-none absolute inset-x-6 -bottom-5 h-10 bg-cyan-500/10 blur-2xl transition-all duration-500"
+          style={{ transform: isHovered ? 'translateZ(-64px) scaleX(0.84) skewX(-20deg)' : 'translateZ(-88px) scaleX(0.68) skewX(-20deg)' }}
         />
-      )}
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,12,22,0.98),rgba(3,8,15,0.84))]"
+          style={{ transform: 'translateZ(-34px)' }}
+        />
+        <div
+          className="pointer-events-none absolute inset-[1px] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_52%),linear-gradient(135deg,rgba(11,19,34,0.92),rgba(4,9,17,0.82))]"
+          style={{ transform: 'translateZ(-12px)' }}
+        />
+        <div
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/16 to-transparent"
+          style={{ transform: 'translateZ(12px)' }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 left-[8%] w-px bg-gradient-to-b from-transparent via-cyan-500/18 to-transparent"
+          style={{ transform: 'translateZ(8px)' }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            transform: 'translateZ(16px)',
+            backgroundImage: 'linear-gradient(rgba(34,211,238,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.06) 1px, transparent 1px)',
+            backgroundSize: '100% 52px, 52px 100%',
+          }}
+        />
 
-      <div className="relative z-10 flex items-center gap-4 text-[10px] font-mono text-cyan-900 uppercase tracking-[0.2em] mb-4">
-        <span className="text-cyan-600 font-bold">[{hexIndex}]</span>
-        <span className="w-12 h-[1px] bg-cyan-900/50" />
-        <span className="text-slate-500 group-hover:text-cyan-400 transition-colors">
-          // ALLOC_ZONE: {post.category}
-        </span>
-      </div>
+        {!disabled && (
+          <div
+            className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            style={{
+              transform: 'translateZ(26px)',
+              background: 'radial-gradient(560px circle at var(--mouse-x) var(--mouse-y), rgba(34,211,238,0.12), transparent 42%)',
+            }}
+          />
+        )}
 
-      <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 transition-transform duration-500 ease-out group-hover:translate-x-4">
-        <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tight text-slate-300 group-hover:text-white group-hover:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-300 w-full md:max-w-[70%]">
-          <ScrambleText text={post.title} />
-        </h2>
-        <div className="flex flex-col items-start md:items-end font-mono text-xs text-slate-600 gap-1 shrink-0">
-          <span className="flex items-center gap-2 group-hover:text-cyan-400 transition-colors">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-cyan-400 group-hover:animate-pulse" />
-            SYS.TIME
-          </span>
-          <span className="text-slate-500 tracking-widest font-mono">{post.date}</span>
+        <div
+          className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ transform: 'translateZ(30px)' }}
+        >
+          <div className="absolute inset-0 bg-cyan-950/6 shadow-[inset_0_0_18px_rgba(34,211,238,0.08)]" />
+          <div className="absolute left-4 top-4 h-3 w-3 border-l border-t border-cyan-500/45" />
+          <div className="absolute right-4 top-4 h-3 w-3 border-r border-t border-cyan-500/45" />
+          <div className="absolute bottom-4 left-4 h-3 w-3 border-b border-l border-cyan-500/45" />
+          <div className="absolute bottom-4 right-4 h-3 w-3 border-b border-r border-cyan-500/45" />
+          <motion.div
+            className="absolute left-1/2 top-1/2 h-16 w-16 border border-cyan-500/22 opacity-0 mix-blend-screen group-hover:opacity-100"
+            style={{ x: reticleX, y: reticleY, transform: 'translateZ(58px) translate(-50%, -50%)' }}
+          />
         </div>
-      </div>
 
-      <div className="absolute bottom-0 left-0 h-[2px] bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left ease-[cubic-bezier(0.16,1,0.3,1)] w-full" />
-    </Link>
+        <motion.div
+          className="relative z-10 overflow-hidden px-6 py-6 lg:px-8 lg:py-8"
+          style={{ x: layerShiftX, y: layerShiftY, transform: 'translateZ(42px)' }}
+        >
+          <motion.div
+            className="relative z-10 mb-5 flex items-center gap-4 border-l-2 border-cyan-500/45 pl-4 text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-900"
+            style={{ x: metaShiftX, y: metaShiftY, transform: 'translateZ(64px)' }}
+          >
+            <span className="font-bold text-cyan-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.22)]">[{hexIndex}]</span>
+            <span className="h-[1px] w-12 bg-cyan-900/50" />
+            <span className="text-slate-500 transition-colors group-hover:text-cyan-300">
+              // ALLOC_ZONE: {post.category}
+            </span>
+          </motion.div>
+
+          <motion.div
+            className="pointer-events-none absolute inset-x-0 top-[76px] h-px bg-gradient-to-r from-cyan-500/0 via-cyan-500/20 to-cyan-500/0"
+            style={{ x: metaShiftX, transform: 'translateZ(58px)' }}
+          />
+
+          <motion.div
+            className="relative z-10 flex flex-col justify-between gap-6 transition-transform duration-500 ease-out group-hover:translate-x-4 md:flex-row md:items-end"
+            style={{ transform: 'translateZ(72px)' }}
+          >
+            <motion.div
+              className="relative w-full md:max-w-[70%]"
+              style={{ x: layerShiftX, y: metaShiftY, transform: 'translateZ(82px)' }}
+            >
+              <div className="pointer-events-none absolute -left-3 top-1 bottom-1 w-px bg-gradient-to-b from-transparent via-cyan-400/40 to-transparent" />
+              <h2 className="w-full text-2xl font-black uppercase tracking-tight text-slate-300 transition-all duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_18px_rgba(34,211,238,0.45)] md:text-4xl">
+              <ScrambleText text={post.title} />
+              </h2>
+            </motion.div>
+            <motion.div
+              className="relative flex shrink-0 flex-col items-start border-l border-cyan-500/20 pl-4 font-mono text-xs text-slate-600 md:items-end md:border-l-0 md:border-t md:border-cyan-500/20 md:pl-0 md:pt-4"
+              style={{ x: dateShiftX, y: dateShiftY, transform: 'translateZ(106px)' }}
+            >
+              <span className="flex items-center gap-2 transition-colors group-hover:text-cyan-300">
+                <span className="h-1.5 w-1.5 bg-slate-600 transition-colors group-hover:animate-pulse group-hover:bg-cyan-400" />
+                SYS.TIME
+              </span>
+              <span className="font-mono tracking-widest text-slate-500">{post.date}</span>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="pointer-events-none absolute right-6 top-6 h-10 w-10 border border-cyan-500/22 opacity-50"
+            style={{ x: reticleX, y: reticleY, transform: 'translateZ(118px)' }}
+          />
+        </motion.div>
+
+        <div
+          className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 bg-gradient-to-r from-cyan-400/10 via-cyan-400 to-cyan-300/10 transition-transform duration-700 origin-left group-hover:scale-x-100"
+          style={{ transform: 'translateZ(38px)', transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+        />
+        </Link>
+      </motion.div>
+    </motion.div>
   );
 });
 ListItem.displayName = 'ListItem';
@@ -307,39 +347,45 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   totalPages,
   onPageChange,
 }) => {
-  const [hoveredPost, setHoveredPost] = useState<Post | null>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
 
   const globalMouseX = useMotionValue(-1000);
   const globalMouseY = useMotionValue(-1000);
-  const smoothX = useSpring(globalMouseX, { stiffness: 150, damping: 20, mass: 0.5 });
-  const smoothY = useSpring(globalMouseY, { stiffness: 150, damping: 20, mass: 0.5 });
+  const panelX = useMotionValue(0);
+  const panelY = useMotionValue(0);
+  const smoothPanelX = useSpring(panelX, { stiffness: 180, damping: 24, mass: 0.8 });
+  const smoothPanelY = useSpring(panelY, { stiffness: 180, damping: 24, mass: 0.8 });
+  const rotateY = useTransform(smoothPanelX, [-1, 1], [-5.5, 5.5]);
+  const rotateX = useTransform(smoothPanelY, [-1, 1], [4.5, -4.5]);
+  const boardOffsetX = useTransform(smoothPanelX, [-1, 1], [-8, 8]);
+  const boardOffsetY = useTransform(smoothPanelY, [-1, 1], [-8, 8]);
+  const decorOffsetX = useTransform(smoothPanelX, [-1, 1], [-14, 14]);
+  const decorOffsetY = useTransform(smoothPanelY, [-1, 1], [-14, 14]);
+  const contentOffsetX = useTransform(smoothPanelX, [-1, 1], [-20, 20]);
+  const contentOffsetY = useTransform(smoothPanelY, [-1, 1], [-20, 20]);
 
-  // 滚动节流（核心修复 - 加强版）
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    let rafTimeout: NodeJS.Timeout;
     const handleScroll = () => {
       setIsScrolling(true);
+      setHoveredIndex(null);
       clearTimeout(timeout);
-      clearTimeout(rafTimeout);
-      // 滚动停止后 220ms 才解除，减少频繁状态切换
       timeout = setTimeout(() => {
         setIsScrolling(false);
-      }, 220);
+      }, 180);
     };
 
     const container = listContainerRef.current;
-    if (container) container.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    if (!container) return;
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      if (container) container.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('scroll', handleScroll);
       clearTimeout(timeout);
-      clearTimeout(rafTimeout);
     };
   }, []);
 
@@ -347,13 +393,21 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
     if (window.innerWidth >= 1024 && !isScrolling) {
       globalMouseX.set(e.clientX);
       globalMouseY.set(e.clientY);
+      const rect = e.currentTarget.getBoundingClientRect();
+      const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+      panelX.set(normalizedX);
+      panelY.set(normalizedY);
     }
-  }, [globalMouseX, globalMouseY, isScrolling]);
+  }, [globalMouseX, globalMouseY, isScrolling, panelX, panelY]);
 
-  const handleHover = useCallback((post: Post | null) => {
-    if (isScrolling) return;
-    setHoveredPost(post);
-  }, [isScrolling]);
+  const handleMouseLeave = useCallback(() => {
+    panelX.set(0);
+    panelY.set(0);
+    globalMouseX.set(-1000);
+    globalMouseY.set(-1000);
+    setHoveredIndex(null);
+  }, [globalMouseX, globalMouseY, panelX, panelY]);
 
   const triggerPageChange = useCallback((newPage: number) => {
     if (newPage === currentPage) return;
@@ -379,114 +433,139 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
     return rangeWithDots;
   };
 
-  const hoverMonitor = hoveredPost ? createPortal(
-    <AnimatePresence>
-      <motion.div
-        key="hover-monitor"
-        initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed top-0 left-0 z-[9999] pointer-events-none hidden lg:block will-change-transform mix-blend-screen"
-        style={{ x: smoothX, y: smoothY, translateX: "-50%", translateY: "-50%" }}
-      >
-        <div className="relative w-[320px] h-[220px] rounded-sm border border-cyan-500/40 bg-black/80 shadow-[0_0_30px_rgba(6,182,212,0.3)] overflow-hidden p-1">
-          <div className="absolute top-2 left-3 z-10 font-mono text-[9px] text-cyan-400 drop-shadow-[0_0_2px_#06b6d4]">
-            ID: {hoveredPost.id} // CHAOS_MATRIX_SYNC
-          </div>
-          <div className="w-full h-full relative opacity-80">
-            <QuantumFieldCanvas seedId={hoveredPost.id} paused={isScrolling} isScrolling={isScrolling} />
-          </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>,
-    document.body
-  ) : null;
-
   return (
-    <div ref={listContainerRef} onMouseMove={handleMouseMove} className="relative w-full z-10 pb-16 flex flex-col perspective-[1000px]">
-      {hoverMonitor}
+    <div
+      ref={listContainerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative z-10 flex w-full flex-col overflow-visible px-3 py-3 pb-16 pr-6 perspective-[1400px] md:px-4 md:py-4 md:pr-8 lg:pr-10"
+    >
+      <motion.div
+        layout
+        className="relative isolate mb-16 min-h-[400px] transform-gpu overflow-visible px-2 py-2 md:px-3 md:py-3"
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      >
+        <motion.div
+          className="pointer-events-none absolute inset-x-6 inset-y-7 border border-cyan-950/80 bg-[linear-gradient(180deg,rgba(4,9,17,0.94),rgba(2,6,12,0.76))] md:inset-x-8 md:inset-y-8"
+          style={{ x: boardOffsetX, y: boardOffsetY, transform: 'translateZ(-110px)' }}
+        />
+        <motion.div
+          className="pointer-events-none absolute inset-x-12 top-10 h-28 bg-cyan-500/8 blur-3xl"
+          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-72px)' }}
+        />
+        <motion.div
+          className="pointer-events-none absolute inset-x-12 top-12 h-px bg-gradient-to-r from-transparent via-cyan-200/18 to-transparent"
+          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-16px)' }}
+        />
 
-      <motion.div layout className="relative z-10 mb-16 min-h-[400px]">
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.div
-            key={`page-${currentPage}`}
-            layout
-            initial={{ opacity: 0, y: 60, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -60, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 180, damping: 22 }}
-            className="flex flex-col gap-4 w-full origin-center transform-gpu"
-          >
-            {posts.map((post, index) => (
-              <ListItem
-                key={post.id}
-                post={post}
-                index={index + (currentPage - 1) * 5}
-                disabled={isScrolling}
-                onMouseEnter={() => handleHover(post)}
-                onMouseLeave={() => handleHover(null)}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          className="relative z-10 overflow-visible px-3 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6"
+          style={{ x: contentOffsetX, y: contentOffsetY, transformStyle: 'preserve-3d' }}
+        >
+          <div className="pointer-events-none absolute inset-x-3 inset-y-4 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(5,11,20,0.82),rgba(2,7,14,0.48))] backdrop-blur-[2px] sm:inset-x-4 sm:inset-y-5 md:inset-x-5 md:inset-y-6" style={{ transform: 'translateZ(-6px)' }} />
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={`page-${currentPage}`}
+              layout
+              initial={{ opacity: 0, y: 60, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -60, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 180, damping: 22 }}
+              className="flex w-full origin-center transform-gpu flex-col gap-6 overflow-visible px-2 py-2 pr-5 md:px-3 md:py-3 md:pr-7 lg:pr-8"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              {posts.map((post, index) => {
+                const absoluteIndex = index + (currentPage - 1) * 5;
+                const isHovered = hoveredIndex === absoluteIndex;
+                return (
+                  <ListItem
+                    key={post.id}
+                    post={post}
+                    index={absoluteIndex}
+                    isHovered={isHovered}
+                    hasHoveredPeer={hoveredIndex !== null && hoveredIndex !== absoluteIndex}
+                    disabled={isScrolling}
+                    onHoverStart={() => setHoveredIndex(absoluteIndex)}
+                    onHoverEnd={() => setHoveredIndex((current) => (current === absoluteIndex ? null : current))}
+                  />
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </motion.div>
 
-      <motion.div ref={paginationRef} layout className="flex justify-center md:justify-start pt-8 border-t border-cyan-900/30">
-        <Pagination>
-          <PaginationContent className="gap-2 font-mono text-sm">
-            <MagneticWrapper disabled={isScrolling}>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => currentPage > 1 && triggerPageChange(currentPage - 1)}
-                  className={cn(
-                    "cursor-none border border-cyan-900/50 hover:bg-cyan-950/50 hover:text-cyan-400 hover:border-cyan-400 transition-all duration-300 text-slate-500 bg-transparent rounded-sm",
-                    currentPage === 1 && "pointer-events-none opacity-20"
-                  )}
-                />
-              </PaginationItem>
-            </MagneticWrapper>
+      <motion.div
+        ref={paginationRef}
+        layout
+        className="relative flex justify-center overflow-visible px-2 pt-8 pb-2 pr-4 md:px-3 md:justify-start md:pb-3 md:pr-6"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-800/55 to-transparent" />
+        <motion.div
+          className="pointer-events-none absolute left-6 top-6 h-12 w-40 bg-cyan-500/8 blur-2xl"
+          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-36px)' }}
+        />
+        <motion.div
+          className="relative overflow-visible px-4 py-4 md:px-5"
+          style={{ x: contentOffsetX, y: contentOffsetY, transform: 'translateZ(12px)' }}
+        >
+          <div className="pointer-events-none absolute inset-0 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(4,9,17,0.76),rgba(2,6,12,0.44))] backdrop-blur-[2px]" style={{ transform: 'translateZ(-4px)' }} />
+          <Pagination>
+            <PaginationContent className="gap-2 font-mono text-sm">
+              <MagneticWrapper disabled={isScrolling}>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => currentPage > 1 && triggerPageChange(currentPage - 1)}
+                    className={cn(
+                      "cursor-none rounded-none border border-cyan-900/50 bg-transparent text-slate-500 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-950/50 hover:text-cyan-300",
+                      currentPage === 1 && "pointer-events-none opacity-20"
+                    )}
+                  />
+                </PaginationItem>
+              </MagneticWrapper>
 
-            <AnimatePresence mode="popLayout">
-              {getVisiblePages().map((page, idx) => (
-                <motion.div key={page === '...' ? `dots-${idx}` : page} layout>
-                  <MagneticWrapper disabled={isScrolling}>
-                    <PaginationItem>
-                      {page === '...' ? (
-                        <PaginationEllipsis className="text-cyan-900" />
-                      ) : (
-                        <PaginationLink
-                          onClick={() => triggerPageChange(page as number)}
-                          isActive={currentPage === page}
-                          className={cn(
-                            "cursor-none w-10 h-10 rounded-sm border transition-all duration-300 font-bold",
-                            currentPage === page
-                              ? "bg-cyan-500/20 text-cyan-300 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110"
-                              : "text-slate-500 bg-transparent border-cyan-900/50 hover:border-cyan-500 hover:text-cyan-300 hover:bg-cyan-950/30"
-                          )}
-                        >
-                          {typeof page === 'number' ? `0x${page.toString(16).toUpperCase()}` : page}
-                        </PaginationLink>
-                      )}
-                    </PaginationItem>
-                  </MagneticWrapper>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+              <AnimatePresence mode="popLayout">
+                {getVisiblePages().map((page, idx) => (
+                  <motion.div key={page === '...' ? `dots-${idx}` : page} layout>
+                    <MagneticWrapper disabled={isScrolling}>
+                      <PaginationItem>
+                        {page === '...' ? (
+                          <PaginationEllipsis className="text-cyan-900" />
+                        ) : (
+                          <PaginationLink
+                            onClick={() => triggerPageChange(page as number)}
+                            isActive={currentPage === page}
+                            className={cn(
+                              "h-10 w-10 cursor-none rounded-none border font-bold transition-all duration-300",
+                              currentPage === page
+                                ? "scale-110 border-cyan-400 bg-cyan-500/20 text-cyan-200 shadow-[0_0_18px_rgba(6,182,212,0.3)]"
+                                : "border-cyan-900/50 bg-transparent text-slate-500 hover:border-cyan-500 hover:bg-cyan-950/30 hover:text-cyan-300"
+                            )}
+                          >
+                            {typeof page === 'number' ? `0x${page.toString(16).toUpperCase()}` : page}
+                          </PaginationLink>
+                        )}
+                      </PaginationItem>
+                    </MagneticWrapper>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
 
-            <MagneticWrapper disabled={isScrolling}>
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => currentPage < totalPages && triggerPageChange(currentPage + 1)}
-                  className={cn(
-                    "cursor-none border border-cyan-900/50 hover:bg-cyan-950/50 hover:text-cyan-400 hover:border-cyan-400 transition-all duration-300 text-slate-500 bg-transparent rounded-sm",
-                    currentPage === totalPages && "pointer-events-none opacity-20"
-                  )}
-                />
-              </PaginationItem>
-            </MagneticWrapper>
-          </PaginationContent>
-        </Pagination>
+              <MagneticWrapper disabled={isScrolling}>
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => currentPage < totalPages && triggerPageChange(currentPage + 1)}
+                    className={cn(
+                      "cursor-none rounded-none border border-cyan-900/50 bg-transparent text-slate-500 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-950/50 hover:text-cyan-300",
+                      currentPage === totalPages && "pointer-events-none opacity-20"
+                    )}
+                  />
+                </PaginationItem>
+              </MagneticWrapper>
+            </PaginationContent>
+          </Pagination>
+        </motion.div>
       </motion.div>
     </div>
   );

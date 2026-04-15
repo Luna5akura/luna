@@ -7,8 +7,7 @@ import {
   useMotionValue, 
   useTransform, 
   useSpring, 
-  AnimatePresence, 
-  useAnimationFrame 
+  AnimatePresence
 } from 'framer-motion';
 
 // ==========================================
@@ -51,18 +50,24 @@ const ScrambleTextNode = ({ text, className }: { text: string, className?: strin
 // ==========================================
 const useQuantumClock = () => {
   const timeStr = useMotionValue("00:00:00:000");
-  useAnimationFrame(() => {
-    const d = new Date();
-    const h = d.getHours();
-    const m = d.getMinutes();
-    const s = d.getSeconds();
-    const ms = d.getMilliseconds();
-    const hs = h < 10 ? '0' + h : h;
-    const ms_m = m < 10 ? '0' + m : m;
-    const ss = s < 10 ? '0' + s : s;
-    const mss = ms < 10 ? '00' + ms : (ms < 100 ? '0' + ms : ms);
-    timeStr.set(`${hs}:${ms_m}:${ss}:${mss}`);
-  });
+  useEffect(() => {
+    const update = () => {
+      const d = new Date();
+      const h = d.getHours();
+      const m = d.getMinutes();
+      const s = d.getSeconds();
+      const ms = d.getMilliseconds();
+      const hs = h < 10 ? '0' + h : h;
+      const ms_m = m < 10 ? '0' + m : m;
+      const ss = s < 10 ? '0' + s : s;
+      const mss = ms < 10 ? '00' + ms : (ms < 100 ? '0' + ms : ms);
+      timeStr.set(`${hs}:${ms_m}:${ss}:${mss}`);
+    };
+
+    update();
+    const intervalId = window.setInterval(update, 100);
+    return () => window.clearInterval(intervalId);
+  }, [timeStr]);
   return timeStr;
 };
 
@@ -215,25 +220,23 @@ const MagneticDockItem = ({ item, isActive, path }: { item: string, isActive: bo
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex items-center justify-center px-6 py-3 outline-none group cursor-crosshair z-20"
+      className="relative flex items-center justify-center px-5 py-3 outline-none group cursor-crosshair z-20"
     >
       <motion.div
         style={{ x: springX, y: springY }}
         className={cn(
-          "relative z-10 font-mono text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 will-change-transform transform-gpu",
-          isActive ? "text-cyan-400" : "text-gray-500 group-hover:text-cyan-200"
+          "relative z-10 font-mono text-[11px] font-bold uppercase tracking-[0.26em] transition-all duration-300 will-change-transform transform-gpu",
+          isActive ? "text-cyan-300" : "text-slate-500 group-hover:text-cyan-100"
         )}
       >
-        {/* Hover 时注入色差效果 */}
-        <span className="relative group-hover:drop-shadow-[2px_0_0_rgba(255,0,0,0.8)] before:absolute before:inset-0 before:text-cyan-400 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity group-hover:before:-translate-x-[2px] group-hover:before:drop-shadow-[-2px_0_0_rgba(0,255,255,0.8)] before:content-[attr(data-text)]" data-text={item}>
+        <span className="relative before:absolute before:inset-0 before:text-cyan-300 before:opacity-0 before:transition-opacity group-hover:before:opacity-70 group-hover:before:-translate-x-[1px] before:content-[attr(data-text)]" data-text={item}>
           {item}
         </span>
 
-        {/* 【高超技术 2：全息光柱投影 (Holographic Beam)】 */}
         {isActive && (
           <motion.div
             layoutId="nav-hologram-beam"
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[120%] h-24 bg-gradient-to-t from-cyan-500/30 via-cyan-500/5 to-transparent blur-[2px] pointer-events-none -z-10"
+            className="absolute -bottom-5 left-1/2 -translate-x-1/2 h-20 w-[120%] bg-gradient-to-t from-cyan-500/20 via-cyan-500/5 to-transparent blur-[2px] pointer-events-none -z-10"
             style={{ maskImage: 'linear-gradient(to top, black, transparent)', WebkitMaskImage: 'linear-gradient(to top, black, transparent)' }}
             transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.8 }}
           />
@@ -242,18 +245,18 @@ const MagneticDockItem = ({ item, isActive, path }: { item: string, isActive: bo
         {isActive && (
           <motion.div
             layoutId="nav-target-lock"
-            className="absolute -inset-x-4 -inset-y-2 border border-cyan-500/30 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.2)] pointer-events-none"
+            className="absolute -inset-x-4 -inset-y-2 border border-cyan-400/30 bg-[linear-gradient(180deg,rgba(34,211,238,0.12),rgba(8,47,73,0.02))] shadow-[0_0_15px_rgba(34,211,238,0.15)] pointer-events-none"
             transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.8 }}
           >
-            <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t-2 border-l-2 border-cyan-400" />
-            <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t-2 border-r-2 border-cyan-400" />
-            <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b-2 border-l-2 border-cyan-400" />
-            <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b-2 border-r-2 border-cyan-400" />
+            <div className="absolute top-0 left-0 h-1.5 w-1.5 border-l-2 border-t-2 border-cyan-400" />
+            <div className="absolute top-0 right-0 h-1.5 w-1.5 border-r-2 border-t-2 border-cyan-400" />
+            <div className="absolute bottom-0 left-0 h-1.5 w-1.5 border-b-2 border-l-2 border-cyan-400" />
+            <div className="absolute bottom-0 right-0 h-1.5 w-1.5 border-b-2 border-r-2 border-cyan-400" />
             
             <motion.div
                animate={{ y: ["0%", "100%", "0%"] }}
                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-               className="absolute top-0 left-0 right-0 h-[1px] bg-cyan-400/50 shadow-[0_0_8px_#22d3ee]"
+               className="absolute left-0 right-0 top-0 h-[1px] bg-cyan-400/40 shadow-[0_0_8px_#22d3ee]"
             />
           </motion.div>
         )}
@@ -299,13 +302,13 @@ const QuantumDock = ({ navItems }: { navItems: string[] }) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX: tiltX, rotateY: tiltY, transformStyle: "preserve-3d" }}
-        className="flex items-center p-1.5 gap-2 bg-[#050505]/60 backdrop-blur-xl border-t border-cyan-900/50 border-b border-cyan-950/80 shadow-[0_25px_50px_-12px_rgba(0,0,0,1),0_0_30px_rgba(34,211,238,0.05)] relative will-change-transform transform-gpu overflow-visible"
+        className="relative flex items-center gap-2 overflow-visible border border-white/10 bg-[linear-gradient(180deg,rgba(4,8,16,0.9),rgba(4,8,16,0.66))] p-2 shadow-[0_25px_50px_-12px_rgba(0,0,0,1),0_0_30px_rgba(34,211,238,0.05)] backdrop-blur-xl will-change-transform transform-gpu"
       >
-        {/* 倒角切割视觉 (Cybernetic Chamfer) */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-500/30 -translate-x-1 -translate-y-1" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-500/30 translate-x-1 -translate-y-1" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-500/30 -translate-x-1 translate-y-1" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-500/30 translate-x-1 translate-y-1" />
+        <div className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+        <div className="absolute -left-1 -top-1 h-3 w-3 border-l-2 border-t-2 border-cyan-500/30" />
+        <div className="absolute -right-1 -top-1 h-3 w-3 border-r-2 border-t-2 border-cyan-500/30" />
+        <div className="absolute -bottom-1 -left-1 h-3 w-3 border-b-2 border-l-2 border-cyan-500/30" />
+        <div className="absolute -bottom-1 -right-1 h-3 w-3 border-b-2 border-r-2 border-cyan-500/30" />
 
         <AnimatePresence>
           {navItems.map((item) => {
@@ -340,51 +343,34 @@ const Navbar: React.FC = () => {
       `}</style>
 
       <div className="fixed inset-6 pointer-events-none z-[100] mix-blend-screen hidden md:block">
-        {/* 四角高亮锁定框 (加大尺寸，增粗边框) */}
-        <div className="absolute top-0 left-0 w-12 h-12 border-t-[2px] border-l-[2px] border-cyan-500/60" />
-        <div className="absolute top-0 right-0 w-12 h-12 border-t-[2px] border-r-[2px] border-cyan-500/60" />
-        <div className="absolute bottom-0 left-0 w-12 h-12 border-b-[2px] border-l-[2px] border-cyan-500/60" />
-        <div className="absolute bottom-0 right-0 w-12 h-12 border-b-[2px] border-r-[2px] border-cyan-500/60" />
-        
-        {/* 左上角系统绝对原点物理指示灯 */}
-        <div className="absolute top-0 left-0 w-1.5 h-1.5 bg-cyan-400 shadow-[0_0_12px_#22d3ee] animate-pulse" />
-
-        {/* 四轴中心校准刻度仪 (Sniper Ticks) */}
-        <div className="absolute top-1/2 left-0 w-3 h-[2px] bg-cyan-500/40 -translate-y-1/2" />
-        <div className="absolute top-1/2 right-0 w-3 h-[2px] bg-cyan-500/40 -translate-y-1/2" />
-        <div className="absolute top-0 left-1/2 w-[2px] h-3 bg-cyan-500/40 -translate-x-1/2" />
-        <div className="absolute bottom-0 left-1/2 w-[2px] h-3 bg-cyan-500/40 -translate-x-1/2" />
+        <div className="absolute top-0 left-0 h-12 w-12 border-l-[2px] border-t-[2px] border-cyan-500/35" />
+        <div className="absolute top-0 right-0 h-12 w-12 border-r-[2px] border-t-[2px] border-cyan-500/35" />
+        <div className="absolute bottom-0 left-0 h-12 w-12 border-b-[2px] border-l-[2px] border-cyan-500/35" />
+        <div className="absolute bottom-0 right-0 h-12 w-12 border-b-[2px] border-r-[2px] border-cyan-500/35" />
+        <div className="absolute left-0 top-0 h-1.5 w-1.5 bg-cyan-400 shadow-[0_0_12px_#22d3ee] animate-pulse" />
       </div>
 
-      {/* --- 左上角：品牌协议簇 --- */}
-      <div className="fixed top-8 left-8 z-50 mix-blend-difference pointer-events-auto">
-        <NavLink to="/" className="group flex flex-col items-start cursor-crosshair outline-none">
-          <div className="flex items-center gap-2 relative overflow-hidden">
-             <motion.span className="text-xl font-black tracking-tighter text-white group-hover:hidden transition-all uppercase drop-shadow-[0_0_2px_#fff]">
-               LUNA_PROTOCOL
-             </motion.span>
-             {/* Hover 色差撕裂 */}
-             <motion.span className="text-xl font-black tracking-tighter text-cyan-400 hidden group-hover:block uppercase drop-shadow-[2px_0_0_red,-2px_0_0_blue]">
-               0x4C554E41_SYS
-             </motion.span>
+      <div className="fixed left-8 top-8 z-50 pointer-events-auto">
+        <NavLink to="/" className="group flex flex-col items-start border border-white/10 bg-[linear-gradient(180deg,rgba(4,8,16,0.84),rgba(4,8,16,0.58))] px-5 py-4 backdrop-blur-xl cursor-crosshair outline-none shadow-[0_14px_40px_rgba(0,0,0,0.4)]">
+          <span className="mb-2 text-[9px] font-mono uppercase tracking-[0.34em] text-cyan-700">Personal Protocol</span>
+          <div className="relative overflow-hidden">
+            <motion.span className="text-xl font-black tracking-[-0.05em] text-slate-100 transition-all uppercase group-hover:text-cyan-200">
+              LUNA_PROTOCOL
+            </motion.span>
           </div>
-          <span className="pl-4 text-[9px] font-mono text-gray-400 group-hover:text-cyan-300 transition-colors flex items-center gap-2 uppercase tracking-widest mt-1">
-            v.2.0.26 // CORE_ONLINE
-            <span className="w-1.5 h-1.5 bg-cyan-500 animate-pulse hidden group-hover:block shadow-[0_0_5px_#06b6d4]" />
-            <span className="w-16 h-[2px] bg-cyan-900 overflow-hidden hidden group-hover:block relative">
-               <span className="absolute top-0 left-0 h-full w-1/3 bg-cyan-400 animate-[sidebar-scanline_0.5s_linear_infinite]" />
-            </span>
+          <span className="mt-2 flex items-center gap-2 text-[9px] font-mono uppercase tracking-[0.24em] text-slate-500 transition-colors group-hover:text-cyan-300">
+            v.2.0.26
+            <span className="h-1.5 w-1.5 bg-cyan-500 shadow-[0_0_5px_#06b6d4]" />
+            CORE_ONLINE
           </span>
         </NavLink>
       </div>
 
-      {/* --- 右上角：物理硬件侦测仪 (Telemetry HUD) --- */}
-      <div className="fixed top-8 right-8 z-50 text-right hidden md:block mix-blend-screen pointer-events-none">
-        <div className="flex items-start gap-4">
-          
+      <div className="fixed right-8 top-8 z-50 hidden text-right md:block pointer-events-none">
+        <div className="flex items-start gap-4 border border-white/10 bg-[linear-gradient(180deg,rgba(4,8,16,0.84),rgba(4,8,16,0.58))] px-4 py-4 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
           <TelemetryRadar />
 
-          <div className="flex flex-col items-end gap-1 font-mono text-[10px] text-gray-400 uppercase tracking-widest">
+          <div className="flex flex-col items-end gap-1 font-mono text-[10px] uppercase tracking-[0.24em] text-gray-400">
             <div className="flex items-center gap-2 text-cyan-600/80">
               <span>{net}</span>
               <span className="w-1.5 h-1.5 rounded-sm bg-cyan-500 animate-pulse shadow-[0_0_5px_#06b6d4]" />
@@ -399,12 +385,11 @@ const Navbar: React.FC = () => {
               {battery}
             </div>
             
-            {/* tabular-nums 强制等宽，防止时钟毫秒跳动引起布局抖动 */}
             <motion.div className="text-white font-bold drop-shadow-[0_0_4px_#22d3ee] mt-0.5 text-[11px] will-change-contents tabular-nums tracking-[0.1em]">
               {timeStr}
             </motion.div>
             
-            <div className="text-cyan-400/90 mt-1 flex items-center gap-2 border border-cyan-500/40 px-2 py-0.5 bg-cyan-950/40 shadow-[inset_0_0_10px_rgba(34,211,238,0.2)]">
+            <div className="mt-1 flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 px-2 py-0.5 text-cyan-400/90 shadow-[inset_0_0_10px_rgba(34,211,238,0.12)]">
               <span className="opacity-70 text-[8px] animate-pulse">LOC_ADDR:</span>
               <ScrambleTextNode text={scrambledPath} className="font-bold drop-shadow-[0_0_2px_cyan]" />
             </div>
@@ -412,14 +397,12 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* --- 底部中央：3D 全息导航底座 --- */}
       <QuantumDock navItems={navItems} />
 
-      {/* --- 左下角：固定烙印与条形码 --- */}
-      <div className="fixed left-8 bottom-8 z-40 hidden md:block pointer-events-none mix-blend-difference flex flex-col items-start gap-2">
-         <div className="w-32 h-6 cyber-barcode opacity-40 mix-blend-screen rotate-180" style={{ writingMode: 'vertical-rl' }} />
+      <div className="fixed bottom-8 left-8 z-40 hidden flex-col items-start gap-2 md:block pointer-events-none">
+         <div className="cyber-barcode h-6 w-32 rotate-180 opacity-25 mix-blend-screen" style={{ writingMode: 'vertical-rl' }} />
          <motion.div 
-           className="writing-vertical-rl text-[10px] tracking-[0.4em] font-mono font-bold text-white/40 uppercase will-change-transform transform-gpu"
+           className="writing-vertical-rl text-[10px] tracking-[0.34em] font-mono font-bold text-white/30 uppercase will-change-transform transform-gpu"
            initial={{ opacity: 0, y: 50 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 1, duration: 1 }}

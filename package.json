@@ -5,6 +5,9 @@
   "type": "module",
   "homepage": "https://luna5akura.github.io",
   "scripts": {
+    "generate:posts": "node scripts/generate-posts-metadata.mjs",
+    "predev": "node scripts/generate-posts-metadata.mjs",
+    "prebuild": "node scripts/generate-posts-metadata.mjs",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
