@@ -1,15 +1,133 @@
 // src/components/Sidebar.tsx
-import React, { useRef, useCallback, useState, useMemo, useEffect, useDeferredValue } from 'react';
+import React, { useRef, useCallback, useState, useMemo, useEffect, useDeferredValue, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform, AnimatePresence, useVelocity, MotionValue, useMotionValue, useSpring } from 'framer-motion';
 import { Cpu, HardDrive, Search, Filter } from 'lucide-react';
 
+type GlyphSignature = {
+  scale: number;
+};
+
+const GLYPH_SCALE_MIN = 0.86;
+const GLYPH_SCALE_RANGE = 0.34;
+const GLYPH_RESPONSE_MIN = 0.66;
+const GLYPH_RESPONSE_RANGE = 1.46;
+
+const getGlyphBlur = (scale: number) => {
+  if (scale >= 1.12) return 0.88;
+  if (scale <= 0.95) return 0.66;
+  return 0;
+};
+
+const createGlyphSignature = (seedSource: string, index: number): GlyphSignature => {
+  let seed = 0;
+  const source = `${seedSource}:${index}`;
+  for (let i = 0; i < source.length; i += 1) {
+    seed = (seed * 29 + source.charCodeAt(i)) % 100000;
+  }
+
+  const normalized = (offset: number) => {
+    const value = Math.sin(seed * 0.019 + offset) * 43758.5453;
+    return value - Math.floor(value);
+  };
+
+  return {
+    scale: GLYPH_SCALE_MIN + normalized(2.7) * GLYPH_SCALE_RANGE,
+  };
+};
+
+const ReactiveGlyph = memo(({
+  char,
+  depthX,
+  depthY,
+  signature,
+  emphasis = 1,
+  isActive = false,
+  fixedScale,
+}: {
+  char: string;
+  depthX: MotionValue<number>;
+  depthY: MotionValue<number>;
+  signature: GlyphSignature;
+  emphasis?: number;
+  isActive?: boolean;
+  fixedScale?: number;
+}) => {
+  const targetScale = fixedScale ?? signature.scale;
+  const normalizedScale = (targetScale - GLYPH_SCALE_MIN) / GLYPH_SCALE_RANGE;
+  const responseCurve = normalizedScale * normalizedScale;
+  const response = (GLYPH_RESPONSE_MIN + responseCurve * GLYPH_RESPONSE_RANGE) * emphasis;
+  const blur = getGlyphBlur(targetScale);
+  const x = useTransform(depthX, [-1, 1], [-9 * response, 9 * response]);
+  const y = useTransform(depthY, [-1, 1], [-7 * response, 7 * response]);
+
+  return (
+    <motion.span
+      className="inline-block will-change-transform"
+      animate={{
+        scale: isActive ? targetScale : 1,
+        filter: isActive && blur > 0 ? `blur(${blur}px)` : 'blur(0px)',
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
+      style={{
+        x,
+        y,
+        paddingRight: char === ' ' ? '0.18em' : undefined,
+      }}
+    >
+      {char === ' ' ? '\u00A0' : char}
+    </motion.span>
+  );
+});
+ReactiveGlyph.displayName = 'SidebarReactiveGlyph';
+
+const ResponsiveTextLine = memo(({
+  text,
+  depthX,
+  depthY,
+  emphasis = 1,
+  className,
+  isActive = false,
+  fixedScale,
+}: {
+  text: string;
+  depthX: MotionValue<number>;
+  depthY: MotionValue<number>;
+  emphasis?: number;
+  className?: string;
+  isActive?: boolean;
+  fixedScale?: number;
+}) => {
+  const signatures = useMemo(
+    () => Array.from(text).map((_, index) => createGlyphSignature(text, index)),
+    [text]
+  );
+
+  return (
+    <span className={cn("flex flex-wrap items-baseline", className)}>
+      {Array.from(text).map((char, index) => (
+        <ReactiveGlyph
+          key={`${text}-${index}`}
+          char={char}
+          depthX={depthX}
+          depthY={depthY}
+          signature={signatures[index]}
+          emphasis={emphasis}
+          isActive={isActive}
+          fixedScale={fixedScale}
+        />
+      ))}
+    </span>
+  );
+});
+ResponsiveTextLine.displayName = 'SidebarResponsiveTextLine';
+
 // ==========================================
 // 【高超技术 1：无状态 (Stateless) 十六进制高频分配器】
 // 以 60fps 直接操作 DOM 节点更新内存地址，不触发任何 React 生命周期
 // ==========================================
-const DataStreamer = () => {
+const DataStreamer = memo(() => {
   const memRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const update = () => {
@@ -19,21 +137,22 @@ const DataStreamer = () => {
       }
     };
     update();
-    const intervalId = window.setInterval(update, 120);
+    const intervalId = window.setInterval(update, 180);
     return () => window.clearInterval(intervalId);
-  },[]);
+  }, []);
   return (
     <span ref={memRef} className="font-mono transition-colors duration-100 drop-shadow-[0_0_4px_rgba(6,182,212,0.8)] text-cyan-400 font-bold">
       0x8F9A_22B1
     </span>
   );
-};
+});
+DataStreamer.displayName = 'DataStreamer';
 
 // ==========================================
 // 【高超技术 2：传感器融合 (Sensor Fusion) 动态示波器】
 // 将物理滚动速率 (Velocity) 注入到底层 Canvas 位图计算中
 // ==========================================
-const LiveOscilloscope = ({ isActive, globalVelocity }: { isActive: boolean; globalVelocity: MotionValue<number> }) => {
+const LiveOscilloscope = memo(({ isActive, globalVelocity }: { isActive: boolean; globalVelocity: MotionValue<number> }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const points = useRef(new Float32Array(15));
   
@@ -96,7 +215,8 @@ const LiveOscilloscope = ({ isActive, globalVelocity }: { isActive: boolean; glo
       <canvas ref={canvasRef} width={60} height={24} className="block" />
     </div>
   );
-};
+});
+LiveOscilloscope.displayName = 'LiveOscilloscope';
 
 // ==========================================
 // 【侧边栏扇区单项组件】
@@ -113,37 +233,34 @@ interface SectorItemProps {
   onHoverEnd: () => void;
 }
 
-const SectorItem = ({ category, isActive, isHovered, hasHoveredPeer, index, onClick, globalVelocity, onHoverStart, onHoverEnd }: SectorItemProps) => {
+const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index, onClick, globalVelocity, onHoverStart, onHoverEnd }: SectorItemProps) => {
   const hexAddress = `0x${(index * 8).toString(16).toUpperCase().padStart(4, '0')}`;
-  
-  // 【高超技术 3：Direct-DOM 密码学篡改引擎 (Quantum Scramble)】
-  const textRef = useRef<HTMLSpanElement>(null);
-  const scrambleRef = useRef<NodeJS.Timeout>();
+  const itemRef = useRef<HTMLButtonElement>(null);
+  const depthShiftX = useMotionValue(0);
+  const depthShiftY = useMotionValue(0);
+  const smoothDepthX = useSpring(depthShiftX, { stiffness: 220, damping: 24, mass: 0.7 });
+  const smoothDepthY = useSpring(depthShiftY, { stiffness: 220, damping: 24, mass: 0.7 });
+  const contentShiftX = useTransform(smoothDepthX, [-1, 1], [-12, 12]);
+  const contentShiftY = useTransform(smoothDepthY, [-1, 1], [-10, 10]);
+  const metaShiftX = useTransform(smoothDepthX, [-1, 1], [-10, 10]);
+  const metaShiftY = useTransform(smoothDepthY, [-1, 1], [-8, 8]);
+  const titleShiftX = useTransform(smoothDepthX, [-1, 1], [-16, 16]);
+  const titleShiftY = useTransform(smoothDepthY, [-1, 1], [-12, 12]);
+  const isInteractive = isHovered || isActive;
 
-  const triggerScramble = useCallback(() => {
-    if (!textRef.current) return;
-    let iteration = 0;
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_!@#$%^&*";
-    const originalText = category;
-    
-    clearInterval(scrambleRef.current);
-    scrambleRef.current = setInterval(() => {
-      if (!textRef.current) return;
-      textRef.current.innerText = originalText
-        .split("")
-        .map((letter, idx) => {
-          if (idx < iteration) return originalText[idx];
-          return chars[Math.floor(Math.random() * chars.length)];
-        })
-        .join("");
-      
-      if (iteration >= originalText.length) clearInterval(scrambleRef.current);
-      iteration += 1 / 2; // 控制解码速度
-    }, 30);
-  }, [category]);
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!itemRef.current || window.innerWidth < 1024) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    depthShiftX.set(normalizedX);
+    depthShiftY.set(normalizedY);
+  }, [depthShiftX, depthShiftY]);
 
-  // 挂载激活状态时触发解码
-  useEffect(() => { if (isActive) triggerScramble(); }, [isActive, triggerScramble]);
+  const resetMouseDepth = useCallback(() => {
+    depthShiftX.set(0);
+    depthShiftY.set(0);
+  }, [depthShiftX, depthShiftY]);
 
   const visualState = isHovered
     ? {
@@ -177,15 +294,16 @@ const SectorItem = ({ category, isActive, isHovered, hasHoveredPeer, index, onCl
 
   return (
     <motion.button
-      layout
+      ref={itemRef}
       initial={{ opacity: 0, x: -20 }}
       exit={{ opacity: 0, x: -10, filter: "blur(5px)" }}
+      onMouseMove={handleMouseMove}
       onClick={() => onClick(category)}
-      onMouseEnter={() => {
-        triggerScramble();
-        onHoverStart();
+      onMouseEnter={onHoverStart}
+      onMouseLeave={() => {
+        resetMouseDepth();
+        onHoverEnd();
       }}
-      onMouseLeave={onHoverEnd}
       animate={visualState}
       className={cn(
         "group relative flex shrink-0 lg:w-full py-3 px-3 lg:px-4 font-mono transition-colors duration-200 outline-none cursor-crosshair transform-gpu",
@@ -227,33 +345,49 @@ const SectorItem = ({ category, isActive, isHovered, hasHoveredPeer, index, onCl
         </motion.div>
       )}
 
-      <div className="relative z-10 flex flex-col items-start w-full" style={{ transform: 'translateZ(24px)' }}>
-        <div className="flex items-center gap-2 mb-1">
+      <div className="relative z-10 flex flex-col items-start w-full" style={{ x: contentShiftX, y: contentShiftY, transform: 'translateZ(24px)' }}>
+        <div className="flex items-center gap-2 mb-1" style={{ transform: 'translateZ(46px)' }}>
           <HardDrive className={cn("w-3 h-3 transition-colors hidden lg:block", isActive ? "text-cyan-400 animate-pulse drop-shadow-[0_0_5px_cyan]" : "text-slate-600")} />
-          <span className={cn(
+          <motion.span
+            style={{ x: metaShiftX, y: metaShiftY }}
+            animate={{ scale: isInteractive ? 1.04 : 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
+            className={cn(
             "text-[8px] tracking-[0.2em] transition-colors font-bold",
             isActive ? "text-cyan-300 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" : "text-slate-600 group-hover:text-cyan-300"
           )}>
-            LOC:{hexAddress}
-          </span>
+            <ResponsiveTextLine text={`LOC:${hexAddress}`} depthX={smoothDepthX} depthY={smoothDepthY} emphasis={0.45} isActive={isInteractive} />
+          </motion.span>
         </div>
 
-        <div className="flex items-center w-full">
-          <span 
-            ref={textRef}
+        <motion.div
+          className="flex items-center w-full"
+          style={{ x: titleShiftX, y: titleShiftY, transform: 'translateZ(68px)' }}
+          animate={{ scale: isInteractive ? 1.1 : 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
+        >
+          <span
             className={cn(
               "tracking-[0.1em] font-bold transition-all duration-300 text-xs lg:text-sm uppercase whitespace-nowrap",
               (isActive || isHovered) && "drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]"
             )}>
-            {category}
+            <ResponsiveTextLine
+              text={category}
+              depthX={smoothDepthX}
+              depthY={smoothDepthY}
+              emphasis={0.9}
+              isActive={isInteractive}
+              fixedScale={isActive ? 1.08 : undefined}
+            />
           </span>
-        </div>
+        </motion.div>
       </div>
 
       <LiveOscilloscope isActive={isActive} globalVelocity={globalVelocity} />
     </motion.button>
   );
-};
+});
+SectorItem.displayName = 'SectorItem';
 
 // ==========================================
 // 【主导出组件：系统级数据分配器】
@@ -268,7 +402,7 @@ type DocumentWithTransition = Document & {
   startViewTransition?: (callback: () => void) => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -519,5 +653,8 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
     </div>
   );
 };
+
+const Sidebar = memo(SidebarComponent);
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;

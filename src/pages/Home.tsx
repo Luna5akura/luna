@@ -1,6 +1,6 @@
 // src/pages/Home.tsx
 import React, { useState, useEffect, useRef, useMemo, useCallback, useTransition } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { flushSync } from 'react-dom';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate, MotionValue, useVelocity } from 'framer-motion';
 import BlogList from '@/components/BlogList';
@@ -166,10 +166,8 @@ const TitleLetter = React.memo(({
     const unsubs = [mouseX, mouseY, titleY].map(mv =>
       mv.on ? mv.on('change', updateLight) : (mv as any).onChange(updateLight)
     );
-    window.addEventListener('scroll', updateLight, { passive: true });
     return () => {
       unsubs.forEach(unsub => unsub());
-      window.removeEventListener('scroll', updateLight);
     };
   }, [updateLight]);
 
@@ -217,7 +215,7 @@ const TitleLetter = React.memo(({
 });
 
 const Home: React.FC = () => {
-  const { posts, contents, contentsStatus, loadAllContents } = usePosts();
+  const { posts, contents, contentsStatus, loadAllContents } = usePosts({ preloadContents: true });
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
@@ -241,7 +239,6 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isPending, startTransition] = useTransition();
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress, scrollY } = useScroll({ 
@@ -258,26 +255,6 @@ const Home: React.FC = () => {
   // 【极致视觉点 3：滚动速率物理畸变场 (Velocity Distortion Field)】
   // ==========================================
   
-  // ==================== 滚动状态精准控制（彻底解决倾斜+变色） ====================
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    const handleScroll = () => {
-      setIsScrolling(true);
-      clearTimeout(timeout);
-      timeout = setTimeout(() => setIsScrolling(false), 120);
-    };
-
-    const contentContainer = contentRef.current;
-    if (contentContainer) contentContainer.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      if (contentContainer) contentContainer.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeout);
-    };
-  }, []);
-
   useGlobalShortcut('/', () => !isSearchVisible && openSearch());
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
 
@@ -394,10 +371,6 @@ const Home: React.FC = () => {
           {/* BlogList 容器 - 已彻底禁用滚动期间的倾斜与变色 */}
           <motion.div
             className="relative z-10 flex-1 min-w-0 w-full overflow-visible will-change-transform lg:pr-6 xl:pr-10"
-            style={{
-              contentVisibility: 'auto',
-              containIntrinsicSize: '1000px'
-            }}
           >
             <div className={`transition-all duration-500 ease-out mt-8 ${isPending ? 'opacity-30 blur-md scale-[0.98]' : 'opacity-100 blur-0 scale-100'}`}>
               {filteredPosts.length > 0 ? (

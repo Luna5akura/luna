@@ -6,44 +6,62 @@ import {
   motion, 
   useMotionValue, 
   useTransform, 
-  useSpring, 
-  AnimatePresence
+  useSpring
 } from 'framer-motion';
+
+const SCRAMBLE_CHARS = "01xX_!@#$<>?{}[]%^&*▓▒░";
+const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow'] as const;
+
+type BatteryManagerLike = {
+  level: number;
+  charging: boolean;
+  addEventListener: (type: 'levelchange' | 'chargingchange', listener: () => void) => void;
+  removeEventListener: (type: 'levelchange' | 'chargingchange', listener: () => void) => void;
+};
+
+type NetworkInformationLike = EventTarget & {
+  effectiveType?: string;
+  downlink?: number;
+};
 
 // ==========================================
 // 【极致优化点 1：零重绘解密引擎】
 // ==========================================
-const ScrambleTextNode = ({ text, className }: { text: string, className?: string }) => {
+const ScrambleTextNode = React.memo(({ text, className }: { text: string, className?: string }) => {
   const nodeRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    const chars = Array.from(text);
+    const textLength = chars.length;
     let frame: number;
     let iteration = 0;
-    const chars = "01xX_!@#$<>?{}[]%^&*▓▒░";
     
     const animate = () => {
-      if (!nodeRef.current) return;
-      nodeRef.current.textContent = text
-        .split("")
-        .map((char, index) => {
-          if (index < iteration) return text[index];
-          return chars[Math.floor(Math.random() * chars.length)];
-        })
-        .join("");
+      const node = nodeRef.current;
+      if (!node) return;
+
+      const scrambled = new Array(textLength);
+      for (let index = 0; index < textLength; index += 1) {
+        scrambled[index] = index < iteration
+          ? chars[index]
+          : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      }
+      node.textContent = scrambled.join("");
       
-      if (iteration < text.length) {
+      if (iteration < textLength) {
         iteration += 1 / 3; 
         frame = requestAnimationFrame(animate);
       } else {
-         nodeRef.current.textContent = text;
+         node.textContent = text;
       }
     };
+
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
   }, [text]);
 
   return <span ref={nodeRef} className={className} />;
-};
+});
 
 // ==========================================
 // 【极致优化点 2：内存友好型时钟】
@@ -79,26 +97,64 @@ const useHardwareStatus = () => {
   const [net, setNet] = useState("NET:UPLINK_ESTABLISHED");
 
   useEffect(() => {
+    let isMounted = true;
+    let batteryManager: BatteryManagerLike | null = null;
+    let handleBatteryUpdate: (() => void) | null = null;
+    let connection: NetworkInformationLike | null = null;
+    let handleConnectionUpdate: (() => void) | null = null;
+
     try {
-      const nav: any = navigator;
+      const nav = navigator as Navigator & {
+        getBattery?: () => Promise<BatteryManagerLike>;
+        connection?: NetworkInformationLike;
+        mozConnection?: NetworkInformationLike;
+        webkitConnection?: NetworkInformationLike;
+      };
+
       if ('getBattery' in nav) {
-        nav.getBattery().then((bat: any) => {
-          const updateBat = () => setBattery(`PWR:${Math.floor(bat.level * 100)}%[${bat.charging ? 'AC' : 'DC'}]`);
-          updateBat();
-          bat.addEventListener('levelchange', updateBat);
-          bat.addEventListener('chargingchange', updateBat);
+        void nav.getBattery?.().then((bat) => {
+          if (!isMounted) return;
+
+          batteryManager = bat;
+          handleBatteryUpdate = () => {
+            setBattery(`PWR:${Math.floor(bat.level * 100)}%[${bat.charging ? 'AC' : 'DC'}]`);
+          };
+
+          handleBatteryUpdate();
+          bat.addEventListener('levelchange', handleBatteryUpdate);
+          bat.addEventListener('chargingchange', handleBatteryUpdate);
         });
       }
-      const conn = nav.connection || nav.mozConnection || nav.webkitConnection;
-      if (conn) {
-        const updateNet = () => setNet(`NET:${conn.effectiveType.toUpperCase()}_${conn.downlink}MBPS`);
-        updateNet();
-        conn.addEventListener('change', updateNet);
+
+      connection = nav.connection || nav.mozConnection || nav.webkitConnection || null;
+      if (connection) {
+        handleConnectionUpdate = () => {
+          const effectiveType = connection?.effectiveType?.toUpperCase() ?? 'UPLINK_ESTABLISHED';
+          const downlink = connection?.downlink;
+          const throughput = typeof downlink === 'number' ? `${downlink}MBPS` : 'UNKNOWN';
+          setNet(`NET:${effectiveType}_${throughput}`);
+        };
+
+        handleConnectionUpdate();
+        connection.addEventListener('change', handleConnectionUpdate);
       }
-    } catch (e) {
+    } catch {
       // 优雅降级
     }
-  },[]);
+
+    return () => {
+      isMounted = false;
+
+      if (batteryManager && handleBatteryUpdate) {
+        batteryManager.removeEventListener('levelchange', handleBatteryUpdate);
+        batteryManager.removeEventListener('chargingchange', handleBatteryUpdate);
+      }
+
+      if (connection && handleConnectionUpdate) {
+        connection.removeEventListener('change', handleConnectionUpdate);
+      }
+    };
+  }, []);
 
   return { battery, net };
 };
@@ -107,7 +163,7 @@ const useHardwareStatus = () => {
 // 【高超技术 1：纯 Canvas 微型异步扫频雷达 (Micro-Radar)】
 // 彻底脱离 DOM 的硬件级绘制，提供极客侦测视觉
 // ==========================================
-const TelemetryRadar = () => {
+const TelemetryRadar = React.memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -123,7 +179,8 @@ const TelemetryRadar = () => {
     ctx.scale(dpr, dpr);
 
     let angle = 0;
-    let frame: number;
+    let frame = 0;
+    let isRunning = false;
     // 生成随机敌标/数据节点
     const blips = Array.from({ length: 3 }, () => ({
       r: Math.random() * 12 + 2,
@@ -178,17 +235,43 @@ const TelemetryRadar = () => {
       angle += 0.08;
       frame = requestAnimationFrame(render);
     };
-    render();
-    return () => cancelAnimationFrame(frame);
-  },[]);
+
+    const start = () => {
+      if (isRunning) return;
+      isRunning = true;
+      frame = requestAnimationFrame(render);
+    };
+
+    const stop = () => {
+      if (!isRunning) return;
+      isRunning = false;
+      cancelAnimationFrame(frame);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   return <canvas ref={canvasRef} style={{ width: 32, height: 32 }} className="rounded-full shadow-[0_0_8px_rgba(34,211,238,0.4)]" />;
-};
+});
 
 // ==========================================
 // 【极致优化点 3：消除布局抖动 (Anti-Layout Thrashing)】
 // ==========================================
-const MagneticDockItem = ({ item, isActive, path }: { item: string, isActive: boolean, path: string }) => {
+const MagneticDockItem = React.memo(({ item, isActive, path }: { item: string, isActive: boolean, path: string }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const rectRef = useRef<{left: number, top: number, width: number, height: number} | null>(null);
   const mouseX = useMotionValue(0);
@@ -263,12 +346,12 @@ const MagneticDockItem = ({ item, isActive, path }: { item: string, isActive: bo
       </motion.div>
     </NavLink>
   );
-};
+});
 
 // ==========================================
 // 【3D 战术底座 HUD】
 // ==========================================
-const QuantumDock = ({ navItems }: { navItems: string[] }) => {
+const QuantumDock = React.memo(({ navItems }: { navItems: readonly string[] }) => {
   const location = useLocation();
   const dockRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<{left: number, top: number, width: number, height: number} | null>(null);
@@ -310,21 +393,18 @@ const QuantumDock = ({ navItems }: { navItems: string[] }) => {
         <div className="absolute -bottom-1 -left-1 h-3 w-3 border-b-2 border-l-2 border-cyan-500/30" />
         <div className="absolute -bottom-1 -right-1 h-3 w-3 border-b-2 border-r-2 border-cyan-500/30" />
 
-        <AnimatePresence>
-          {navItems.map((item) => {
-            const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
-            const isActive = location.pathname === path || (item === 'World' && location.pathname === '/');
-            return <MagneticDockItem key={item} item={item} isActive={isActive} path={path} />;
-          })}
-        </AnimatePresence>
+        {navItems.map((item) => {
+          const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
+          const isActive = location.pathname === path || (item === 'World' && location.pathname === '/');
+          return <MagneticDockItem key={item} item={item} isActive={isActive} path={path} />;
+        })}
       </motion.nav>
     </div>
   );
-};
+});
 
 const Navbar: React.FC = () => {
   const location = useLocation();
-  const navItems =['World', 'Warp', 'Wit', 'Wow'];
   
   const scrambledPath = location.pathname === '/' ? '/ROOT' : location.pathname.toUpperCase();
   const { battery, net } = useHardwareStatus();
@@ -397,7 +477,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <QuantumDock navItems={navItems} />
+      <QuantumDock navItems={NAV_ITEMS} />
 
       <div className="fixed bottom-8 left-8 z-40 hidden flex-col items-start gap-2 md:block pointer-events-none">
          <div className="cyber-barcode h-6 w-32 rotate-180 opacity-25 mix-blend-screen" style={{ writingMode: 'vertical-rl' }} />

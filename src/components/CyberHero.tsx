@@ -1,5 +1,5 @@
 // src/components/CyberHero.tsx
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, memo } from 'react';
 import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 
 // 量子级深海色彩（更高级、更具未来感）
@@ -41,18 +41,17 @@ const useCyberGlitch = (text: string, delay: number = 0) => {
   return ref;
 };
 
-const DataSphere: React.FC = () => {
+const DataSphere = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
     if (!ctx) return;
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let pixelRatio = 1;
 
     const POINTS_COUNT = 520;
     let sphereRadius = Math.min(width, height) * 0.27;
@@ -81,12 +80,25 @@ const DataSphere: React.FC = () => {
     let angleX = 0;
     let angleY = 0;
     let animationId: number;
+    let isRunning = false;
+    let lastFrameTime = 0;
+    let scrollBoostUntil = 0;
 
     let targetVelocityX = 0.0009;
     let targetVelocityY = 0.0009;
 
     let mouseX = -1000;
     let mouseY = -1000;
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      sphereRadius = Math.min(width, height) * 0.27;
+    };
 
     const onMouseMove = (e: MouseEvent) => {
       targetVelocityY = ((e.clientX / width) - 0.5) * 0.014;
@@ -95,17 +107,40 @@ const DataSphere: React.FC = () => {
       mouseY = e.clientY;
     };
 
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      sphereRadius = Math.min(width, height) * 0.27;
+    const onScroll = () => {
+      scrollBoostUntil = performance.now() + 180;
     };
-    window.addEventListener('resize', resize, { passive: true });
 
-    const animate = () => {
+    const stop = () => {
+      if (!isRunning) return;
+      isRunning = false;
+      cancelAnimationFrame(animationId);
+    };
+
+    const start = () => {
+      if (isRunning) return;
+      isRunning = true;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        lastFrameTime = 0;
+        start();
+      }
+    };
+
+    const animate = (now: number) => {
+      const isScrollActive = now < scrollBoostUntil;
+      const minFrameInterval = isScrollActive ? 1000 / 36 : 1000 / 48;
+      if (lastFrameTime !== 0 && now - lastFrameTime < minFrameInterval) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime = now;
+
       ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = 'rgba(2, 4, 10, 0.97)';
       ctx.fillRect(0, 0, width, height);
@@ -164,7 +199,7 @@ const DataSphere: React.FC = () => {
           screenX += (dx / dist) * force * 11;
           screenY += (dy / dist) * force * 11;
           isOverloaded = true;
-          activeNodes.push({ x: screenX, y: screenY });
+          if (activeNodes.length < 14) activeNodes.push({ x: screenX, y: screenY });
           if (Math.random() < 0.022) chars[idx] = CHAR_SET[Math.floor(Math.random() * CHAR_SET.length)];
         }
 
@@ -189,7 +224,7 @@ const DataSphere: React.FC = () => {
       }
 
       // 高级神经网络脉冲连线
-      if (activeNodes.length > 1) {
+      if (!isScrollActive && activeNodes.length > 1) {
         ctx.beginPath();
         for (let i = 0; i < activeNodes.length; i++) {
           for (let j = i + 1; j < activeNodes.length; j++) {
@@ -207,8 +242,8 @@ const DataSphere: React.FC = () => {
       }
 
       // 量子核心光核（中心脉冲）
-      const corePulse = Math.sin(Date.now() / 800) * 0.3 + 0.7;
-      ctx.shadowBlur = 60;
+      const corePulse = Math.sin(now / 800) * 0.3 + 0.7;
+      ctx.shadowBlur = isScrollActive ? 30 : 60;
       ctx.shadowColor = '#06b6d4';
       ctx.fillStyle = `rgba(6, 182, 212, ${0.12 * corePulse})`;
       ctx.beginPath();
@@ -229,7 +264,7 @@ const DataSphere: React.FC = () => {
       ctx.stroke();
 
       // 极弱干扰
-      if (Math.random() < 0.0035) {
+      if (!isScrollActive && Math.random() < 0.0035) {
         const sliceY = Math.random() * height;
         const sliceH = 12 + Math.random() * 8;
         const shiftX = (Math.random() - 0.5) * 18;
@@ -241,19 +276,28 @@ const DataSphere: React.FC = () => {
       animationId = requestAnimationFrame(animate);
     };
 
-    animate();
+    resize();
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    start();
 
     return () => {
+      stop();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationId);
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, []);
 
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10 opacity-75 blur-[0.6px]" />;
-};
+});
+DataSphere.displayName = 'DataSphere';
 
-const HexMemoryGrid: React.FC = () => {
+const HexMemoryGrid = memo(() => {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
   const smoothX = useSpring(mouseX, { damping: 35, stiffness: 160 });
@@ -297,9 +341,10 @@ const HexMemoryGrid: React.FC = () => {
       </motion.div>
     </div>
   );
-};
+});
+HexMemoryGrid.displayName = 'HexMemoryGrid';
 
-export const CyberHero: React.FC = () => {
+const CyberHeroComponent: React.FC = () => {
   const metricRef = useCyberGlitch('[ QUANTUM CORE ONLINE ]', 1100);
 
   return (
@@ -331,3 +376,6 @@ export const CyberHero: React.FC = () => {
     </div>
   );
 };
+
+export const CyberHero = memo(CyberHeroComponent);
+CyberHero.displayName = 'CyberHero';

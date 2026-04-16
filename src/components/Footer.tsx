@@ -1,5 +1,5 @@
 // src/components/Footer.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, memo } from 'react';
 import {
   motion,
   useScroll,
@@ -17,14 +17,17 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
-const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>) => {
+const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>, isActive: boolean) => {
   const fps = useMotionValue(0);
   const memory = useMotionValue("0x000000");
   useEffect(() => {
+    if (!isActive) return;
+
     let frameCount = 0;
     let lastTime = performance.now();
     let startTime = performance.now();
     let rAF: number;
+
     const updateMetrics = () => {
       const now = performance.now();
       frameCount++;
@@ -46,9 +49,11 @@ const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>) => {
       }
       rAF = requestAnimationFrame(updateMetrics);
     };
+
     rAF = requestAnimationFrame(updateMetrics);
     return () => cancelAnimationFrame(rAF);
-  }, [fps, memory, uptimeRef]);
+  }, [fps, isActive, memory, uptimeRef]);
+
   const cores = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 'UNKNOWN' : 8;
   return { fps, memory, cores };
 };
@@ -56,9 +61,10 @@ const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>) => {
 interface KineticMarqueeProps {
   baseVelocity: number;
   scrollVelocity: any;
+  isActive: boolean;
 }
 
-const KineticMarquee: React.FC<KineticMarqueeProps> = ({ baseVelocity, scrollVelocity }) => {
+const KineticMarquee = memo(({ baseVelocity, scrollVelocity, isActive }: KineticMarqueeProps) => {
   const baseX = useMotionValue(0);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
   const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], { clamp: false });
@@ -66,6 +72,8 @@ const KineticMarquee: React.FC<KineticMarqueeProps> = ({ baseVelocity, scrollVel
   const directionFactor = useRef<number>(1);
 
   useAnimationFrame((t, delta) => {
+    if (!isActive) return;
+
     const currentVelocityFactor = velocityFactor.get();
     if (currentVelocityFactor < 0) directionFactor.current = -1;
     else if (currentVelocityFactor > 0) directionFactor.current = 1;
@@ -87,19 +95,39 @@ const KineticMarquee: React.FC<KineticMarqueeProps> = ({ baseVelocity, scrollVel
       </motion.div>
     </div>
   );
-};
+});
+KineticMarquee.displayName = 'KineticMarquee';
 
 const Footer: React.FC = () => {
   const footerRef = useRef<HTMLDivElement>(null);
   const svgFilterRef = useRef<SVGFEDisplacementMapElement>(null);
   const uptimeRef = useRef<HTMLSpanElement>(null);
+  const [isActive, setIsActive] = useState(false);
 
   const { scrollYProgress, scrollY } = useScroll({ target: footerRef, offset: ["start end", "end end"] });
-  const { fps, memory, cores } = useHardwareMetrics(uptimeRef);
+  const { fps, memory, cores } = useHardwareMetrics(uptimeRef, isActive);
   const scrollVelocity = useVelocity(scrollY);
+
+  useEffect(() => {
+    const node = footerRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsActive(entry.isIntersecting),
+      { rootMargin: '400px 0px' }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   // SVG 滤镜节流（更柔和的死区）
   useEffect(() => {
+    if (!isActive) {
+      svgFilterRef.current?.setAttribute("scale", "0");
+      return;
+    }
+
     let lastScale = 0;
     return scrollVelocity.on("change", (latest) => {
       if (!svgFilterRef.current) return;
@@ -113,7 +141,7 @@ const Footer: React.FC = () => {
         lastScale = tearIntensity;
       }
     });
-  }, [scrollVelocity]);
+  }, [isActive, scrollVelocity]);
 
   const y = useTransform(scrollYProgress, [0, 1], [150, 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
@@ -144,7 +172,7 @@ const Footer: React.FC = () => {
       >
         {/* 动态字幕 */}
         <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-center z-0">
-          <KineticMarquee baseVelocity={-2.2} scrollVelocity={scrollVelocity} />
+          <KineticMarquee baseVelocity={-2.2} scrollVelocity={scrollVelocity} isActive={isActive} />
         </div>
 
         {/* 哲学引言 */}
