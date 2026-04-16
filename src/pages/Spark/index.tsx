@@ -133,20 +133,20 @@ const SparkEngine = () => {
         </div>
 
         <div className="flex gap-2 md:gap-4 pointer-events-auto font-mono text-xs md:text-sm flex-wrap justify-center items-center">
-          <button onClick={() => setIsAuto(!isAuto)} className={`px-4 py-1.5 border transition-all ${isAuto ? 'border-green-400 text-green-400 bg-green-400/10' : 'border-white/30 text-white bg-black/50'}`}>AUTO: {isAuto ? 'ON' : 'OFF'}</button>
+          <button onClick={() => setIsAuto(!isAuto)} className={`px-4 py-1.5 border transition-all ${isAuto ? 'border-teal-300 text-teal-200 bg-teal-400/10' : 'border-cyan-900/50 text-cyan-100 bg-black/50'}`}>AUTO: {isAuto ? 'ON' : 'OFF'}</button>
           
           {/* ★ 全局 CRT 开关 */}
-          <button onClick={() => setIsCRT(!isCRT)} className={`px-4 py-1.5 border transition-all ${isCRT ? 'border-purple-400 text-purple-400 bg-purple-400/20' : 'border-white/30 text-white bg-black/50'}`}>
+          <button onClick={() => setIsCRT(!isCRT)} className={`px-4 py-1.5 border transition-all ${isCRT ? 'border-cyan-300 text-cyan-200 bg-cyan-400/15' : 'border-cyan-900/50 text-cyan-100 bg-black/50'}`}>
             CRT: {isCRT ? 'ON' : 'OFF'}
           </button>
           
-          <select value={displayBgIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'BG'); }} className="px-4 py-1.5 pr-8 border border-blue-500/50 text-blue-400 bg-black/50 hover:bg-blue-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
+          <select value={displayBgIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'BG'); }} className="px-4 py-1.5 pr-8 border border-cyan-500/50 text-cyan-300 bg-black/50 hover:bg-cyan-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
             {BACKGROUND_REGISTRY.map((bg, idx) => ( <option key={bg.id} value={idx} className="bg-gray-900 text-white">{bg.name}</option> ))}
           </select>
-          <select value={displayEffectIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'FX'); }} className="px-4 py-1.5 pr-8 border border-yellow-500/50 text-yellow-500 bg-black/50 hover:bg-yellow-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
+          <select value={displayEffectIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'FX'); }} className="px-4 py-1.5 pr-8 border border-teal-500/50 text-teal-300 bg-black/50 hover:bg-teal-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
             {EFFECT_REGISTRY.map((fx, idx) => ( <option key={fx.id} value={idx} className="bg-gray-900 text-white">{fx.name}</option> ))}
           </select>
-          <button onClick={() => { setIsAuto(false); handleManualTrigger('NEXT'); }} className="px-4 py-1.5 border border-white/30 text-white bg-black/50 hover:bg-white/20">NEXT</button>
+          <button onClick={() => { setIsAuto(false); handleManualTrigger('NEXT'); }} className="px-4 py-1.5 border border-cyan-900/50 text-cyan-100 bg-black/50 hover:bg-cyan-500/20">NEXT</button>
         </div>
       </div>
     </div>

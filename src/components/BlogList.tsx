@@ -227,11 +227,11 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           style={{ transform: isHovered ? 'translateZ(-64px) scaleX(0.84) skewX(-20deg)' : 'translateZ(-88px) scaleX(0.68) skewX(-20deg)' }}
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,12,22,0.98),rgba(3,8,15,0.84))]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,8,16,0.96),rgba(4,8,16,0.78))]"
           style={{ transform: 'translateZ(-34px)' }}
         />
         <div
-          className="pointer-events-none absolute inset-[1px] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_52%),linear-gradient(135deg,rgba(11,19,34,0.92),rgba(4,9,17,0.82))]"
+          className="pointer-events-none absolute inset-[1px] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_52%),linear-gradient(135deg,rgba(9,16,28,0.92),rgba(4,9,17,0.82))]"
           style={{ transform: 'translateZ(-12px)' }}
         />
         <div

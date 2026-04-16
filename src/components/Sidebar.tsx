@@ -197,7 +197,7 @@ const SectorItem = ({ category, isActive, isHovered, hasHoveredPeer, index, onCl
       style={{ transformStyle: 'preserve-3d', transformPerspective: 1200, transformOrigin: 'left center' }}
     >
       <div
-        className="absolute inset-0 rounded-[2px] border border-white/5 bg-[linear-gradient(180deg,rgba(8,14,24,0.92),rgba(4,8,15,0.72))] pointer-events-none"
+        className="absolute inset-0 rounded-[2px] border border-white/5 bg-[linear-gradient(180deg,rgba(4,8,16,0.92),rgba(4,8,16,0.66))] pointer-events-none"
         style={{ transform: 'translateZ(-26px)' }}
       />
       <div
@@ -232,7 +232,7 @@ const SectorItem = ({ category, isActive, isHovered, hasHoveredPeer, index, onCl
           <HardDrive className={cn("w-3 h-3 transition-colors hidden lg:block", isActive ? "text-cyan-400 animate-pulse drop-shadow-[0_0_5px_cyan]" : "text-slate-600")} />
           <span className={cn(
             "text-[8px] tracking-[0.2em] transition-colors font-bold",
-            isActive ? "text-cyan-300 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" : "text-slate-600 group-hover:text-cyan-700"
+            isActive ? "text-cyan-300 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" : "text-slate-600 group-hover:text-cyan-300"
           )}>
             LOC:{hexAddress}
           </span>
@@ -263,6 +263,10 @@ interface SidebarProps {
   isExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }
+
+type DocumentWithTransition = Document & {
+  startViewTransition?: (callback: () => void) => void;
+};
 
 const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
   const navigate = useNavigate();
@@ -307,8 +311,9 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
 
   const handleCategoryClick = useCallback((category: string) => {
     const to = category === 'All' ? '/' : `/?category=${category}`;
-    if ((document as any).startViewTransition) {
-      (document as any).startViewTransition(() => navigate(to));
+    const doc = document as DocumentWithTransition;
+    if (doc.startViewTransition) {
+      doc.startViewTransition(() => navigate(to));
     } else {
       navigate(to);
     }
@@ -388,7 +393,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
           style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
         >
           <motion.div
-            className="absolute inset-x-1 inset-y-2 rounded-sm border border-white/5 bg-[linear-gradient(180deg,rgba(6,10,18,0.96),rgba(2,6,12,0.98))] shadow-[0_20px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.04)] md:inset-x-1.5 md:inset-y-2.5"
+            className="absolute inset-x-1 inset-y-2 rounded-sm border border-white/5 bg-[linear-gradient(180deg,rgba(4,8,16,0.96),rgba(4,8,16,0.72))] shadow-[0_20px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.04)] md:inset-x-1.5 md:inset-y-2.5"
             style={{ x: boardOffsetX, y: boardOffsetY, z: -50 }}
           >
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.02),transparent_42%),repeating-linear-gradient(180deg,rgba(148,163,184,0.04),rgba(148,163,184,0.04)_1px,transparent_1px,transparent_18px)] opacity-80" />
@@ -450,15 +455,20 @@ const Sidebar: React.FC<SidebarProps> = ({ categories }) => {
               </div>
             </div>
           
-            <div className="relative z-10 overflow-visible px-0.5 pb-1.5 pt-0.5 md:px-1 md:pb-2 lg:pr-8 xl:pr-10">
+            <div className="relative z-10 overflow-visible px-0.5 pb-1.5 pt-0.5 md:px-1 md:pb-2">
+              <div className="pointer-events-none absolute inset-y-0 left-0 right-0 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(4,8,16,0.72),rgba(4,8,16,0.4))] backdrop-blur-[2px] lg:right-8 xl:right-10" />
+              <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent lg:right-12 xl:right-14" />
               <div 
                 ref={scrollContainerRef}
                 className={cn(
-                  "flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto hide-scroll relative z-10",
+                  "relative z-10 flex flex-row lg:flex-col hide-scroll",
+                  "overflow-x-auto lg:overflow-y-auto",
                   "gap-2 lg:gap-2 w-full",
-                  "max-w-[100vw] lg:max-w-none", 
-                  "max-h-20 lg:max-h-[56vh]",    
-                  "mask-x lg:mask-y px-2.5 py-2.5 md:px-3 md:py-3 lg:w-[calc(100%+2rem)] lg:-mr-8 lg:pb-7 xl:w-[calc(100%+2.5rem)] xl:-mr-10"
+                  "max-w-[100vw] lg:max-w-none",
+                  "max-h-20 lg:max-h-[56vh]",
+                  "mask-x lg:mask-y px-2.5 py-2.5 md:px-3 md:py-3",
+                  "lg:w-[calc(100%+2rem)] lg:-mr-8 lg:pr-8 lg:pb-7",
+                  "xl:w-[calc(100%+2.5rem)] xl:-mr-10 xl:pr-10"
                 )} 
               >
               {filteredCategories.length === 0 && (
