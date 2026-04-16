@@ -13,9 +13,9 @@ const Switch = React.forwardRef<
     ref={ref}
     className={cn(
       "relative inline-flex h-[24px] w-[44px] cursor-pointer rounded-full transition-colors duration-200 ease-in-out",
-      "focus:outline-none focus-visible:ring focus-visible:ring-sky-500 focus-visible:ring-opacity-75",
-      "bg-sky-900",
-      "data-[state=checked]:bg-sky-600",
+      "focus:outline-none focus-visible:ring focus-visible:ring-cyan-500 focus-visible:ring-opacity-75",
+      "bg-cyan-950",
+      "data-[state=checked]:bg-cyan-600",
       className
     )}
     {...props}

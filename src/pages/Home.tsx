@@ -323,8 +323,8 @@ const Home: React.FC = () => {
       </div>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(6,182,212,0.12),transparent_0_32%),radial-gradient(circle_at_80%_16%,rgba(59,130,246,0.08),transparent_0_28%),linear-gradient(180deg,rgba(4,7,13,0.98)_0%,rgba(2,4,10,1)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-[55vh] bg-[linear-gradient(180deg,rgba(10,20,32,0.32),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(34,211,238,0.12),transparent_0_32%),radial-gradient(circle_at_80%_16%,rgba(20,184,166,0.08),transparent_0_28%),linear-gradient(180deg,rgba(3,11,15,0.98)_0%,rgba(2,6,10,1)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-[55vh] bg-[linear-gradient(180deg,rgba(7,24,28,0.36),transparent)]" />
         <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(148,163,184,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.18) 1px, transparent 1px)', backgroundSize: '120px 120px' }} />
       </div>
 

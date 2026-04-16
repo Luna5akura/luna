@@ -270,8 +270,8 @@ const Wit: React.FC = () => {
         {/* 左侧：3D 神经模型与生命体征 */}
         <div className="w-full md:w-5/12 border-b md:border-b-0 md:border-r border-cyan-900/40 p-8 flex flex-col items-center relative overflow-hidden" style={{ transform: "translateZ(20px)" }}>
            
-           <div className="absolute top-4 left-4 text-[9px] font-mono text-red-500/80 tracking-widest uppercase flex items-center gap-2">
-             <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+           <div className="absolute top-4 left-4 text-[9px] font-mono text-cyan-400/80 tracking-widest uppercase flex items-center gap-2">
+             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
              RESTRICTED_ACCESS
            </div>
 
@@ -310,8 +310,8 @@ const Wit: React.FC = () => {
              </p>
              <p className="mb-6 relative group">
                <span className="text-cyan-500 font-bold mr-2">&gt;</span>
-               <span className="font-bold text-white group-hover:text-red-400 transition-colors">Love is murderous utopia.</span>
-               <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-4 bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+               <span className="font-bold text-white group-hover:text-cyan-300 transition-colors">Love is murderous utopia.</span>
+               <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-1 h-4 bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
              </p>
              <p className="mb-6">
                <span className="text-cyan-500 font-bold mr-2">&gt;</span>

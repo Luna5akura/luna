@@ -44,13 +44,14 @@ const ReadingTelemetry = () => {
 const KernelPanic404 = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-[#aa0000] text-white font-mono p-8 md:p-16 flex flex-col items-start justify-center overflow-hidden relative selection:bg-white selection:text-[#aa0000]">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-50 mix-blend-overlay pointer-events-none" />
+    <div className="relative flex min-h-screen items-start justify-center overflow-hidden bg-[linear-gradient(180deg,rgba(3,11,15,1),rgba(2,6,10,1))] p-8 font-mono text-white selection:bg-cyan-300/30 selection:text-cyan-50 md:p-16">
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMTAzLDIzMiwyNDksMC4xKSIvPjwvc3ZnPg==')] opacity-40 mix-blend-overlay pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_0_28%),radial-gradient(circle_at_84%_18%,rgba(20,184,166,0.08),transparent_0_22%)] pointer-events-none" />
       
       <motion.div 
         animate={{ opacity:[1, 0.8, 1, 0.5, 1] }} 
         transition={{ repeat: Infinity, duration: 0.2 }}
-        className="bg-white text-[#aa0000] px-2 py-1 text-2xl font-bold mb-8"
+        className="mb-8 border border-cyan-300/40 bg-cyan-100 text-[#031015] px-2 py-1 text-2xl font-bold shadow-[0_0_20px_rgba(34,211,238,0.18)]"
       >
         FATAL_ERROR
       </motion.div>
@@ -66,14 +67,14 @@ const KernelPanic404 = () => {
         If this is a new installation, ask your hardware manufacturer for any LUNA updates you might need.
       </div>
 
-      <div className="text-sm opacity-60 mb-12 flex flex-col gap-1">
+      <div className="mb-12 flex flex-col gap-1 text-sm text-cyan-100/60">
         <span>*** STOP: 0x00000050 (0xFFFFF80002A90000, 0x0000000000000000, 0xFFFFF80002A90000, 0x0000000000000000)</span>
         <span>*** sys_core_router.sys - Address 0xFFFFF80002A90000 base at 0xFFFFF80002A90000, DateStamp 64f1a2b3</span>
       </div>
 
       <button 
         onClick={() => navigate('/')}
-        className="border-2 border-white px-6 py-2 hover:bg-white hover:text-[#aa0000] transition-colors uppercase tracking-widest font-bold flex items-center gap-2"
+        className="flex items-center gap-2 border-2 border-cyan-300 px-6 py-2 font-bold uppercase tracking-widest text-cyan-100 transition-colors hover:bg-cyan-100 hover:text-[#031015]"
       >
         <Terminal className="w-5 h-5" /> Reboot System
       </button>
@@ -196,7 +197,7 @@ const PostDetails: React.FC = () => {
       <ReadingTelemetry />
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_0_26%),linear-gradient(180deg,rgba(4,7,13,1),rgba(2,4,10,1))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_0_26%),radial-gradient(circle_at_82%_14%,rgba(20,184,166,0.07),transparent_0_24%),linear-gradient(180deg,rgba(3,11,15,1),rgba(2,6,10,1))]" />
         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(148,163,184,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.18) 1px, transparent 1px)', backgroundSize: '96px 96px' }} />
       </div>
 

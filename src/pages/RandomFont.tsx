@@ -84,15 +84,18 @@ const RandomFont: React.FC = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-[#050505] text-white overflow-x-hidden cursor-none selection:bg-cyan-500/30"
+      className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,rgba(3,11,15,1),rgba(2,6,10,1))] text-white cursor-none selection:bg-cyan-500/30"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
       <style>{fontFaceCSS}</style>
 
+      <div className="pointer-events-none absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'linear-gradient(rgba(103,232,249,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(103,232,249,0.18) 1px, transparent 1px)', backgroundSize: '104px 104px' }} />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_0_30%),radial-gradient(circle_at_82%_12%,rgba(20,184,166,0.08),transparent_0_24%)]" />
+
       {/* 页面标题（保持赛博风格） */}
-      <div className="pt-12 pb-8 text-center">
+      <div className="relative z-10 pt-12 pb-8 text-center">
         <h1 className="font-mono text-6xl md:text-7xl font-black tracking-[-0.05em] text-slate-200">
           RANDOM<span className="text-cyan-400">.</span>FONT
         </h1>
@@ -101,23 +104,23 @@ const RandomFont: React.FC = () => {
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-6">
         {/* 输入区 */}
-        <div className="mb-8 bg-[#0a0a0a] border border-white/10 rounded-xl p-6">
+        <div className="mb-8 border border-cyan-900/40 bg-[linear-gradient(180deg,rgba(7,14,24,0.88),rgba(4,10,16,0.72))] p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-md">
           <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            className="w-full h-40 bg-transparent outline-none font-mono text-lg resize-none text-slate-300"
+            className="w-full h-40 resize-none bg-transparent font-mono text-lg text-slate-300 outline-none"
             placeholder="在此输入任意文本（支持英文 / 中文 / 日文）..."
           />
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-3 font-mono text-xs">
-              <span className="px-3 py-1 bg-cyan-950 text-cyan-400 rounded">当前语言: {currentLang.toUpperCase()}</span>
-              <span className="px-3 py-1 bg-cyan-950 text-cyan-400 rounded">当前字体: {currentFont}</span>
+              <span className="border border-cyan-900/50 bg-cyan-950/40 px-3 py-1 text-cyan-300">当前语言: {currentLang.toUpperCase()}</span>
+              <span className="border border-cyan-900/50 bg-cyan-950/40 px-3 py-1 text-cyan-300">当前字体: {currentFont}</span>
             </div>
             <button
               onClick={handleReroll}
-              className="px-8 py-3 bg-transparent border border-cyan-400 hover:bg-cyan-400 hover:text-[#050505] transition-all font-mono text-sm tracking-widest"
+              className="border border-cyan-500/60 bg-transparent px-8 py-3 font-mono text-sm tracking-widest text-cyan-300 transition-all hover:bg-cyan-400 hover:text-[#031015]"
             >
               REROLL FONT
             </button>
@@ -125,7 +128,7 @@ const RandomFont: React.FC = () => {
         </div>
 
         {/* 实时预览区 */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-12 min-h-[420px] flex items-center justify-center text-center">
+        <div className="flex min-h-[420px] items-center justify-center border border-cyan-900/35 bg-[linear-gradient(180deg,rgba(7,14,24,0.8),rgba(4,10,16,0.62))] p-12 text-center shadow-[0_24px_70px_rgba(0,0,0,0.42)] backdrop-blur-md">
           <motion.p
             key={currentFont}
             className="text-4xl md:text-5xl leading-relaxed max-w-2xl"
