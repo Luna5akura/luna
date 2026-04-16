@@ -30,8 +30,7 @@ const CustomCursor = () => {
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let pixelRatio = 1;
 
     const mouse = { x: width / 2, y: height / 2 };
     const lastMouse = { x: width / 2, y: height / 2 };
@@ -49,12 +48,17 @@ const CustomCursor = () => {
     let hoverTarget: HTMLElement | null = null;
     let hoverRect: DOMRect | null = null; // 【核心缓存】存储目标的物理包围盒
     let isHidden = false;
+    let isRunning = false;
+    let lastFrameTime = 0;
+    let scrollBoostUntil = 0;
 
     const onResize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       // 保证调整窗口时如果正在悬停，框的尺寸坐标也能被正确刷新
       if (hoverTarget) hoverRect = hoverTarget.getBoundingClientRect();
     };
@@ -86,6 +90,7 @@ const CustomCursor = () => {
 
     // 监听页面滚动，动态补偿缓存的物理坐标，确保滑动页面时瞄准框也能死死锁住目标
     const onScroll = () => {
+      scrollBoostUntil = performance.now() + 160;
       if (hoverTarget) hoverRect = hoverTarget.getBoundingClientRect();
     };
 
@@ -96,6 +101,27 @@ const CustomCursor = () => {
       trail.forEach(pt => { pt.x = mouse.x; pt.y = mouse.y; });
     };
 
+    const stop = () => {
+      if (!isRunning) return;
+      isRunning = false;
+      cancelAnimationFrame(rAF);
+    };
+
+    const start = () => {
+      if (isRunning) return;
+      isRunning = true;
+      rAF = requestAnimationFrame(render);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        lastFrameTime = 0;
+        start();
+      }
+    };
+
     window.addEventListener('resize', onResize, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('mouseover', onMouseOver, { passive: true });
@@ -103,9 +129,18 @@ const CustomCursor = () => {
     window.addEventListener('scroll', onScroll, { passive: true, capture: true });
     document.addEventListener('mouseleave', onMouseLeave);
     document.addEventListener('mouseenter', onMouseEnter);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     let rAF: number;
-    const render = () => {
+    const render = (now: number) => {
+      const isScrollActive = now < scrollBoostUntil;
+      const minFrameInterval = isScrollActive ? 1000 / 48 : 1000 / 60;
+      if (lastFrameTime !== 0 && now - lastFrameTime < minFrameInterval) {
+        rAF = requestAnimationFrame(render);
+        return;
+      }
+      lastFrameTime = now;
+
       const velX = mouse.x - lastMouse.x;
       const velY = mouse.y - lastMouse.y;
       const speed = Math.sqrt(velX * velX + velY * velY); 
@@ -192,16 +227,18 @@ const CustomCursor = () => {
       rAF = requestAnimationFrame(render);
     };
 
-    rAF = requestAnimationFrame(render);
+    onResize();
+    start();
 
     return () => {
+      stop();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseover', onMouseOver);
       window.removeEventListener('scroll', onScroll, { capture: true });
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
-      cancelAnimationFrame(rAF);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   },[location.pathname]);
 

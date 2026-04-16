@@ -1,8 +1,8 @@
 // src/components/BlogList.tsx
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react';
 import { Post } from '@/types';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, AnimatePresence, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence, useTransform, MotionValue } from 'framer-motion';
 import {
   Pagination,
   PaginationContent,
@@ -56,43 +56,119 @@ MagneticWrapper.displayName = 'MagneticWrapper';
 // ==========================================
 // 【ScrambleText - 一次性动画 + memo】
 // ==========================================
-const ScrambleText = memo(({ text, className }: { text: string; className?: string }) => {
-  const spanRef = useRef<HTMLSpanElement>(null);
+type GlyphSignature = {
+  scale: number;
+};
 
-  useEffect(() => {
-    const el = spanRef.current;
-    if (!el) return;
-    let frame: number;
-    const chars = "01@#$%&X_!<>?{}[]";
-    const duration = 600;
-    const startTime = performance.now();
+const GLYPH_SCALE_MIN = 0.84;
+const GLYPH_SCALE_RANGE = 0.42;
+const GLYPH_RESPONSE_MIN = 0.7;
+const GLYPH_RESPONSE_RANGE = 1.7;
 
-    const animate = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 4);
-      const revealCount = Math.floor(text.length * easeProgress);
-      let display = "";
-      for (let i = 0; i < text.length; i++) {
-        if (i < revealCount) display += text[i];
-        else if (text[i] === " ") display += " ";
-        else display += chars[Math.floor(Math.random() * chars.length)];
-      }
-      el.textContent = display;
-      if (progress < 1) frame = requestAnimationFrame(animate);
-    };
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [text]);
+const getGlyphBlur = (scale: number) => {
+  if (scale >= 1.17) return 1.05;
+  if (scale <= 0.95) return 0.78;
+  return 0;
+};
+
+const createGlyphSignature = (seedSource: string, index: number): GlyphSignature => {
+  let seed = 0;
+  const source = `${seedSource}:${index}`;
+  for (let i = 0; i < source.length; i += 1) {
+    seed = (seed * 31 + source.charCodeAt(i)) % 100000;
+  }
+
+  const normalized = (offset: number) => {
+    const value = Math.sin(seed * 0.017 + offset) * 43758.5453;
+    return value - Math.floor(value);
+  };
+
+  return {
+    scale: GLYPH_SCALE_MIN + normalized(2.9) * GLYPH_SCALE_RANGE,
+  };
+};
+
+const ReactiveGlyph = memo(({
+  char,
+  depthX,
+  depthY,
+  signature,
+  emphasis = 1,
+  isActive = false,
+  className,
+}: {
+  char: string;
+  depthX: MotionValue<number>;
+  depthY: MotionValue<number>;
+  signature: GlyphSignature;
+  emphasis?: number;
+  isActive?: boolean;
+  className?: string;
+}) => {
+  const normalizedScale = (signature.scale - GLYPH_SCALE_MIN) / GLYPH_SCALE_RANGE;
+  const responseCurve = normalizedScale * normalizedScale;
+  const response = (GLYPH_RESPONSE_MIN + responseCurve * GLYPH_RESPONSE_RANGE) * emphasis;
+  const blur = getGlyphBlur(signature.scale);
+  const x = useTransform(depthX, [-1, 1], [-10 * response, 10 * response]);
+  const y = useTransform(depthY, [-1, 1], [-8 * response, 8 * response]);
 
   return (
-    <span className={cn("grid w-full items-start", className)}>
-      <span className="col-start-1 row-start-1 invisible whitespace-pre-wrap break-words">{text}</span>
-      <span ref={spanRef} className="col-start-1 row-start-1 whitespace-pre-wrap break-words text-cyan-50">{text}</span>
+    <motion.span
+      className={cn("inline-block will-change-transform", className)}
+      animate={{
+        scale: isActive ? signature.scale : 1,
+        filter: isActive && blur > 0 ? `blur(${blur}px)` : 'blur(0px)',
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
+      style={{
+        x,
+        y,
+        paddingRight: char === ' ' ? '0.24em' : undefined,
+      }}
+    >
+      {char === ' ' ? '\u00A0' : char}
+    </motion.span>
+  );
+});
+ReactiveGlyph.displayName = 'ReactiveGlyph';
+
+const ResponsiveTextLine = memo(({
+  text,
+  depthX,
+  depthY,
+  className,
+  emphasis = 1,
+  isActive = false,
+}: {
+  text: string;
+  depthX: MotionValue<number>;
+  depthY: MotionValue<number>;
+  className?: string;
+  emphasis?: number;
+  isActive?: boolean;
+}) => {
+  const signatures = useMemo(
+    () => Array.from(text).map((_, index) => createGlyphSignature(text, index)),
+    [text]
+  );
+
+  return (
+    <span className={cn("flex flex-wrap items-baseline", className)}>
+      {Array.from(text).map((char, index) => (
+        <ReactiveGlyph
+          key={`${text}-${index}`}
+          char={char}
+          depthX={depthX}
+          depthY={depthY}
+          signature={signatures[index]}
+          emphasis={emphasis}
+          isActive={isActive}
+        />
+      ))}
     </span>
   );
 });
-ScrambleText.displayName = 'ScrambleText';
+ResponsiveTextLine.displayName = 'ResponsiveTextLine';
 
 // ==========================================
 // 【优化后的 ListItem（滚动时禁用变色 + 倾斜）】
@@ -109,7 +185,7 @@ interface ListItemProps {
 
 const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = false, onHoverStart, onHoverEnd }: ListItemProps) => {
   const hexIndex = `0x${(index + 1).toString(16).toUpperCase().padStart(2, '0')}`;
-  const cardRef = useRef<HTMLAnchorElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const tiltX = useMotionValue(0);
   const tiltY = useMotionValue(0);
   const depthShiftX = useMotionValue(0);
@@ -118,15 +194,16 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
   const smoothTiltY = useSpring(tiltY, { stiffness: 220, damping: 26, mass: 0.8 });
   const smoothDepthX = useSpring(depthShiftX, { stiffness: 200, damping: 24, mass: 0.85 });
   const smoothDepthY = useSpring(depthShiftY, { stiffness: 200, damping: 24, mass: 0.85 });
-  const layerShiftX = useTransform(smoothDepthX, [-1, 1], [-12, 12]);
-  const layerShiftY = useTransform(smoothDepthY, [-1, 1], [-10, 10]);
-  const metaShiftX = useTransform(smoothDepthX, [-1, 1], [-8, 8]);
-  const metaShiftY = useTransform(smoothDepthY, [-1, 1], [-6, 6]);
-  const dateShiftX = useTransform(smoothDepthX, [-1, 1], [-18, 18]);
-  const dateShiftY = useTransform(smoothDepthY, [-1, 1], [-12, 12]);
-  const reticleX = useTransform(smoothDepthX, [-1, 1], [-22, 22]);
-  const reticleY = useTransform(smoothDepthY, [-1, 1], [-18, 18]);
-
+  const layerShiftX = useTransform(smoothDepthX, [-1, 1], [-18, 18]);
+  const layerShiftY = useTransform(smoothDepthY, [-1, 1], [-15, 15]);
+  const metaShiftX = useTransform(smoothDepthX, [-1, 1], [-14, 14]);
+  const metaShiftY = useTransform(smoothDepthY, [-1, 1], [-10, 10]);
+  const titleShiftX = useTransform(smoothDepthX, [-1, 1], [-24, 24]);
+  const titleShiftY = useTransform(smoothDepthY, [-1, 1], [-18, 18]);
+  const dateShiftX = useTransform(smoothDepthX, [-1, 1], [-30, 30]);
+  const dateShiftY = useTransform(smoothDepthY, [-1, 1], [-18, 18]);
+  const reticleX = useTransform(smoothDepthX, [-1, 1], [-36, 36]);
+  const reticleY = useTransform(smoothDepthY, [-1, 1], [-24, 24]);
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
@@ -134,7 +211,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
     el.style.setProperty('--mouse-y', '50%');
   }, []);
 
-  const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (disabled || !cardRef.current || window.innerWidth < 1024) return;
     const rect = cardRef.current.getBoundingClientRect();
     const localX = e.clientX - rect.left;
@@ -163,13 +240,13 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
 
   const cardState = isHovered
     ? {
-        scale: 1.055,
-        x: 20,
-        y: -6,
-        z: 108,
+        scale: 1.07,
+        x: 22,
+        y: -8,
+        z: 132,
         opacity: 1,
-        filter: 'brightness(1.16) saturate(1.12)',
-        boxShadow: '0 32px 58px rgba(2,12,27,0.56), 0 0 24px rgba(34,211,238,0.14)',
+        filter: 'brightness(1.18) saturate(1.16)',
+        boxShadow: '0 36px 62px rgba(2,12,27,0.58), 0 0 28px rgba(34,211,238,0.16)',
       }
     : hasHoveredPeer
       ? {
@@ -192,15 +269,28 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         };
 
   return (
-    <motion.div
-      layout
-      animate={cardState}
-      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
-      className={cn("relative transform-gpu", isHovered ? "z-30" : hasHoveredPeer ? "z-10" : "z-20")}
+    <div
+      ref={cardRef}
+      onMouseMove={handleCardMouseMove}
+      onMouseEnter={() => {
+        if (!disabled) onHoverStart();
+      }}
+      onMouseLeave={() => {
+        resetCardMouse();
+        onHoverEnd();
+      }}
+      className={cn("group/card relative transform-gpu", isHovered ? "z-30" : hasHoveredPeer ? "z-10" : "z-20")}
       style={{ transformStyle: 'preserve-3d', transformPerspective: 1400 }}
     >
+      <Link
+        to={`/posts/${post.contentKey}`}
+        aria-label={post.title}
+        className="absolute inset-0 z-40 cursor-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"
+      />
       <motion.div
-        className="relative transform-gpu"
+        animate={cardState}
+        transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.72 }}
+        className="relative transform-gpu pointer-events-none"
         style={{
           rotateX: smoothTiltX,
           rotateY: smoothTiltY,
@@ -208,20 +298,6 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           perspective: 1400,
         }}
       >
-        <Link
-          ref={cardRef}
-          to={`/posts/${post.contentKey}`}
-          onMouseMove={handleCardMouseMove}
-          onMouseEnter={() => {
-            if (!disabled) onHoverStart();
-          }}
-          onMouseLeave={() => {
-            resetCardMouse();
-            onHoverEnd();
-          }}
-          className="group relative block w-full cursor-none overflow-visible bg-transparent outline-none transition-colors duration-500 focus:outline-none focus-visible:outline-none focus-visible:ring-0"
-          style={{ transformStyle: 'preserve-3d' }}
-        >
         <div
           className="pointer-events-none absolute inset-x-6 -bottom-5 h-10 bg-cyan-500/10 blur-2xl transition-all duration-500"
           style={{ transform: isHovered ? 'translateZ(-64px) scaleX(0.84) skewX(-20deg)' : 'translateZ(-88px) scaleX(0.68) skewX(-20deg)' }}
@@ -253,7 +329,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
 
         {!disabled && (
           <div
-            className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
             style={{
               transform: 'translateZ(26px)',
               background: 'radial-gradient(560px circle at var(--mouse-x) var(--mouse-y), rgba(34,211,238,0.12), transparent 42%)',
@@ -262,7 +338,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         )}
 
         <div
-          className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
           style={{ transform: 'translateZ(30px)' }}
         >
           <div className="absolute inset-0 bg-cyan-950/6 shadow-[inset_0_0_18px_rgba(34,211,238,0.08)]" />
@@ -271,7 +347,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           <div className="absolute bottom-4 left-4 h-3 w-3 border-b border-l border-cyan-500/45" />
           <div className="absolute bottom-4 right-4 h-3 w-3 border-b border-r border-cyan-500/45" />
           <motion.div
-            className="absolute left-1/2 top-1/2 h-16 w-16 border border-cyan-500/22 opacity-0 mix-blend-screen group-hover:opacity-100"
+            className="absolute left-1/2 top-1/2 h-16 w-16 border border-cyan-500/22 opacity-0 mix-blend-screen group-hover/card:opacity-100"
             style={{ x: reticleX, y: reticleY, transform: 'translateZ(58px) translate(-50%, -50%)' }}
           />
         </div>
@@ -283,11 +359,19 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           <motion.div
             className="relative z-10 mb-5 flex items-center gap-4 border-l-2 border-cyan-500/45 pl-4 text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-900"
             style={{ x: metaShiftX, y: metaShiftY, transform: 'translateZ(64px)' }}
+            animate={{ scale: isHovered ? 1.045 : 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
           >
             <span className="font-bold text-cyan-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.22)]">[{hexIndex}]</span>
             <span className="h-[1px] w-12 bg-cyan-900/50" />
-            <span className="text-slate-500 transition-colors group-hover:text-cyan-300">
-              // ALLOC_ZONE: {post.category}
+            <span className="text-slate-500 transition-colors group-hover/card:text-cyan-300">
+              <ResponsiveTextLine
+                text={`// ALLOC_ZONE: ${post.category}`}
+                depthX={smoothDepthX}
+                depthY={smoothDepthY}
+                emphasis={0.48}
+                isActive={isHovered}
+              />
             </span>
           </motion.div>
 
@@ -297,27 +381,51 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           />
 
           <motion.div
-            className="relative z-10 flex flex-col justify-between gap-6 transition-transform duration-500 ease-out group-hover:translate-x-4 md:flex-row md:items-end"
+            className="relative z-10 flex flex-col justify-between gap-6 transition-transform duration-500 ease-out group-hover/card:translate-x-4 md:flex-row md:items-end"
             style={{ transform: 'translateZ(72px)' }}
           >
             <motion.div
               className="relative w-full md:max-w-[70%]"
-              style={{ x: layerShiftX, y: metaShiftY, transform: 'translateZ(82px)' }}
+              style={{ x: titleShiftX, y: titleShiftY, transform: 'translateZ(92px)' }}
+              animate={{ scale: isHovered ? 1.12 : 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
             >
               <div className="pointer-events-none absolute -left-3 top-1 bottom-1 w-px bg-gradient-to-b from-transparent via-cyan-400/40 to-transparent" />
-              <h2 className="w-full text-2xl font-black uppercase tracking-tight text-slate-300 transition-all duration-300 group-hover:text-white group-hover:drop-shadow-[0_0_18px_rgba(34,211,238,0.45)] md:text-4xl">
-              <ScrambleText text={post.title} />
+              <h2 className="w-full text-2xl font-black uppercase tracking-tight text-slate-300 transition-all duration-300 group-hover/card:text-white group-hover/card:drop-shadow-[0_0_18px_rgba(34,211,238,0.45)] md:text-4xl">
+                <ResponsiveTextLine
+                  text={post.title}
+                  depthX={smoothDepthX}
+                  depthY={smoothDepthY}
+                  emphasis={1}
+                  isActive={isHovered}
+                />
               </h2>
             </motion.div>
             <motion.div
               className="relative flex shrink-0 flex-col items-start border-l border-cyan-500/20 pl-4 font-mono text-xs text-slate-600 md:items-end md:border-l-0 md:border-t md:border-cyan-500/20 md:pl-0 md:pt-4"
               style={{ x: dateShiftX, y: dateShiftY, transform: 'translateZ(106px)' }}
+              animate={{ scale: isHovered ? 1.055 : 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
             >
-              <span className="flex items-center gap-2 transition-colors group-hover:text-cyan-300">
-                <span className="h-1.5 w-1.5 bg-slate-600 transition-colors group-hover:animate-pulse group-hover:bg-cyan-400" />
-                SYS.TIME
+              <span className="flex items-center gap-2 transition-colors group-hover/card:text-cyan-300">
+                <span className="h-1.5 w-1.5 bg-slate-600 transition-colors group-hover/card:animate-pulse group-hover/card:bg-cyan-400" />
+                <ResponsiveTextLine
+                  text="SYS.TIME"
+                  depthX={smoothDepthX}
+                  depthY={smoothDepthY}
+                  emphasis={0.4}
+                  isActive={isHovered}
+                />
               </span>
-              <span className="font-mono tracking-widest text-slate-500">{post.date}</span>
+              <span className="font-mono tracking-widest text-slate-500">
+                <ResponsiveTextLine
+                  text={post.date}
+                  depthX={smoothDepthX}
+                  depthY={smoothDepthY}
+                  emphasis={0.36}
+                  isActive={isHovered}
+                />
+              </span>
             </motion.div>
           </motion.div>
 
@@ -328,12 +436,11 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         </motion.div>
 
         <div
-          className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 bg-gradient-to-r from-cyan-400/10 via-cyan-400 to-cyan-300/10 transition-transform duration-700 origin-left group-hover:scale-x-100"
+          className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 bg-gradient-to-r from-cyan-400/10 via-cyan-400 to-cyan-300/10 transition-transform duration-700 origin-left group-hover/card:scale-x-100"
           style={{ transform: 'translateZ(38px)', transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         />
-        </Link>
       </motion.div>
-    </motion.div>
+    </div>
   );
 });
 ListItem.displayName = 'ListItem';
@@ -352,8 +459,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   const listContainerRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
 
-  const globalMouseX = useMotionValue(-1000);
-  const globalMouseY = useMotionValue(-1000);
   const panelX = useMotionValue(0);
   const panelY = useMotionValue(0);
   const smoothPanelX = useSpring(panelX, { stiffness: 180, damping: 24, mass: 0.8 });
@@ -391,30 +496,26 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth >= 1024 && !isScrolling) {
-      globalMouseX.set(e.clientX);
-      globalMouseY.set(e.clientY);
       const rect = e.currentTarget.getBoundingClientRect();
       const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
       panelX.set(normalizedX);
       panelY.set(normalizedY);
     }
-  }, [globalMouseX, globalMouseY, isScrolling, panelX, panelY]);
+  }, [isScrolling, panelX, panelY]);
 
   const handleMouseLeave = useCallback(() => {
     panelX.set(0);
     panelY.set(0);
-    globalMouseX.set(-1000);
-    globalMouseY.set(-1000);
     setHoveredIndex(null);
-  }, [globalMouseX, globalMouseY, panelX, panelY]);
+  }, [panelX, panelY]);
 
   const triggerPageChange = useCallback((newPage: number) => {
     if (newPage === currentPage) return;
     onPageChange(newPage);
   }, [currentPage, onPageChange]);
 
-  const getVisiblePages = () => {
+  const visiblePages = useMemo(() => {
     const delta = 1;
     const range: number[] = [];
     const rangeWithDots: (number | string)[] = [];
@@ -431,7 +532,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
       l = i;
     }
     return rangeWithDots;
-  };
+  }, [currentPage, totalPages]);
 
   return (
     <div
@@ -441,7 +542,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
       className="relative z-10 flex w-full flex-col overflow-visible px-3 py-3 pb-16 pr-6 perspective-[1400px] md:px-4 md:py-4 md:pr-8 lg:pr-10"
     >
       <motion.div
-        layout
         className="relative isolate mb-16 min-h-[400px] transform-gpu overflow-visible px-2 py-2 md:px-3 md:py-3"
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
       >
@@ -466,7 +566,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={`page-${currentPage}`}
-              layout
               initial={{ opacity: 0, y: 60, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -60, scale: 0.95 }}
@@ -497,7 +596,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
 
       <motion.div
         ref={paginationRef}
-        layout
         className="relative flex justify-center overflow-visible px-2 pt-8 pb-2 pr-4 md:px-3 md:justify-start md:pb-3 md:pr-6"
         style={{ transformStyle: 'preserve-3d' }}
       >
@@ -526,8 +624,8 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
               </MagneticWrapper>
 
               <AnimatePresence mode="popLayout">
-                {getVisiblePages().map((page, idx) => (
-                  <motion.div key={page === '...' ? `dots-${idx}` : page} layout>
+                {visiblePages.map((page, idx) => (
+                  <motion.div key={page === '...' ? `dots-${idx}` : page}>
                     <MagneticWrapper disabled={isScrolling}>
                       <PaginationItem>
                         {page === '...' ? (
@@ -571,4 +669,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   );
 };
 
-export default BlogList;
+const MemoizedBlogList = memo(BlogList);
+MemoizedBlogList.displayName = 'BlogList';
+
+export default MemoizedBlogList;

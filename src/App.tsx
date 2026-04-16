@@ -1,5 +1,5 @@
 // src/App.tsx
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,13 +7,21 @@ import Home from "@/pages/Home";
 import { FontToggleProvider } from "@/context/FontToggleContext";
 import CustomCursor from "@/components/CustomCursor";
 
-const Warp = lazy(() => import("@/pages/Warp"));
-const Wow = lazy(() => import("@/pages/Wow"));
-const Wit = lazy(() => import("@/pages/Wit"));
-const Lifecode = lazy(() => import("@/pages/Lifecode"));
-const Spark = lazy(() => import("@/pages/Spark"));
-const RandomFont = lazy(() => import("./pages/RandomFont"));
-const PostDetails = lazy(() => import("@/pages/PostDetails"));
+const loadWarp = () => import("@/pages/Warp");
+const loadWow = () => import("@/pages/Wow");
+const loadWit = () => import("@/pages/Wit");
+const loadLifecode = () => import("@/pages/Lifecode");
+const loadSpark = () => import("@/pages/Spark");
+const loadRandomFont = () => import("./pages/RandomFont");
+const loadPostDetails = () => import("@/pages/PostDetails");
+
+const Warp = lazy(loadWarp);
+const Wow = lazy(loadWow);
+const Wit = lazy(loadWit);
+const Lifecode = lazy(loadLifecode);
+const Spark = lazy(loadSpark);
+const RandomFont = lazy(loadRandomFont);
+const PostDetails = lazy(loadPostDetails);
 
 const DynamicCursor = () => {
   const location = useLocation();
@@ -30,6 +38,30 @@ const RouteLoadingFallback = () => (
 );
 
 function App() {
+  useEffect(() => {
+    const warmUpRoutes = () => {
+      void Promise.allSettled([
+        loadWarp(),
+        loadWow(),
+        loadWit(),
+        loadLifecode(),
+        loadSpark(),
+        loadRandomFont(),
+        loadPostDetails(),
+      ]);
+    };
+
+    if (typeof window === "undefined") return;
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(warmUpRoutes, { timeout: 1500 });
+      return () => window.cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = window.setTimeout(warmUpRoutes, 300);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   return (
     <FontToggleProvider>
       <div className="flex flex-col w-full min-h-screen overflow-x-clip bg-[#02050A]">
