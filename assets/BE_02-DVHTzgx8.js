@@ -1,0 +1,11 @@
+const n=`---
+title: Business English - Week 2
+category: Notes
+date: 2025-9-10 
+---
+
+# Reading Aim
+
+- get useful information 
+
+`;export{n as default};

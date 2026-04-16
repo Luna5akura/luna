@@ -1,0 +1,350 @@
+const n=`---
+title: Econometrics - Week 1
+category: Notes
+date: 2025-9-12
+---
+
+# 1 复习
+
+## 1.1 条件期望
+
+条件密度函数：$p(y|x) = \\dfrac{p(y, x)}{p(x)} = \\dfrac{p(y,x)}{\\int p(y, x)\\mathrm dy}$
+
+条件期望：$E[Y|X=x] = \\int yp(y|x) \\mathrm dy$
+
+可以定义： $\\varphi (x) = E[Y|X = x]$
+
+条件期望： $E[Y|X] = \\phi (X)$
+
+### 1.1.1 推论
+
+1. $E[h(X) Y|X] = h(X) E[Y|X]$
+2. $E[Y] = E[E[Y|X]]$
+3. $E[E[Y|X_1,X_2]|X_1] = E(E[Y|X_1]|X_1,X_2) = E[Y|X_1]$
+4. $E[Y|X] = \\argmin E[(Y-f(X))^2]$
+
+## 1.2 相关系数 
+
+$\\rho_{X, Y } = \\dfrac{\\sum_{i=1 }^{n }(X_i - \\bar{X })(Y_i - \\bar{Y }) }{\\sqrt{\\sum_{i=1 }^{n }(X_i - \\bar X) ^2 }\\sqrt{\\sum_{i=1 }^{n }(Y_i  - \\bar{Y })^2 }} $
+
+## 1.3 回归分析
+
+统计模型： 关于总体分布的某种特征的假定
+
+$Z = (Y, \\vec{X })$
+
+- $\\vec{X } = (X_1,\\dots, X_k)$: 解释变量
+- $Y $： 目标变量
+
+线性回归模型： $E[Y|X] = \\beta_0 + \\beta _1X_1 + \\cdots + \\beta _k X_k $
+
+- $\\beta _0, \\beta _1,\\dots,\\beta _k $: 未知参数
+
+对于样本： $E[Y_i|\\vec{X_i}] = \\beta _0 +\\beta _1X_{i1 }+ \\cdots + \\beta _k X_{ik }$
+
+### 1.3.1 简单线性回归模型
+
+$E[Y|X] = \\beta_0 + \\beta _1X $
+
+如果定义： $u = Y - \\beta _0 - \\beta _1 X $ why?
+
+可证： $E[u|X] = 0$
+
+可以得到线性回归模型等价形式：
+
+$\\begin{cases}
+Y = \\beta _0 + \\beta _1X + u \\\\ 
+E[u|X] = 0
+\\end{cases}
+$
+
+对于样本 $Z_i=(Y_i, X_i)$:
+
+$\\begin{cases}
+Y_i = \\beta _0 + \\beta _1 X_i + u_i \\\\ 
+E[u_i|X_i] = 0  
+\\end{cases}
+$
+
+### 1.3.2 假设1
+
+$u $关于 $X $的条件期望为零： $E[u|X] = 0 $
+
+- $Cov (h(u), X) = 0 $,  $h(\\cdot ) $为任意线性 \\ 非线性函数
+
+## 1.4 参数估计
+
+### 1.4.1 方法1: 矩估计
+
+构建矩条件：
+
+1. $E[u_i] = 0$
+2. $E[u_i|X_i] = 0 \\Rightarrow E[X_iu_i] = 0$
+
+$ E\\left[\\begin{array}{c}Y_{i}-\\beta_{0}-\\beta_{1} X_{i} \\\\ X_{i}\\left(Y_{i}-\\beta_{0}-\\beta_{1} X_{i}\\right)\\end{array}\\right]=0 $
+
+可得：
+
+$ \\tilde{\\beta}_{0}=\\bar{Y}-\\tilde{\\beta}_{1} \\bar{X}, \\quad \\tilde{\\beta}_{1}=\\dfrac{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)\\left(Y_{i}-\\bar{Y}\\right)}{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)^{2}} $
+
+### 1.4.2 方法2: 最小二乘法
+
+最小化这个函数： $ S\\left(\\beta_{0}, \\beta_{1}\\right)=\\sum_{i=1}^{n}\\left(Y_{i}-\\beta_{0}-\\beta_{1} X_{i}\\right)^{2} $
+
+可得相同结果
+
+## 1.5 样本方差、样本协方差、相关系数
+
+给定数据： $ \\left\\{\\left(X_{i}, Y_{i}\\right), i=1, \\ldots, n\\right\\} $
+
+有 $X, Y $的样本方差：
+
+$ s_{X}^{2}=\\dfrac{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)^{2}}{n-1}, s_{Y}^{2}=\\dfrac{\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2}}{n-1} $
+
+样本协方差：
+
+$ s_{X Y}=\\dfrac{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)\\left(Y_{i}-\\bar{Y}\\right)}{n-1} $
+
+相关系数：
+
+$ r_{X Y}=\\dfrac{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)\\left(Y_{i}-\\bar{Y}\\right)}{\\sqrt{\\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)^{2}} \\sqrt{\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2}}}=\\dfrac{s_{X Y}}{s_{X} s_{Y}} $
+
+## 1.6 最小二乘法估计量解释
+
+$ \\hat{\\beta}_{1}=\\frac{s_{X Y}}{s_{X}^{2}}=\\frac{s_{Y}}{s_{X}} r_{X Y} $
+
+### 1.6.1 样本回归直线
+
+- $y = \\hat \\beta _0 + \\hat \\beta _1 x$： 样本回归直线
+- $\\hat Y_i = \\hat \\beta _0 + \\hat \\beta _1 X_i $: 拟合值
+- $\\hat u_i = Y_i - \\hat Y_i $: 残差
+
+### 1.6.2 最小二乘法性质
+
+1. $ \\sum_{i=1}^{n} \\hat{u}_{i}=0 $
+2. $ \\sum_{i=1}^{n} X_{i} \\hat{u}_{i}=0 $
+3. $ \\sum_{i=1}^{n} \\hat{Y}_{i} \\hat{u}_{i}=0 $
+
+
+$ \\frac{\\partial (SSR)}{\\partial \\hat{\\beta}0} = \\sum_{i=1}^{n} 2 (Y_i - \\hat{\\beta}_0 - \\hat{\\beta}_1 X_i) \\cdot (-1) = 0 $
+
+### 1.6.3 SST, SSE, SSR
+
+SS: Sum of Squares
+
+SST: Total
+
+SSE: Explained
+
+SSR: Residual
+
+$ \\begin{aligned} S S T & =\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2} \\\\ S S E & =\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\bar{Y}\\right)^{2} \\\\ S S R & =\\sum_{i=1}^{n} \\hat{u}_{i}^{2}\\end{aligned} $
+
+注意到： $SST=SSE+SSR $
+
+### 1.6.4 $R^2 $
+
+
+$R^2 = \\dfrac{SSE}{SST} = \\dfrac{s^2_{\\bar{Y}}}{s^2_Y}$
+
+#### 1.6.4.1 $R^2$ 与 相关系数
+
+$ r_{\\hat{Y} Y}=\\frac{\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\overline{\\hat{Y}}\\right)\\left(Y_{i}-\\bar{Y}\\right)}{\\sqrt{\\sum_{i=1}^{n}\\left(\\hat{Y}_{i}-\\overline{\\hat{Y}}\\right)^{2}} \\sqrt{\\sum_{i=1}^{n}\\left(Y_{i}-\\bar{Y}\\right)^{2}}} $
+
+有： $ R^{2}=r_{\\hat{Y} Y}^{2} $
+
+
+如果 $X$ 为一维，还有： $ R^{2}=r_{\\hat{Y} Y}^{2}=r_{X Y}^{2} $
+
+# 2 关注变量 $Z$
+
+总体： 变量 $Z $ 的所有可能取值的全体
+$F_Z $： 总体的概率分布
+$\\theta  $： 与分布有关的关键参数
+任务：对 $\\theta  $ 的取值作出估计和推断
+
+解决方法：抽样收集 $Z $ 的一组数据 $z_1, \\cdots\\ z_n $
+
+目标：对参数作出估计和推断
+
+## 2.1 总体、样本、实现值、估计量
+
+简单随机样本： $Z_1, \\dots,Z_n $：互相独立并服从 $F_Z $ 分布
+实现值： $z_1, \\dots,z_n $ 是 $Z_1, \\dots,Z_n $ 的实现值
+
+目标：基于样本建立决策规则，应用于观测到的数据上
+
+决策规则：
+
+- 点估计： $\\hat\\theta (Z_1,\\dots\\Z_n) $ 来估计 $\\Theta  $的取值， $\\hat\\theta $ 是 $\\theta $ 的估计量
+- 区间估计：构建区间 $ \\left[a\\left(Z_{1}, \\ldots, Z_{n}\\right), b\\left(Z_{1}, \\ldots, Z_{n}\\right)\\right] $ 估计 $\\theta  $ 的取值范围
+- 假设检验：判断关于 $\\theta  $ ，比如 $\\theta  \\ge 0 $ 的论断的正确性
+
+### 2.1.1 假设条件
+
+第一类假设条件： $F $ 属于某个已知的分布族，比如正态分布族
+- 叫做参数模型
+  
+第二类条件： $F $ 是未知的，但是已知有连续的密度函数
+- 叫做非参数模型
+
+第三类条件： $F $ 未知，但已知存在 $\\phi(\\cdot) $ 满足：
+
+$E[\\phi(Z_i,\\theta )] = 0, \\forall i = 1, \\dots, n $
+
+- $\\phi $ 是向量值函数
+- 叫做半参数模型
+- 矩条件
+
+## 2.2 参数估计方法的构造
+
+1. 矩估计方法
+2. 极大似然估计方法
+3. 最小二乘法
+4. 核估计方法
+
+### 2.2.1 矩估计
+
+已知矩条件，则可以构造：
+
+$ \\bar{\\phi}(\\theta)=\\frac{1}{n} \\sum_{i=1}^{n} \\phi\\left(Z_{i}, \\theta\\right) $
+
+- $\\bar \\phi (\\theta )$ ：样本矩 
+- $\\hat\\theta  $：$\\bar \\phi (\\theta )$ 的解
+- $\\hat\\theta  $：$\\theta $ 的矩估计量
+
+#### 2.2.1.1 算例：正态分布的矩估计
+
+$ \\begin{array}{l}E\\left[Z_{i}\\right]=\\mu, E\\left[Z_{i}^{2}\\right]=\\mu^{2}+\\sigma^{2} \\\\ \\phi\\left(Z_{i}, \\mu, \\sigma^{2}\\right)=\\left[\\begin{array}{c}Z_{i}-\\mu \\\\ Z_{i}^{2}-\\mu^{2}-\\sigma^{2}\\end{array}\\right] \\\\ \\bar{\\phi}\\left(\\mu, \\sigma^{2}\\right)=\\left[\\begin{array}{c}\\bar{Z}-\\mu \\\\ \\frac{1}{n} \\sum_{i=1}^{n} Z_{i}^{2}-\\mu^{2}-\\sigma^{2}\\end{array}\\right]\\end{array} $
+
+可得：$ \\hat{\\mu}=\\bar{Z}, \\hat{\\sigma}^{2}=\\frac{1}{n} \\sum_{i=1}^{n}\\left(Z_{i}-\\bar{Z}\\right)^{2} $
+
+### 2.2.2 最大似然估计
+
+设 $Z_1, \\dots, Z_n $ 有联合密度分布 $p(z_1, \\dots, z_n, \\theta ) $ 
+
+- $l_Z(\\theta  )= \\log p(z_1, \\dots, z_n, \\theta) $: 对数似然函数
+- 最大似然估计量： $\\tilde \\theta  = \\arg \\max l_Z(\\theta ) $
+- 通常情况：解 $\\dfrac{\\partial l_Z(\\theta )}{\\partial\\theta } = 0$
+
+#### 2.2.2.1 算例：正态分布的最大似然估计
+
+连乘、取对数、求导
+
+$ \\begin{array}{l}L\\left(\\mu, \\sigma^{2}\\right)=\\prod_{i=1}^{n} \\frac{1}{\\sqrt{2 \\pi \\sigma^{2}}} \\exp \\left(-\\frac{\\left(x_{i}-\\mu\\right)^{2}}{2 \\sigma^{2}}\\right) \\\\ \\ell\\left(\\mu, \\sigma^{2}\\right)=\\ln L=-\\frac{n}{2} \\ln (2 \\pi)-\\frac{n}{2} \\ln \\sigma^{2}-\\frac{1}{2 \\sigma^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)^{2} \\\\ \\frac{\\partial \\ell}{\\partial \\mu}=\\frac{1}{\\sigma^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)=0 \\\\ \\Rightarrow \\hat{\\mu}=\\frac{1}{n} \\sum_{i=1}^{n} x_{i} \\\\ \\frac{\\partial \\ell}{\\partial \\sigma^{2}}=-\\frac{n}{2 \\sigma^{2}}+\\frac{1}{2\\left(\\sigma^{2}\\right)^{2}} \\sum_{i=1}^{n}\\left(x_{i}-\\mu\\right)^{2}=0 \\\\ \\Rightarrow \\hat{\\sigma}^{2}=\\frac{1}{n} \\sum_{i=1}^{n}\\left(x_{i}-\\hat{\\mu}\\right)^{2}\\end{array} $
+
+# 3 论证决策规则的优良性
+
+## 3.1 点估计的偏差
+
+偏差： $ \\operatorname{Bias}(\\hat{\\theta})=\\hat{\\theta}-\\theta $
+
+- 是随机变量
+- $ \\operatorname{Var}(\\operatorname{Bias}(\\hat{\\theta}))=\\operatorname{Var}(\\hat{\\theta}) $
+- 理想的估计量：偏差为0
+  - 无偏： 偏差均值0
+  - 有效： 偏差方差小
+  - 相合： $Bias(\\hat \\theta )\\approx 0, n\\to \\infty $
+  - 渐进正态： $Bias(\\hat \\theta )\\sim N(0, \\frac{\\sigma^2}{n}), n\\to\\infty$
+
+## 3.2 估计量的性质
+
+$\\theta  $ 的所有可能取值范围为 $\\Theta  $. 
+
+参数空间： $\\Theta$
+
+## 3.2.1 有限样本性质
+
+无偏估计： $\\hat \\theta  $ 是 $ \\theta  $ 的一个无偏估计， 如果：
+
+$E[\\hat \\theta ] = \\theta  , \\forall \\theta $ in $ \\Theta  $
+
+有效： $\\hat \\theta_1 $ 比 $\\hat \\theta _2 $ 更有效， 如果：
+
+
+$Var [\\hat \\theta _2 ] - Var [ \\hat \\theta _1] \\ge 0, \\forall \\theta  \\in \\Theta  $ 
+
+## 3.2.2 大样本性质
+
+相合估计： $\\hat \\theta  $  是 $\\theta  $ 的一个相合估计，如果：
+
+$ \\lim _{n \\rightarrow \\infty} P(|\\hat{\\theta}-\\theta|>\\varepsilon)=0, \\forall \\theta \\in \\Theta, \\forall \\varepsilon  \\gt 0  $
+
+有效： $\\hat \\theta_1 $ 比 $\\hat \\theta _2 $ 更有效， 如果：
+
+$V_2 - V_ 1 $ 为非负定矩阵，其中：
+
+$\\forall \\varepsilon  \\gt 0,  \\begin{array}{ll}\\sqrt{n}\\left(\\hat{\\theta}_{1}-\\theta\\right) & \\xrightarrow{d} N\\left(0, V_{1}\\right), \\\\ \\sqrt{n}\\left(\\hat{\\theta}_{2}-\\theta\\right) & \\xrightarrow{d} N\\left(0, V_{2}\\right) .\\end{array} $
+
+## 3.3 渐进正态分布
+
+有以下称呼：
+
+- $\\hat\\theta  $ 服从 $\\sqrt n $ 渐进正态分布 
+- $V $ 为 $\\sqrt n (\\hat \\theta  - \\theta ) $ 的渐进方差
+- $\\frac{V}{n} $ 为 $\\hat \\theta  $ 的渐进方差
+
+，如果：
+
+$ \\sqrt{n}(\\hat{\\theta}-\\theta) \\xrightarrow{d} N(0, V) $,
+
+- 其中， $V $ 为 $k\\times k $ 维非负定矩阵
+
+并且有： $\\hat\\theta  $ 为 $\\theta $ 的相合估计：
+
+$ \\hat{\\theta}-\\theta=\\frac{1}{\\sqrt{n}} \\sqrt{n}(\\hat{\\theta}-\\theta) \\xrightarrow{p} 0 $
+
+## 3.4 区间估计
+
+我们称区间
+
+$ \\left[a\\left(Z_{1}, \\ldots, Z_{n}\\right), b\\left(Z_{1}, \\ldots, Z_{n}\\right)\\right] $
+
+为参数 $\\theta $ 的一个置信水平为 $1 - \\alpha $ 的置信区间，如果：
+
+$ P\\left\\{a\\left(Z_{1}, \\ldots, Z_{n}\\right) \\leq \\theta \\leq b\\left(Z_{1}, \\ldots, Z_{n}\\right)\\right\\}=1-\\alpha $,
+
+其中：
+
+- $ a\\left(Z_{1}, \\ldots, Z_{n}\\right), b\\left(Z_{1}, \\ldots, Z_{n}\\right) $ 为 $ Z_{1}, \\ldots, Z_{n} $ 的两个函数
+- $\\alpha \\in (0, 1) $ 为一个给定的常数
+
+### 3.4.1 构造置信区间的基本方法
+
+枢轴量： $T $ 为一个枢轴量，如果：
+
+- $T(Z_1, \\dots, Z_n, \\theta  )  $ 为 $Z_1, \\dots, Z_n , \\theta  $ 的函数
+- 它的分布是已知且不依赖于 $\\theta  $ 的概率分布 
+
+因此有：
+
+$ P\\left\\{t_{a} \\leq T\\left(Z_{1}, \\ldots, Z_{n}, \\theta\\right) \\leq t_{b}\\right\\}=1-\\alpha $
+
+- $t_a, t_b $ 是两个常数
+
+因此可以得到：
+
+$ a\\left(Z_{1}, \\ldots, Z_{n}\\right) \\leq \\theta \\leq b\\left(Z_{1}, \\ldots, Z_{n}\\right) $
+
+#### 3.4.1.1 构造置信区间的算例
+
+设 $X_1, \\dots, X_n  $ 为来自总体分布为 $N(\\mu , \\sigma^2 $ 的样本，其中 $\\mu, \\sigma $ 未知，接下来构造 $\\mu $ 的置信水平为 $1 - \\alpha  $ 的置信区间：
+
+$ \\begin{array}{c}\\bar{X}=\\frac{1}{n} \\sum_{i=1}^{n} X_{i} \\\\ S^{2}=\\frac{1}{n-1} \\sum_{i=1}^{n}\\left(X_{i}-\\bar{X}\\right)^{2} \\\\ T=\\frac{\\bar{X}-\\mu}{S / \\sqrt{n}} \\sim t_{n-1} \\\\ P\\left(-t_{\\alpha / 2, n-1} \\leq T \\leq t_{\\alpha / 2, n-1}\\right)=1-\\alpha \\\\ P\\left(\\bar{X}-t_{\\alpha / 2, n-1} \\frac{S}{\\sqrt{n}} \\leq \\mu \\leq \\bar{X}+t_{\\alpha / 2, n-1} \\frac{S}{\\sqrt{n}}\\right)=1-\\alpha \\\\ \\Rightarrow\\left[\\bar{X}-t_{\\alpha / 2, n-1} \\frac{S}{\\sqrt{n}}, \\quad \\bar{X}+t_{\\alpha / 2, n-1} \\frac{S}{\\sqrt{n}}\\right]\\end{array} $
+
+
+
+
+
+
+placeholder
+
+placeholder
+
+placeholder
+
+placeholder
+
+placeholder
+
+placeholder`;export{n as default};

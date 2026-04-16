@@ -1,0 +1,28 @@
+const n=`---
+title: Business English - Week 8
+category: Notes
+date: 2025-9-10 
+---
+
+No
+
+- shift
+- huge part + e+
+
+20?online? -- like shop --always retail
+
+however: 300 shops + prosper 300 bottom close 5-10 year 300mid exist 
+
+shop - Emmerce? phone price - same immediately online:price 
+
+walmart: order pickup : good innovater 
+
+---
+
+younger retailer: better: mix channel sortment - GAP - 
+
+# Emmerce
+
+
+
+# Brick-n-mortar`;export{n as default};

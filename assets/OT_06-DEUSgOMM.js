@@ -1,0 +1,91 @@
+const e=`---
+category: Notes
+date: '2025-12-21'
+title: Optimization Theory - Week 6
+---
+
+Based on the content of the provided PDF slides, here are the important contents organized in the requested format:
+
+# Formulation of the Linear Programming Dual
+
+**Primal Problem:**
+(P) minimize $ z = \\mathbf{c^t x} $
+subject to $ \\mathbf{Ax} \\geq \\mathbf{b} $, $ \\mathbf{x} \\geq \\mathbf{0} $.
+
+**Dual Problem:**
+(D) maximize $ Z = \\mathbf{b^t y} $
+subject to $ \\mathbf{A^t y} + \\boldsymbol{\\lambda} = \\mathbf{c} $, $ \\mathbf{y}, \\boldsymbol{\\lambda} \\geq \\mathbf{0} $.
+
+# 4.1 Duality Theorem of Linear Programming
+
+## Theorem 4.1
+
+Let $ X $ denote the feasible set for the primal problem and let $ Y $ denote the feasible set for the dual problem. Then:
+
+(i) **(Weak Duality)** For each $ \\mathbf{x} \\in X $ and $ \\mathbf{y} \\in Y $, we have $ \\langle \\mathbf{b}, \\mathbf{y} \\rangle \\leq \\langle \\mathbf{c}, \\mathbf{x} \\rangle $.
+(ii) Let $ Y \\neq \\phi $. Then $ X $ is empty if and only if $ \\langle \\mathbf{b}, \\mathbf{y} \\rangle $ is unbounded above on $ Y $.
+(iii) Let $ X \\neq \\phi $. Then $ Y $ is empty if and only if $ \\langle \\mathbf{c}, \\mathbf{x} \\rangle $ is unbounded below on $ Y $.
+(iv) **(Strong Duality I)** If the primal problem (P) has a solution $ \\mathbf{x}^* \\in X $, then the dual problem (D) has a solution $ \\mathbf{y}^* \\in Y $ and $ \\langle \\mathbf{b}, \\mathbf{y}^* \\rangle = \\langle \\mathbf{c}, \\mathbf{x}^* \\rangle $.
+(v) **(Strong Duality II)** The feasible sets $ X $ and $ Y $ for the primal and dual problems respectively are nonempty if and only if there exists a solution $ \\mathbf{x}^* \\in X $ to the primal problem and a solution $ \\mathbf{y}^* \\in Y $ to the dual problem and $ \\langle \\mathbf{c}, \\mathbf{x}^* \\rangle = \\langle \\mathbf{b}, \\mathbf{y}^* \\rangle $.
+
+## Summary of Primal-Dual Relationships
+
+| Primal problem | Dual problem |
+| :--- | :--- |
+| Infeasible | Infeasible or Unbounded |
+| Unbounded | Infeasible |
+| Feasible and bounded (have a finite optimal solution) | Feasible and bounded (have a finite optimal solution) |
+
+# 5 Simplex Method: Extreme Points and Directions
+
+## Definition 5.1 (Extreme points)
+
+A point $ \\mathbf{x} $ is an extreme point of a given convex set $ D \\in \\mathbb{R}^n $ if it cannot be written as a strict convex combination of two other distinct points of $ D $. Or, equivalently, if $ \\mathbf{x}_1, \\mathbf{x}_2 \\in D $, and $ \\lambda \\in (0, 1) $ and $ \\mathbf{x} = \\lambda \\mathbf{x}_1 + (1 - \\lambda)\\mathbf{x}_2 $, then $ \\mathbf{x} = \\mathbf{x}_1 = \\mathbf{x}_2 $.
+
+## Lemma 5.2
+
+Let $ S = \\{ \\mathbf{x} : \\mathbf{Ax} \\leq \\mathbf{b}, \\mathbf{x} \\geq \\mathbf{0} \\} $, where $ \\mathbf{A} $ is an $ m \\times n $ matrix. Then $ \\mathbf{x} $ is an extreme point of $ S $ if and only if $ \\mathbf{x} $ belongs to some $ n $ linearly independent hyperplanes out of the $ (m+n) $ defining hyperplanes of $ S $, i.e. $ \\text{rank}(\\tilde{\\mathbf{A}}_E) = n $.
+
+## Theorem 5.3
+
+Denote $ E_p $ as the set of extreme points of $ S = \\{ \\mathbf{x} : \\mathbf{Ax} \\leq \\mathbf{b}, \\mathbf{x} \\geq \\mathbf{0} \\} $. If $ S \\neq \\phi $, then $ E_p \\neq \\phi $ and only has finite elements.
+
+## Definition 5.4 (Direction)
+
+A nonzero vector $ \\mathbf{d} = (d_1, d_2, \\dots, d_n)^t \\in \\mathbb{R}^n $ is a direction of a convex set $ S $ if $ \\mathbf{x} + \\lambda \\mathbf{d} \\in S $ for all $ \\mathbf{x} \\in S $ and $ \\lambda \\geq 0 $.
+
+## Definition 5.5 (Extreme direction)
+
+A direction $ \\mathbf{d} $ of a set $ D $ is an extreme direction if it cannot be written as a strict convex combination of two other distinct directions of $ D $. Or, equivalently, if $ \\mathbf{d}_1, \\mathbf{d}_2 $ are directions of $ D $, and $ \\lambda \\in (0, 1) $ and $ \\mathbf{d} = \\lambda \\mathbf{d}_1 + (1 - \\lambda)\\mathbf{d}_2 $, then $ \\mathbf{d}_1 = \\alpha \\mathbf{d}_2 $ for some $ \\alpha > 0 $.
+
+## Theorem 5.6 & 5.8
+
+*   Let $ S = \\{ \\mathbf{x} : \\mathbf{Ax} \\leq \\mathbf{b}, \\mathbf{x} \\geq \\mathbf{0} \\} $. Then, $ \\mathbf{d} $ is a direction of $ S $ if and only if $ \\mathbf{d} \\in \\tilde{S} = \\{ \\mathbf{d} : \\mathbf{Ad} \\leq \\mathbf{0}, \\mathbf{d} \\geq \\mathbf{0}, \\mathbf{d} \\neq \\mathbf{0} \\} $.
+*   Denote $ E_d $ as the set of extreme directions of $ S $. Then, $ E_d $ is nonempty if and only if $ S $ is unbounded.
+
+# 5.9 Representation Theorem
+
+Let $ S = \\{ \\mathbf{x} : \\mathbf{Ax} \\leq \\mathbf{b}, \\mathbf{x} \\geq \\mathbf{0} \\} \\neq \\phi $ and let $ E_p $ be the set of extreme points and $ E_d $ be the set of extreme directions of $ S $. Then:
+
+(1) $ S $ has at least one extreme point and at most a finite number of extreme points ($ E_p \\neq \\phi $ and finite).
+(2) $ S $ is unbounded if and only if $ S $ has at least one extreme direction ($ E_d \\neq \\phi $).
+(3) If $ S $ is unbounded, then $ S $ has a finite number of extreme directions ($ E_d \\neq \\phi $).
+(4) If $ \\mathbf{x} \\in S $, then $ \\mathbf{x} $ can be written as a convex combination of the extreme points plus a nonnegative combination of the extreme directions, that is:
+$
+\\mathbf{x} = \\sum_{i=1}^{u} \\alpha_i \\mathbf{x}_i + \\sum_{j=1}^{v} \\lambda_j \\mathbf{d}_j
+$
+where $ \\sum_{i=1}^{u} \\alpha_i = 1 $, $ \\alpha_i \\geq 0 $ for all $ i $, and $ \\lambda_j \\geq 0 $ for all $ j $.
+
+# 5.10 Optimality Theorem
+
+## Theorem 5.10
+
+Let $ S = \\{ \\mathbf{x} : \\mathbf{Ax} = \\mathbf{b}, \\mathbf{x} \\geq \\mathbf{0} \\} $ and consider the following linear program:
+(LP) minimize $ z = \\mathbf{c^t x} $
+subject to $ \\mathbf{x} \\in S $.
+
+Suppose $ S $ is an unbounded set with extreme points $ E_p \\neq \\phi $ and extreme directions $ E_d \\neq \\phi $. Let $ z^* $ represent the optimal objective value of (LP). Then $ z^* $ is finite (that is, $ z^* > -\\infty $), if and only if $ \\mathbf{c^t d}_j \\geq 0 $ for all $ \\mathbf{d}_j \\in E_d $. Furthermore, if a finite optimal solution exists, then an **extreme-point optimal solution exists**.
+
+## Corollary 5.11
+
+Suppose $ S $ is a bounded set with extreme points $ E_p \\neq \\phi $. Let $ z^* $ represent the optimal objective value of (LP). Then $ z^* $ is finite, and, furthermore, an extreme-point optimal solution exists.`;export{e as default};

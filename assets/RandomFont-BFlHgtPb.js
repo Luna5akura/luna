@@ -1,0 +1,29 @@
+import{r as a,j as t,m as l}from"./index-XKNy1F4y.js";const T=()=>{const s=a.useMemo(()=>["Kreeper","Calvera","FifthAgent","Chettavissto","Deberta","Aabukeyan","AgreePersonalThin","GoodTiming","AvenueMadison","MaassSlicerItalic","Bauhaus93","OV","BlackAcute","PixelFont12","BlackFlag","RealityHyper","BostonCaps","Jasmin","BaiTuoHeLiMa","FangZhengBeiWeiKaiShu","FangZhengRuiSuTi","FusionPixelZH","FangZhengSongTiKai","DFSoGe7","AOTFHaseTopPostD"],[]),i=e=>/[\u3040-\u309f\u30a0-\u30ff]/.test(e)?"ja":/[\u4e00-\u9fa5]/.test(e)?"zh":"en",f=()=>s[Math.floor(Math.random()*s.length)],[n,c]=a.useState(`Welcome to LUNA WORLD
+欢迎来到赛博世界
+ようこそ LUNA WORLD へ`),[o,r]=a.useState(""),[p,u]=a.useState("en");a.useEffect(()=>{r(f())},[]),a.useEffect(()=>{const e=i(n);u(e)},[n]);const m=()=>{r(f())};return t.jsxs(l.div,{className:"min-h-screen bg-[#050505] text-white overflow-x-hidden cursor-none selection:bg-cyan-500/30",initial:{opacity:0},animate:{opacity:1},transition:{duration:.6},children:[t.jsx("style",{children:`
+    @font-face { font-family: 'Kreeper'; src: url('/font/5KREEPER.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Calvera'; src: url('/font/CALVERA PERSONAL USE ONLY.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'FifthAgent'; src: url('/font/5THAGENT.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Chettavissto'; src: url('/font/CHETTAVISSTO.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Deberta'; src: url('/font/DEBERTAP.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Aabukeyan'; src: url('/font/AABUKEYAN-2.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'AgreePersonalThin'; src: url('/font/AGREEPERSONALUSE-THIN.OTF') format('opentype'); font-display: swap; }
+    @font-face { font-family: 'GoodTiming'; src: url('/font/GOOD TIMING BD.OTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'AvenueMadison'; src: url('/font/AVENUE DE MADISON.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'MaassSlicerItalic'; src: url('/font/MAASS SLICER ITALIC.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Bauhaus93'; src: url('/font/BAUHS93.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'OV'; src: url('/font/OV_.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'BlackAcute'; src: url('/font/BLACKACUTE.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'PixelFont12'; src: url('/font/pixelFont12.ttf') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'BlackFlag'; src: url('/font/BLACKFLAG.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'RealityHyper'; src: url('/font/REALITY HYPER REGULAR.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'BostonCaps'; src: url('/font/BOSTON CAPS.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'Jasmin'; src: url('/font/JASMIN-REGULAR.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'BaiTuoHeLiMa'; src: url('/font/拜托 这河狸嘛.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'FangZhengBeiWeiKaiShu'; src: url('/font/方正北魏楷书简体.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'FangZhengRuiSuTi'; src: url('/font/方正字汇-锐速体 简.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'FusionPixelZH'; src: url('/font/FUSION-PIXEL-10PX-PROPORTIONAL-ZH_HANS.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'FangZhengSongTiKai'; src: url('/font/FZSTK.TTF') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'DFSoGe7'; src: url('/font/DFSOGE7.TTC') format('truetype'); font-display: swap; }
+    @font-face { font-family: 'AOTFHaseTopPostD'; src: url('/font/A-OTF-HASETOPPOSTD-DEBOLD.OTF') format('opentype'); font-display: swap; }
+  `}),t.jsxs("div",{className:"pt-12 pb-8 text-center",children:[t.jsxs("h1",{className:"font-mono text-6xl md:text-7xl font-black tracking-[-0.05em] text-slate-200",children:["RANDOM",t.jsx("span",{className:"text-cyan-400",children:"."}),"FONT"]}),t.jsx("p",{className:"mt-2 font-mono text-xs tracking-[0.3em] text-cyan-600",children:"LANGUAGE-AWARE DISPLAY • GLOBAL RANDOM TYPEFACE"})]}),t.jsxs("div",{className:"max-w-4xl mx-auto px-6",children:[t.jsxs("div",{className:"mb-8 bg-[#0a0a0a] border border-white/10 rounded-xl p-6",children:[t.jsx("textarea",{value:n,onChange:e=>c(e.target.value),className:"w-full h-40 bg-transparent outline-none font-mono text-lg resize-none text-slate-300",placeholder:"在此输入任意文本（支持英文 / 中文 / 日文）..."}),t.jsxs("div",{className:"flex items-center justify-between mt-4",children:[t.jsxs("div",{className:"flex items-center gap-3 font-mono text-xs",children:[t.jsxs("span",{className:"px-3 py-1 bg-cyan-950 text-cyan-400 rounded",children:["当前语言: ",p.toUpperCase()]}),t.jsxs("span",{className:"px-3 py-1 bg-cyan-950 text-cyan-400 rounded",children:["当前字体: ",o]})]}),t.jsx("button",{onClick:m,className:"px-8 py-3 bg-transparent border border-cyan-400 hover:bg-cyan-400 hover:text-[#050505] transition-all font-mono text-sm tracking-widest",children:"REROLL FONT"})]})]}),t.jsx("div",{className:"bg-[#0a0a0a] border border-white/10 rounded-2xl p-12 min-h-[420px] flex items-center justify-center text-center",children:t.jsx(l.p,{className:"text-4xl md:text-5xl leading-relaxed max-w-2xl",style:{fontFamily:o},initial:{opacity:0,y:20},animate:{opacity:1,y:0},transition:{duration:.4},children:n||"请输入文本以触发随机字体"},o)}),t.jsxs("div",{className:"mt-12 text-center font-mono text-xs text-slate-500",children:["输入任意文本 → “当前语言”显示框实时更新",t.jsx("br",{}),"点击 REROLL FONT → 从全局字体库中随机选取（与输入语言无关）"]})]})]})};export{T as default};
