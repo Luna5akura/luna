@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import matter from 'gray-matter';
 import { Post } from '@/types';
 import { posts as generatedPosts } from '@/data/posts.generated';
 
@@ -13,6 +12,31 @@ let allContentsPromise: Promise<Record<string, string>> | null = null;
 
 const pathToKey = (path: string) => path.replace('../posts/', '').replace(/\.md$/, '');
 
+const stripFrontmatter = (raw: string) => {
+  if (!raw.startsWith('---')) return raw;
+
+  const match = raw.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (!match) return raw;
+
+  return raw.slice(match[0].length);
+};
+
+const yieldToMainThread = async () => {
+  if (typeof window === 'undefined') {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    return;
+  }
+
+  await new Promise<void>((resolve) => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => resolve(), { timeout: 120 });
+      return;
+    }
+
+    window.setTimeout(() => resolve(), 0);
+  });
+};
+
 const loadContentFromPath = async (path: string): Promise<string> => {
   const key = pathToKey(path);
   if (contentCache[key]) return contentCache[key];
@@ -23,7 +47,7 @@ const loadContentFromPath = async (path: string): Promise<string> => {
   }
 
   const raw = (await loader()) as string;
-  const { content } = matter(raw);
+  const content = stripFrontmatter(raw);
   contentCache[key] = content;
   return content;
 };
@@ -31,12 +55,31 @@ const loadContentFromPath = async (path: string): Promise<string> => {
 const loadAllContentsInternal = async () => {
   if (allContentsPromise) return allContentsPromise;
 
-  allContentsPromise = Promise.all(
-    Object.keys(markdownFiles).map(async (path) => {
-      const content = await loadContentFromPath(path);
-      return [pathToKey(path), content] as const;
-    })
-  ).then((entries) => Object.fromEntries(entries));
+  allContentsPromise = (async () => {
+    const entries: Array<readonly [string, string]> = [];
+    const paths = Object.keys(markdownFiles);
+
+    for (let index = 0; index < paths.length; index += 4) {
+      const batch = paths.slice(index, index + 4);
+      const loadedBatch = await Promise.all(
+        batch.map(async (path) => {
+          const content = await loadContentFromPath(path);
+          return [pathToKey(path), content] as const;
+        })
+      );
+
+      entries.push(...loadedBatch);
+
+      if (index + 4 < paths.length) {
+        await yieldToMainThread();
+      }
+    }
+
+    return Object.fromEntries(entries);
+  })().catch((error) => {
+    allContentsPromise = null;
+    throw error;
+  });
 
   return allContentsPromise;
 };
@@ -72,7 +115,27 @@ export const usePosts = ({ preloadContents = false }: { preloadContents?: boolea
 
   useEffect(() => {
     if (preloadContents) {
-      void loadAllContents();
+      let cancelled = false;
+
+      const startPreload = () => {
+        if (!cancelled) {
+          void loadAllContents();
+        }
+      };
+
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        const idleId = window.requestIdleCallback(startPreload, { timeout: 1800 });
+        return () => {
+          cancelled = true;
+          window.cancelIdleCallback?.(idleId);
+        };
+      }
+
+      const timeoutId = window.setTimeout(startPreload, 1200);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timeoutId);
+      };
     }
   }, [loadAllContents, preloadContents]);
 

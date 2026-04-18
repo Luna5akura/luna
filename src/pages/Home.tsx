@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, useTransition } from 'react';
 import { useLocation } from 'react-router-dom';
 import { flushSync } from 'react-dom';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate, MotionValue, useVelocity } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate, MotionValue } from 'framer-motion';
 import BlogList from '@/components/BlogList';
 import Sidebar from '@/components/Sidebar';
 import SearchModal from '@/components/SearchModal';
@@ -11,6 +11,10 @@ import { CyberHero } from '@/components/CyberHero';
 import { RotatingQuotes } from '@/components/RotatingQuotes';
 
 const ITEMS_PER_PAGE = 5;
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void) => void;
+};
 
 // ==========================================
 // 【极致优化点 1：零开销高频数据流引擎】
@@ -126,7 +130,7 @@ const TitleLetter = React.memo(({
     const amplitude = 24;
     const speed = 0.7;
     const phase = index * 0.45;
-    let start = performance.now();
+    const start = performance.now();
     const tick = (now: number) => {
       const t = (now - start) / 1000;
       z.set(Math.sin(t * speed + phase) * amplitude);
@@ -163,13 +167,11 @@ const TitleLetter = React.memo(({
   }, [mouseX, mouseY, titleY, light]);
 
   useEffect(() => {
-    const unsubs = [mouseX, mouseY, titleY].map(mv =>
-      mv.on ? mv.on('change', updateLight) : (mv as any).onChange(updateLight)
-    );
+    const unsubs = [mouseX, mouseY, titleY].map((mv) => mv.on('change', updateLight));
     return () => {
       unsubs.forEach(unsub => unsub());
     };
-  }, [updateLight]);
+  }, [mouseX, mouseY, titleY, updateLight]);
 
   const color = useTransform(light, (v) => {
     const r = Math.round(236 * (1 - v) + 6 * v);
@@ -215,7 +217,7 @@ const TitleLetter = React.memo(({
 });
 
 const Home: React.FC = () => {
-  const { posts, contents, contentsStatus, loadAllContents } = usePosts({ preloadContents: true });
+  const { posts, contents, contentsStatus, loadAllContents } = usePosts();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedCategory = params.get('category');
@@ -241,7 +243,7 @@ const Home: React.FC = () => {
   const [isPending, startTransition] = useTransition();
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress, scrollY } = useScroll({ 
+  const { scrollYProgress } = useScroll({ 
     target: contentRef, 
     offset: ['start end', 'end start'],
     layoutEffect: false  // 新增：减少滚动时的布局计算
@@ -259,10 +261,11 @@ const Home: React.FC = () => {
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
 
   const handlePageChange = useCallback((newPage: number) => {
-    if (!(document as any).startViewTransition) {
+    const transitionDocument = document as ViewTransitionDocument;
+    if (!transitionDocument.startViewTransition) {
       startTransition(() => setCurrentPage(newPage));
     } else {
-      (document as any).startViewTransition(() => {
+      transitionDocument.startViewTransition(() => {
         flushSync(() => setCurrentPage(newPage));
       });
     }
@@ -281,6 +284,22 @@ const Home: React.FC = () => {
   const openSearch = useCallback(() => {
     setIsSearchVisible(true);
     void loadAllContents();
+  }, [loadAllContents]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const startWarmup = () => {
+      void loadAllContents();
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(startWarmup, { timeout: 2800 });
+      return () => window.cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = window.setTimeout(startWarmup, 1600);
+    return () => window.clearTimeout(timeoutId);
   }, [loadAllContents]);
 
   return (

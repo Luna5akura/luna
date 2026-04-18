@@ -18,12 +18,9 @@ const CHAR_SET = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', 'X', 'Z', '◉'];
 const useCyberGlitch = (text: string, delay: number = 0) => {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    let interval: NodeJS.Timeout;
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-    timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
       let iterations = 0;
-      interval = setInterval(() => {
+      const interval = setInterval(() => {
         if (!ref.current) return;
         ref.current.innerText = text
           .split('')
@@ -33,9 +30,9 @@ const useCyberGlitch = (text: string, delay: number = 0) => {
         iterations += 1 / 3;
       }, 28);
     }, delay);
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
     return () => {
       clearTimeout(timeout);
-      clearInterval(interval);
     };
   }, [text, delay]);
   return ref;
@@ -53,7 +50,7 @@ const DataSphere = memo(() => {
     let height = window.innerHeight;
     let pixelRatio = 1;
 
-    const POINTS_COUNT = 520;
+    const POINTS_COUNT = 320;
     let sphereRadius = Math.min(width, height) * 0.27;
 
     const x = new Float32Array(POINTS_COUNT);
@@ -83,6 +80,7 @@ const DataSphere = memo(() => {
     let isRunning = false;
     let lastFrameTime = 0;
     let scrollBoostUntil = 0;
+    let isInHeroZone = window.scrollY < window.innerHeight * 0.9;
 
     let targetVelocityX = 0.0009;
     let targetVelocityY = 0.0009;
@@ -109,6 +107,8 @@ const DataSphere = memo(() => {
 
     const onScroll = () => {
       scrollBoostUntil = performance.now() + 180;
+      isInHeroZone = window.scrollY < window.innerHeight * 0.9;
+      start();
     };
 
     const stop = () => {
@@ -134,7 +134,9 @@ const DataSphere = memo(() => {
 
     const animate = (now: number) => {
       const isScrollActive = now < scrollBoostUntil;
-      const minFrameInterval = isScrollActive ? 1000 / 36 : 1000 / 48;
+      const minFrameInterval = isInHeroZone
+        ? (isScrollActive ? 1000 / 22 : 1000 / 30)
+        : (isScrollActive ? 1000 / 10 : 1000 / 14);
       if (lastFrameTime !== 0 && now - lastFrameTime < minFrameInterval) {
         animationId = requestAnimationFrame(animate);
         return;
@@ -163,7 +165,9 @@ const DataSphere = memo(() => {
         projectedZ[i] = z2;
         indices[i] = i;
       }
-      indices.sort((a, b) => projectedZ[a] - projectedZ[b]);
+      if (isInHeroZone) {
+        indices.sort((a, b) => projectedZ[a] - projectedZ[b]);
+      }
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -193,7 +197,7 @@ const DataSphere = memo(() => {
         const repulseRadius = 130;
 
         let isOverloaded = false;
-        if (distSq < repulseRadius * repulseRadius) {
+        if (isInHeroZone && distSq < repulseRadius * repulseRadius) {
           const dist = Math.sqrt(distSq);
           const force = (repulseRadius - dist) / repulseRadius;
           screenX += (dx / dist) * force * 11;
@@ -204,13 +208,13 @@ const DataSphere = memo(() => {
         }
 
         const isFront = depthNormalized > 0.84;
-        let targetFont = isFront ? FRONT_FONT : BACK_FONT;
+        const targetFont = isFront ? FRONT_FONT : BACK_FONT;
         if (currentFont !== targetFont) {
           ctx.font = targetFont;
           currentFont = targetFont;
         }
 
-        let targetColor = isOverloaded
+        const targetColor = isOverloaded
           ? 'rgba(6, 182, 212, 0.55)'
           : isFront
             ? FRONT_COLORS[Math.min(100, Math.floor(depthNormalized * 100))]
@@ -224,7 +228,7 @@ const DataSphere = memo(() => {
       }
 
       // 高级神经网络脉冲连线
-      if (!isScrollActive && activeNodes.length > 1) {
+      if (isInHeroZone && !isScrollActive && activeNodes.length > 1) {
         ctx.beginPath();
         for (let i = 0; i < activeNodes.length; i++) {
           for (let j = i + 1; j < activeNodes.length; j++) {
@@ -243,13 +247,10 @@ const DataSphere = memo(() => {
 
       // 量子核心光核（中心脉冲）
       const corePulse = Math.sin(now / 800) * 0.3 + 0.7;
-      ctx.shadowBlur = isScrollActive ? 30 : 60;
-      ctx.shadowColor = '#06b6d4';
       ctx.fillStyle = `rgba(6, 182, 212, ${0.12 * corePulse})`;
       ctx.beginPath();
-      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.arc(cx, cy, isInHeroZone ? 18 : 12, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
 
       // 全息轨道环（双层）
       ctx.lineWidth = 1.1;
@@ -264,7 +265,7 @@ const DataSphere = memo(() => {
       ctx.stroke();
 
       // 极弱干扰
-      if (!isScrollActive && Math.random() < 0.0035) {
+      if (isInHeroZone && !isScrollActive && Math.random() < 0.0035) {
         const sliceY = Math.random() * height;
         const sliceH = 12 + Math.random() * 8;
         const shiftX = (Math.random() - 0.5) * 18;
@@ -349,6 +350,7 @@ const CyberHeroComponent: React.FC = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#02040a] font-mono">
+      <span ref={metricRef} className="sr-only" aria-hidden />
       {/* 极弱全息边框 */}
       <div className="absolute inset-0 border border-cyan-400/5 pointer-events-none z-40" />
 

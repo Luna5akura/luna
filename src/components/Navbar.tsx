@@ -11,6 +11,8 @@ import {
 
 const SCRAMBLE_CHARS = "01xX_!@#$<>?{}[]%^&*▓▒░";
 const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow'] as const;
+const CLOCK_UPDATE_INTERVAL_MS = 250;
+const RADAR_FRAME_INTERVAL = 1000 / 24;
 
 type BatteryManagerLike = {
   level: number;
@@ -83,7 +85,7 @@ const useQuantumClock = () => {
     };
 
     update();
-    const intervalId = window.setInterval(update, 100);
+    const intervalId = window.setInterval(update, CLOCK_UPDATE_INTERVAL_MS);
     return () => window.clearInterval(intervalId);
   }, [timeStr]);
   return timeStr;
@@ -181,6 +183,7 @@ const TelemetryRadar = React.memo(() => {
     let angle = 0;
     let frame = 0;
     let isRunning = false;
+    let lastFrameTime = 0;
     // 生成随机敌标/数据节点
     const blips = Array.from({ length: 3 }, () => ({
       r: Math.random() * 12 + 2,
@@ -188,7 +191,13 @@ const TelemetryRadar = React.memo(() => {
       life: Math.random() * 100
     }));
 
-    const render = () => {
+    const render = (now: number) => {
+      if (lastFrameTime !== 0 && now - lastFrameTime < RADAR_FRAME_INTERVAL) {
+        frame = requestAnimationFrame(render);
+        return;
+      }
+
+      lastFrameTime = now;
       ctx.clearRect(0, 0, 32, 32);
       const cx = 16, cy = 16;
 
@@ -252,6 +261,7 @@ const TelemetryRadar = React.memo(() => {
       if (document.hidden) {
         stop();
       } else {
+        lastFrameTime = 0;
         start();
       }
     };

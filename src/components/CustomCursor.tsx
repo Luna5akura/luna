@@ -16,6 +16,10 @@ const CustomCursor = () => {
   const location = useLocation(); 
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && !window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
+
     const canvas = canvasRef.current;
     const head = headRef.current;
     const outline = outlineRef.current;
@@ -51,6 +55,8 @@ const CustomCursor = () => {
     let isRunning = false;
     let lastFrameTime = 0;
     let scrollBoostUntil = 0;
+    let lastInteractionAt = performance.now();
+    const scrollListenerOptions = { passive: true, capture: true } as const;
 
     const onResize = () => {
       width = window.innerWidth;
@@ -66,6 +72,8 @@ const CustomCursor = () => {
     const onMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      lastInteractionAt = performance.now();
+      start();
     };
 
     // ==========================================
@@ -86,19 +94,29 @@ const CustomCursor = () => {
         hoverRect = null;
         outline.classList.remove('is-locked');
       }
+      lastInteractionAt = performance.now();
+      start();
     };
 
     // 监听页面滚动，动态补偿缓存的物理坐标，确保滑动页面时瞄准框也能死死锁住目标
     const onScroll = () => {
       scrollBoostUntil = performance.now() + 160;
       if (hoverTarget) hoverRect = hoverTarget.getBoundingClientRect();
+      lastInteractionAt = performance.now();
+      start();
     };
 
-    const onMouseLeave = () => (isHidden = true);
+    const onMouseLeave = () => {
+      isHidden = true;
+      lastInteractionAt = performance.now();
+      start();
+    };
     const onMouseEnter = () => {
       isHidden = false;
+      lastInteractionAt = performance.now();
       // 防止光标离开窗口再回来时，出现一条贯穿屏幕的长线
       trail.forEach(pt => { pt.x = mouse.x; pt.y = mouse.y; });
+      start();
     };
 
     const stop = () => {
@@ -126,7 +144,7 @@ const CustomCursor = () => {
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('mouseover', onMouseOver, { passive: true });
     // 使用 capture 阶段侦听所有 DOM 层级的 scroll 事件
-    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    window.addEventListener('scroll', onScroll, scrollListenerOptions);
     document.addEventListener('mouseleave', onMouseLeave);
     document.addEventListener('mouseenter', onMouseEnter);
     document.addEventListener('visibilitychange', onVisibilityChange);
@@ -221,10 +239,25 @@ const CustomCursor = () => {
         ctx.stroke();
       }
 
+      const recentlyActive = now - lastInteractionAt < 180;
+      const isSettling =
+        Math.abs(outlineState.x - targetX) > 0.35 ||
+        Math.abs(outlineState.y - targetY) > 0.35 ||
+        Math.abs(outlineState.width - targetW) > 0.35 ||
+        Math.abs(outlineState.height - targetH) > 0.35 ||
+        Math.abs(mouse.x - lastMouse.x) > 0.2 ||
+        Math.abs(mouse.y - lastMouse.y) > 0.2;
+
       lastMouse.x = mouse.x;
       lastMouse.y = mouse.y;
 
-      rAF = requestAnimationFrame(render);
+      if (recentlyActive || isScrollActive || hoverTarget || isSettling) {
+        rAF = requestAnimationFrame(render);
+        return;
+      }
+
+      ctx.clearRect(0, 0, width, height);
+      isRunning = false;
     };
 
     onResize();
@@ -235,7 +268,7 @@ const CustomCursor = () => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseover', onMouseOver);
-      window.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('scroll', onScroll, scrollListenerOptions);
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
       document.removeEventListener('visibilitychange', onVisibilityChange);
