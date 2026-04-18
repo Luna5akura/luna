@@ -104,6 +104,10 @@ const ResponsiveTextLine = memo(({
     [text]
   );
 
+  if (!isActive) {
+    return <span className={cn("inline-block whitespace-pre-wrap", className)}>{text}</span>;
+  }
+
   return (
     <span className={cn("flex flex-wrap items-baseline", className)}>
       {Array.from(text).map((char, index) => (

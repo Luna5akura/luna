@@ -84,7 +84,7 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
   useEffect(() => {
     if (!containerRef.current) return;
     const elements = containerRef.current.querySelectorAll(
-      'p, h1, h2, h3, h4, li, blockquote, img, table, th, td'
+      'p, h1, h2, h3, h4, li, blockquote, img, table, pre'
     );
     const observer = new IntersectionObserver(
       (entries) => {
@@ -224,22 +224,18 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
         .markdown-sys-container blockquote:not(.sys-reveal-visible),
         .markdown-sys-container img:not(.sys-reveal-visible),
         .markdown-sys-container table:not(.sys-reveal-visible),
-        .markdown-sys-container th:not(.sys-reveal-visible),
-        .markdown-sys-container td:not(.sys-reveal-visible) {
+        .markdown-sys-container pre:not(.sys-reveal-visible) {
           opacity: 0;
-          transform: translateY(24px) skewX(-3deg);
-          filter: blur(4px);
+          transform: translateY(18px);
           transition: none;
         }
         .sys-reveal-visible {
           opacity: 1;
-          transform: translateY(0) skewX(0);
-          filter: blur(0);
-          will-change: opacity, transform, filter;
+          transform: translateY(0);
+          will-change: opacity, transform;
           transition: 
             opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-            filter 0.6s ease-out;
+            transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* 选中文本 - 数据泄露感 */

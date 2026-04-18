@@ -152,6 +152,10 @@ const ResponsiveTextLine = memo(({
     [text]
   );
 
+  if (!isActive) {
+    return <span className={cn("inline-block whitespace-pre-wrap", className)}>{text}</span>;
+  }
+
   return (
     <span className={cn("flex flex-wrap items-baseline", className)}>
       {Array.from(text).map((char, index) => (
@@ -280,7 +284,12 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         onHoverEnd();
       }}
       className={cn("group/card relative transform-gpu", isHovered ? "z-30" : hasHoveredPeer ? "z-10" : "z-20")}
-      style={{ transformStyle: 'preserve-3d', transformPerspective: 1400 }}
+      style={{
+        transformStyle: 'preserve-3d',
+        transformPerspective: 1400,
+        contentVisibility: 'auto',
+        containIntrinsicSize: '280px',
+      }}
     >
       <Link
         to={`/posts/${post.contentKey}`}
@@ -456,7 +465,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
 }) => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const listContainerRef = useRef<HTMLDivElement>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
 
   const panelX = useMotionValue(0);
@@ -473,24 +481,30 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   const contentOffsetY = useTransform(smoothPanelY, [-1, 1], [-20, 20]);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeoutId = 0;
+    let rafId = 0;
+
     const handleScroll = () => {
-      setIsScrolling(true);
-      setHoveredIndex(null);
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 180);
+      if (rafId !== 0) return;
+
+      rafId = window.requestAnimationFrame(() => {
+        setIsScrolling(true);
+        setHoveredIndex(null);
+        window.clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(() => {
+          setIsScrolling(false);
+        }, 140);
+        rafId = 0;
+      });
     };
-
-    const container = listContainerRef.current;
-    if (!container) return;
-
-    container.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      container.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeout);
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      window.clearTimeout(timeoutId);
     };
   }, []);
 
@@ -536,7 +550,6 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
 
   return (
     <div
-      ref={listContainerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative z-10 flex w-full flex-col overflow-visible px-3 py-3 pb-16 pr-6 perspective-[1400px] md:px-4 md:py-4 md:pr-8 lg:pr-10"
