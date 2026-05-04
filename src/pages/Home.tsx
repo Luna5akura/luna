@@ -287,19 +287,7 @@ const Home: React.FC = () => {
   }, [loadAllContents]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const startWarmup = () => {
-      void loadAllContents();
-    };
-
-    if ('requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(startWarmup, { timeout: 2800 });
-      return () => window.cancelIdleCallback?.(idleId);
-    }
-
-    const timeoutId = window.setTimeout(startWarmup, 1600);
-    return () => window.clearTimeout(timeoutId);
+    void loadAllContents({ eager: true });
   }, [loadAllContents]);
 
   return (

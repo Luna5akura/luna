@@ -1,155 +1,548 @@
-// src/pages/Spark/index.tsx
-import React, { useState, useEffect } from 'react';
-import { EffectStyles, EFFECT_REGISTRY, EFFECTS } from './effectRegistry';
-import { SCENES, BACKGROUND_REGISTRY } from './scenes'; 
-import { PALETTES, FALLBACK_PHRASES, fetchDynamicLyrics } from './utils';
+import React, { startTransition, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Layers3,
+  Pause,
+  Play,
+  RefreshCcw,
+  Shuffle,
+  Sparkles,
+  Wand2,
+} from "lucide-react";
+import { TEMPLATE_MAP, TEMPLATE_REGISTRY } from "./effectRegistry";
+import { BACKGROUND_MAP, BACKGROUND_REGISTRY, StageChrome } from "./scenes";
+import {
+  CUE_BANK,
+  DEFAULT_SCRIPT,
+  PALETTE_REGISTRY,
+  SAMPLE_IDEAS,
+  SUBLINE_BANK,
+  clamp,
+  extractSceneLines,
+  getEmphasisToken,
+  makeSceneId,
+  mulberry32,
+  pickUnique,
+  randomChoice,
+  randomInt,
+  splitWordsSmart,
+  type SparkScene,
+} from "./utils";
 
-// ★ 全局 CRT 鱼眼电视机遮罩组件 (纯 SVG 绘制球面边缘)
-const CRTOverlay = ({ active }: { active: boolean }) => {
-  if (!active) return null;
-  return (
-    <div className="absolute inset-0 z-[999] pointer-events-none">
-      {/* 边缘鱼眼扭曲黑框 */}
-      <svg width="100%" height="100%" preserveAspectRatio="none" className="absolute inset-0">
-        <defs>
-          <mask id="crt-mask">
-            <rect width="100%" height="100%" fill="white" />
-            <rect width="100%" height="100%" fill="black" rx="10%" ry="10%" />
-          </mask>
-        </defs>
-        {/* 四周的黑色球面边框 */}
-        <rect width="100%" height="100%" fill="#0a0a0a" mask="url(#crt-mask)" />
-      </svg>
-      {/* CRT 屏幕反光与扫描线 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-20" />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%)', backgroundSize: '100% 4px' }} />
-      {/* 顶部与底部的 WATERMARK 标签 */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono px-2 py-0.5 border border-white/30">WATERMARK</div>
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono px-2 py-0.5 border border-white/30">WATERMARK</div>
-    </div>
-  );
+type FlavorId = "wild" | "impact" | "minimal" | "dream";
+
+const BUTTON_BASE =
+  "inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200";
+
+const SECONDARY_BUTTON =
+  `${BUTTON_BASE} border-white/10 bg-white/5 text-white/82 hover:border-white/20 hover:bg-white/10`;
+
+const PRIMARY_BUTTON =
+  `${BUTTON_BASE} border-transparent bg-white text-[#050816] hover:bg-white/90`;
+
+const FLAVOR_PRESETS: Array<{ id: FlavorId; label: string; description: string }> = [
+  { id: "wild", label: "参考混剪", description: "把这批参考里的视觉母题混在一起，但仍保持克制" },
+  { id: "impact", label: "黑红冲击", description: "偏 WORLD FAILED 和红黑日系短片那种压迫感" },
+  { id: "minimal", label: "黑白几何", description: "偏菱形 HUD、时钟、信息面板和留白构图" },
+  { id: "dream", label: "酸性波普", description: "偏 Angel / WARP / 未来包豪斯这组更轻更亮的风格" },
+];
+
+const PACE_OPTIONS = [
+  { id: "fast", label: "快", durationMs: 2400 },
+  { id: "medium", label: "中", durationMs: 3200 },
+  { id: "slow", label: "慢", durationMs: 4200 },
+] as const;
+
+const SCENE_COUNT_OPTIONS = [6, 8, 10];
+
+const flavorTemplateAllowList: Record<FlavorId, string[]> = {
+  wild: TEMPLATE_REGISTRY.map((template) => template.id),
+  impact: [
+    "ref-red-noir",
+    "ref-crimson-kanji",
+    "ref-scan-panels",
+    "ref-code-cluster",
+  ],
+  minimal: [
+    "ref-diamond-hud",
+    "ref-clock-orbit",
+    "ref-scan-panels",
+    "ref-code-cluster",
+  ],
+  dream: [
+    "ref-acid-poster",
+    "ref-warp-pop",
+    "ref-bauhaus-blocks",
+    "ref-diamond-hud",
+  ],
 };
 
-const SparkEngine = () => {
-  const [paletteIndex, setPaletteIndex] = useState(0);
-  const[effectIndex, setEffectIndex] = useState(0);
-  const [bgIndex, setBgIndex] = useState(0); 
-  const [phase, setPhase] = useState<'ENTER' | 'EXIT'>('ENTER');
-  const [triggerKey, setTriggerKey] = useState(0);
-  const [isAuto, setIsAuto] = useState(false);
-  const [nextAction, setNextAction] = useState<{ action: 'NEXT' | 'RANDOM' | 'SELECT', payload?: number, type?: 'FX' | 'BG' } | null>(null);
+const flavorBackgroundAllowList: Record<FlavorId, string[]> = {
+  wild: ["shattered", "noise-signal", "spotlight", "halftone-burst", "aurora-mesh", "checker-flash", "stage-beams", "paper-collage", "blueprint"],
+  impact: ["shattered", "noise-signal", "folded-curtain", "spotlight"],
+  minimal: ["blueprint", "radial-bloom", "mono-panels", "spotlight"],
+  dream: ["halftone-burst", "aurora-mesh", "paper-collage", "checker-flash", "stage-beams"],
+};
 
-  // ★ 新增 CRT 全局模式开关 (默认开启让你体验)
-  const[isCRT, setIsCRT] = useState(true);
+const makeSeed = () => Math.floor(Date.now() % 100000000);
 
-  const [textPool, setTextPool] = useState<string[][]>(FALLBACK_PHRASES);
-  const [currentSong, setCurrentSong] = useState("LOCAL_FALLBACK_DB");
-  const [isCrawling, setIsCrawling] = useState(false);
+const buildStoryboard = ({
+  sourceText,
+  sceneCount,
+  seed,
+  flavor,
+  templateMode,
+  paletteMode,
+  paceMs,
+}: {
+  sourceText: string;
+  sceneCount: number;
+  seed: number;
+  flavor: FlavorId;
+  templateMode: string;
+  paletteMode: string;
+  paceMs: number;
+}) => {
+  const rng = mulberry32(seed);
+  const lines = extractSceneLines(sourceText, sceneCount);
+  const templateCandidates =
+    templateMode === "random"
+      ? TEMPLATE_REGISTRY.filter((template) => flavorTemplateAllowList[flavor].includes(template.id)).map((template) => template.id)
+      : [templateMode];
 
-  useEffect(() => { handleCrawlDatabase(); },[]);
+  const backgroundCandidates = BACKGROUND_REGISTRY.filter((background) =>
+    flavorBackgroundAllowList[flavor].includes(background.id),
+  ).map((background) => background.id);
 
-  const handleCrawlDatabase = async () => {
-    setIsCrawling(true); setPhase('EXIT'); 
-    await new Promise(resolve => setTimeout(resolve, 800)); 
-    const result = await fetchDynamicLyrics();
-    setTextPool(result.lines); setCurrentSong(result.songName);
-    setIsCrawling(false);
-    setEffectIndex(Math.floor(Math.random() * EFFECTS.length));
-    setBgIndex(Math.floor(Math.random() * BACKGROUND_REGISTRY.length));
-    setPaletteIndex(Math.floor(Math.random() * PALETTES.length));
-    setTriggerKey(prev => prev + 1); setPhase('ENTER');
-  };
+  const paletteCandidates =
+    paletteMode === "random"
+      ? PALETTE_REGISTRY.map((palette) => palette.id)
+      : [paletteMode];
+
+  const templateOrder = pickUnique(rng, templateCandidates, templateCandidates.length);
+  const backgroundOrder = pickUnique(rng, backgroundCandidates, backgroundCandidates.length);
+  const paletteOrder = pickUnique(rng, paletteCandidates, paletteCandidates.length);
+
+  return lines.map((line, index) => {
+    const tokens = splitWordsSmart(line);
+    const emphasis = getEmphasisToken(tokens);
+    const descriptor = randomChoice(rng, SUBLINE_BANK);
+    const tagTrail = tokens.slice(0, 3).join(" / ");
+
+    return {
+      id: makeSceneId(seed, index, line),
+      text: line,
+      subline: `${descriptor} / ${tagTrail || emphasis}`,
+      cue: randomChoice(rng, CUE_BANK),
+      tokens,
+      emphasis,
+      templateId: templateOrder[index % templateOrder.length],
+      backgroundId: backgroundOrder[(index + randomInt(rng, 0, backgroundOrder.length - 1)) % backgroundOrder.length],
+      paletteId: paletteOrder[(index + randomInt(rng, 0, paletteOrder.length - 1)) % paletteOrder.length],
+      durationMs: clamp(paceMs + randomInt(rng, -280, 480), 1800, 5200),
+    } satisfies SparkScene;
+  });
+};
+
+export default function SparkEngine() {
+  const [initialSeed] = useState(() => makeSeed());
+  const [draftText, setDraftText] = useState(DEFAULT_SCRIPT);
+  const [sceneCount, setSceneCount] = useState(8);
+  const [flavor, setFlavor] = useState<FlavorId>("wild");
+  const [templateMode, setTemplateMode] = useState("random");
+  const [paletteMode, setPaletteMode] = useState("random");
+  const [paceId, setPaceId] = useState<(typeof PACE_OPTIONS)[number]["id"]>("medium");
+  const [seed, setSeed] = useState(initialSeed);
+  const [storyboard, setStoryboard] = useState<SparkScene[]>(() =>
+    buildStoryboard({
+      sourceText: DEFAULT_SCRIPT,
+      sceneCount: 8,
+      seed: initialSeed,
+      flavor: "wild",
+      templateMode: "random",
+      paletteMode: "random",
+      paceMs: 3200,
+    }),
+  );
+  const [activeSceneIndex, setActiveSceneIndex] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
+
+  const paletteMap = useMemo(
+    () => Object.fromEntries(PALETTE_REGISTRY.map((palette) => [palette.id, palette])),
+    [],
+  ) as Record<string, (typeof PALETTE_REGISTRY)[number]>;
+
+  const currentScene = storyboard[activeSceneIndex] ?? storyboard[0];
+  const currentPalette = currentScene ? paletteMap[currentScene.paletteId] : PALETTE_REGISTRY[0];
+  const currentTemplate = currentScene ? TEMPLATE_MAP[currentScene.templateId] : TEMPLATE_REGISTRY[0];
+  const currentBackground = currentScene ? BACKGROUND_MAP[currentScene.backgroundId] : BACKGROUND_REGISTRY[0];
+  const paceMs = PACE_OPTIONS.find((option) => option.id === paceId)?.durationMs ?? 3200;
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (phase === 'EXIT' && !isCrawling) {
-      timer = setTimeout(() => {
-        if (nextAction?.action === 'RANDOM') {
-          setEffectIndex(Math.floor(Math.random() * EFFECTS.length));
-          setBgIndex(Math.floor(Math.random() * BACKGROUND_REGISTRY.length));
-        } else if (nextAction?.action === 'SELECT' && nextAction.payload !== undefined) {
-          if (nextAction.type === 'FX') setEffectIndex(nextAction.payload);
-          if (nextAction.type === 'BG') setBgIndex(nextAction.payload);
-        } else {
-          setEffectIndex(prev => (prev + 1) % EFFECTS.length);
-        }
-        setPaletteIndex(Math.floor(Math.random() * PALETTES.length));
-        setTriggerKey(prev => prev + 1); setPhase('ENTER'); setNextAction(null);
-      }, 800);
-    } else if (phase === 'ENTER' && isAuto && !isCrawling) {
-      timer = setTimeout(() => { setNextAction({ action: 'NEXT' }); setPhase('EXIT'); }, 3500);
-    }
-    return () => clearTimeout(timer);
-  },[phase, isAuto, nextAction, isCrawling]);
+    if (!autoPlay || storyboard.length === 0) return;
 
-  const handleManualTrigger = (action: 'NEXT' | 'RANDOM' | 'SELECT', payload?: number, type?: 'FX' | 'BG') => {
-    if (phase === 'EXIT' || isCrawling) return; 
-    setNextAction({ action, payload, type }); setPhase('EXIT');
+    const timeoutId = window.setTimeout(() => {
+      setActiveSceneIndex((previous) => (previous + 1) % storyboard.length);
+    }, storyboard[activeSceneIndex]?.durationMs ?? paceMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [activeSceneIndex, autoPlay, paceMs, storyboard]);
+
+  useEffect(() => {
+    if (activeSceneIndex <= storyboard.length - 1) return;
+    setActiveSceneIndex(0);
+  }, [activeSceneIndex, storyboard.length]);
+
+  const regenerateStoryboard = (nextText = draftText, nextSeed = makeSeed()) => {
+    startTransition(() => {
+      setSeed(nextSeed);
+      setStoryboard(
+        buildStoryboard({
+          sourceText: nextText,
+          sceneCount,
+          seed: nextSeed,
+          flavor,
+          templateMode,
+          paletteMode,
+          paceMs,
+        }),
+      );
+      setActiveSceneIndex(0);
+    });
   };
 
-  const currentPalette = PALETTES[paletteIndex];
-  const CurrentScene = SCENES[0];
-  const displayEffectIndex = (nextAction?.action === 'SELECT' && nextAction.type === 'FX' && nextAction.payload !== undefined) ? nextAction.payload : effectIndex;
-  const displayBgIndex = (nextAction?.action === 'SELECT' && nextAction.type === 'BG' && nextAction.payload !== undefined) ? nextAction.payload : bgIndex;
-  const currentEffectName = EFFECT_REGISTRY[displayEffectIndex]?.name || EFFECTS[displayEffectIndex];
+  const handleApplySample = (sampleText: string) => {
+    setDraftText(sampleText);
+    regenerateStoryboard(sampleText);
+  };
+
+  const handleRerollCurrentScene = () => {
+    if (!currentScene) return;
+    const nextSeed = makeSeed();
+    const [replacement] = buildStoryboard({
+      sourceText: currentScene.text,
+      sceneCount: 1,
+      seed: nextSeed,
+      flavor,
+      templateMode,
+      paletteMode,
+      paceMs,
+    });
+
+    setStoryboard((previous) =>
+      previous.map((scene, index) =>
+        index === activeSceneIndex
+          ? {
+              ...replacement,
+              text: scene.text,
+              tokens: scene.tokens,
+              emphasis: scene.emphasis,
+              id: makeSceneId(nextSeed, index, scene.text),
+            }
+          : scene,
+      ),
+    );
+  };
 
   return (
-    <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden font-sans bg-black selection:bg-white selection:text-black">
-      <EffectStyles />
-      {/* 注入全局滤镜 */}
-      <svg style={{ width: 0, height: 0, position: 'absolute' }}>
-        <defs>
-          <filter id="liquid-ripple">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.1" numOctaves="1" result="warp" />
-            <feDisplacementMap in="SourceGraphic" in2="warp" scale="30" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
+    <div className="relative min-h-[calc(100vh-88px)] overflow-hidden bg-[#050816] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(91,224,255,0.16),transparent_28%),radial-gradient(circle_at_100%_20%,rgba(255,83,182,0.12),transparent_22%),linear-gradient(180deg,#050816_0%,#090d1f_100%)]" />
 
-      {isCrawling && (
-        <div className="absolute inset-0 z-[200] flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-green-400 font-mono">
-          <div className="text-2xl animate-pulse mb-2 tracking-widest">CRAWLING DB...</div>
-        </div>
-      )}
+      <div className="relative mx-auto grid w-full max-w-[1620px] gap-6 px-4 py-6 lg:grid-cols-[360px_minmax(0,1fr)] xl:px-6">
+        <aside className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_35%)]" />
+          <div className="relative">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.48em] text-white/45">Spark</div>
+                <h1 className="mt-2 text-2xl font-semibold tracking-tight">随机文字 PV 生成器</h1>
+              </div>
+              <div className="rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.36em] text-white/55">
+                seed {seed}
+              </div>
+            </div>
 
-      {/* 核心场景 */}
-      <div key={triggerKey} className="w-full h-full absolute inset-0">
-        <CurrentScene palette={currentPalette} phase={phase} effect={EFFECTS[effectIndex]} bgIndex={displayBgIndex} textPool={textPool} />
-      </div>
+            <p className="mb-5 text-sm leading-6 text-white/64">
+              这里不再是单纯的特效堆叠页，而是一个把文案拆成镜头、自动分配模板、背景和色盘的文字 PV 工作台。
+            </p>
 
-      {/* ★ 独立的全局 CRT 遮罩 */}
-      <CRTOverlay active={isCRT} />
+            <label className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">
+              Script
+            </label>
+            <textarea
+              value={draftText}
+              onChange={(event) => setDraftText(event.target.value)}
+              className="h-56 w-full rounded-[1.5rem] border border-white/10 bg-[#090d1f] px-4 py-4 text-sm leading-6 text-white outline-none transition focus:border-white/25"
+              placeholder="把你想做成文字 PV 的内容丢进来"
+            />
 
-      {/* 底部控制台 */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] flex flex-col items-center gap-4 w-full px-8 pointer-events-none">
-        
-        <div className="flex flex-col md:flex-row items-center gap-4 opacity-90 font-mono text-xs md:text-sm uppercase text-white mix-blend-difference bg-black/20 px-4 py-2 rounded-xl backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_currentColor] ${phase === 'ENTER' ? 'bg-green-400 animate-pulse' : 'bg-red-500'}`} />
-            <span>FX: {currentEffectName}</span>
+            <div className="mt-4">
+              <div className="mb-2 text-[11px] uppercase tracking-[0.44em] text-white/46">Ideas</div>
+              <div className="flex flex-wrap gap-2">
+                {SAMPLE_IDEAS.map((idea) => (
+                  <button
+                    key={idea.id}
+                    onClick={() => handleApplySample(idea.text)}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/74 transition hover:border-white/20 hover:bg-white/[0.08]"
+                  >
+                    {idea.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              <label className="block">
+                <span className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">镜头数</span>
+                <select
+                  value={sceneCount}
+                  onChange={(event) => setSceneCount(Number(event.target.value))}
+                  className="w-full rounded-[1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm outline-none transition focus:border-white/25"
+                >
+                  {SCENE_COUNT_OPTIONS.map((count) => (
+                    <option key={count} value={count} className="bg-[#0b1023]">
+                      {count} scenes
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">节奏</span>
+                <select
+                  value={paceId}
+                  onChange={(event) => setPaceId(event.target.value as (typeof PACE_OPTIONS)[number]["id"])}
+                  className="w-full rounded-[1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm outline-none transition focus:border-white/25"
+                >
+                  {PACE_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id} className="bg-[#0b1023]">
+                      {option.label} / {option.durationMs}ms
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">风格预设</span>
+                <select
+                  value={flavor}
+                  onChange={(event) => setFlavor(event.target.value as FlavorId)}
+                  className="w-full rounded-[1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm outline-none transition focus:border-white/25"
+                >
+                  {FLAVOR_PRESETS.map((preset) => (
+                    <option key={preset.id} value={preset.id} className="bg-[#0b1023]">
+                      {preset.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">模板</span>
+                <select
+                  value={templateMode}
+                  onChange={(event) => setTemplateMode(event.target.value)}
+                  className="w-full rounded-[1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm outline-none transition focus:border-white/25"
+                >
+                  <option value="random" className="bg-[#0b1023]">
+                    随机模板池
+                  </option>
+                  {TEMPLATE_REGISTRY.map((template) => (
+                    <option key={template.id} value={template.id} className="bg-[#0b1023]">
+                      {template.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                <span className="mb-2 block text-[11px] uppercase tracking-[0.44em] text-white/46">色盘</span>
+                <select
+                  value={paletteMode}
+                  onChange={(event) => setPaletteMode(event.target.value)}
+                  className="w-full rounded-[1rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm outline-none transition focus:border-white/25"
+                >
+                  <option value="random" className="bg-[#0b1023]">
+                    随机色盘
+                  </option>
+                  {PALETTE_REGISTRY.map((palette) => (
+                    <option key={palette.id} value={palette.id} className="bg-[#0b1023]">
+                      {palette.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              <button onClick={() => regenerateStoryboard()} className={PRIMARY_BUTTON}>
+                <Wand2 className="h-4 w-4" />
+                生成整支 PV
+              </button>
+              <button onClick={() => regenerateStoryboard(draftText, makeSeed())} className={SECONDARY_BUTTON}>
+                <Shuffle className="h-4 w-4" />
+                重骰随机结果
+              </button>
+              <button onClick={handleRerollCurrentScene} className={SECONDARY_BUTTON}>
+                <RefreshCcw className="h-4 w-4" />
+                重做当前镜头
+              </button>
+            </div>
+
+            <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-black/20 p-4">
+              <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.4em] text-white/46">
+                <Sparkles className="h-3.5 w-3.5" />
+                当前策略
+              </div>
+              <div className="space-y-2 text-sm text-white/68">
+                <div>{FLAVOR_PRESETS.find((preset) => preset.id === flavor)?.description}</div>
+                <div>模板数: {TEMPLATE_REGISTRY.length} / 背景数: {BACKGROUND_REGISTRY.length}</div>
+                <div>适合把歌词、告白、预告片台词、人物独白直接转成文字 PV 草案。</div>
+                <div>这一版会更贴近你给的参考：黑红压迫、酸性波普、黑白几何、钟盘轨道、代码散点、包豪斯块面。</div>
+              </div>
+            </div>
           </div>
-          <div className="hidden md:block w-px h-4 bg-white/30" />
-          <span className="text-cyan-300 font-bold tracking-wider max-w-[200px] md:max-w-md truncate">SRC: {currentSong}</span>
-        </div>
+        </aside>
 
-        <div className="flex gap-2 md:gap-4 pointer-events-auto font-mono text-xs md:text-sm flex-wrap justify-center items-center">
-          <button onClick={() => setIsAuto(!isAuto)} className={`px-4 py-1.5 border transition-all ${isAuto ? 'border-teal-300 text-teal-200 bg-teal-400/10' : 'border-cyan-900/50 text-cyan-100 bg-black/50'}`}>AUTO: {isAuto ? 'ON' : 'OFF'}</button>
-          
-          {/* ★ 全局 CRT 开关 */}
-          <button onClick={() => setIsCRT(!isCRT)} className={`px-4 py-1.5 border transition-all ${isCRT ? 'border-cyan-300 text-cyan-200 bg-cyan-400/15' : 'border-cyan-900/50 text-cyan-100 bg-black/50'}`}>
-            CRT: {isCRT ? 'ON' : 'OFF'}
-          </button>
-          
-          <select value={displayBgIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'BG'); }} className="px-4 py-1.5 pr-8 border border-cyan-500/50 text-cyan-300 bg-black/50 hover:bg-cyan-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
-            {BACKGROUND_REGISTRY.map((bg, idx) => ( <option key={bg.id} value={idx} className="bg-gray-900 text-white">{bg.name}</option> ))}
-          </select>
-          <select value={displayEffectIndex} onChange={(e) => { setIsAuto(false); handleManualTrigger('SELECT', Number(e.target.value), 'FX'); }} className="px-4 py-1.5 pr-8 border border-teal-500/50 text-teal-300 bg-black/50 hover:bg-teal-500/20 transition-all outline-none cursor-pointer appearance-none uppercase max-w-[150px] truncate">
-            {EFFECT_REGISTRY.map((fx, idx) => ( <option key={fx.id} value={idx} className="bg-gray-900 text-white">{fx.name}</option> ))}
-          </select>
-          <button onClick={() => { setIsAuto(false); handleManualTrigger('NEXT'); }} className="px-4 py-1.5 border border-cyan-900/50 text-cyan-100 bg-black/50 hover:bg-cyan-500/20">NEXT</button>
-        </div>
+        <section className="space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-[2rem] border border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur-xl">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.48em] text-white/45">Now Playing</div>
+              <div className="mt-2 text-xl font-semibold">
+                {currentScene?.text ?? "暂无镜头"}
+              </div>
+              <div className="mt-1 text-sm text-white/56">
+                {currentTemplate?.name} / {currentBackground?.name} / {currentPalette?.name}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setAutoPlay((previous) => !previous)}
+                className={SECONDARY_BUTTON}
+              >
+                {autoPlay ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                {autoPlay ? "暂停轮播" : "继续轮播"}
+              </button>
+              <button
+                onClick={() => setActiveSceneIndex((previous) => (previous - 1 + storyboard.length) % storyboard.length)}
+                className={SECONDARY_BUTTON}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                上一镜
+              </button>
+              <button
+                onClick={() => setActiveSceneIndex((previous) => (previous + 1) % storyboard.length)}
+                className={SECONDARY_BUTTON}
+              >
+                下一镜
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-black/30 p-3 backdrop-blur-xl">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-[#090d1f]">
+              <AnimatePresence mode="wait">
+                {currentScene && currentTemplate && currentBackground && currentPalette ? (
+                  <motion.div
+                    key={currentScene.id}
+                    initial={{ opacity: 0, scale: 0.985 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.015, filter: "blur(14px)" }}
+                    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute inset-0"
+                  >
+                    {currentBackground.render({ scene: currentScene, palette: currentPalette })}
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_20%,transparent_80%,rgba(255,255,255,0.03))]" />
+                    <div className="absolute inset-0 opacity-20 mix-blend-screen" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.16) 1px, transparent 1px)", backgroundSize: "100% 5px" }} />
+                    <StageChrome
+                      palette={currentPalette}
+                      scene={currentScene}
+                      sceneIndex={activeSceneIndex}
+                      totalScenes={storyboard.length}
+                    />
+                    <div className="absolute inset-0 z-20">
+                      {currentTemplate.render({ scene: currentScene, palette: currentPalette })}
+                    </div>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
+              <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.46em] text-white/45">
+                <Layers3 className="h-3.5 w-3.5" />
+                Storyboard
+              </div>
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {storyboard.map((scene, index) => {
+                  const scenePalette = paletteMap[scene.paletteId];
+                  const template = TEMPLATE_MAP[scene.templateId];
+                  return (
+                    <button
+                      key={scene.id}
+                      onClick={() => setActiveSceneIndex(index)}
+                      className={`rounded-[1.5rem] border p-4 text-left transition ${
+                        index === activeSceneIndex
+                          ? "border-white/30 bg-white/[0.08]"
+                          : "border-white/10 bg-black/10 hover:border-white/20 hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      <div className="mb-3 flex items-center justify-between text-[10px] uppercase tracking-[0.34em] text-white/45">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <span>{template?.tag ?? "PV"}</span>
+                      </div>
+                      <div className="line-clamp-2 text-lg font-semibold leading-snug">{scene.text}</div>
+                      <div className="mt-2 line-clamp-2 text-xs leading-5 text-white/54">{scene.subline}</div>
+                      <div className="mt-4 flex items-center gap-2">
+                        <span className="h-3 w-3 rounded-full" style={{ backgroundColor: scenePalette?.accent }} />
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-white/45">
+                          {template?.name}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
+              <div className="mb-3 text-[11px] uppercase tracking-[0.46em] text-white/45">Scene Meta</div>
+              <div className="space-y-4">
+                <div className="rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+                  <div className="text-[11px] uppercase tracking-[0.34em] text-white/45">模板说明</div>
+                  <div className="mt-2 text-lg font-semibold">{currentTemplate?.name}</div>
+                  <div className="mt-2 text-sm leading-6 text-white/62">{currentTemplate?.description}</div>
+                </div>
+                <div className="rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+                  <div className="text-[11px] uppercase tracking-[0.34em] text-white/45">镜头关键词</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {currentScene?.tokens.map((token, index) => (
+                      <span
+                        key={`${token}-${index}`}
+                        className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/72"
+                      >
+                        {token}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+                  <div className="text-[11px] uppercase tracking-[0.34em] text-white/45">使用建议</div>
+                  <div className="mt-2 text-sm leading-6 text-white/62">
+                    如果你之后愿意，我还可以继续往里加“按歌曲段落分配模板”、“更强的卡点时间轴”、“特定风格包”或者“根据你给的故事自动写文字 PV 文案”。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
-};
-export default SparkEngine;
+}

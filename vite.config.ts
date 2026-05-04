@@ -32,20 +32,6 @@ export default defineConfig({
             return 'motion-vendor';
           }
 
-          if (
-            id.includes('react-markdown') ||
-            id.includes('remark-') ||
-            id.includes('rehype-') ||
-            id.includes('/unified/') ||
-            id.includes('/mdast-') ||
-            id.includes('/micromark') ||
-            id.includes('/hast-') ||
-            id.includes('/unist-') ||
-            id.includes('/katex/')
-          ) {
-            return 'markdown-vendor';
-          }
-
           if (id.includes('@radix-ui') || id.includes('lucide-react')) {
             return 'ui-vendor';
           }

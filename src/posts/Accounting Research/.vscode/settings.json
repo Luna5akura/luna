@@ -1,0 +1,62 @@
+{
+  "latex-workshop.latex.autoBuild.run": "never",
+  "latex-workshop.latex.outDir": "%DIR%",
+  "latex-workshop.view.autoFocus.enabled": false,
+  "latex-workshop.view.pdf.viewer": "external",
+  "latex-workshop.view.pdf.tab.editorGroup": "right",
+  "latex-workshop.view.pdf.ref.viewer": "external",
+  "latex-workshop.view.pdf.zoom": "page-width",
+  "latex-workshop.view.pdf.scrollMode": 0,
+  "latex-workshop.view.pdf.spreadMode": 0,
+  "latex-workshop.view.pdf.trim": 0,
+  "latex-workshop.view.pdf.invertMode.enabled": "never",
+  "latex-workshop.view.pdf.color.light.backgroundColor": "#f5f5f5",
+  "latex-workshop.view.pdf.color.light.pageBorderColor": "#cccccc",
+  "latex-workshop.view.pdf.color.dark.backgroundColor": "#1e1e1e",
+  "latex-workshop.view.pdf.color.dark.pageBorderColor": "#777777",
+  "latex-workshop.view.pdf.internal.keyboardEvent": "auto",
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+  "latex-workshop.synctex.afterBuild.enabled": false,
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl",
+    "*.bcf",
+    "*.blg",
+    "*.fdb_latexmk",
+    "*.fls",
+    "*.log",
+    "*.nav",
+    "*.out",
+    "*.run.xml",
+    "*.snm",
+    "*.synctex.gz",
+    "*.toc",
+    "*.vrb"
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-xelatex",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-xelatex",
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk (xelatex)",
+      "tools": [
+        "latexmk-xelatex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "lastUsed",
+  "latex-workshop.message.log.show": false,
+  "latex-workshop.message.error.show": false,
+  "latex-workshop.message.warning.show": false,
+  "workbench.editor.revealIfOpen": false
+}

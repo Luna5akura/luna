@@ -463,9 +463,11 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   totalPages,
   onPageChange,
 }) => {
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [isInteractionLocked, setIsInteractionLocked] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
+  const isInteractionLockedRef = useRef(false);
+  const isScrollActiveRef = useRef(false);
 
   const panelX = useMotionValue(0);
   const panelY = useMotionValue(0);
@@ -488,12 +490,16 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
       if (rafId !== 0) return;
 
       rafId = window.requestAnimationFrame(() => {
-        setIsScrolling(true);
-        setHoveredIndex(null);
+        isScrollActiveRef.current = true;
+        if (!isInteractionLockedRef.current) {
+          isInteractionLockedRef.current = true;
+          setIsInteractionLocked(true);
+        }
+        setHoveredIndex((current) => (current === null ? current : null));
         window.clearTimeout(timeoutId);
         timeoutId = window.setTimeout(() => {
-          setIsScrolling(false);
-        }, 140);
+          isScrollActiveRef.current = false;
+        }, 180);
         rafId = 0;
       });
     };
@@ -509,14 +515,19 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.innerWidth >= 1024 && !isScrolling) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-      panelX.set(normalizedX);
-      panelY.set(normalizedY);
+    if (window.innerWidth < 1024 || isScrollActiveRef.current) return;
+
+    if (isInteractionLockedRef.current) {
+      isInteractionLockedRef.current = false;
+      setIsInteractionLocked(false);
     }
-  }, [isScrolling, panelX, panelY]);
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    panelX.set(normalizedX);
+    panelY.set(normalizedY);
+  }, [panelX, panelY]);
 
   const handleMouseLeave = useCallback(() => {
     panelX.set(0);
@@ -596,7 +607,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
                     index={absoluteIndex}
                     isHovered={isHovered}
                     hasHoveredPeer={hoveredIndex !== null && hoveredIndex !== absoluteIndex}
-                    disabled={isScrolling}
+                    disabled={isInteractionLocked}
                     onHoverStart={() => setHoveredIndex(absoluteIndex)}
                     onHoverEnd={() => setHoveredIndex((current) => (current === absoluteIndex ? null : current))}
                   />
@@ -624,7 +635,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
           <div className="pointer-events-none absolute inset-0 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(4,9,17,0.76),rgba(2,6,12,0.44))] backdrop-blur-[2px]" style={{ transform: 'translateZ(-4px)' }} />
           <Pagination>
             <PaginationContent className="gap-2 font-mono text-sm">
-              <MagneticWrapper disabled={isScrolling}>
+              <MagneticWrapper disabled={isInteractionLocked}>
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => currentPage > 1 && triggerPageChange(currentPage - 1)}
@@ -639,7 +650,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
               <AnimatePresence mode="popLayout">
                 {visiblePages.map((page, idx) => (
                   <motion.div key={page === '...' ? `dots-${idx}` : page}>
-                    <MagneticWrapper disabled={isScrolling}>
+                    <MagneticWrapper disabled={isInteractionLocked}>
                       <PaginationItem>
                         {page === '...' ? (
                           <PaginationEllipsis className="text-cyan-900" />
@@ -663,7 +674,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
                 ))}
               </AnimatePresence>
 
-              <MagneticWrapper disabled={isScrolling}>
+              <MagneticWrapper disabled={isInteractionLocked}>
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => currentPage < totalPages && triggerPageChange(currentPage + 1)}

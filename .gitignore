@@ -8,6 +8,16 @@ pnpm-debug.log*
 lerna-debug.log*
 
 *.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.xdv
+missfont.log
 
 
 node_modules
@@ -25,3 +35,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.ods

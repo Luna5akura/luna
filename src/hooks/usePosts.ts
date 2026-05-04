@@ -52,15 +52,16 @@ const loadContentFromPath = async (path: string): Promise<string> => {
   return content;
 };
 
-const loadAllContentsInternal = async () => {
+const loadAllContentsInternal = async ({ eager = false }: { eager?: boolean } = {}) => {
   if (allContentsPromise) return allContentsPromise;
 
   allContentsPromise = (async () => {
     const entries: Array<readonly [string, string]> = [];
     const paths = Object.keys(markdownFiles);
+    const batchSize = eager ? 16 : 4;
 
-    for (let index = 0; index < paths.length; index += 4) {
-      const batch = paths.slice(index, index + 4);
+    for (let index = 0; index < paths.length; index += batchSize) {
+      const batch = paths.slice(index, index + batchSize);
       const loadedBatch = await Promise.all(
         batch.map(async (path) => {
           const content = await loadContentFromPath(path);
@@ -70,7 +71,7 @@ const loadAllContentsInternal = async () => {
 
       entries.push(...loadedBatch);
 
-      if (index + 4 < paths.length) {
+      if (!eager && index + batchSize < paths.length) {
         await yieldToMainThread();
       }
     }
@@ -103,11 +104,11 @@ export const usePosts = ({ preloadContents = false }: { preloadContents?: boolea
     return content;
   }, []);
 
-  const loadAllContents = useCallback(async () => {
+  const loadAllContents = useCallback(async ({ eager = false }: { eager?: boolean } = {}) => {
     if (contentsStatus === 'ready') return contentCache;
 
     setContentsStatus('loading');
-    const loaded = await loadAllContentsInternal();
+    const loaded = await loadAllContentsInternal({ eager });
     setContents(loaded);
     setContentsStatus('ready');
     return loaded;

@@ -1,0 +1,351 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\title{公司治理影响公司财务风险吗？}
+\author{于富生、张敏、姜付秀、任梦杰}
+\date{\today}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{引言}
+
+\begin{frame}
+  \bigidea{企业行为→企业风险}
+  \begin{itemize}
+    \item \Large 历史研究：看收益、忽视风险
+    \item \Large 企业行为 → 公司治理 
+    \item \Large 企业风险 → 公司财务风险
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{研究假设}
+
+\begin{frame}
+  \bigidea{公司治理}
+  \begin{itemize}
+    \item \Large 董事会特征
+    \item \Large 高管激励
+    \item \Large 股权结构
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{董事会特征}
+  \begin{itemize}
+    \item \Large H1：独立董事比例越高，风险越低
+    \item \Large 财务舞弊，经营失败
+    \item \Large H2：董事会规模越大，风险越高
+    \item \Large 官僚主义、决策效率、侥幸心理
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{高管特征}
+  \begin{itemize}
+    \item \Large H3：二职合一企业，风险更高
+    \item \Large 经营效率、激进政策（乐视）
+    \item \Large H4、H5：高管激励越高，风险越低（持股、薪酬）
+    \item \Large 利益一致、降低风险
+  \end{itemize}
+  \vspace{0.8em}
+\end{frame}
+
+\begin{frame}
+  \bigidea{股权结构}
+  \begin{itemize}
+    \item \Large H6：国有控股企业，风险更低
+    \item \Large 国家政策倾斜、地方资金倾斜
+    \item \Large H7：股权集中度越高，财务风险越高
+    \item \Large 强化控制、掏空公司
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{研究设计}
+
+\begin{frame}
+  \bigidea{样本与数据}
+  \begin{itemize}
+    \item \Large 沪深两市 A 股上市公司
+    \item \Large 2002--2005 年
+    \item \Large 801 家公司、2379 个公司年度观察值
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{被解释变量：财务风险}
+  \begin{block}{行业调整后的 Z 指数}
+  \begin{center}
+    {\Large
+    \[
+      Z = 0.012X_1 + 0.014X_2 + 0.033X_3 + 0.006X_4 + 0.999X_5
+    \]
+    }
+  \end{center}
+  \end{block}
+  \begin{center}
+    \Large Z 值越高，财务风险越低
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \bigidea{解释变量与控制变量}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \begin{block}{解释变量}
+      \Large
+      独立董事比例（Outdir）\\
+      董事会规模（Dirsize）\\
+      是否二职合一（Dual）\\
+      高管持股（Gghold） \\
+      高管薪酬（Ggxc）\\
+      是否国有控股（Ownership）\\
+      股权集中度（HHI5）
+    \end{block}
+    \column{0.48\textwidth}
+    \begin{block}{控制变量}
+      \Large
+      成长速度（Grow）-\\
+      现金股利（Xjgl）-\\
+      股票股利（Gpgl）-\\
+      上市年限（Age）+\\
+      企业规模（Size）+\\
+      业务数量（N）+ \\
+      是否股东变更（Turnover）- \\
+      行业、年度
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\sectionpageframe{实证检验及结果}
+
+\begin{frame}
+  \centering
+  \Large
+  \begin{tabular}{lcccc}
+    \toprule
+    变量 & 均值 & 中位数 & 最大值 & 最小值 \\
+    \midrule
+    Outdir & 0.309 & \textbf{0.333} & 0.667 & 0.110 \\
+    Dirsize & 9.736 & \textbf{9.000} & 19.000 & 4.000 \\
+    Dual & \textbf{0.148} & 0.000 & 1.000 & 0.000 \\
+    Gghold & \textbf{0.027} & 0.099 & \textbf{0.602} & \textbf{0.000} \\
+    Ggxc & 12.693 & 12.753 & \textbf{15.454} & \textbf{8.366} \\
+    Ownership & \textbf{0.263} & 0.000 & 1.000 & 0.000 \\
+    HHI5 & 0.178 & 0.034 & \textbf{0.719} & \textbf{0.000} \\
+    \bottomrule
+  \end{tabular}
+\vspace{0.6em}
+\end{frame}
+
+\begin{frame}
+  \bigidea{描述性统计}
+  \begin{itemize}
+    \item \Large 多数公司达到证监会要求（1/3）
+    \item \Large 大多数公司的董事会规模为 9 人
+    \item \Large 15\% 的公司二职合一
+    \item \Large 公司激励机制差距较大
+    \item \Large 大多数样本公司为国有控股
+    \item \Large 公司控制权差距较大
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{董事会特征}
+  \centering
+  \large
+  \begin{tabular}{lccc}
+    \toprule
+    变量 & 模型（1） & 模型（2） & 模型（3） \\
+    \midrule
+    Outdir & \textbf{3.39}/5.32*** &  & \textbf{3.433}/5.17*** \\
+    Dirsize &  & \textbf{0.027/1.26} & \textbf{0.005/0.23} \\
+    Xjgl & -4.508/-9.21*** & -4.551/-9.25*** & -4.506/-9.2*** \\
+    Age & 0.16/6.9*** & 0.189/8.38*** & 0.16/6.89*** \\
+    Size & 0.552/9.42*** & 0.527/8.79*** & 0.555/9.26*** \\
+    行业、年度 & 控制 & 控制 & 控制 \\
+    观测值 & 2464 & 2464 & 2464 \\
+    Adj-R2 & 0.119 & 0.101 & 0.111 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{董事会特征}
+  \begin{itemize}
+    \item \Large 独立董事显著降低风险
+    \item \Large 董事会规模回归系数为正，但不显著
+    \item \Large 形式上的决策机构 
+    \item \Large 支持 H1，不支持 H2
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{高管特征}
+  \centering
+  \begin{tabular}{lcccc}
+    \toprule
+    变量 & 模型（1） & 模型（2） & 模型（3） & 模型（4） \\
+    \midrule
+    Dual & \textbf{-0.333/-1.96**} &  &  & \textbf{-0.326/-1.90*} \\
+    Gghold &  & \textbf{0.105/1.73*} &  & \textbf{0.154/1.63*} \\
+    Ggxc &  &  & \textbf{0.243/3.67***} & \textbf{0.147/1.82*} \\
+    Xjgl & -3.532/-6.46*** & -4.618/-9.35*** & -4.255/-8.35*** & -3.493/-6.11*** \\
+    Age & 0.190/8.41*** & 0.190/8.41*** & 0.171/7.41*** & 0.174/6.19*** \\
+    Size & 0.638/9.09*** & 0.532/8.99*** & 0.596/9.70*** & 0.663/9.08*** \\
+    行业、年度 & 控制 & 控制 & 控制 & 控制 \\
+    观测值 & 2397 & 2397 & 2397 & 2379 \\
+    Adj-R2 & 0.110 & 0.100 & 0.110 & 0.118 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{高管特征}
+  \begin{itemize}
+    \item \Large 二职合一显著提高风险
+    \item \Large 高管激励显著降低风险
+    \item \Large 支持 H3、H4、H5
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{股权结构}
+  \centering
+  \scriptsize
+  \begin{tabular}{lccc}
+    \toprule
+    变量 & 模型（1） & 模型（2） & 模型（3） \\
+    \midrule
+    Ownership & \textbf{-0.536/-4.56***} &  & \textbf{-0.542/-4.61***} \\
+    HHI5 &  & -0.069/-0.55 & -0.053/-0.42 \\
+    Grow & -0.084/-0.36 & -0.014/-0.06 & -0.095/-0.41 \\
+    Xjgl & -4.447/-9.06*** & -4.549/-9.23*** & -4.445/-9.05*** \\
+    Gpgl & -0.309/-1.34 & -0.281/-1.21 & -0.322/-1.39 \\
+    Age & 0.191/8.51*** & 0.192/8.49*** & 0.193/8.56*** \\
+    Turnover & -0.161/-0.74 & -0.202/-0.92 & -0.162/-0.74 \\
+    N & 0.027/1.31 & 0.026/1.27 & 0.026/1.27 \\
+    Size & 0.585/9.84*** & 0.544/9.22*** & 0.588/9.88*** \\
+    行业、年度 & 控制 & 控制 & 控制 \\
+    观测值 & 2379 & 2379 & 2379 \\
+    Adj-R2 & 0.110 & 0.101 & 0.110 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{股权结构}
+  \begin{itemize}
+    \item \Large Ownership 系数显著为负：非国有控股企业风险更高
+    \item \Large 反过来说，国有控股企业财务风险更低
+    \item \Large HHI5 系数为负，但统计上不显著
+    \item \Large 结果支持 H6，不支持 H7
+  \end{itemize}
+  \vspace{0.8em}
+  \begin{center}
+    \Large 产权背景重要，但集中度未显示稳定作用
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \bigidea{总体检验与稳健性}
+  \begin{itemize}
+    \item \Large 全部治理变量同时进入模型，结果基本一致
+    \item \Large 替换风险指标：年末资产负债率
+    \item \Large Hausman 检验：未见严重内生性
+    \item \Large 剔除 ST 样本后，主要结论不变
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{结论}
+
+\begin{frame}
+  \bigidea{论文结论}
+  \begin{itemize}
+    \item \Large 公司治理确实具有“风险效应”
+    \item \Large 有效治理不仅影响绩效，也影响稳健性
+    \item \Large 更具体地说：
+    \item \Large 独立董事、二职分离、管理层激励更重要
+    \item \Large 国有控股风险更低，股权集中度不显著
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{一句话记住}
+  \begin{center}
+    {\LARGE \bfseries 公司治理}\\[0.5em]
+    {\LARGE \bfseries 不只影响收益}\\[0.5em]
+    {\LARGE \bfseries 也影响风险}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \bigidea{政策含义}
+  \begin{itemize}
+    \item \Large 改善治理结构，可以在一定程度上降低风险
+    \item \Large 企业不能只盯住价值和业绩
+    \item \Large 还要把治理当作风险管理的前端机制
+    \item \Large 建立治理机制时，要重实质，不只重形式
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{贡献与局限}
+  \begin{columns}[T]
+    \column{0.49\textwidth}
+    \begin{block}{贡献}
+      \Large
+      引入风险视角\\
+      提供中国证据\\
+      支持治理优化
+    \end{block}
+    \column{0.49\textwidth}
+    \begin{block}{局限}
+      \Large
+      样本期较早\\
+      指标较单一\\
+      因果识别偏弱
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \bigidea{启示}
+  \begin{center}
+    {\LARGE \bfseries 改善治理结构}\\[0.6em]
+    {\LARGE \bfseries 不只是“做得更好”}\\[0.6em]
+    {\LARGE \bfseries 也是“少出问题”}
+  \end{center}
+\end{frame}
+
+\end{document}
