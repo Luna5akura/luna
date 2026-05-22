@@ -1,0 +1,282 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+\title{审计任期与审计质量}
+\subtitle{来自中国证券市场的经验证据：论文点评}
+\author{陈信元、夏立军}
+\date{\today}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{引言}
+
+\begin{frame}
+  \bigidea{长审计任期与审计质量的关系}
+  \begin{itemize}
+    \item \Large 长审计任期可能会损害审计独立性
+    \item \Large 可能会提高审计师专业技能
+    \item \Large 长 审 计 任 期 情 况 下 审 计 质 量 反 而 更 高
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{研究设计}
+
+\begin{frame}
+  \bigidea{样本选择}
+  \begin{itemize}
+    \item \Large 沪深两市上市公司
+    \item \Large 2000--2002 年
+    \item \Large 剔除未披露年报、新上市、非标准无保留意见、金融保险业
+    \item \Large 2667 个公司年度观察值
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{被解释变量：审计质量}
+  \begin{block}{替代变量}
+  \begin{center}
+    {\Large
+    \[
+      |DA|=\text{操纵性应计利润的绝对值}
+    \]
+    }
+  \end{center}
+  \end{block}
+  \begin{center}
+    \Large $|DA|$ 越高，盈余管理越强，审计质量越低
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \bigidea{解释变量：审计任期}
+  \begin{block}{检验模型}
+  \begin{center}
+    {\Large
+    \[
+      |DA|=\beta_0+\beta_1TenuCen+\beta_2TenuCenSq+\cdots+\varepsilon
+    \]
+    }
+  \end{center}
+  \end{block}
+  \begin{center}
+    \Large 检验非线性关系 
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \bigidea{控制变量}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \begin{block}{事务所}
+      \Large
+      是否更换事务所\\
+      国际五大国内合作所\\
+      国内十大事务所
+    \end{block}
+    \column{0.48\textwidth}
+    \begin{block}{公司}
+      \Large
+      行业成长性\\
+      公司规模\\
+      经营业绩\\
+      资产负债率\\
+      上市年龄、年度
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\sectionpageframe{实证结果}
+
+\begin{frame}
+  \bigidea{多变量结果}
+  \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lccc}
+    \toprule
+    变量 & 全体样本 & 正 $DA$ 组 & 负 $DA$ 组 \\
+    \midrule
+    TenuCen & -0.0014 / -2.17** & -0.0018 / -1.91* & 0.0009 / 0.99 \\
+    TenuCenSq & 0.0006 / 2.91*** & 0.0004 / 1.16 & -0.0007 / -2.72*** \\
+    IBig5 & 0.0015 / 0.35 & -0.0047 / -0.67 & -0.0050 / -0.90 \\
+    DBig10 & 0.0021 / 0.85 & 0.0098 / 2.62*** & 0.0047 / 1.41 \\
+    Leverage & 0.0601 / 8.45*** & 0.0620 / 5.81*** & -0.0584 / -6.17*** \\
+    Adj-R2 & 0.036 & 0.040 & 0.046 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\sectionpageframe{论文贡献}
+
+\begin{frame}
+  \bigidea{引入非线性关系}
+  \begin{itemize}
+    \item \Large 审计质量来自专业能力和独立性的合成
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{后续文献引用}
+
+\begin{frame}
+  \bigidea{综述}
+  \begin{itemize}
+    \item \Large 被引量 226
+    \item \Large 杜英（2008）将其列入审计任期研究综述
+    \item \Large 审计任期、审计质量、独立性和专业胜任能力
+    \item \Large Wu 和 Xiao（2021）综述中国审计研究
+    \item \Large 把审计任期列为影响审计独立性的客户关系因素
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{有依据的后续评价}
+
+\begin{frame}
+  \bigidea{保留有文献依据的评价}
+  \begin{itemize}
+    \item \Large 原文自述：样本期较短，最长任期只有 11 年
+    \item \Large 后续论文：Chen and Xia 样本期被认为偏短
+    \item \Large 审计综述：审计质量代理变量各有强弱
+    \item \Large 任期文献：审计任期选择存在内生性问题
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{主要局限}
+
+\begin{frame}
+  \bigidea{这些局限的依据}
+  \begin{itemize}
+    \item \Large 样本期和个人任期：作者原文明确承认
+    \item \Large 代理变量局限：审计质量综述文献支持
+    \item \Large 内生性问题：审计任期文献普遍提醒
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{审计质量的代理变量较窄}
+  \begin{itemize}
+    \item \Large 本文以操纵性应计利润衡量审计质量
+    \item \Large DeFond and Zhang：审计质量代理变量各有强弱
+    \item \Large 因此本文结论更准确地说是盈余管理口径下的审计质量
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{任期选择存在内生性}
+  \begin{itemize}
+    \item \Large 审计任期不是随机分配的
+    \item \Large 客户与审计师的匹配会影响任期长短
+    \item \Large Singer and Zhang：审计任期研究需要处理内生性
+    \item \Large 因此本文结果更适合作为相关关系证据
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{事务所任期不等于审计师任期}
+  \begin{itemize}
+    \item \Large 论文考察的是事务所层面的任期
+    \item \Large 作者结论中提出未来可考察审计师任期
+    \item \Large 后续研究进一步区分事务所任期与签字审计师任期
+    \item \Large 因此本文不能直接回答个人审计师任期问题
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{样本期非常特殊}
+  \begin{itemize}
+    \item \Large 本文样本期为 2000--2002 年
+    \item \Large 作者承认样本中最长审计任期只有 11 年
+    \item \Large 后续论文也指出 Chen and Xia 的样本期较短
+    \item \Large 因此本文不足以单独推出长期轮换的最优年限
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{现实对照}
+
+\begin{frame}
+  \bigidea{与现行监管并不冲突}
+  \begin{itemize}
+    \item \Large 论文说：过短和过长都可能伤害审计质量
+    \item \Large 现行监管也没有只押注单一工具
+    \item \Large 人员轮换、事务所选聘、审计委员会责任同时推进
+    \item \Large 这说明监管也在追求平衡，而不是单纯缩短任期
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{证监会答复中的现实约束}
+  \begin{itemize}
+    \item \Large 上市公司审计机构强制轮换，影响面很大
+    \item \Large 2020、2021 年已有 398 家、446 家上市公司变更审计机构
+    \item \Large 服务超过 6 年的上市公司约 1916 家，占比约 40\%
+    \item \Large 大规模集中轮换可能反而扰动审计质量
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{2023 年《选聘办法》的启示}
+  \begin{itemize}
+    \item \Large 质量管理水平权重不低于 40\%
+    \item \Large 审计费用报价权重不高于 15\%
+    \item \Large 国企连续聘用同一事务所原则上不超过 8 年
+    \item \Large 监管重点转向“质量导向的选聘机制”
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{基于文献依据的总体评价}
+  \begin{itemize}
+    \item \Large 贡献：提出审计任期与审计质量的非线性关系
+    \item \Large 局限：审计质量度量集中在盈余管理口径
+    \item \Large 局限：任期选择的内生性仍需进一步处理
+    \item \Large 局限：事务所任期不能替代个人审计师任期
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{局限与批评的依据}
+  \small
+  \begin{itemize}
+    \item \href{https://www.cfrn.com.cn/uploads/fileupload/1635/paper/200605111635.pdf}{原文结论：样本期、最长任期、未来研究方向}
+    \item \href{https://citeseerx.ist.psu.edu/document?doi=f05d8786d2c1997a2dc129478a98bd9f81a4d61f&repid=rep1&type=pdf}{International Business Research 2013：指出 Chen and Xia 样本期较短}
+    \item \href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2411228}{DeFond and Zhang 2014：审计质量代理变量各有强弱}
+    \item \href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2654998}{Singer and Zhang 2017：审计任期研究存在内生性问题}
+    \item \href{https://manu68.magtech.com.cn/Jwk_glxb/CN/abstract/abstract8977.shtml}{沈玉清、戚务君、曾勇：区分审计师任期与事务所任期}
+  \end{itemize}
+\end{frame}
+
+\end{document}

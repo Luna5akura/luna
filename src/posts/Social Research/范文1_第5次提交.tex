@@ -1,0 +1,80 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+
+\title{范文1第5次提交\\调查过程与样本}
+\author{王鲲淏-22307100011}
+\date{Social Research}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{调查过程}
+
+\begin{frame}
+  \bigidea{论文的调查过程}
+  \begin{enumerate}
+    \item \Large 研究采用 vignette-based survey，每位被试先收到一条经过操纵的 SMS 电影促销广告。
+    \item \Large 研究者构造了 16 个情境：$2 \times 2 \times 2 \times 2$，分别操纵折扣、来源、远近和时间。
+    \item \Large 次日通过 e-mail 发放问卷，并电话确认被试收到短信、按“刚收到时的反应”填写。
+    \item \Large 最后剔除无效和缺失问卷，保留有效样本做后续分析。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \bigidea{调查过程中的关键细节}
+  \begin{itemize}
+    \item \Large 先招募 3 名 student confederates，每人约有 60 名同校学生朋友。
+    \item \Large 删除重复联系人后共有 160 名受试者，随机分配到 16 个 scenario，每组约 10 人。
+    \item \Large 其中 80 人收到“来自朋友”的短信，80 人收到“来自代表商家的陌生人”的短信。
+    \item \Large 研究结束后进行 debrief，解释实验中的情境操纵和欺骗设计。
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{样本量}
+
+\begin{frame}
+  \bigidea{最后的样本量}
+  \begin{center}
+    {\Large 最终有效样本量：\alert{N = 141}}
+  \end{center}
+  \vspace{1em}
+  \begin{itemize}
+    \item \Large 原始联系样本为 160 人，排除无效问卷后回收 141 份有效问卷。
+    \item \Large 性别结构：51 名男性（36.1\%），90 名女性（63.8\%）。
+    \item \Large 平均年龄：24.5 岁。
+    \item \Large 论文把 demographic statistics 作为控制变量进入假设检验。
+  \end{itemize}
+\end{frame}
+
+\end{document}

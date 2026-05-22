@@ -1,0 +1,155 @@
+\begin{thebibliography}{25}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ahmadi-Javid et~al.(2017)Ahmadi-Javid, Jalali, and Klassen]{AhmadiJavid2017}
+Amir Ahmadi-Javid, Zahra Jalali, and Kenneth~J. Klassen.
+\newblock Outpatient appointment systems in healthcare: A review of optimization studies.
+\newblock \emph{European Journal of Operational Research}, 258\penalty0 (1):\penalty0 3--34, 2017.
+\newblock \doi{10.1016/j.ejor.2016.06.064}.
+
+\bibitem[Aumann and Serrano(2008)]{AumannSerrano2008}
+Robert~J. Aumann and Roberto Serrano.
+\newblock An economic index of riskiness.
+\newblock \emph{Journal of Political Economy}, 116\penalty0 (5):\penalty0 810--836, 2008.
+\newblock \doi{10.1086/591947}.
+
+\bibitem[Bagust et~al.(1999)Bagust, Place, and Posnett]{BagustPlacePosnett1999}
+Adrian Bagust, Michael Place, and John~W. Posnett.
+\newblock Dynamics of bed use in accommodating emergency admissions: Stochastic simulation model.
+\newblock \emph{BMJ}, 319\penalty0 (7203):\penalty0 155--158, 1999.
+\newblock \doi{10.1136/bmj.319.7203.155}.
+
+\bibitem[Bailey(1952)]{Bailey1952}
+Norman T.~J. Bailey.
+\newblock A study of queues and appointment systems in hospital out-patient departments, with special reference to waiting-times.
+\newblock \emph{Journal of the Royal Statistical Society. Series B}, 14\penalty0 (2):\penalty0 185--199, 1952.
+
+\bibitem[Balasubramanian et~al.(2014)Balasubramanian, Biehl, Dai, and Muriel]{BalasubramanianBiehlDaiMuriel2014}
+Hari Balasubramanian, Sebastian Biehl, Longjie Dai, and Ana Muriel.
+\newblock Dynamic allocation of same-day requests in multi-physician primary care practices in the presence of prescheduled appointments.
+\newblock \emph{Health Care Management Science}, 17\penalty0 (1):\penalty0 31--48, 2014.
+\newblock \doi{10.1007/s10729-013-9242-2}.
+
+\bibitem[Cayirli and Veral(2003)]{CayirliVeral2003}
+Tugba Cayirli and Emre Veral.
+\newblock Outpatient scheduling in health care: A review of literature.
+\newblock \emph{Production and Operations Management}, 12\penalty0 (4):\penalty0 519--549, 2003.
+\newblock \doi{10.1111/j.1937-5956.2003.tb00218.x}.
+
+\bibitem[Chand et~al.(2009)Chand, Moskowitz, Norris, Shade, and Willis]{ChandMoskowitzNorrisShadeWillis2009}
+Suresh Chand, Herbert Moskowitz, John~B. Norris, Steve Shade, and Deanna~R. Willis.
+\newblock Improving patient flow at an outpatient clinic: Study of sources of variability and improvement factors.
+\newblock \emph{Health Care Management Science}, 12\penalty0 (3):\penalty0 325--340, 2009.
+\newblock \doi{10.1007/s10729-008-9094-3}.
+
+\bibitem[Dai et~al.(2021)Dai, Geng, and Xie]{DaiGengXie2021}
+Jiajun Dai, Na~Geng, and Xiaolan Xie.
+\newblock Dynamic advance scheduling of outpatient appointments in a moving booking window.
+\newblock \emph{European Journal of Operational Research}, 292\penalty0 (2):\penalty0 622--632, 2021.
+\newblock \doi{10.1016/j.ejor.2020.11.030}.
+
+\bibitem[Denton and Gupta(2003)]{DentonGupta2003}
+Brian Denton and Diwakar Gupta.
+\newblock A sequential bounding approach for optimal appointment scheduling.
+\newblock \emph{IIE Transactions}, 35\penalty0 (11):\penalty0 1003--1016, 2003.
+\newblock \doi{10.1080/07408170304395}.
+
+\bibitem[Erg{\"u}n-{\c S}ahin et~al.(2022)Erg{\"u}n-{\c S}ahin, G{\"u}ne{\c s}, Kocab{\i}y{\i}ko{\u g}lu, and Keskin]{ErgunSahinGunesKocabiyikogluKeskin2022}
+B{\"u}{\c s}ra Erg{\"u}n-{\c S}ahin, Evrim~Didem G{\"u}ne{\c s}, Ay{\c s}e Kocab{\i}y{\i}ko{\u g}lu, and Ahmet Keskin.
+\newblock How does workload affect test ordering behavior of physicians? an empirical investigation.
+\newblock \emph{Production and Operations Management}, 31\penalty0 (6):\penalty0 2664--2680, 2022.
+\newblock \doi{10.1111/poms.13711}.
+
+\bibitem[Fetter and Thompson(1966)]{FetterThompson1966}
+Robert~B. Fetter and John~D. Thompson.
+\newblock Patients' waiting time and doctors' idle time in the outpatient setting.
+\newblock \emph{Health Services Research}, 1\penalty0 (1):\penalty0 66--90, 1966.
+
+\bibitem[Green(2002)]{Green2002}
+Linda~V. Green.
+\newblock How many hospital beds?
+\newblock \emph{Inquiry}, 39\penalty0 (4):\penalty0 400--412, 2002.
+\newblock \doi{10.5034/inquiryjrnl_39.4.400}.
+
+\bibitem[Gupta and Denton(2008)]{GuptaDenton2008}
+Diwakar Gupta and Brian Denton.
+\newblock Appointment scheduling in health care: Challenges and opportunities.
+\newblock \emph{IIE Transactions}, 40\penalty0 (9):\penalty0 800--819, 2008.
+\newblock \doi{10.1080/07408170802165880}.
+
+\bibitem[Hulshof et~al.(2012)Hulshof, Kortbeek, Boucherie, Hans, and Bakker]{Hulshof2012}
+Peter J.~H. Hulshof, Nikky Kortbeek, Richard~J. Boucherie, Elias~W. Hans, and Piet J.~M. Bakker.
+\newblock Taxonomic classification of planning decisions in health care: A structured review of the state of the art in {OR/MS}.
+\newblock \emph{Health Systems}, 1\penalty0 (2):\penalty0 129--175, 2012.
+\newblock \doi{10.1057/hs.2012.18}.
+
+\bibitem[Kc and Terwiesch(2009)]{KcTerwiesch2009}
+Diwas~S. Kc and Christian Terwiesch.
+\newblock Impact of workload on service time and patient safety: An econometric analysis of hospital operations.
+\newblock \emph{Management Science}, 55\penalty0 (9):\penalty0 1486--1498, 2009.
+\newblock \doi{10.1287/mnsc.1090.1037}.
+
+\bibitem[Kuiper et~al.(2021)Kuiper, de~Mast, and Mandjes]{KuiperDeMastMandjes2021}
+Alex Kuiper, Jeroen de~Mast, and Michel Mandjes.
+\newblock The problem of appointment scheduling in outpatient clinics: A multiple case study of clinical practice.
+\newblock \emph{Omega}, 98:\penalty0 102122, 2021.
+\newblock \doi{10.1016/j.omega.2019.102122}.
+
+\bibitem[Laan et~al.(2018)Laan, van~de Vrugt, Olsman, and Boucherie]{LaanVanDeVrugtOlsmanBoucherie2018}
+Corine Laan, Maartje van~de Vrugt, Jan Olsman, and Richard~J. Boucherie.
+\newblock Static and dynamic appointment scheduling to improve patient access time.
+\newblock \emph{Health Systems}, 7\penalty0 (2):\penalty0 148--159, 2018.
+\newblock \doi{10.1080/20476965.2017.1403675}.
+
+\bibitem[Panagioti et~al.(2018)Panagioti, Geraghty, Johnson, Zhou, Panagopoulou, Chew-Graham, Peters, Hodkinson, Riley, and Esmail]{PanagiotiGeraghtyJohnsonEtAl2018}
+Maria Panagioti, Keith Geraghty, Judith Johnson, Anli Zhou, Efharis Panagopoulou, Carolyn Chew-Graham, David Peters, Alexander Hodkinson, Ruth Riley, and Aneez Esmail.
+\newblock Association between physician burnout and patient safety, professionalism, and patient satisfaction: A systematic review and meta-analysis.
+\newblock \emph{JAMA Internal Medicine}, 178\penalty0 (10):\penalty0 1317--1331, 2018.
+\newblock \doi{10.1001/jamainternmed.2018.3713}.
+
+\bibitem[Prasad et~al.(2020)Prasad, Poplau, Brown, Yale, Grossman, Varkey, Williams, Neprash, and Linzer]{PrasadPoplauBrownEtAl2020}
+Kriti Prasad, Sara Poplau, Roger Brown, Steven Yale, Erica Grossman, Anita~B. Varkey, Eric~S. Williams, Hannah~T. Neprash, and Mark Linzer.
+\newblock Time pressure during primary care office visits: A prospective evaluation of data from the healthy work place study.
+\newblock \emph{Journal of General Internal Medicine}, 35\penalty0 (2):\penalty0 465--472, 2020.
+\newblock \doi{10.1007/s11606-019-05343-6}.
+
+\bibitem[Robinson and Chen(2003)]{RobinsonChen2003}
+Lawrence~W. Robinson and Rachel~R. Chen.
+\newblock Scheduling doctors' appointments: Optimal and empirically-based heuristic policies.
+\newblock \emph{IIE Transactions}, 35\penalty0 (3):\penalty0 295--307, 2003.
+\newblock \doi{10.1080/07408170304367}.
+
+\bibitem[Ross(2014)]{Ross2014}
+Sheldon~M. Ross.
+\newblock \emph{Introduction to Probability Models}.
+\newblock Academic Press, San Diego, CA, 11 edition, 2014.
+
+\bibitem[Salzarulo et~al.(2011)Salzarulo, Bretthauer, C{\^o}t{\'e}, and Schultz]{SalzaruloBretthauerCoteSchultz2011}
+Peter~A. Salzarulo, Kurt~M. Bretthauer, Murray~J. C{\^o}t{\'e}, and Kenneth~L. Schultz.
+\newblock The impact of variability and patient information on health care system performance.
+\newblock \emph{Production and Operations Management}, 20\penalty0 (6):\penalty0 848--859, 2011.
+\newblock \doi{10.1111/j.1937-5956.2010.01210.x}.
+
+\bibitem[Xie et~al.(2023)Xie, Loke, Sim, and Lam]{XieLokeSimLam2023}
+Jingui Xie, Gar~Goei Loke, Melvyn Sim, and Shao~Wei Lam.
+\newblock The analytics of bed shortages: Coherent metric, prediction, and optimization.
+\newblock \emph{Operations Research}, 71\penalty0 (1):\penalty0 23--46, 2023.
+\newblock \doi{10.1287/opre.2021.2231}.
+
+\bibitem[Zhang et~al.(2017)Zhang, Shen, and Erdogan]{ZhangShenErdogan2017}
+Yiling Zhang, Siqian Shen, and S.~Ayca Erdogan.
+\newblock Distributionally robust appointment scheduling with moment-based ambiguity set.
+\newblock \emph{Operations Research Letters}, 45\penalty0 (2):\penalty0 139--144, 2017.
+\newblock \doi{10.1016/j.orl.2017.01.010}.
+
+\bibitem[Zhou et~al.(2022)Zhou, Sim, and Lam]{ZhouSimLam2022}
+Minglong Zhou, Melvyn Sim, and Shao-Wei Lam.
+\newblock Advance admission scheduling via resource satisficing.
+\newblock \emph{Production and Operations Management}, 31\penalty0 (11):\penalty0 4002--4020, 2022.
+\newblock \doi{10.1111/poms.13799}.
+
+\end{thebibliography}

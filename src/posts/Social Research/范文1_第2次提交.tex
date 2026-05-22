@@ -1,0 +1,95 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+
+\title{范文1第2次提交\\文献综述阅读报告}
+\author{王鲲淏-22307100011}
+\date{Social Research}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{前人理论}
+
+\begin{frame}
+  \bigidea{本文所用的前人理论}
+  \begin{itemize}
+    \item \Large 相关性判断理论：尤其是 Xu \& Chen (2006) 的五因素框架。
+    \item \Large 移动营销理论：用来识别 mobile commercial information 中独有的 commercial relevance factor。
+    \item \Large 隐私担忧理论：解释用户为什么会在“有用”与“被监控”之间做权衡。
+    \item \Large 本文明确说自己建立在三条文献流之上：relevance、mobile marketing、privacy。
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{文献类型}
+
+\begin{frame}
+  \bigidea{第一类：相关性判断文献}
+  \begin{itemize}
+    \item \Large 关注用户如何判断信息是否满足当前任务、兴趣与问题情境。
+    \item \Large 核心结论：相关性是主观且情境化的，topicality 与 reliability 是重要前因。
+    \item \Large 对本文的启发：作者直接从这条文献中抽取 topicality 和 reliability 进入模型。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{第二类：移动营销与情境文献}
+  \begin{itemize}
+    \item \Large 关注移动广告、位置服务与情境推送在不同场景中的有效性。
+    \item \Large 核心结论：location 和 time 是移动场景中最关键的 situational personalization 维度。
+    \item \Large 对本文的启发：作者从这条文献中抽取 economic value、location、time 进入模型。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{第三类：隐私担忧文献}
+  \begin{itemize}
+    \item \Large 关注个性化、定位与数据收集带来的心理成本。
+    \item \Large 核心结论：用户会进行 privacy calculus，在收益与风险之间权衡。
+    \item \Large 对本文的启发：作者把 privacy concerns 作为 affective relevance，一起纳入模型。
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{综述判断}
+
+\begin{frame}
+  \bigidea{这些文献是因果性的还是框架性的}
+  \begin{itemize}
+    \item \Large 相关性判断理论以框架性为主：强调概念维度与判断逻辑。
+    \item \Large 移动营销文献兼有框架性与因果性：既提出情境作用框架，也做影响检验。
+    \item \Large 隐私担忧文献更偏因果性：常检验个性化、位置使用与态度反应之间的关系。
+    \item \Large 因此本文是在框架理论基础上，发展出可检验的因果假设。
+  \end{itemize}
+\end{frame}
+
+\end{document}

@@ -19,6 +19,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    export MPLBACKEND=Agg
     echo
     echo "LaTeX + Python shell ready."
     echo "Compile once:"
@@ -29,6 +30,12 @@ pkgs.mkShell {
     echo
     echo "Run outpatient data analysis:"
     echo "  python 'src/posts/Business Paper/Graduate/analyze_data.py'"
+    echo
+    echo "Generate thesis figures:"
+    echo "  python 'src/posts/Business Paper/Graduate/make_figures.py'"
+    echo
+    echo "Generate matplotlib comparison figures:"
+    echo "  python 'src/posts/Business Paper/Graduate/plot_model_comparison.py'"
     echo
   '';
 }

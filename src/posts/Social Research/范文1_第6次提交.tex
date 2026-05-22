@@ -1,0 +1,102 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+
+\title{范文1第6次提交\\数据分析方法与假设检验}
+\author{王鲲淏-22307100011}
+\date{Social Research}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{统计方法}
+
+\begin{frame}
+  \bigidea{论文使用的数据分析方法}
+  \small
+  \begin{tabular}{p{3.2cm}p{6.8cm}}
+    \toprule
+    统计方法 & 分析目的 \\
+    \midrule
+    Logistic regression & 检查 economic、location、time 的实验操纵是否成功。 \\
+    One-way ANOVA & 检查 reliability 操纵是否成功。 \\
+    CFA（LISREL 8.70） & 检验 measurement model 的收敛效度、区分效度和整体拟合。 \\
+    Regression analysis & 检验主效应和交互效应假设（Table 4）。 \\
+    Mediator analysis & 按 Baron \& Kenny 程序和 Sobel test 检验 MCI relevance 的中介作用。 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{这些统计方法分别看什么}
+  \begin{itemize}
+    \item \Large 操纵检验：确认“高折扣/近距离/一周前/朋友来源”确实被被试感知出来。
+    \item \Large 测量模型检验：确认 relevance、privacy、topicality、reliability 这些量表是可靠有效的。
+    \item \Large 回归分析：看各主效应和交互项的方向与显著性。
+    \item \Large 中介分析：看 reliability 和 economic 是否先影响 relevance，再影响 privacy。
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{支持判断}
+
+\begin{frame}
+  \bigidea{论文如何判断假设是否被支持}
+  \begin{itemize}
+    \item \Large 第一步：看回归系数方向是否与假设预期一致。
+    \item \Large 第二步：看 p 值是否显著；本文因样本量相对较小，采用 $\alpha = 0.1$。
+    \item \Large 第三步：若是假设调节效应，就看交互项是否显著且方向正确。
+    \item \Large 第四步：若是 H12 这类中介/结果变量关系，再结合 mediator analysis 判断。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{论文里可以直接举的判断例子}
+  \begin{itemize}
+    \item \Large H1a supported：Topicality $\rightarrow$ Relevance，系数 0.332，$p<0.001$。
+    \item \Large H5a rejected：Time $\rightarrow$ Relevance，不显著，$p=0.367$。
+    \item \Large H10b supported：Reliability $\times$ Location $\rightarrow$ Privacy，交互项显著为负，$p=0.015$。
+    \item \Large H12 supported：MCI relevance $\rightarrow$ Privacy，系数 -0.245，$p=0.029$。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{数据分析结论小结}
+  \begin{itemize}
+    \item \Large 直接影响 relevance 的主要是 topicality、reliability、economic value 和 location。
+    \item \Large Time 不影响 relevance，但会降低 privacy concerns。
+    \item \Large Topicality $\times$ Economic 被支持，说明内容个性化与促销力度存在协同作用。
+    \item \Large Reliability $\times$ Location 在 privacy 上被支持，说明可信来源能缓解精确定位带来的隐私担忧。
+  \end{itemize}
+\end{frame}
+
+\end{document}

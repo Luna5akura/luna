@@ -38,6 +38,7 @@ SERVICE_END_FIELDS = [
     "结束就诊时间",
 ]
 MAX_CONSULT_MINUTES = 60.0
+SLOT_MINUTES = 30.0
 
 
 def cell_text(cell: ET.Element) -> str:
@@ -151,6 +152,7 @@ def summarize(values: list[float]) -> dict[str, float]:
         "n": len(clean),
         "mean": sum(clean) / len(clean),
         "median": percentile(clean, 0.5),
+        "p10": percentile(clean, 0.1),
         "p90": percentile(clean, 0.9),
         "p95": percentile(clean, 0.95),
         "std": stats.pstdev(clean) if len(clean) > 1 else 0.0,
@@ -171,12 +173,156 @@ def fit_linear(xs: list[float], ys: list[float]) -> dict[str, float] | None:
     slope = sxy / sxx if sxx else 0.0
     intercept = mean_y - slope * mean_x
     corr = sxy / math.sqrt(sxx * syy) if sxx and syy else 0.0
+    preds = [intercept + slope * x for x, _ in pairs]
+    metrics = regression_metrics([y for _, y in pairs], preds, k=2)
     return {
         "n": len(pairs),
         "intercept": intercept,
         "slope": slope,
         "r": corr,
-        "r2": corr * corr,
+        "r2": metrics["r2"],
+        "rmse": metrics["rmse"],
+        "mae": metrics["mae"],
+        "sse": metrics["sse"],
+        "aic": metrics["aic"],
+    }
+
+
+def regression_metrics(ys: list[float], preds: list[float], k: int) -> dict[str, float]:
+    n = len(ys)
+    mean_y = sum(ys) / n if n else 0.0
+    sse = sum((y - pred) ** 2 for y, pred in zip(ys, preds))
+    sst = sum((y - mean_y) ** 2 for y in ys)
+    mse = sse / n if n else 0.0
+    mae = sum(abs(y - pred) for y, pred in zip(ys, preds)) / n if n else 0.0
+    return {
+        "sse": sse,
+        "rmse": math.sqrt(mse),
+        "mae": mae,
+        "r2": 1 - sse / sst if sst else 0.0,
+        "aic": n * math.log(sse / n) + 2 * k if n and sse > 0 else float("-inf"),
+    }
+
+
+def fit_exponential_decay(xs: list[float], ys: list[float]) -> dict[str, float] | None:
+    pairs = [(x, y) for x, y in zip(xs, ys) if x is not None and y is not None and y > 0]
+    if len(pairs) < 2:
+        return None
+    log_fit = fit_linear([x for x, _ in pairs], [math.log(y) for _, y in pairs])
+    if not log_fit:
+        return None
+    log_intercept = log_fit["intercept"]
+    log_slope = log_fit["slope"]
+    intercept = math.exp(log_intercept)
+    slope = -log_slope
+    preds = [intercept * math.exp(-slope * x) for x, _ in pairs]
+    metrics = regression_metrics([y for _, y in pairs], preds, k=2)
+    return {
+        "n": len(pairs),
+        "intercept": intercept,
+        "slope": slope,
+        "log_intercept": log_intercept,
+        "log_slope": log_slope,
+        "r2": metrics["r2"],
+        "rmse": metrics["rmse"],
+        "mae": metrics["mae"],
+        "sse": metrics["sse"],
+        "aic": metrics["aic"],
+        "log_r2": log_fit["r2"],
+    }
+
+
+def fit_power_decay(xs: list[float], ys: list[float]) -> dict[str, float] | None:
+    pairs = [
+        (x, y)
+        for x, y in zip(xs, ys)
+        if x is not None and y is not None and x >= 0 and y > 0
+    ]
+    if len(pairs) < 2:
+        return None
+    transformed_xs = [math.log1p(x) for x, _ in pairs]
+    log_fit = fit_linear(transformed_xs, [math.log(y) for _, y in pairs])
+    if not log_fit:
+        return None
+    log_intercept = log_fit["intercept"]
+    log_slope = log_fit["slope"]
+    intercept = math.exp(log_intercept)
+    slope = -log_slope
+    preds = [intercept * (1 + x) ** (-slope) for x, _ in pairs]
+    metrics = regression_metrics([y for _, y in pairs], preds, k=2)
+    return {
+        "n": len(pairs),
+        "intercept": intercept,
+        "slope": slope,
+        "log_intercept": log_intercept,
+        "log_slope": log_slope,
+        "r2": metrics["r2"],
+        "rmse": metrics["rmse"],
+        "mae": metrics["mae"],
+        "sse": metrics["sse"],
+        "aic": metrics["aic"],
+        "log_r2": log_fit["r2"],
+    }
+
+
+def model_target_service_duration(
+    backlog_count: float,
+    arrival_count: float,
+    arrival_dispersion: float,
+    mean_service: float,
+    variance_service: float,
+    c_safe: float,
+    s_min: float,
+    s_max: float,
+    slot_minutes: float = SLOT_MINUTES,
+) -> dict[str, float | str]:
+    c0 = slot_minutes
+    raw_c_max = slot_minutes * mean_service / s_min
+    c_max = max(raw_c_max, c0)
+    gamma = 1 / (2 * (c_max - c0)) if c_max > c0 else 0.0
+    risk_scale = max(c_safe, 1.0)
+    variance_adjustment = (
+        arrival_count * (variance_service + arrival_dispersion * mean_service**2)
+    ) / (2 * risk_scale)
+    adjusted_load = (backlog_count + arrival_count) * mean_service + variance_adjustment
+    required_release = adjusted_load - c_safe
+
+    def effective_release(capacity: float) -> float:
+        return capacity - gamma * max(capacity - c0, 0.0) ** 2
+
+    if required_release <= effective_release(c0):
+        capacity = c0
+        status = "comfort"
+    elif required_release >= effective_release(c_max):
+        capacity = c_max
+        status = "lower_bound"
+    else:
+        lo, hi = c0, c_max
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            if effective_release(mid) >= required_release:
+                hi = mid
+            else:
+                lo = mid
+        capacity = hi
+        status = "adjusted"
+
+    candidate_duration = slot_minutes * mean_service / capacity
+    if c_max == c0:
+        target_duration = min(s_max, mean_service)
+    else:
+        target_duration = max(s_min, min(s_max, candidate_duration))
+    return {
+        "duration": target_duration,
+        "capacity": capacity,
+        "adjusted_load": adjusted_load,
+        "required_release": required_release,
+        "status": status,
+        "gamma": gamma,
+        "risk_scale": risk_scale,
+        "arrival_dispersion": arrival_dispersion,
+        "c0": c0,
+        "c_max": c_max,
     }
 
 
@@ -301,6 +447,14 @@ def analyze_month(
     for (doctor_id, _), items in doctor_day_cases.items():
         pass
 
+    doctor_days: defaultdict[str, set[object]] = defaultdict(set)
+    doctor_slot_day_arrivals: defaultdict[tuple[str, str], Counter] = defaultdict(Counter)
+    for (doctor_id, day), items in doctor_day_cases.items():
+        doctor_days[doctor_id].add(day)
+        for item in items:
+            registration = item["registration"]
+            doctor_slot_day_arrivals[(doctor_id, slot_label(floor_half_hour(registration)))][day] += 1
+
     doctor_groups: defaultdict[str, list[dict[str, object]]] = defaultdict(list)
     for (doctor_id, _day), items in doctor_day_cases.items():
         doctor_groups[doctor_id].extend(items)
@@ -333,13 +487,35 @@ def analyze_month(
     active_service_p10 = percentile(active_service_values, 0.1) if active_service_values else None
     active_service_p90 = percentile(active_service_values, 0.9) if active_service_values else None
 
-    # Queue-state feedback fitting at doctor-day half-hour level.
-    queue_lengths: list[float] = []
+    def local_arrival_dispersion(doctor_id: str, slot: str, fallback: float) -> float:
+        days = sorted(doctor_days.get(doctor_id, set()))
+        counts = doctor_slot_day_arrivals.get((doctor_id, slot))
+        if len(days) < 3 or not counts:
+            return fallback
+        values = [counts.get(day, 0) for day in days]
+        mean_value = sum(values) / len(values)
+        if mean_value <= 0:
+            return fallback
+        raw = stats.pvariance(values) / mean_value if len(values) > 1 else fallback
+        # Local doctor-slot estimates are noisy in a 14-day window; shrink them
+        # toward the month-level half-hour dispersion and cap extremes.
+        weight = len(values) / (len(values) + 5)
+        shrunk = weight * raw + (1 - weight) * fallback
+        return max(0.25, min(10.0, shrunk))
+
+    month_arrival_dispersion = max(mean_dispersion or 1.0, 0.25)
+
+    # Queue-state model implementation at doctor-day half-hour level.
+    model_queue_lengths: list[float] = []
+    model_arrivals: list[float] = []
+    model_arrival_dispersions: list[float] = []
+    observed_queue_lengths: list[float] = []
     served_per_slot: list[float] = []
+    service_time_per_slot: list[float] = []
     baseline_service = sum(service_minutes) / len(service_minutes) if service_minutes else None
     queue_workloads: list[float] = []
 
-    for (_doctor_id, day), items in doctor_day_cases.items():
+    for (doctor_id, day), items in doctor_day_cases.items():
         if len(items) < 10:
             continue
         items.sort(key=lambda item: item["start"])
@@ -353,16 +529,35 @@ def analyze_month(
                 for item in items
                 if item["registration"] <= current and item["start"] >= current
             )
-            served = sum(1 for item in items if current <= item["start"] < nxt)
+            arrivals = sum(
+                1
+                for item in items
+                if current <= item["registration"] < nxt
+            )
+            slot_services = [
+                item["service"] for item in items if current <= item["start"] < nxt
+            ]
+            served = len(slot_services)
+            if backlog > 0 or arrivals > 0 or served > 0:
+                model_queue_lengths.append(backlog)
+                model_arrivals.append(arrivals)
+                model_arrival_dispersions.append(
+                    local_arrival_dispersion(doctor_id, slot_label(current), month_arrival_dispersion)
+                )
             if served > 0:
-                queue_lengths.append(backlog)
+                observed_queue_lengths.append(backlog)
                 served_per_slot.append(served)
+                service_time_per_slot.append(sum(slot_services) / served)
                 if baseline_service is not None:
                     queue_workloads.append(backlog * baseline_service)
             current = nxt
 
-    fit_queue_count = fit_linear(queue_lengths, served_per_slot)
+    fit_queue_count = fit_linear(observed_queue_lengths, served_per_slot)
     fit_queue_workload = fit_linear(queue_workloads, served_per_slot) if queue_workloads else None
+    observed_fit_queue_service_duration = fit_linear(observed_queue_lengths, service_time_per_slot)
+    observed_fit_queue_service_duration_exp = fit_exponential_decay(observed_queue_lengths, service_time_per_slot)
+    observed_fit_queue_service_duration_power = fit_power_decay(observed_queue_lengths, service_time_per_slot)
+    observed_service_duration_stats = summarize(service_time_per_slot)
 
     service_stats = summarize(service_minutes)
     wait_registration_stats = summarize(wait_registration)
@@ -379,8 +574,91 @@ def analyze_month(
         uniform_ab = None
 
     c_safe_proxy = percentile(
-        [backlog * baseline_service for backlog in queue_lengths if baseline_service is not None], 0.95
-    ) if queue_lengths and baseline_service is not None else None
+        [
+            (backlog + arrivals) * baseline_service
+            for backlog, arrivals in zip(model_queue_lengths, model_arrivals)
+            if baseline_service is not None
+        ],
+        0.95,
+    ) if model_queue_lengths and baseline_service is not None else None
+
+    model_target_durations: list[float] = []
+    model_target_capacities: list[float] = []
+    model_adjusted_loads: list[float] = []
+    model_statuses: list[str] = []
+    model_fit_bounds: dict[str, float] = {}
+    if service_stats and c_safe_proxy is not None and observed_service_duration_stats:
+        mean_service = service_stats["mean"]
+        variance_service = service_stats["std"] ** 2
+        s_min = max(2.0, observed_service_duration_stats.get("p10") or service_stats.get("p10") or 2.0)
+        s_max = min(15.0, observed_service_duration_stats.get("p90") or service_stats.get("p90") or 15.0)
+        if s_max <= max(s_min, mean_service):
+            s_max = max(s_min, mean_service) + 1.0
+        for backlog, arrivals, arrival_dispersion in zip(
+            model_queue_lengths, model_arrivals, model_arrival_dispersions
+        ):
+            target = model_target_service_duration(
+                backlog,
+                arrivals,
+                arrival_dispersion,
+                mean_service,
+                variance_service,
+                c_safe_proxy,
+                s_min,
+                s_max,
+            )
+            model_target_durations.append(float(target["duration"]))
+            model_target_capacities.append(float(target["capacity"]))
+            model_adjusted_loads.append(float(target["adjusted_load"]))
+            model_statuses.append(str(target["status"]))
+        model_fit_bounds = {
+            "s_min": s_min,
+            "s_max": s_max,
+            "c0": SLOT_MINUTES,
+            "c_max": max(SLOT_MINUTES * mean_service / s_min, SLOT_MINUTES),
+            "gamma": (
+                1 / (2 * (SLOT_MINUTES * mean_service / s_min - SLOT_MINUTES))
+                if SLOT_MINUTES * mean_service / s_min > SLOT_MINUTES
+                else 0.0
+            ),
+            "risk_scale": c_safe_proxy,
+        }
+
+    fit_queue_service_duration = fit_linear(model_queue_lengths, model_target_durations)
+    fit_queue_service_duration_exp = fit_exponential_decay(model_queue_lengths, model_target_durations)
+    fit_queue_service_duration_power = fit_power_decay(model_queue_lengths, model_target_durations)
+    feedback_queue_stats = summarize(model_queue_lengths)
+    model_arrival_dispersion_stats = summarize(model_arrival_dispersions)
+    feedback_service_duration_stats = summarize(model_target_durations)
+    model_capacity_stats = summarize(model_target_capacities)
+    model_adjusted_load_stats = summarize(model_adjusted_loads)
+    model_application = {
+        "n_states": len(model_target_durations),
+        "c_safe": c_safe_proxy,
+        "risk_scale": model_fit_bounds.get("risk_scale"),
+        "gamma": model_fit_bounds.get("gamma"),
+        "s_min": model_fit_bounds.get("s_min"),
+        "s_max": model_fit_bounds.get("s_max"),
+        "arrival_dispersion": model_arrival_dispersion_stats,
+        "comfort_share": (
+            sum(1 for status in model_statuses if status == "comfort") / len(model_statuses)
+            if model_statuses
+            else None
+        ),
+        "adjusted_share": (
+            sum(1 for status in model_statuses if status == "adjusted") / len(model_statuses)
+            if model_statuses
+            else None
+        ),
+        "lower_bound_share": (
+            sum(1 for status in model_statuses if status == "lower_bound") / len(model_statuses)
+            if model_statuses
+            else None
+        ),
+        "target_duration": feedback_service_duration_stats,
+        "target_capacity": model_capacity_stats,
+        "adjusted_load": model_adjusted_load_stats,
+    }
 
     return {
         "n_visits": len(visits),
@@ -408,6 +686,17 @@ def analyze_month(
         "active_doctor_service_p90": active_service_p90,
         "fit_queue_count": fit_queue_count,
         "fit_queue_workload": fit_queue_workload,
+        "fit_queue_service_duration": fit_queue_service_duration,
+        "fit_queue_service_duration_exp": fit_queue_service_duration_exp,
+        "fit_queue_service_duration_power": fit_queue_service_duration_power,
+        "observed_fit_queue_service_duration": observed_fit_queue_service_duration,
+        "observed_fit_queue_service_duration_exp": observed_fit_queue_service_duration_exp,
+        "observed_fit_queue_service_duration_power": observed_fit_queue_service_duration_power,
+        "feedback_queue_stats": feedback_queue_stats,
+        "model_arrival_dispersion": model_arrival_dispersion_stats,
+        "feedback_service_duration_stats": feedback_service_duration_stats,
+        "observed_service_duration_stats": observed_service_duration_stats,
+        "model_application": model_application,
         "uniform_ab": uniform_ab,
         "s_base": service_stats.get("mean") if service_stats else None,
         "c_safe_proxy": c_safe_proxy,
@@ -446,7 +735,7 @@ def build_markdown(report: dict[str, dict]) -> str:
         "",
         "## 3. 到达过程与峰值拥堵特征",
         "",
-        f"- 2月样本的半小时到达离散系数均值为 {format_num(feb['slot_dispersion_mean'])}，8月样本为 {format_num(aug['slot_dispersion_mean'])}，均显著高于泊松过程的基准值 1，说明门诊到达存在明显的峰值聚集与过度离散现象。",
+        f"- 2月样本的半小时到达离散系数均值为 {format_num(feb['slot_dispersion_mean'])}，8月样本为 {format_num(aug['slot_dispersion_mean'])}，均明显高于泊松过程的基准值 1，说明门诊到达存在峰值聚集与过度离散现象。",
         f"- 早高峰（07:30-10:00）约占 2 月总挂号量的 {format_num(feb['morning_share'] * 100)}%，占 8 月总挂号量的 {format_num(aug['morning_share'] * 100)}%，说明排队风险主要集中在上午时段。",
         f"- 2 月半小时平均挂号量最高的时段为 {feb['top_slots'][0][0]}，均值为 {format_num(feb['top_slots'][0][1])} 人；8 月最高时段为 {aug['top_slots'][0][0]}，均值为 {format_num(aug['top_slots'][0][1])} 人。",
         "",
@@ -454,18 +743,29 @@ def build_markdown(report: dict[str, dict]) -> str:
         "",
         f"- Model 1 的固定服务时长参数可取样本均值：2 月 `s_base={format_num(feb['s_base'])}` 分钟，8 月 `s_base={format_num(aug['s_base'])}` 分钟。",
         f"- Model 2 若采用矩估计的均匀分布近似，则 2 月可写为 `S~Uniform({format_num(feb['uniform_ab']['a'])}, {format_num(feb['uniform_ab']['b'])})`，8 月可写为 `S~Uniform({format_num(aug['uniform_ab']['a'])}, {format_num(aug['uniform_ab']['b'])})`。由于左端点被截断为 0，说明真实服务分布右偏较强，均匀分布更适合作为近似分析口径而非精确拟合。",
-        f"- 按队列工作量代理变量的 95 分位数标定安全阈值时，2 月 `C_safe` 的经验参考值约为 {format_num(feb['c_safe_proxy'])} 分钟，8 月约为 {format_num(aug['c_safe_proxy'])} 分钟。",
+        f"- 按局部队列与时段到达需求形成的风险负载 95 分位数标定安全阈值时，2 月 `C_safe` 的经验参考值约为 {format_num(feb['c_safe_proxy'])} 分钟，8 月约为 {format_num(aug['c_safe_proxy'])} 分钟。",
+        f"- 模型原型使用医生-时段局部到达离散系数并向月度半小时离散系数收缩；进入模型的局部 `kappa` 均值在 2 月为 {format_num(feb['model_arrival_dispersion']['mean'])}，8 月为 {format_num(aug['model_arrival_dispersion']['mean'])}。",
         "",
-        "## 5. 多诊室异质性与动态分流依据",
+        "## 5. 模型原型的经验标定情况",
+        "",
+        f"- 2 月共有 {feb['model_application']['n_states']} 个医生-日期-半小时状态用于模型标定检验，舒适节奏已经满足风险约束的状态占 {format_num(feb['model_application']['comfort_share'] * 100)}%，需要节奏调整但未触及服务用时下界的状态占 {format_num(feb['model_application']['adjusted_share'] * 100)}%，触及下界的状态占 {format_num(feb['model_application']['lower_bound_share'] * 100)}%。",
+        f"- 8 月共有 {aug['model_application']['n_states']} 个医生-日期-半小时状态用于模型标定检验，舒适节奏已经满足风险约束的状态占 {format_num(aug['model_application']['comfort_share'] * 100)}%，需要节奏调整但未触及服务用时下界的状态占 {format_num(aug['model_application']['adjusted_share'] * 100)}%，触及下界的状态占 {format_num(aug['model_application']['lower_bound_share'] * 100)}%。",
+        f"- 模型原型给出的目标平均单人服务用时均值在 2 月为 {format_num(feb['model_application']['target_duration']['mean'])} 分钟，在 8 月为 {format_num(aug['model_application']['target_duration']['mean'])} 分钟；该目标已纳入局部 `kappa` 方差修正，两期样本均存在一部分高压状态需要服务节奏调整、支援或触及服务用时下界。",
+        "",
+        "## 6. 多诊室异质性与可行分流依据",
         "",
         f"- 2 月高频医生样本的平均服务时长变异系数为 {format_num(feb['active_doctor_service_cv'])}，8 月为 {format_num(aug['active_doctor_service_cv'])}，显示出明显的跨医生异质性。",
-        f"- 以高频医生平均服务时长的分位区间衡量，2 月样本的 10% 分位数为 {format_num(feb['active_doctor_service_p10'])} 分钟、90% 分位数为 {format_num(feb['active_doctor_service_p90'])} 分钟；8 月样本分别为 {format_num(aug['active_doctor_service_p10'])} 分钟和 {format_num(aug['active_doctor_service_p90'])} 分钟。这一差异直接支持 Model 3 中对异构诊室参数 `γ_i` 与 `C_safe,i` 的设定。",
+        f"- 以高频医生平均服务时长的分位区间衡量，2 月样本的 10% 分位数为 {format_num(feb['active_doctor_service_p10'])} 分钟、90% 分位数为 {format_num(feb['active_doctor_service_p90'])} 分钟；8 月样本分别为 {format_num(aug['active_doctor_service_p10'])} 分钟和 {format_num(aug['active_doctor_service_p90'])} 分钟。这一差异可作为 Model 3 中异构诊室参数 `γ_i` 与 `C_safe,i` 设定的经验依据，但不能单独解释为医生个人能力差异。",
         "",
-        "## 6. 队列状态反馈模型估计",
+        "## 7. 模型目标服务用时的反馈策略拟合",
         "",
-        f"- 以“医生-日期-半小时”为面板单元，将半小时内服务人次记为因变量、时段开始时的待诊人数记为解释变量，可得 2 月样本的经验反馈函数：`y_t = {format_num(feb['fit_queue_count']['intercept'], 3)} + {format_num(feb['fit_queue_count']['slope'], 3)} Q_t`，`R^2={format_num(feb['fit_queue_count']['r2'], 3)}`。",
-        f"- 同样方法下，8 月样本的经验反馈函数为：`y_t = {format_num(aug['fit_queue_count']['intercept'], 3)} + {format_num(aug['fit_queue_count']['slope'], 3)} Q_t`，`R^2={format_num(aug['fit_queue_count']['r2'], 3)}`。",
-        f"- 两个样本期的斜率均为正，说明等待队列越长，医生在后续半小时内的实际服务产出越高，数据层面支持第五章提出的线性反馈控制思想。",
+        f"- 以模型原型给出的目标平均单人服务用时为因变量、时段开始时的待诊人数为解释变量，可得 2 月样本线性反馈函数：`s_t^* = {format_num(feb['fit_queue_service_duration']['intercept'], 3)} {format_num(feb['fit_queue_service_duration']['slope'], 3)} Q_t`，`R^2={format_num(feb['fit_queue_service_duration']['r2'], 3)}`，RMSE 为 {format_num(feb['fit_queue_service_duration']['rmse'], 3)}。",
+        f"- 2 月样本指数型反馈函数为：`s_t = {format_num(feb['fit_queue_service_duration_exp']['intercept'], 3)} exp(-{format_num(feb['fit_queue_service_duration_exp']['slope'], 3)} Q_t)`，`R^2={format_num(feb['fit_queue_service_duration_exp']['r2'], 3)}`，RMSE 为 {format_num(feb['fit_queue_service_duration_exp']['rmse'], 3)}。",
+        f"- 2 月样本幂函数反馈函数为：`s_t = {format_num(feb['fit_queue_service_duration_power']['intercept'], 3)} (1+Q_t)^(-{format_num(feb['fit_queue_service_duration_power']['slope'], 3)})`，`R^2={format_num(feb['fit_queue_service_duration_power']['r2'], 3)}`，RMSE 为 {format_num(feb['fit_queue_service_duration_power']['rmse'], 3)}。",
+        f"- 8 月样本线性反馈函数为：`s_t = {format_num(aug['fit_queue_service_duration']['intercept'], 3)} {format_num(aug['fit_queue_service_duration']['slope'], 3)} Q_t`，`R^2={format_num(aug['fit_queue_service_duration']['r2'], 3)}`，RMSE 为 {format_num(aug['fit_queue_service_duration']['rmse'], 3)}。",
+        f"- 8 月样本指数型反馈函数为：`s_t = {format_num(aug['fit_queue_service_duration_exp']['intercept'], 3)} exp(-{format_num(aug['fit_queue_service_duration_exp']['slope'], 3)} Q_t)`，`R^2={format_num(aug['fit_queue_service_duration_exp']['r2'], 3)}`，RMSE 为 {format_num(aug['fit_queue_service_duration_exp']['rmse'], 3)}。",
+        f"- 8 月样本幂函数反馈函数为：`s_t = {format_num(aug['fit_queue_service_duration_power']['intercept'], 3)} (1+Q_t)^(-{format_num(aug['fit_queue_service_duration_power']['slope'], 3)})`，`R^2={format_num(aug['fit_queue_service_duration_power']['r2'], 3)}`，RMSE 为 {format_num(aug['fit_queue_service_duration_power']['rmse'], 3)}。",
+        "- 三类策略均显示等待队列越长，模型建议的目标平均单人服务用时越短。若按原始分钟尺度的拟合指标比较，线性型策略在两期样本中表现最好，指数型策略次之，幂函数型策略相对较弱。",
         "",
     ]
     return "\n".join(lines) + "\n"

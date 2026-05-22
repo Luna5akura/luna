@@ -1,0 +1,138 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\title{范文1第3次提交\\模型开发与假设}
+\author{王鲲淏-22307100011}
+\date{Social Research}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{研究模型}
+
+\begin{frame}
+  \bigidea{本文的模型}
+  \centering
+  \begin{tikzpicture}[
+    node distance=0.8cm and 1.0cm,
+    box/.style={draw, rounded corners, align=center, minimum width=2.9cm, minimum height=1.0cm},
+    arr/.style={-{Latex[length=2.5mm]}, thick}
+  ]
+    \node[box] (content) {内容因素\\Topicality\\Reliability\\Economic Value};
+    \node[box, below=of content] (context) {情境因素\\Location\\Time};
+    \node[box, right=2.1cm of content] (rel) {MCI Relevance};
+    \node[box, right=2.1cm of context] (privacy) {Privacy Concerns};
+
+    \draw[arr] (content) -- (rel);
+    \draw[arr] (content) -- (privacy);
+    \draw[arr] (context) -- (rel);
+    \draw[arr] (context) -- (privacy);
+    \draw[arr] (rel) -- (privacy);
+    \draw[arr, dashed] (content.east) to[bend left=18] node[above, font=\scriptsize] {交互效应 H6-H11} (rel.west);
+    \draw[arr, dashed] (context.east) to[bend right=18] node[below, font=\scriptsize] {交互效应 H6-H11} (privacy.west);
+  \end{tikzpicture}
+\end{frame}
+
+\sectionpageframe{假设列表}
+
+\begin{frame}
+  \bigidea{直接效应假设 H1-H5}
+  \small
+  \begin{itemize}
+    \item H1：Topicality 对 MCI relevance 有正向作用（H1a），并降低 privacy concerns（H1b）。
+    \item H2：Reliability 对 MCI relevance 有正向作用（H2a），并降低 privacy concerns（H2b）。
+    \item H3：Economic value 对 MCI relevance 有正向作用（H3a），并降低 privacy concerns（H3b）。
+    \item H4：Location pertinence 对 MCI relevance 有正向作用（H4a），并加剧 privacy concerns（H4b）。
+    \item H5：Time pertinence 对 MCI relevance 有正向作用（H5a），并降低 privacy concerns（H5b）。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{调节效应假设 H6-H11}
+  \small
+  \begin{itemize}
+    \item H6：Topicality 正向调节 economic value 与 relevance，并负向调节 economic value 与 privacy。
+    \item H7：Topicality 正向调节 location 与 relevance，并负向调节 location 与 privacy。
+    \item H8：Topicality 正向调节 time 与 relevance，并负向调节 time 与 privacy。
+    \item H9：Reliability 正向调节 economic value 与 relevance，并负向调节 economic value 与 privacy。
+    \item H10：Reliability 正向调节 location 与 relevance，并负向调节 location 与 privacy。
+    \item H11：Reliability 正向调节 time 与 relevance，并负向调节 time 与 privacy。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \bigidea{结果变量之间的关系}
+  \small
+  \begin{itemize}
+    \item H12：MCI relevance alleviates privacy concerns.
+    \item 即：一条移动商业信息越“相关”，用户越愿意接受其可能带来的隐私交换。
+    \item 这条路径把 utilitarian relevance 和 affective relevance 联系起来。
+  \end{itemize}
+\end{frame}
+
+\sectionpageframe{变量定义}
+
+\begin{frame}
+  \bigidea{假设涉及的变量定义}
+  \scriptsize
+  \begin{tabular}{p{2.2cm}p{7.6cm}}
+    \toprule
+    变量 & 定义 \\
+    \midrule
+    主题性（Topicality） & 信息内容与用户当前兴趣、任务或需求的匹配程度。 \\
+    可靠性（Reliability） & 用户认为该信息真实、可信、准确的程度。 \\
+    经济价值（Economic Value） & 信息是否带来优惠、节省或其他可感知收益。 \\
+    位置（Location） & 信息与用户当前所在地点是否匹配，以及定位是否精确。 \\
+    时间（Time） & 信息出现的时间是否与用户当前情境、时机和任务相契合。 \\
+    相关性判断（Relevance Judgment） & 用户对移动商业信息“是否与自己有关、是否值得看”的总体评价。 \\
+    隐私担忧（Privacy Concerns） & 用户对个人信息、位置数据或行为数据被收集和使用的担忧。 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\sectionpageframe{假设1论证}
+
+\begin{frame}
+  \bigidea{假设1论证中使用的方法}
+  \begin{itemize}
+    \item \Large 概念定义法：先把 topicality 定义为“信息与用户兴趣/消费类别的匹配程度”。
+    \item \Large 文献演绎法：引用 Boyce、Xu \& Chen 等相关性研究，说明 topicality 是 relevance judgment 的第一步。
+    \item \Large 情境迁移法：把搜索/文献相关性理论迁移到移动商业信息情境。
+    \item \Large 隐私计算逻辑：再从 personalization 的收益角度推导 H1b，认为更贴题的广告更像帮助而不是打扰。
+  \end{itemize}
+\end{frame}
+
+\end{document}

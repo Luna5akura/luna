@@ -1,0 +1,111 @@
+\documentclass[aspectratio=169,UTF8,zihao=-4]{ctexbeamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+
+\title{范文1第4次提交\\问卷开发与问卷设计}
+\author{王鲲淏-22307100011}
+\date{Social Research}
+
+\newcommand{\bigidea}[1]{
+  \begin{center}
+    \vspace{0.8em}
+    {\LARGE \bfseries #1}
+    \vspace{0.6em}
+  \end{center}
+}
+
+\newcommand{\sectionpageframe}[1]{
+  \begin{frame}[plain]
+    \begin{center}
+      \vfill
+      {\Huge \bfseries #1}
+      \vfill
+    \end{center}
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\sectionpageframe{问卷开发}
+
+\begin{frame}
+  \bigidea{问卷开发的基本步骤}
+  \begin{enumerate}
+    \item \Large 尽量采用已有成熟题项，并根据 cinema promotion 的研究情境做必要改编。
+    \item \Large 主观构念用 3-4 个题项测量：relevance、topicality、reliability、privacy。
+    \item \Large 客观构念用单题测量：economic、location、time，且按二元变量编码。
+    \item \Large 先做 20 人 pilot test，再根据反馈做 minor revisions。
+    \item \Large 之后用 exploratory factor analysis 检验收敛效度和区分效度。
+  \end{enumerate}
+\end{frame}
+
+\sectionpageframe{构念设计}
+
+\begin{frame}
+  \bigidea{问卷包含的主要构念}
+  \small
+  \begin{tabular}{p{3.0cm}p{7.0cm}}
+    \toprule
+    构念类别 & 具体变量 \\
+    \midrule
+    内容因素 & Topicality、Reliability、Economic value \\
+    情境因素 & Location、Time \\
+    结果变量 & Relevance、Privacy concerns \\
+    控制变量 & Source、Gender、Age \\
+    场景材料 & 受访者先收到一条 SMS 电影促销广告，再完成问卷 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{附录中的题项（一）}
+  \scriptsize
+  \begin{tabular}{p{2.2cm}p{7.6cm}}
+    \toprule
+    构念 & 题项示例 \\
+    \midrule
+    Topicality & This message fits my future personal consumption need; I'm interested in watching movies; This kind of message is related to my personal interest. \\
+    Reliability & I'm worried about the truthfulness of this message; I believe that the message is reliable; I believe that the cinema will honor the promised promotion. \\
+    Relevance & The message provides me with a reference; I will keep this message for reference; I will forward this message; I will go to the cinema based on the message. \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{附录中的题项（二）}
+  \scriptsize
+  \begin{tabular}{p{2.2cm}p{7.6cm}}
+    \toprule
+    构念 & 题项示例 \\
+    \midrule
+    Privacy & Others have no right to send me this kind of message unless they have my permission; I'm worried the sender will reveal my personal information; This message violated my privacy. \\
+    Economic & How would you evaluate the discounts offered in the message? Low / High \\
+    Location & How far would you be from the cinema mentioned in the message? Near / Far \\
+    Time & When did you receive this message? One week before the promotion activity / Two weeks before \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \bigidea{这一部分的汇报重点}
+  \begin{itemize}
+    \item \Large 主观变量使用 7 点量表，客观变量用实验操纵的二元值。
+    \item \Large 作者没有操纵 topicality，而是把它作为问卷测量变量。
+    \item \Large 这一部分汇报时最好强调“量表改编 + 预测试 + EFA”这三步。
+  \end{itemize}
+\end{frame}
+
+\end{document}
