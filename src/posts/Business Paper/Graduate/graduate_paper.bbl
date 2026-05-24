@@ -1,4 +1,4 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{51}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -34,6 +34,31 @@ Hari Balasubramanian, Sebastian Biehl, Longjie Dai, and Ana Muriel.
 \newblock \emph{Health Care Management Science}, 17\penalty0 (1):\penalty0 31--48, 2014.
 \newblock \doi{10.1007/s10729-013-9242-2}.
 
+\bibitem[Bernstein et~al.(2026)Bernstein, Keskin, Mersereau, Wood, and Ziya]{BernsteinKeskinMersereauWoodZiya2026}
+Fernando Bernstein, N.~Bora Keskin, Adam Mersereau, Morgan Wood, and Serhan Ziya.
+\newblock Frontiers in operations: Show-up profiles for scheduled services: Estimation and applications.
+\newblock \emph{Manufacturing \& Service Operations Management}, 2026.
+\newblock \doi{10.1287/msom.2024.1575}.
+\newblock Articles in Advance.
+
+\bibitem[Berry~Jaeker and Tucker(2017)]{BerryJaekerTucker2017}
+Jillian~A. Berry~Jaeker and Anita~L. Tucker.
+\newblock Past the point of speeding up: The negative effects of workload saturation on efficiency and patient severity.
+\newblock \emph{Management Science}, 63\penalty0 (4):\penalty0 1042--1062, 2017.
+\newblock \doi{10.1287/mnsc.2015.2387}.
+
+\bibitem[Brown and Sim(2009)]{BrownSim2009}
+David~B. Brown and Melvyn Sim.
+\newblock Satisficing measures for analysis of risky positions.
+\newblock \emph{Management Science}, 55\penalty0 (1):\penalty0 71--84, 2009.
+\newblock \doi{10.1287/mnsc.1080.0929}.
+
+\bibitem[Cao et~al.(2011)Cao, Wan, Tu, Shang, Liu, Tan, Sun, Ye, and Xu]{CaoWanTuShangEtAl2011}
+Wen Cao, Ying Wan, Hongyan Tu, Fengming Shang, Dapeng Liu, Zhaoxu Tan, Chunmei Sun, Qiang Ye, and Yong Xu.
+\newblock A web-based appointment system to reduce waiting for outpatients: A retrospective study.
+\newblock \emph{BMC Health Services Research}, 11:\penalty0 318, 2011.
+\newblock \doi{10.1186/1472-6963-11-318}.
+
 \bibitem[Cayirli and Veral(2003)]{CayirliVeral2003}
 Tugba Cayirli and Emre Veral.
 \newblock Outpatient scheduling in health care: A review of literature.
@@ -46,11 +71,29 @@ Suresh Chand, Herbert Moskowitz, John~B. Norris, Steve Shade, and Deanna~R. Will
 \newblock \emph{Health Care Management Science}, 12\penalty0 (3):\penalty0 325--340, 2009.
 \newblock \doi{10.1007/s10729-008-9094-3}.
 
+\bibitem[Collins et~al.(2015)Collins, Reitsma, Altman, and Moons]{CollinsReitsmaAltmanMoons2015}
+Gary~S. Collins, Johannes~B. Reitsma, Douglas~G. Altman, and Karel G.~M. Moons.
+\newblock Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis ({TRIPOD}): The {TRIPOD} statement.
+\newblock \emph{BMJ}, 350:\penalty0 g7594, 2015.
+\newblock \doi{10.1136/bmj.g7594}.
+
+\bibitem[Collins et~al.(2024)Collins, Moons, Dhiman, Riley, Beam, Van~Calster, Ghassemi, Liu, Reitsma, van Smeden, Boulesteix, Camaradou, Celi, Patel, Denniston, Glocker, Golub, Harvey, Heinze, Hoffman, Kengne, Lam, Lee, Loder, Maier-Hein, Mateen, McCradden, Oakden-Rayner, Ordish, Parnell, Rose, Singh, Wynants, and Logullo]{CollinsMoonsDhimanEtAl2024}
+Gary~S. Collins, Karel G.~M. Moons, Paula Dhiman, Richard~D. Riley, Andrew~L. Beam, Ben Van~Calster, Marzyeh Ghassemi, Xiaoxuan Liu, Johannes~B. Reitsma, Maarten van Smeden, Anne-Laure Boulesteix, Jenny Camaradou, Leo~Anthony Celi, Kashyap Patel, Alastair~K. Denniston, Ben Glocker, Robert~M. Golub, Hugh Harvey, Georg Heinze, Michael Hoffman, Andre~Pascal Kengne, Emily Lam, Naomi Lee, Elizabeth Loder, Lena Maier-Hein, Bilal~A. Mateen, Melissa~D. McCradden, Luke Oakden-Rayner, Johan Ordish, Richard Parnell, Sherri Rose, Karandeep Singh, Laure Wynants, and Patricia Logullo.
+\newblock {TRIPOD+AI} statement: Updated guidance for reporting clinical prediction models that use regression or machine learning methods.
+\newblock \emph{BMJ}, 385:\penalty0 e078378, 2024.
+\newblock \doi{10.1136/bmj-2023-078378}.
+
 \bibitem[Dai et~al.(2021)Dai, Geng, and Xie]{DaiGengXie2021}
 Jiajun Dai, Na~Geng, and Xiaolan Xie.
 \newblock Dynamic advance scheduling of outpatient appointments in a moving booking window.
 \newblock \emph{European Journal of Operational Research}, 292\penalty0 (2):\penalty0 622--632, 2021.
 \newblock \doi{10.1016/j.ejor.2020.11.030}.
+
+\bibitem[Dantas et~al.(2018)Dantas, Fleck, Oliveira, and Hamacher]{DantasFleckOliveiraHamacher2018}
+Luiz~Felipe Dantas, Jo{\~a}o~Luiz Fleck, Fernando Luiz~Cyrino Oliveira, and Silvio Hamacher.
+\newblock No-shows in appointment scheduling: A systematic literature review.
+\newblock \emph{Health Policy}, 122\penalty0 (4):\penalty0 412--421, 2018.
+\newblock \doi{10.1016/j.healthpol.2018.02.002}.
 
 \bibitem[Denton and Gupta(2003)]{DentonGupta2003}
 Brian Denton and Diwakar Gupta.
@@ -75,11 +118,29 @@ Linda~V. Green.
 \newblock \emph{Inquiry}, 39\penalty0 (4):\penalty0 400--412, 2002.
 \newblock \doi{10.5034/inquiryjrnl_39.4.400}.
 
+\bibitem[Green and Savin(2008)]{GreenSavin2008}
+Linda~V. Green and Sergei Savin.
+\newblock Reducing delays for medical appointments: A queueing approach.
+\newblock \emph{Operations Research}, 56\penalty0 (6):\penalty0 1526--1538, 2008.
+\newblock \doi{10.1287/opre.1080.0575}.
+
+\bibitem[Green et~al.(2007)Green, Savin, and Murray]{GreenSavinMurray2007}
+Linda~V. Green, Sergei Savin, and Mark Murray.
+\newblock Providing timely access to care: What is the right patient panel size?
+\newblock \emph{Joint Commission Journal on Quality and Patient Safety}, 33\penalty0 (4):\penalty0 211--218, 2007.
+\newblock \doi{10.1016/S1553-7250(07)33025-0}.
+
 \bibitem[Gupta and Denton(2008)]{GuptaDenton2008}
 Diwakar Gupta and Brian Denton.
 \newblock Appointment scheduling in health care: Challenges and opportunities.
 \newblock \emph{IIE Transactions}, 40\penalty0 (9):\penalty0 800--819, 2008.
 \newblock \doi{10.1080/07408170802165880}.
+
+\bibitem[Hodkinson et~al.(2022)Hodkinson, Zhou, Johnson, Geraghty, Riley, Zhou, Panagopoulou, Chew-Graham, Peters, Esmail, and Panagioti]{HodkinsonZhouJohnsonEtAl2022}
+Alexander Hodkinson, Anli Zhou, Judith Johnson, Keith Geraghty, Ruth Riley, Andrew Zhou, Efharis Panagopoulou, Carolyn~A. Chew-Graham, David Peters, Aneez Esmail, and Maria Panagioti.
+\newblock Associations of physician burnout with career engagement and quality of patient care: Systematic review and meta-analysis.
+\newblock \emph{BMJ}, 378:\penalty0 e070442, 2022.
+\newblock \doi{10.1136/bmj-2022-070442}.
 
 \bibitem[Hulshof et~al.(2012)Hulshof, Kortbeek, Boucherie, Hans, and Bakker]{Hulshof2012}
 Peter J.~H. Hulshof, Nikky Kortbeek, Richard~J. Boucherie, Elias~W. Hans, and Piet J.~M. Bakker.
@@ -87,11 +148,29 @@ Peter J.~H. Hulshof, Nikky Kortbeek, Richard~J. Boucherie, Elias~W. Hans, and Pi
 \newblock \emph{Health Systems}, 1\penalty0 (2):\penalty0 129--175, 2012.
 \newblock \doi{10.1057/hs.2012.18}.
 
+\bibitem[Irving et~al.(2017)Irving, Neves, Dambha-Miller, Oishi, Tagashira, Verho, and Holden]{IrvingNevesDambhaMillerEtAl2017}
+Greg Irving, Ana~Luisa Neves, Hajira Dambha-Miller, Ai~Oishi, Hiroko Tagashira, Anistasiya Verho, and John Holden.
+\newblock International variations in primary care physician consultation time: A systematic review of 67 countries.
+\newblock \emph{BMJ Open}, 7\penalty0 (10):\penalty0 e017902, 2017.
+\newblock \doi{10.1136/bmjopen-2017-017902}.
+
 \bibitem[Kc and Terwiesch(2009)]{KcTerwiesch2009}
 Diwas~S. Kc and Christian Terwiesch.
 \newblock Impact of workload on service time and patient safety: An econometric analysis of hospital operations.
 \newblock \emph{Management Science}, 55\penalty0 (9):\penalty0 1486--1498, 2009.
 \newblock \doi{10.1287/mnsc.1090.1037}.
+
+\bibitem[Kim et~al.(2015)Kim, Vel, Whitt, and Cha]{KimVelWhittCha2015}
+Song~Hee Kim, Ponni Vel, Ward Whitt, and Won~Chul Cha.
+\newblock Poisson and non-poisson properties in appointment-generated arrival processes: The case of an endocrinology clinic.
+\newblock \emph{Operations Research Letters}, 43\penalty0 (3):\penalty0 247--253, 2015.
+\newblock \doi{10.1016/j.orl.2015.02.008}.
+
+\bibitem[Klassen and Yoogalingam(2009)]{KlassenYoogalingam2009}
+Kenneth~J. Klassen and Reena Yoogalingam.
+\newblock Improving performance in outpatient appointment services with a simulation optimization approach.
+\newblock \emph{Production and Operations Management}, 18\penalty0 (4):\penalty0 447--458, 2009.
+\newblock \doi{10.1111/j.1937-5956.2009.01021.x}.
 
 \bibitem[Kuiper et~al.(2021)Kuiper, de~Mast, and Mandjes]{KuiperDeMastMandjes2021}
 Alex Kuiper, Jeroen de~Mast, and Michel Mandjes.
@@ -105,11 +184,53 @@ Corine Laan, Maartje van~de Vrugt, Jan Olsman, and Richard~J. Boucherie.
 \newblock \emph{Health Systems}, 7\penalty0 (2):\penalty0 148--159, 2018.
 \newblock \doi{10.1080/20476965.2017.1403675}.
 
-\bibitem[Panagioti et~al.(2018)Panagioti, Geraghty, Johnson, Zhou, Panagopoulou, Chew-Graham, Peters, Hodkinson, Riley, and Esmail]{PanagiotiGeraghtyJohnsonEtAl2018}
-Maria Panagioti, Keith Geraghty, Judith Johnson, Anli Zhou, Efharis Panagopoulou, Carolyn Chew-Graham, David Peters, Alexander Hodkinson, Ruth Riley, and Aneez Esmail.
-\newblock Association between physician burnout and patient safety, professionalism, and patient satisfaction: A systematic review and meta-analysis.
-\newblock \emph{JAMA Internal Medicine}, 178\penalty0 (10):\penalty0 1317--1331, 2018.
-\newblock \doi{10.1001/jamainternmed.2018.3713}.
+\bibitem[Lemon and Smith(2014)]{LemonSmith2014}
+Thomas~I. Lemon and Rebecca~H. Smith.
+\newblock Consultation content not consultation length improves patient satisfaction.
+\newblock \emph{Journal of Family Medicine and Primary Care}, 3\penalty0 (4):\penalty0 333--339, 2014.
+\newblock \doi{10.4103/2249-4863.148102}.
+
+\bibitem[Le{\'o}n-Garc{\'i}a et~al.(2023)Le{\'o}n-Garc{\'i}a, Wieringa, Espinoza~Su{\'a}rez, Hern{\'a}ndez-Leal, Villanueva, Ospina, Hidalgo, Prokop, Calder{\'o}n, LeBlanc, Zeballos-Palacios, Brito, and Montori]{LeonGarciaWieringaEspinozaEtAl2023}
+Montserrat Le{\'o}n-Garc{\'i}a, Thomas~H. Wieringa, Nataly~R. Espinoza~Su{\'a}rez, Mar{\'i}a~Jos{\'e} Hern{\'a}ndez-Leal, Gemma Villanueva, Naykky~Singh Ospina, Jessica Hidalgo, Larry~J. Prokop, Claudio~Rocha Calder{\'o}n, Annie LeBlanc, Claudia Zeballos-Palacios, Juan~Pablo Brito, and Victor~M. Montori.
+\newblock Does the duration of ambulatory consultations affect the quality of healthcare? a systematic review.
+\newblock \emph{BMJ Open Quality}, 12\penalty0 (4):\penalty0 e002311, 2023.
+\newblock \doi{10.1136/bmjoq-2023-002311}.
+
+\bibitem[Liu et~al.(2010)Liu, Ziya, and Kulkarni]{LiuZiyaKulkarni2010}
+Nan Liu, Serhan Ziya, and Vidyadhar~G. Kulkarni.
+\newblock Dynamic scheduling of outpatient appointments under patient no-shows and cancellations.
+\newblock \emph{Manufacturing \& Service Operations Management}, 12\penalty0 (2):\penalty0 347--364, 2010.
+\newblock \doi{10.1287/msom.1090.0272}.
+
+\bibitem[Long et~al.(2023)Long, Sim, and Zhou]{LongSimZhou2023}
+Daniel~Zhuoyu Long, Melvyn Sim, and Minglong Zhou.
+\newblock Robust satisficing.
+\newblock \emph{Operations Research}, 71\penalty0 (1):\penalty0 61--82, 2023.
+\newblock \doi{10.1287/opre.2021.2238}.
+
+\bibitem[Manderson et~al.(2025)Manderson, Taylor, Lewis, and Harding]{MandersonTaylorLewisEtAl2025}
+Kim Manderson, Nicholas~F. Taylor, Annie Lewis, and Katherine~E. Harding.
+\newblock Service-level interventions to reduce waiting time in outpatient and community health settings may be sustained: A systematic review.
+\newblock \emph{BMJ Open Quality}, 14\penalty0 (1):\penalty0 e003235, 2025.
+\newblock \doi{10.1136/bmjoq-2024-003235}.
+
+\bibitem[Moons et~al.(2025)Moons, Damen, Kaul, Hooft, Andaur~Navarro, Dhiman, Beam, Van~Calster, Celi, Denaxas, Denniston, Ghassemi, Heinze, Kengne, Maier-Hein, Liu, Logullo, McCradden, Liu, Oakden-Rayner, Singh, Ting, Wynants, Yang, Reitsma, Riley, Collins, and van Smeden]{MoonsDamenKaulEtAl2025}
+Karel G.~M. Moons, Johanna A.~A. Damen, T.~Kaul, Lotty Hooft, Constanza~L. Andaur~Navarro, Paula Dhiman, Andrew~L. Beam, Ben Van~Calster, Leo~Anthony Celi, Spiros Denaxas, Alastair~K. Denniston, Marzyeh Ghassemi, Georg Heinze, Andre~Pascal Kengne, Lena Maier-Hein, Xiaoxuan Liu, Patricia Logullo, Melissa~D. McCradden, Nan Liu, Luke Oakden-Rayner, Karandeep Singh, Daniel S.~W. Ting, Laure Wynants, Bin Yang, Johannes~B. Reitsma, Richard~D. Riley, Gary~S. Collins, and Maarten van Smeden.
+\newblock {PROBAST+AI}: An updated quality, risk of bias, and applicability assessment tool for prediction models using regression or artificial intelligence methods.
+\newblock \emph{BMJ}, 388:\penalty0 e082505, 2025.
+\newblock \doi{10.1136/bmj-2024-082505}.
+
+\bibitem[Murray and Berwick(2003)]{MurrayBerwick2003}
+Mark Murray and Donald~M. Berwick.
+\newblock Advanced access: Reducing waiting and delays in primary care.
+\newblock \emph{JAMA}, 289\penalty0 (8):\penalty0 1035--1040, 2003.
+\newblock \doi{10.1001/jama.289.8.1035}.
+
+\bibitem[Nguyen et~al.(2024)Nguyen, Honcharov, Ballard, Satterwhite, McDermott, and Sarkar]{NguyenHoncharovBallardEtAl2024}
+Michelle-Linh~T. Nguyen, Vlad Honcharov, Dawna Ballard, Shannon Satterwhite, Aoife~M. McDermott, and Urmimala Sarkar.
+\newblock Primary care physicians' experiences with and adaptations to time constraints.
+\newblock \emph{JAMA Network Open}, 7\penalty0 (4):\penalty0 e248827, 2024.
+\newblock \doi{10.1001/jamanetworkopen.2024.8827}.
 
 \bibitem[Prasad et~al.(2020)Prasad, Poplau, Brown, Yale, Grossman, Varkey, Williams, Neprash, and Linzer]{PrasadPoplauBrownEtAl2020}
 Kriti Prasad, Sara Poplau, Roger Brown, Steven Yale, Erica Grossman, Anita~B. Varkey, Eric~S. Williams, Hannah~T. Neprash, and Mark Linzer.
@@ -123,6 +244,12 @@ Lawrence~W. Robinson and Rachel~R. Chen.
 \newblock \emph{IIE Transactions}, 35\penalty0 (3):\penalty0 295--307, 2003.
 \newblock \doi{10.1080/07408170304367}.
 
+\bibitem[Rose et~al.(2011)Rose, Ross, and Horwitz]{RoseRossHorwitz2011}
+Kathryn~D. Rose, Joseph~S. Ross, and Leora~I. Horwitz.
+\newblock Advanced access scheduling outcomes: A systematic review.
+\newblock \emph{Archives of Internal Medicine}, 171\penalty0 (13):\penalty0 1150--1159, 2011.
+\newblock \doi{10.1001/archinternmed.2011.168}.
+
 \bibitem[Ross(2014)]{Ross2014}
 Sheldon~M. Ross.
 \newblock \emph{Introduction to Probability Models}.
@@ -134,11 +261,40 @@ Peter~A. Salzarulo, Kurt~M. Bretthauer, Murray~J. C{\^o}t{\'e}, and Kenneth~L. S
 \newblock \emph{Production and Operations Management}, 20\penalty0 (6):\penalty0 848--859, 2011.
 \newblock \doi{10.1111/j.1937-5956.2010.01210.x}.
 
+\bibitem[Samorani and LaGanga(2015)]{SamoraniLaGanga2015}
+Michele Samorani and Linda~R. LaGanga.
+\newblock Outpatient appointment scheduling given individual day-dependent no-show predictions.
+\newblock \emph{European Journal of Operational Research}, 240\penalty0 (1):\penalty0 245--257, 2015.
+\newblock \doi{10.1016/j.ejor.2014.06.034}.
+
+\bibitem[Vasey et~al.(2022)Vasey, Nagendran, Campbell, Clifton, Collins, Denaxas, Denniston, Faes, Geerts, Ibrahim, Liu, Mateen, Mathur, McCradden, Morgan, Ordish, Rogers, Saria, Ting, Watkinson, Weber, Wheatstone, and McCulloch]{VaseyNagendranCampbellEtAl2022}
+Baptiste Vasey, Myura Nagendran, Bruce Campbell, David~A. Clifton, Gary~S. Collins, Spiros Denaxas, Alastair~K. Denniston, Livia Faes, Bart Geerts, Mudathir Ibrahim, Xiaoxuan Liu, Bilal~A. Mateen, Piyush Mathur, Melissa~D. McCradden, Lauren Morgan, Johan Ordish, Campbell Rogers, Suchi Saria, Daniel S.~W. Ting, Peter Watkinson, Wim Weber, Peter Wheatstone, and Peter McCulloch.
+\newblock Reporting guideline for the early-stage clinical evaluation of decision support systems driven by artificial intelligence: {DECIDE-AI}.
+\newblock \emph{Nature Medicine}, 28:\penalty0 924--933, 2022.
+\newblock \doi{10.1038/s41591-022-01772-9}.
+
+\bibitem[Wilson and Childs(2002)]{WilsonChilds2002}
+Andrew Wilson and Susan Childs.
+\newblock The relationship between consultation length, process and outcomes in general practice: A systematic review.
+\newblock \emph{British Journal of General Practice}, 52\penalty0 (485):\penalty0 1012--1020, 2002.
+
+\bibitem[Wolff et~al.(2019)Wolff, Moons, Riley, Whiting, Westwood, Collins, Reitsma, Kleijnen, and Mallett]{WolffMoonsRileyEtAl2019}
+Robert~F. Wolff, Karel G.~M. Moons, Richard~D. Riley, Penny~F. Whiting, Marie Westwood, Gary~S. Collins, Johannes~B. Reitsma, Jos Kleijnen, and Sue Mallett.
+\newblock {PROBAST}: A tool to assess the risk of bias and applicability of prediction model studies.
+\newblock \emph{Annals of Internal Medicine}, 170\penalty0 (1):\penalty0 51--58, 2019.
+\newblock \doi{10.7326/M18-1376}.
+
 \bibitem[Xie et~al.(2023)Xie, Loke, Sim, and Lam]{XieLokeSimLam2023}
 Jingui Xie, Gar~Goei Loke, Melvyn Sim, and Shao~Wei Lam.
 \newblock The analytics of bed shortages: Coherent metric, prediction, and optimization.
 \newblock \emph{Operations Research}, 71\penalty0 (1):\penalty0 23--46, 2023.
 \newblock \doi{10.1287/opre.2021.2231}.
+
+\bibitem[Youn et~al.(2022)Youn, Geismar, and Pinedo]{YounGeismarPinedo2022}
+Seokjun Youn, H.~Neil Geismar, and Michael Pinedo.
+\newblock Planning and scheduling in healthcare for better care coordination: Current understanding, trending topics, and future opportunities.
+\newblock \emph{Production and Operations Management}, 31\penalty0 (12):\penalty0 4407--4423, 2022.
+\newblock \doi{10.1111/poms.13867}.
 
 \bibitem[Zhang et~al.(2017)Zhang, Shen, and Erdogan]{ZhangShenErdogan2017}
 Yiling Zhang, Siqian Shen, and S.~Ayca Erdogan.

@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering
+\small
+\caption{模型派生高压标签的时间前推回放（区间为按测试日期聚类bootstrap的95\%区间）}
+\label{tab:predictive-backtest}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrlll}
+\toprule
+样本窗口 & 测试状态 & 标签高压 & 候选信号 & TP & FP & FN & P & R & F1 \\
+\midrule
+2023年2月 & 9,405 & 221 & 148 & 136 & 12 & 85 & 91.9\% [90.2, 93.9] & 61.5\% [53.9, 68.6] & 0.74 \\
+2023年8月 & 14,294 & 441 & 342 & 322 & 20 & 119 & 94.2\% [90.7, 96.2] & 73.0\% [66.9, 77.0] & 0.82 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
