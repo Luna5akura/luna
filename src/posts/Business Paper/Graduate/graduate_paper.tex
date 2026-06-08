@@ -1,9 +1,10 @@
-\documentclass[12pt,a4paper]{ctexart}
+\documentclass[a4paper,zihao=-4]{ctexart}
 
 \usepackage{geometry}
 \usepackage{setspace}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{caption}
@@ -14,15 +15,73 @@
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 
-\geometry{left=2.8cm,right=2.6cm,top=2.8cm,bottom=2.8cm}
-\setstretch{1.5}
+\geometry{
+  left=3cm,
+  right=3cm,
+  top=2.5cm,
+  bottom=2.5cm,
+  headheight=15pt,
+  headsep=0.5cm,
+  footskip=1.75cm
+}
+\setstretch{1.39}
 \emergencystretch=3em
 \graphicspath{{figures/}}
 \setlist{nosep}
+\setlength{\parindent}{2em}
+\pagestyle{plain}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Var}{\operatorname{Var}}
 \newcommand{\RSI}{\operatorname{RSI}}
+\providecommand{\I}{I}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+\ctexset{
+  section = {
+    format = \bfseries\songti\zihao{3},
+    name = {},
+    number = \thesection,
+    aftername = \quad,
+    beforeskip = 18bp,
+    afterskip = 12bp,
+    break = \clearpage
+  },
+  subsection = {
+    format = \bfseries\songti\zihao{-3},
+    name = {},
+    number = \thesubsection,
+    aftername = \quad,
+    beforeskip = 12bp,
+    afterskip = 6bp
+  },
+  subsubsection = {
+    format = \bfseries\songti\zihao{4},
+    name = {},
+    number = \thesubsubsection,
+    aftername = \quad,
+    beforeskip = 6bp,
+    afterskip = 6bp
+  }
+}
+
+\DeclareCaptionLabelFormat{fdulabel}{#1#2}
+\captionsetup{
+  font={small},
+  labelfont=bf,
+  labelformat=fdulabel,
+  labelsep=quad
+}
+\captionsetup[figure]{justification=centering,singlelinecheck=true}
+\captionsetup[table]{justification=raggedright,singlelinecheck=false}
+\renewcommand{\bibfont}{\zihao{5}\setstretch{1.15}}
 
 \title{\bfseries 基于资源满意度的门诊调度系统研究}
 \author{作者：\underline{\hspace{3cm}} \quad 指导教师：\underline{\hspace{3cm}}}
@@ -30,111 +89,237 @@
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{3cm}
+  {\zihao{2}\bfseries 基于资源满意度的门诊调度系统研究\par}
+  \vspace{4cm}
+  {\zihao{4}作者：\underline{\hspace{4cm}}\par}
+  \vspace{1cm}
+  {\zihao{4}指导教师：\underline{\hspace{4cm}}\par}
+  \vfill
+  {\zihao{4}2026年5月\par}
+\end{titlepage}
 
-\begin{abstract}
-大型医院门诊系统长期面临患者集中到达、服务时间随机、诊室能力不同以及医生赶工可能带来质量风险之间的多重权衡。
+\pagenumbering{Roman}
+\setcounter{page}{1}
+\tableofcontents
+\clearpage
 
-\textbf{关键词：} 门诊调度；资源满意度；
-\end{abstract}
-
-\newpage
+\phantomsection
+\addcontentsline{toc}{section}{摘要}
 \begin{center}
-\textbf{\Large Outpatient Pressure-Indicator Prototype, Temporally Ordered Replay, and Operational Proxy Checks Inspired by Resource Satisficing}
+{\zihao{3}\bfseries 摘要}
+\end{center}
+
+大型医院门诊系统长期面临患者集中到达、服务时间随机、预约容量开放、诊室能力不同以及医生赶工风险之间的多重权衡。传统门诊预约调度研究多以平均等待时间、医生空闲时间、加班时间或期望成本为目标，能够刻画常态效率；本文进一步聚焦高峰期尾部拥堵、后续预约开放数量和服务速度压缩边界之间的联动关系。本文借鉴资源满意度和风险指数思想，构建门诊系统压力指标原型，将候诊工作量、随机服务需求、后续预约数量、服务能力释放和赶工惩罚统一到同一风险度量框架中。模型部分依次建立随机服务时长下的单诊室压力模型、加入后续预约数量决策的单诊室模型，以及保留多诊室可行分流并加入后续预约数量决策的协同模型，并在正态近似下将指数型风险约束转化为可解释的确定性均值--方差约束。进一步地，本文将模型输出的服务工作量决策映射为平均单人服务时长，并将后续预约开放数量作为并列策略输出，构造同时使用排队状态和预约簿状态的联合决策函数。
+
+实证部分使用2023年2月1日至2月14日和2023年8月1日至8月14日两个门诊运营数据窗口，完成数据清洗、变量构造、描述统计、参数标定、策略输出构造和决策函数拟合。结果显示，医生-时段挂号流入存在明显过度离散，服务时长分布右偏，8月窗口等待压力高于2月窗口；预约记录中的区间人次和预约数可进一步构造后续预约容量、已预约数量、剩余可开放号源和预约请求代理。本文以未来4个半小时窗口作为近期预约窗口，分别拟合Model 1、Model 2和Model 3对应的反馈决策函数。结果显示，Model 1服务时长函数在2月和8月的$R^2$分别为0.404和0.384；Model 2纳入近期预约簿状态后，服务时长函数$R^2$为0.458和0.423，预约开放函数$R^2$为0.288和0.331；Model 3进一步纳入系统层压力和号源状态后，服务时长函数RMSE为2.334和2.473，预约开放函数$R^2$为0.340和0.367。上述结果说明，现有数据能够支持按模型结构构造方向受约束、可解释的服务速度与后续窗口开放联合策略样本。
+
+\textbf{关键词：} 门诊调度；资源满意度；系统压力；预约开放数量；联合决策函数
+
+\clearpage
+
+\phantomsection
+\addcontentsline{toc}{section}{Abstract}
+\begin{center}
+{\zihao{3}\bfseries Outpatient Pressure-Indicator Prototype and Joint Feedback Inspired by Resource Satisficing}
 \end{center}
 
 \noindent\textbf{Abstract:}
-Outpatient departments in large hospitals must balance concentrated patient arrivals, random consultation times, heterogeneous clinic capacity, and the operational risk induced by excessive service acceleration. Classical appointment scheduling and queueing models usually optimize average waiting time, physician idle time, overtime, or expected cost. These criteria are useful for normal operating efficiency but are less sensitive to tail congestion and rarely state the operational boundary of rushed consultations. Inspired by resource satisficing and riskiness-index-based healthcare resource planning, this thesis develops a prototype outpatient pressure indicator rather than a clinically validated warning model. The decision variable is defined as standard service workload released per time slot, and the rushing penalty is interpreted as an equivalent-workload proxy for service-pace risk rather than a direct clinical-quality estimate. A progressive model family is proposed: a single-clinic baseline model with fixed service times, a single-clinic stochastic-service model, and a multi-clinic extension with routing feasibility constraints. To improve interpretability, a dimensional mapping from workload capacity to average service-pace signals is introduced, and queue-state feedback rules are constructed only as approximations to model-implied signals.
+Outpatient departments in large hospitals must balance concentrated patient arrivals, random consultation times, appointment-capacity release, heterogeneous clinic capacity, and the operational risk induced by excessive service acceleration. Classical appointment scheduling and queueing models usually optimize average waiting time, physician idle time, overtime, or expected cost. This thesis further focuses on the joint effect of tail congestion, future appointment release quantities, and the operational boundary of rushed consultations. Inspired by resource satisficing and riskiness-index-based healthcare resource planning, this thesis develops a prototype outpatient pressure indicator for internal operations monitoring. The service-workload decision is interpreted as standard workload released per time slot, and the rushing penalty is interpreted as an equivalent-workload representation of service-pace risk. A progressive model family is proposed: a single-clinic stochastic-service pressure model, a single-clinic model with future appointment-quantity decisions, and a multi-clinic model that preserves feasible routing while adding future appointment-quantity decisions. Under a normal approximation, the exponential risk constraint is converted into a deterministic mean--variance expression. To improve interpretability, a dimensional mapping from workload capacity to average service duration is introduced, and feedback rules for both service duration and future appointment release are formulated.
 
-\noindent Empirically, two outpatient data windows, February 1--14 and August 1--14, 2023, are used for descriptive analysis, parameter calibration, temporally ordered replay, baseline-rule comparison, threshold-sensitivity analysis, and operational waiting-proxy checks. The results show strong over-dispersion in half-hour registration-inflow proxies, right-skewed service-duration proxies, and substantial cross-physician heterogeneity that may reflect departments, case mix, and timestamp practices. Data-quality diagnostics show that the service-duration proxy is available for 88.1\% and 92.8\% of visits, while call-to-consultation waiting time is available for only 39.1\% and 52.4\%. At the doctor-date-half-hour level, the first seven days are used as the calibration window and the last seven days as the test window. The replay outcome is not an external clinical endpoint; it is a model-derived high-pressure label obtained by applying the same local risk constraint under realized registration-inflow proxies. Under this label, the historical-average local-risk rule achieves precision of 91.9\% and 94.2\% and recall of 61.5\% and 73.0\% in the two test windows, with date-cluster bootstrap 95\% intervals of 90.2\%--93.9\% and 90.7\%--96.2\% for precision and 53.9\%--68.6\% and 66.9\%--77.0\% for recall. Baseline comparisons show that backlog-only and unadjusted-load thresholds obtain higher recall but many more false positives, while an appointment-count-calibrated rule does not outperform the historical-average rule in this short sample. Historical registration-inflow forecasts underpredict realized inflow proxies, with biases of -0.49 and -0.42 patients per state. Flagged states have higher registration-to-consultation waiting-time proxies than unflagged states, but call-to-consultation waiting results are unstable. These estimates should be interpreted as internal consistency and dashboard-candidate evidence, not as causal evidence that shortening consultations improves outpatient performance.
+\noindent Empirically, two outpatient data windows, February 1--14 and August 1--14, 2023, are used for data cleaning, descriptive analysis, parameter calibration, policy-output construction, and decision-function fitting. The results show clear over-dispersion in half-hour registration-inflow proxies, right-skewed service-duration proxies, and higher registration-to-consultation waiting pressure in the August window. Appointment records provide slot capacity and booked quantity, from which near-horizon booking load, remaining releasable capacity, and request proxies are constructed over four future half-hour slots. The empirical analysis fits model-specific feedback rules based on risk-feasible policy outputs generated from the deterministic risk constraints. The Model 1 service-duration rule obtains $R^2$ values of 0.404 and 0.384 in the two windows. After adding appointment-book states, the Model 2 service-duration rule obtains $R^2$ values of 0.458 and 0.423, while its appointment-release rule obtains $R^2$ values of 0.288 and 0.331. After further adding system-level pressure and capacity states, the Model 3 service-duration rule obtains RMSE values of 2.334 and 2.473, and its appointment-release rule obtains $R^2$ values of 0.340 and 0.367. These findings suggest that the available data can support interpretable, sign-constrained joint policy samples for service-pace adjustment and future appointment release. The proposed model serves as an internal pressure-monitoring and dashboard-candidate tool.
 
-\noindent\textbf{Keywords:} outpatient scheduling; resource satisficing; queueing risk; service-time feedback; feasible routing; healthcare operations
+\noindent\textbf{Keywords:} outpatient scheduling; resource satisficing; queueing risk; appointment release quantity; joint decision function; feasible routing
 
-\newpage
-\tableofcontents
-\newpage
+\clearpage
+
+\phantomsection
+\section*{符号说明}
+\addcontentsline{toc}{section}{符号说明}
+
+本表列示正文模型和实证分析中使用的主要符号。同一符号带下标$i$时表示诊室或医生层面的对应变量，带下标$t$或$\tau$时表示日内决策时段。
+
+\begingroup
+\small
+\setstretch{1.15}
+\begin{longtable}{>{\centering\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.48\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}}
+  \toprule
+  符号 & 含义 & 单位或说明 \\
+  \midrule
+  \endfirsthead
+  \toprule
+  符号 & 含义 & 单位或说明 \\
+  \midrule
+  \endhead
+  \bottomrule
+  \endfoot
+  $T$ & 一天内的决策时段总数 & 个 \\
+  $\Delta$ & 单个决策时段的长度 & 分钟 \\
+  $t,\tau$ & 日内决策时段索引 & $1,\ldots,T$ \\
+  $d$ & 样本日期或观测单元索引 & -- \\
+  $I$ & 诊室集合，$i\in I$表示诊室索引 & -- \\
+  $H,\mathcal H$ & 后续预约决策窗口长度及其索引集合 & 个 \\
+  $W_t,W_{it}$ & 时段开始时单诊室或诊室$i$的候诊工作量 & 分钟 \\
+  $W_{d\tau}$ & 样本$d$在时段$\tau$的排队时长或待消化工作量 & 分钟 \\
+  $Q_{d\tau}$ & 医生-日期-时段开始时已挂号但尚未开始就诊的患者人数 & 人 \\
+  $c_t,c_{it}$ & 时段内释放的服务工作量 & 分钟 \\
+  $c_{\min},c_{\max}$ & 服务工作量的下界与上界 & 分钟 \\
+  $c_0,c_{i0}$ & 舒适服务速度基准对应的服务工作量 & 分钟 \\
+  $R_t,z_t$ & 时段$t$新出现的预约请求量及待安排请求量 & 人 \\
+  $K_{t,h},B_{t,h},G_{t,h}$ & 距当前$h$个时段后的预约容量、已预约数量和剩余可开放数量 & 人 \\
+  $u_{t,h},u_{i,t,h}$ & 安排到后续第$h$个时段的预约数量 & 人 \\
+  $\tilde A_t,\tilde A_{it}$ & 时段内随机需求流入人数 & 人 \\
+  $\lambda_t$ & 时段$t$开始前可预测的条件平均流入率 & 人/时段 \\
+  $\kappa_t$ & 流入离散系数，$\Var(\tilde A_t)/\E(\tilde A_t)$ & 无量纲 \\
+  $\lambda_t^0,\kappa_t^0$ & 外生基础流入均值及离散系数 & 参数 \\
+  $q_h,q_{i,h}$ & 提前$h$个时段预约患者的实际到达概率 & 概率 \\
+  $\Lambda_t,\Lambda_{it}$ & 纳入后续预约数量后的到达均值 & 人/时段 \\
+  $\Omega_t,\Omega_{it}$ & 纳入后续预约数量后的到达方差 & 人$^2$ \\
+  $S_k,S_{ik}$ & 第$k$名患者的服务需求或诊室$i$患者的服务需求 & 分钟 \\
+  $m,m_i$ & 单名患者服务需求均值 & 分钟 \\
+  $v,v_i$ & 单名患者服务需求方差 & 分钟$^2$ \\
+  $\tilde D_t,\tilde D_{it}$ & 时段内随机总服务需求 & 分钟 \\
+  $h(c_t)$ & 超过舒适服务速度后的赶工惩罚函数 & 等价工作量 \\
+  $\gamma,\gamma_i$ & 赶工惩罚系数 & 参数 \\
+  $L_t,L_t^{(1)},L_t^{(2)},L_{it}^{(3)}$ & 系统压力及不同模型下的压力变量 & 等价工作量 \\
+  $C_{\mathrm{safe}},C_{\mathrm{safe},i}$ & 压力风险安全阈值 & 等价工作量 \\
+  $\nu$ & 风险敏感度参数 & 参数 \\
+  $\rho$ & 模型中待最小化的风险水平 & 参数 \\
+  $\alpha,\beta$ & 待安排预约请求和安排到较远窗口的惩罚权重 & 参数 \\
+  $\delta_t^{(2)},\delta_t^{(3)}$ & Model 2和Model 3中的门诊调度决策向量 & 决策向量 \\
+  $\mathcal A_t^{(2)},\mathcal A_t^{(3)}$ & Model 2和Model 3中的可行调度决策集合 & 集合 \\
+  $\RSI_\nu(\cdot)$ & 资源满意度启发的压力风险指数 & 指标 \\
+  $p_{it}$ & 时段$t$分配给诊室$i$的患者比例 & $[0,1]$ \\
+  $e_{it}$ & 诊室$i$在时段$t$是否可接收该类需求 & 0--1变量 \\
+  $\omega_{it}$ & 诊室$i$在时段$t$的到达方差 & 人$^2$ \\
+  $\mu_X,\sigma_X^2$ & 正态近似下随机变量$X$的均值和方差 & 视变量而定 \\
+  $B_{d\tau}^{\mathrm{near}},G_{d\tau}^{\mathrm{near}}$ & 样本状态下近期已预约工作量和近期剩余可开放号源 & 人或分钟 \\
+  $s_{d\tau}^{\star}$ & 模型派生的目标平均单人服务时长 & 分钟/人 \\
+  $u_{d\tau}^{\star}$ & 模型派生的后续预约开放数量 & 人 \\
+  $u_{i,d,\tau,h}^{\mathrm{hist}}$ & 由预约记录构造的历史预约数量策略输出代理 & 人 \\
+  $F_{\tau}^{(1)},F_{\tau}^{(2)},F_{\tau}^{(3)}$ & Model 1--3对应的服务时长反馈决策函数 & 分钟/人 \\
+  $G_{\tau}^{(2)},G_{\tau}^{(3)}$ & Model 2--3对应的后续预约开放决策函数 & 人 \\
+  $W^{\mathrm{sys}},B^{\mathrm{sys}},G^{\mathrm{sys}},R^{\mathrm{sys}}$ & 同一日期和时段内的系统层状态汇总 & 多诊室状态 \\
+  $\theta_{j\tau}$ & 时段$\tau$下模型反馈函数$j$的参数向量 & 参数 \\
+  $\hat m,\hat v,\hat\kappa$ & 样本估计得到的服务时长均值、方差和流入离散系数 & 估计量 \\
+  $\E(\cdot),\Var(\cdot)$ & 数学期望和方差算子 & 算子 \\
+\end{longtable}
+\endgroup
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \section{绪论}
 
 \subsection{研究背景与意义}
 
-门诊预约与诊疗过程是体现医院服务能力和资源利用效率的重要环节，其运行表现直接影响患者等待体验、医生工作负荷和诊室服务能力。门诊通常以半日或数小时安排诊次，并将医生可用时间划分为若干预约时段；因此，患者到达、服务时长等短周期波动，会直接传导为候诊积压、医生空闲或加班\citep{FetterThompson1966,KuiperDeMastMandjes2021,LaanVanDeVrugtOlsmanBoucherie2018}。同时，患者类别、检查依赖、服务时间差异会进一步放大门诊流程的不确定性\citep{SalzaruloBretthauerCoteSchultz2011,ChandMoskowitzNorrisShadeWillis2009}。已有门诊预约调度研究表明，预约规则的核心在于同步随机需求与有限服务能力，并在患者等待、医生空闲、资源利用和服务质量之间形成权衡\citep{Bailey1952,CayirliVeral2003,GuptaDenton2008,AhmadiJavid2017}。
+门诊预约与诊疗过程是体现医院服务能力和资源利用效率的重要环节，其运行表现直接影响患者等待体验、医生工作负荷和诊室服务能力。门诊通常以半日或数小时安排诊次，并将医生可用时间划分为若干预约时段；因此，患者到达、服务时长、已预约数量和可开放号源等短周期波动，会直接传导为候诊积压、医生空闲或加班\citep{FetterThompson1966,KuiperDeMastMandjes2021,LaanVanDeVrugtOlsmanBoucherie2018}。同时，患者类别、检查依赖、服务时间差异会进一步放大门诊流程的不确定性\citep{SalzaruloBretthauerCoteSchultz2011,ChandMoskowitzNorrisShadeWillis2009}。已有门诊预约调度研究表明，预约规则的核心在于同步随机需求与有限服务能力，并在患者等待、医生空闲、资源利用和服务质量之间形成权衡\citep{Bailey1952,CayirliVeral2003,GuptaDenton2008,AhmadiJavid2017}。
 
-然而，门诊服务能力的调节不能仅由服务速度的调整来完成。医疗运营研究表明，服务人员会在系统负荷上升时主动压缩服务时间或改变工作方式，但持续高负荷可能削弱服务效率，并伴随质量风险上升\citep{KcTerwiesch2009,BerryJaekerTucker2017}。
+门诊服务能力的调节同时包含服务速度和后续预约开放。预约系统一方面决定患者何时进入后续诊疗窗口，另一方面也决定当前拥堵向未来时段的传导方式。将后续预约数量纳入决策变量，有助于刻画“今天开放多少未来号源”对后续排队压力的影响。医疗运营研究表明，服务人员会在系统负荷上升时主动压缩服务时间或改变工作方式，持续高负荷也会带来服务效率和质量风险方面的管理压力\citep{KcTerwiesch2009,BerryJaekerTucker2017}。
 
-进一步地，医疗资源配置中的风险并不能由平均利用率或平均等待时间充分刻画。床位容量研究已经表明，平均占用率相同的系统可能具有截然不同的床位不可得风险和延误风险；若以服务质量为目标，容量规划应着重关注患者能否及时获得适当资源\citep{Green2002,BagustPlacePosnett1999}。近期医疗运营研究进一步发展出床位短缺指数和资源满意度模型，用以刻画资源短缺的概率、强度及尾部风险，并在多资源、多时段环境中实现风险均衡\citep{XieLokeSimLam2023,ZhouSimLam2022}。
+进一步地，医疗资源配置中的风险需要在平均利用率或平均等待时间之外刻画尾部拥堵。床位容量研究已经表明，平均占用率相同的系统可能具有不同的床位可得风险和延误风险；若以服务质量为目标，容量规划应着重关注患者能否及时获得适当资源\citep{Green2002,BagustPlacePosnett1999}。近期医疗运营研究进一步发展出床位短缺指数和资源满意度模型，用以刻画资源短缺的概率、强度及尾部风险，并在多资源、多时段环境中实现风险均衡\citep{XieLokeSimLam2023,ZhouSimLam2022}。
 
 \subsection{研究问题}
 
-现有文献已经广泛讨论了实时拥堵、服务能力调节和服务质量风险等问题，但如何在门诊场景构造尾部敏感的风险指标，并据此指导门诊服务速度，仍有待进一步研究。基于此，本旨在文回答以下问题：
+现有文献已经广泛讨论了实时拥堵、服务能力调节和服务质量风险等问题，但如何在门诊场景构造尾部敏感的风险指标，并据此指导门诊服务速度，仍有待进一步研究。基于此，本文旨在回答以下问题：
 
 \begin{enumerate}
-  \item 如何
+  \item 如何将候诊工作量、随机到达、随机服务时长和医生赶工风险统一为门诊系统压力，并构造尾部敏感的压力风险指标？
+  \item 如何将后续预约数量作为决策变量纳入门诊压力模型，使当前服务能力决策与未来号源开放决策能够共同反映系统压力？
+  \item 如何在随机服务时长、单诊室后续预约开放和多诊室可行分流场景下建立递进模型，并将指数型风险约束转化为可求解、可解释的确定性表达？
+  \item 如何将模型中的服务工作量决策映射为平均单人服务时长，并将后续预约数量决策转化为门诊现场可理解的预约开放提示？
+  \item 基于真实门诊运营时间戳数据，如何利用排队状态、预约簿状态和预约请求代理构造同时输出服务时长与后续开放数量的联合决策函数，并比较Model 1、Model 2和Model 3的策略拟合表现？
 \end{enumerate}
 
 \subsection{研究内容与方法}
 
-为探讨上述问题，本文的主要研究内容包括：梳理门诊预约调度、医疗资源风险度量和资源满意度模型的理论基础；构建刻画随机到达、随机服务时长、诊室异质性和赶工风险之间的关系的模型，并在正态近似下推导模型的确定性表达；构建使用赶工风险指导服务速率的模型，并使用医院门诊的就诊、预约和医生数据完成参数标定。最后，根据数据结果比较分析各种模型的表现。
+为探讨上述问题，本文的主要研究内容包括：梳理门诊预约调度、动态预约开放、医疗资源风险度量、资源满意度模型和状态依赖服务时间研究的理论基础；构建刻画随机到达、随机服务时长、后续预约数量、诊室异质性和赶工风险之间关系的模型，并在正态近似下推导模型的确定性表达；将模型输出的目标服务工作量转化为平均单人服务时长，将后续预约数量转化为号源开放提示，再使用医院门诊的就诊、预约和医生数据完成数据清洗、参数标定、描述统计以及三类模型反馈决策函数拟合比较。
 
 \subsection{研究创新点}
 
-在既有门诊预约调度、医疗资源风险度量和医生工作负荷研究基础上，本文的边际贡献主要体现在三个方面。第一，将门诊运行压力从患者等待或医生空闲等单一绩效指标拓展为包含候诊工作量、随机服务需求、服务能力释放和赶工风险代理的广义系统压力。第二，将资源满意度思想从住院床位等物理资源过载风险扩展到门诊服务能力压力刻画场景，构造尾部敏感的压力风险约束。第三，基于门诊运营时间戳数据，生成根据现场门诊排队情况指导服务速度的模型。
+在既有门诊预约调度、医疗资源风险度量和医生工作负荷研究基础上，本文的边际贡献主要体现在三个方面。第一，将门诊运行压力从患者等待或医生空闲等单一绩效指标拓展为包含候诊工作量、随机服务需求、后续预约数量、服务能力释放和赶工风险的系统压力。第二，将资源满意度思想扩展到门诊服务能力压力刻画场景，构造尾部敏感的压力风险约束，并将后续预约开放数量纳入压力传播过程。第三，将调度函数中的服务工作量决策转化为平均单人服务时长，将预约数量决策转化为号源开放提示，并基于真实门诊运营时间戳数据构造同时使用排队工作量、近期预约负荷、剩余号源和请求代理的联合决策函数，为门诊调度看板提供可解释的服务速度和预约开放建议。
 
 \section{文献综述}
 
 \subsection{门诊预约与动态调度研究}
 
-门诊预约调度研究长期围绕患者等待、医生空闲和加班之间的权衡展开。Bailey较早使用排队思想分析门诊预约系统\citep{Bailey1952}，Fetter和Thompson进一步指出预约间隔、服务时间、患者到达模式、爽约、临时到诊、医生到达和服务中断都会影响患者等待与医生空闲的关系\citep{FetterThompson1966}。Cayirli和Veral、Gupta和Denton以及Ahmadi-Javid等的综述表明，门诊预约研究已经形成包括排队模型、仿真、随机规划、启发式算法和动态决策在内的方法体系\citep{CayirliVeral2003,GuptaDenton2008,AhmadiJavid2017,Hulshof2012,YounGeismarPinedo2022}。在中国门诊情境中，网络预约系统能够减少无效等待，但非出勤仍会影响预约容量的实际释放\citep{CaoWanTuShangEtAl2011}。在具体模型上，Denton和Gupta将预约时间设计表述为随机规划问题\citep{DentonGupta2003}，Robinson和Chen提出了随机服务时间条件下的启发式规则\citep{RobinsonChen2003}，Klassen和Yoogalingam使用仿真优化评价随机预约规则\citep{KlassenYoogalingam2009}；近年研究则进一步处理同日请求、移动预约窗口、动态预约、患者迟到、爽约、取消、实时排序和分布鲁棒调度等问题\citep{BalasubramanianBiehlDaiMuriel2014,DaiGengXie2021,LaanVanDeVrugtOlsmanBoucherie2018,LiuZiyaKulkarni2010,SamoraniLaGanga2015,ZhangShenErdogan2017}。同时，门诊真实问题往往包含多目标、流程约束和组织边界，优化模型需要与实际诊室运行情境对齐\citep{KuiperDeMastMandjes2021}。这些研究为门诊调度建模提供了充分基础。
+门诊预约调度研究长期围绕患者等待、医生空闲和加班之间的权衡展开。Bailey较早使用排队思想分析门诊预约系统\citep{Bailey1952}，Fetter和Thompson进一步指出预约间隔、服务时间、患者到达模式、爽约、临时到诊、医生到达和服务中断都会影响患者等待与医生空闲的关系\citep{FetterThompson1966}。Cayirli和Veral、Gupta和Denton以及Ahmadi-Javid等的综述表明，门诊预约研究已经形成包括排队模型、仿真、随机规划、启发式算法和动态决策在内的方法体系\citep{CayirliVeral2003,GuptaDenton2008,AhmadiJavid2017,Hulshof2012,YounGeismarPinedo2022}。在中国门诊情境中，网络预约系统能够提升预约等待效率，非出勤会影响预约容量的实际释放\citep{CaoWanTuShangEtAl2011}。在具体模型上，Denton和Gupta将预约时间设计表述为随机规划问题\citep{DentonGupta2003}，Robinson和Chen提出了随机服务时间条件下的启发式规则\citep{RobinsonChen2003}，Klassen和Yoogalingam使用仿真优化评价随机预约规则\citep{KlassenYoogalingam2009}；近年研究则进一步处理同日请求、移动预约窗口、动态预约、患者迟到、爽约、取消、实时排序和分布鲁棒调度等问题\citep{BalasubramanianBiehlDaiMuriel2014,DaiGengXie2021,LaanVanDeVrugtOlsmanBoucherie2018,LiuZiyaKulkarni2010,SamoraniLaGanga2015,ZhangShenErdogan2017}。其中，移动预约窗口和同日请求研究尤其说明，后续可预约窗口及其开放数量会改变未来时段的到达分布，需要作为可调节的到达来源进入模型。同时，门诊真实问题往往包含多目标、流程约束和组织边界，优化模型需要与实际诊室运行情境对齐\citep{KuiperDeMastMandjes2021}。这些研究为门诊调度建模提供了充分基础。
 
 \subsection{医生工作负荷与服务质量研究}
 
-门诊服务能力主要与医生服务速度和服务质量有关。医疗运营研究发现，系统负荷上升会影响服务时间和患者安全，说明服务速度调整可能伴随质量风险\citep{KcTerwiesch2009}；当负荷超过一定程度后，继续依赖人员加速还可能出现工作负荷饱和，使效率和质量同时恶化\citep{BerryJaekerTucker2017}。在门诊或相近诊疗场景中，医生未完成工作量会改变检查开具行为，时间压力会影响医生压力、职业倦怠和离职意愿，医生倦怠也与患者安全事件、低专业性行为和较低患者满意度相关\citep{ErgunSahinGunesKocabi.yikogluKeskin2022,PrasadPoplauBrownEtAl2020,HodkinsonZhouJohnsonEtAl2022}。近期定性研究进一步显示，基层医生常在有限时间与工作要求不匹配时被迫在照护质量、个人时间和职业可持续性之间取舍\citep{NguyenHoncharovBallardEtAl2024}。
+门诊服务能力主要与医生服务速度和服务质量有关。医疗运营研究发现，系统负荷上升会影响服务时间和患者安全，说明服务速度调整可能伴随质量风险\citep{KcTerwiesch2009}；当负荷超过一定程度后，继续依赖人员加速还可能出现工作负荷饱和，使效率和质量同时承压\citep{BerryJaekerTucker2017}。更一般地，负荷依赖服务时间研究指出，系统负荷可能通过工作内容、服务速度、顾客准备和服务者行为等机制改变服务时长，且不同机制可能产生服务时间缩短、延长或非单调变化\citep{DelasayIngolfssonKolfalSchultz2019}；近期状态依赖服务时间研究进一步强调，经验平均服务时长应结合状态测量时点和行为机制转化为排队模型参数\citep{DingKolfalIngolfsson2025}。在门诊或相近诊疗场景中，医生待完成工作量会改变检查开具行为，时间压力会影响医生压力、职业倦怠和离职意愿，医生倦怠也与患者安全、专业性行为和患者满意度相关\citep{ErgunSahinGunesKocabiyikogluKeskin2022,PrasadPoplauBrownEtAl2020,HodkinsonZhouJohnsonEtAl2022}。近期定性研究进一步显示，基层医生常在时间约束、照护质量、个人时间和职业可持续性之间进行权衡\citep{NguyenHoncharovBallardEtAl2024}。
 
 \subsection{相关理论模型与分析方法}
 
-门诊调度研究常用的理论模型主要包括排队模型、随机规划、动态规划、仿真优化和鲁棒优化。排队模型适合刻画患者到达、服务时间和候诊积压之间的基本关系；随机规划和仿真优化能够处理服务时长、爽约和临时到诊等随机因素；动态规划和马尔可夫决策过程适用于预约请求逐步到达、系统状态随时间更新的调度问题\citep{DentonGupta2003,RobinsonChen2003,KlassenYoogalingam2009,BalasubramanianBiehlDaiMuriel2014,DaiGengXie2021}。在分布信息不完全的情况下，分布鲁棒优化进一步通过矩信息或支撑集构造模糊集，用于处理随机服务时长和爽约行为的不确定性\citep{ZhangShenErdogan2017}。
+门诊调度研究常用的理论模型主要包括排队模型、随机规划、动态规划、仿真优化和鲁棒优化。排队模型适合刻画患者到达、服务时间和候诊积压之间的基本关系；随机规划和仿真优化能够处理服务时长、爽约和临时到诊等随机因素；动态规划和马尔可夫决策过程适用于预约请求逐步到达、系统状态随时间更新的调度问题\citep{DentonGupta2003,RobinsonChen2003,KlassenYoogalingam2009,BalasubramanianBiehlDaiMuriel2014,DaiGengXie2021}。当预约系统允许逐步开放未来号源时，状态变量还需要包含已预约数量、剩余可开放号源和未来到诊概率，决策变量也从当期排序或服务速度扩展为“安排多少患者进入后续窗口”。在分布信息部分可得的情况下，分布鲁棒优化进一步通过矩信息或支撑集构造模糊集，用于处理随机服务时长和爽约行为的不确定性\citep{ZhangShenErdogan2017}。
 
 在医疗资源风险分析中，Aumann和Serrano提出的风险指数从分布整体出发度量风险，为后续医疗资源短缺指数提供了理论基础\citep{AumannSerrano2008,XieLokeSimLam2023}。Brown和Sim的满意度度量强调以目标或期望水平评价风险位置，为资源满意度框架提供了更一般的决策基础\citep{BrownSim2009}。Zhou、Sim和Lam的资源满意度模型将该类思想用于多资源、多时段住院提前排班，强调在不确定需求下控制资源过载尾部风险\citep{ZhouSimLam2022}；后续鲁棒满意度研究进一步强调目标达成和分布偏移下的稳健性\citep{LongSimZhou2023}。
 
 \subsection{文献述评与研究定位}
 
-综上，既有研究已经较系统地讨论了门诊预约时间设计、随机服务时长、爽约、动态接纳、多医生调度、面板容量以及风险规避型预约优化，为本文提供了成熟的建模基础。与此同时，医生工作负荷文献表明高负荷会影响服务时间、诊疗行为和服务质量，医疗资源风险文献则说明平均利用率和平均等待不足以刻画资源短缺的尾部风险。上述两类发现与门诊调度问题密切相关，但在现有门诊优化模型中并没有被一个可用于量化风险和服务速度的压力指标。
+综上，既有研究已经较系统地讨论了门诊预约时间设计、随机服务时长、爽约、动态接纳、多医生调度、面板容量以及风险规避型预约优化，为本文提供了成熟的建模基础。与此同时，医生工作负荷文献表明高负荷会影响服务时间、诊疗行为和服务质量，医疗资源风险文献则说明平均利用率和平均等待可以由尾部压力风险指标进一步补充。基于上述发现，本文把后续预约开放数量、现场服务速度和尾部压力风险放入同一个可解释的压力指标中联合刻画。
 
-基于此，本文将研究定位于门诊压力指标与服务速度指导：一方面，将候诊工作量、随机服务需求、服务能力释放和医生赶工风险代理统一为广义系统压力；另一方面，将资源满意度启发的尾部风险约束引入门诊场景，并通过拟合函数把模型输出转化为现场可理解的服务速度指导建议。该定位既延续门诊预约调度研究对等待、空闲和加班权衡的关注，也吸收医疗资源风险度量对尾部过载的处理思想，从而为高峰拥堵下的门诊服务能力管理提供更贴近实际运行的分析框架。
+基于此，本文将研究定位于门诊压力指标、后续预约开放和服务速度指导：一方面，将候诊工作量、随机服务需求、后续预约数量、服务能力释放和医生赶工风险统一为系统压力；另一方面，将资源满意度启发的尾部风险约束引入门诊场景，并通过正态近似和反馈函数拟合把模型输出转化为现场可理解的服务时长和预约开放提示。该定位既延续门诊预约调度研究对等待、空闲和加班权衡的关注，也吸收医疗资源风险度量对尾部过载的处理思想，从而为高峰拥堵下的门诊服务能力管理提供更贴近实际运行的分析框架。
 
 \section{问题描述与模型假设}
 
-\subsection{门诊系统与队列状态}
+\subsection{门诊系统与预约状态}
 
-本文考虑一个离散时间门诊系统。一天被划分为$T$个长度为$\Delta$的决策时段，实证部分取$\Delta=30$分钟。时段$t$开始时，系统已知当前候诊工作量$W_t$，单位为分钟，表示若不再有新患者到达，消化现有队列所需的服务时间。
+本文考虑一个离散时间门诊系统。一天被划分为$T$个长度为$\Delta$的决策时段，实证部分取$\Delta=30$分钟。时段$t$开始时，系统已知当前候诊工作量$W_t$，单位为分钟，表示消化现有队列所需的服务时间。
 
-时段$t$的决策变量为$c_t$，表示该时段释放的服务工作量，单位为分钟。服务完成后的实际队列状态满足
+除现场队列外，门诊系统还存在一个滚动预约簿。令$\mathcal H=\{1,\ldots,H\}$表示可被当前决策影响的后续预约窗口集合。$K_{t,h}$表示从时段$t$看向后续第$h$个时段的最大预约容量，$B_{t,h}$表示该窗口中已经形成的预约数量，剩余可开放号源为
+\begin{equation}
+G_{t,h}=\left[K_{t,h}-B_{t,h}\right]_+,\qquad h\in\mathcal H .
+\end{equation}
+在单诊室模型中，$u_{t,h}$表示时段$t$新安排到后续第$h$个预约窗口的患者数量；在多诊室模型中，$u_{i,t,h}$表示安排到诊室$i$、后续第$h$个预约窗口的患者数量。该变量既可以理解为新开放并被预约的号源数，也可以理解为在给定预约请求下被模型接纳到相应后续窗口的数量。
+
+时段$t$的服务能力决策为$c_t$，表示该时段释放的服务工作量，单位为分钟。服务完成后的实际队列状态满足
 \begin{equation}
 \tilde W_{t+1}=\left[W_t+\tilde D_t-c_t\right]_+,
+\label{eq:queue-dynamic}
 \end{equation}
-其中$\tilde D_t$为时段$t$新到患者形成的随机服务需求，$[x]_+=\max\{x,0\}$。在优化模型中，本文使用条件均值更新预测状态，即$W_{t+1}=[W_t+\E(\tilde D_t\mid\mathcal F_t)-c_t]_+$，其中$\mathcal F_t$表示时段开始前可获得的信息集；在现场更新时，每个时段开始后再用实际观测到的队列状态修正下一时段决策。
+其中$\tilde D_t$为时段$t$实际到达患者形成的随机服务需求，$[x]_+=\max\{x,0\}$。在风险评价模型中，本文使用条件均值更新预测状态；在现场更新时，每个时段开始后再用实际观测到的队列状态和预约簿状态修正下一时段决策。
 
-\subsection{随机到达与随机服务需求}
+\subsection{随机到达、预约数量与随机服务需求}
 
-令$\tilde A_t$表示时段$t$的需求流入人数。对于短时段需求流入过程有：
+令$\tilde A_t$表示时段$t$的需求流入人数。在后续预约数量作为给定流入的基准情形下，有
 \begin{equation}
-\E(\tilde A_t)=\lambda_t,\qquad \Var(\tilde A_t)=\kappa_t\lambda_t,\qquad \kappa_t>0,
+\E(\tilde A_t)=\lambda_t,\qquad
+\Var(\tilde A_t)=\kappa_t\lambda_t,\qquad \kappa_t>0,
 \end{equation}
-其中$\lambda_t=\E(\tilde A_t\mid\mathcal F_t)$为该时段开始前可预测的条件平均流入率，$\kappa_t$为流入离散系数。$\kappa_t=1$时退化为泊松到达；$\kappa_t>1$表示短时段流入存在过度离散和峰值聚集。设第$k$名患者的服务需求为$S_k$，满足独立同分布且具有有限均值和方差：
+其中$\lambda_t=\E(\tilde A_t\mid\mathcal F_t)$为该时段开始前可预测的条件平均流入率，$\kappa_t$为流入离散系数。$\kappa_t=1$时退化为泊松到达；$\kappa_t>1$表示短时段流入存在过度离散和峰值聚集。
+
+当后续预约数量成为决策变量时，时段$t$的到达由外生基础流入和预约决策诱发流入共同组成。令$\lambda_t^0$表示外生基础流入均值，$\kappa_t^0\lambda_t^0$表示其方差；令$q_h$表示提前$h$个时段安排的预约患者在目标时段实际到达的概率。则时段$t$由历史开放决策诱发的条件到达均值和方差可写为
+\begin{equation}
+\Lambda_t(\bm u)=\lambda_t^0+\sum_{\substack{h\in\mathcal H\\ t-h\geq 1}}q_hu_{t-h,h},
+\label{eq:arrival-mean-with-booking}
+\end{equation}
+\begin{equation}
+\Omega_t(\bm u)=\kappa_t^0\lambda_t^0+
+\sum_{\substack{h\in\mathcal H\\ t-h\geq 1}}q_h(1-q_h)u_{t-h,h}.
+\label{eq:arrival-var-with-booking}
+\end{equation}
+其中$\Lambda_t(\bm u)$和$\Omega_t(\bm u)$分别表示纳入后续预约数量后的流入均值和方差。在基准模型中，可取$\Lambda_t=\lambda_t$、$\Omega_t=\kappa_t\lambda_t$。
+
+设第$k$名患者的服务需求为$S_k$，满足独立同分布且具有有限均值和方差：
 \begin{equation}
 S_k\overset{i.i.d.}{\sim}F_S,\qquad m=\E(S_k),\quad v=\Var(S_k)<\infty .
 \end{equation}
-则时段总服务需求为随机和
+时段总服务需求为随机和
 \begin{equation}
 \tilde D_t=\sum_{k=1}^{\tilde A_t}S_k,
 \end{equation}
 并有
 \begin{equation}
-\E(\tilde D_t)=\lambda_t m,\qquad
-\Var(\tilde D_t)=\lambda_t v+\kappa_t\lambda_t m^2
-=\lambda_t(v+\kappa_t m^2).
+\E(\tilde D_t)=\Lambda_t m,\qquad
+\Var(\tilde D_t)=\Lambda_t v+\Omega_t m^2 .
 \label{eq:compound-moments}
 \end{equation}
+该表达式表明，后续预约数量不仅改变未来时段的平均到达，也会通过爽约或取消不确定性改变服务需求方差。
 
 \subsection{服务速度调节与赶工风险}
 
@@ -143,13 +328,13 @@ S_k\overset{i.i.d.}{\sim}F_S,\qquad m=\E(S_k),\quad v=\Var(S_k)<\infty .
 h(c_t)=\gamma[c_t-c_0]_+^2,\qquad \gamma>0,
 \label{eq:rushing-penalty}
 \end{equation}
-其中$c_0$为舒适服务速度基准，$\gamma$为赶工惩罚系数。固定服务时长模型是上一小节随机服务需求形式的特殊情形，即$m=s_{\mathrm{base}}$且$v=0$。
+其中$c_0$为舒适服务速度基准，$\gamma$为赶工惩罚系数。
 
-\subsection{模型假设与递进结构}
+\subsection{模型假设}
 
-为保持模型清晰，本文作如下假设。第一，短期预测窗口内的流入均值$\lambda_t$和离散系数$\kappa_t$可由历史到达、预约信息和实时到院情况估计。第二，服务需求与流入过程在给定时段内相互独立，且服务需求至少具有有限二阶矩。第三，服务能力存在上下界$c_{\min}\leq c_t\leq c_{\max}$，以反映医生工作速度的可调范围。
+为保持模型清晰，本文作如下假设。第一，短期预测窗口内的基础流入均值、离散系数、预约到达概率和服务时长矩可由历史到达、预约信息和实时到院情况估计。第二，给定预约簿状态和开放决策后，患者服务需求与流入过程相互独立，且服务需求至少具有有限二阶矩。第三，后续预约数量决策满足号源容量约束，实证实现中可先采用连续松弛，实际落地时再取整。第四，服务速度存在上下界$c_{\min}\leq c_t\leq c_{\max}$，以反映医生工作速度的可调范围。
 
-在此基础上，本文构建三类模型。Model 1假设服务时长固定，用于给出单诊室压力指标基准模型；Model 2引入随机服务时长和到达过度离散修正，用于刻画服务需求方差对尾部风险的影响；Model 3进一步考虑多诊室可行分流和诊室异质性。
+在此基础上，本文构建三类模型。Model 1为随机服务时长下的单诊室压力基线模型；Model 2在Model 1基础上加入后续预约数量决策，刻画号源开放对未来压力的传导；Model 3保留多诊室可行分流和诊室异质性，并进一步加入各诊室的后续预约数量决策。
 
 \begin{figure}[H]
   \centering
@@ -157,25 +342,25 @@ h(c_t)=\gamma[c_t-c_0]_+^2,\qquad \gamma>0,
   \toprule
   Model 1 & Model 2 & Model 3 \\
   \midrule
-  固定服务时长 & 随机服务时长 & 多诊室可行分流 \\
-  单诊室压力基线 & 单诊室尾部压力指标 & 异质诊室协同压力指标扩展 \\
-  到达随机性 & 到达与服务随机性 & 分流可行性与诊室差异 \\
+  随机服务时长 & 单诊室预约数量 & 多诊室预约数量 \\
+  单诊室压力基线 & 后续号源开放决策 & 分流与号源联合决策 \\
+  到达与服务随机性 & 预约簿状态与未来压力 & 诊室差异、分流可行性与未来压力 \\
   \bottomrule
   \end{tabular}
   \caption{门诊风险指标原型体系}
   \label{fig:model-framework}
 \end{figure}
 
-\section{基于广义系统压力的风险指标模型}
+\section{基于系统压力的风险指标模型}
 
-\subsection{广义系统压力定义}
+\subsection{系统压力}
 
-给定时段开始状态$W_t$和服务能力决策$c_t$，本文定义时段$t$的广义系统压力为
+给定时段开始状态$W_t$和服务能力决策$c_t$，本文定义时段$t$的系统压力为
 \begin{equation}
 L_t=W_t+\tilde D_t-c_t+h(c_t).
 \label{eq:general-pressure}
 \end{equation}
-其中$W_t+\tilde D_t-c_t$刻画服务能力释放后的剩余工作量，$h(c_t)$刻画过度加速带来的等价工作量惩罚。该指标能够反映候诊积压和随机服务需求会提高压力，服务能力释放会降低压力，赶工风险代理会在服务能力过高时重新增加压力。
+其中$W_t+\tilde D_t-c_t$为当前时段的剩余工作量，$h(c_t)$为过度加速带来的惩罚。该指标能够反映候诊积压和随机服务需求会提高压力，服务速度提升会降低压力，赶工风险会在服务速度过高时重新增加压力。
 
 \subsection{资源满意度启发的尾部风险约束}
 
@@ -184,20 +369,19 @@ L_t=W_t+\tilde D_t-c_t+h(c_t).
 \E\left[\exp\left(\frac{L_t-C_{\mathrm{safe}}}{\rho\nu}\right)\right]\leq 1,
 \label{eq:rsi-constraint}
 \end{equation}
-其中$C_{\mathrm{safe}}$为风险安全阈值，$\nu>0$为风险敏感度参数，$\rho>0$为待最小化的风险水平。式\eqref{eq:rsi-constraint}通过指数函数放大$L_t$右尾，当风险均值接近阈值或波动变大时，满足约束所需的$\rho$随之升高。在本文经验部分，风险约束通过正态近似转化为均值--方差形式。资源满意度启发的压力风险指数定义为
+其中$C_{\mathrm{safe}}$为风险安全阈值，$\nu>0$为风险敏感度参数，$\rho>0$为待最小化的风险水平。式\eqref{eq:rsi-constraint}通过指数函数放大$L_t$右尾，当风险均值升高或方差变大时，满足约束所需的$\rho$随之升高。资源满意度启发的压力风险指数定义为
 \begin{equation}
 \RSI_{\nu}(L_t,C_{\mathrm{safe}})
 =\inf\left\{\rho>0:
 \E\left[\exp\left(\frac{L_t-C_{\mathrm{safe}}}{\rho\nu}\right)\right]\leq 1
 \right\}.
 \end{equation}
-理论模型在周期内最小化所有时段的最大风险水平，即在满足服务能力上下界和队列状态更新约束的条件下，使最不利时段的广义压力风险尽可能低。后文实证则在医生局部状态上使用该约束生成目标服务工作量，用于检验模型原型是否能给出可解释的服务速度提示。
 
-\subsection{Model 1：固定服务时长下的单诊室压力指标}
+\subsection{Model 1：随机服务时长下的单诊室压力指标}
 
-固定服务时长模型用于建立基础标准。设每名患者服务需求为$s_{\mathrm{base}}$，则$\tilde D_t=s_{\mathrm{base}}\tilde A_t$，$\E(\tilde D_t)=\lambda_ts_{\mathrm{base}}$，$\Var(\tilde D_t)=\kappa_t\lambda_ts_{\mathrm{base}}^2$，广义压力为
+Model 1用于刻画后续预约数量作为给定流入时的单诊室压力。根据式\eqref{eq:compound-moments}，总服务需求$\tilde D_t$同时受患者到达人数和患者服务时长影响。在该基准模型中，取$\Lambda_t=\lambda_t$、$\Omega_t=\kappa_t\lambda_t$，系统压力为
 \begin{equation}
-L_t^{(1)} = W_t+\tilde A_t s_{\mathrm{base}}-c_t+\gamma[c_t-c_0]_+^2.
+L_t^{(1)}=W_t+\tilde D_t-c_t+\gamma[c_t-c_0]_+^2.
 \label{eq:model1-pressure}
 \end{equation}
 对应的单诊室压力风险模型为
@@ -206,94 +390,164 @@ L_t^{(1)} = W_t+\tilde A_t s_{\mathrm{base}}-c_t+\gamma[c_t-c_0]_+^2.
 \min_{\bm{c},\rho}\quad & \rho\\
 \mathrm{s.t.}\quad
 & \E\left[\exp\left(\frac{L_t^{(1)}-C_{\mathrm{safe}}}{\rho\nu}\right)\right]\leq 1,\quad t=1,\ldots,T,\\
-& W_{t+1}=\max\{0,W_t+\lambda_t s_{\mathrm{base}}-c_t\},\\
+& W_{t+1}=\max\{0,W_t+\lambda_t m-c_t\},\\
 & c_{\min}\leq c_t\leq c_{\max},\quad t=1,\ldots,T.
 \end{aligned}
 \label{eq:model1}
 \end{equation}
-该模型仅保留到达随机性，适用于服务时长波动较小或希望建立基线比较的场景。若实证显示$\kappa_t>1$，则不能把该模型解释为严格泊松排队系统，而应将其视为含过度离散修正的固定服务需求近似。
+该模型是后续模型的压力基准。即使平均到达人数相同，服务时长方差越大，系统压力右尾越厚，满足风险约束所需的服务能力或安全裕度也越高。
 
-\subsection{Model 2：随机服务时长下的单诊室压力指标}
+\subsection{Model 2：加入后续预约数量的单诊室压力模型}
 
-随机服务时长模型是本文的核心单诊室模型。根据式\eqref{eq:compound-moments}，总服务需求$\tilde D_t$同时受患者到达人数和患者服务时长影响。广义压力为
+Model 2在Model 1基础上加入后续预约数量决策。令$R_t$表示时段$t$出现的预约请求量，$u_{t,h}$表示安排到后续第$h$个预约窗口的患者数量，$z_t$表示待安排请求量。定义单诊室调度决策向量
 \begin{equation}
-L_t^{(2)}=W_t+\tilde D_t-c_t+\gamma[c_t-c_0]_+^2.
-\label{eq:model2-pressure}
+\delta_t^{(2)}=(c_t,\bm u_t,z_t),\qquad
+\bm u_t=(u_{t,h})_{h\in\mathcal H}.
 \end{equation}
-优化模型为
+其可行调度集合$\mathcal A_t^{(2)}$由预约容量、请求守恒和服务能力边界共同给出：
 \begin{equation}
 \begin{aligned}
-\min_{\bm{c},\rho}\quad & \rho\\
+\mathcal A_t^{(2)}=\bigg\{(c_t,\bm u_t,z_t):\ 
+&0\leq u_{t,h}\leq G_{t,h},\quad h\in\mathcal H,\\
+&\sum_{h\in\mathcal H}u_{t,h}+z_t=R_t,\quad z_t\geq0,\\
+&c_{\min}\leq c_t\leq c_{\max}\bigg\}.
+\end{aligned}
+\label{eq:single-booking-constraints}
+\end{equation}
+其中$G_{t,h}$由预约簿中的区间容量和已预约数量决定。该集合把号源开放、请求安排和服务速度纳入同一个门诊调度决策。
+
+由式\eqref{eq:arrival-mean-with-booking}和式\eqref{eq:arrival-var-with-booking}，后续预约数量会改变未来时段的$\Lambda_t(\bm u)$和$\Omega_t(\bm u)$。Model 2的系统压力为
+\begin{equation}
+L_t^{(2)}(\delta_t^{(2)})
+=W_t+\tilde D_t(\bm u)-c_t+\gamma[c_t-c_0]_+^2.
+\label{eq:model2-pressure}
+\end{equation}
+式\eqref{eq:model2-pressure}将门诊调度决策$\delta_t^{(2)}$直接放入压力定义：预约开放数量通过随机服务需求$\tilde D_t(\bm u)$影响未来压力，服务能力$c_t$通过当期能力释放和赶工惩罚影响当前压力。给定一组可行调度决策$\bm\delta^{(2)}=\{\delta_t^{(2)}\}_{t=1}^T$后，单诊室压力风险模型为
+\begin{equation}
+\begin{aligned}
+\rho^{(2)}(\bm\delta^{(2)})
+=\min_{\rho>0}\quad
+& \rho\\
 \mathrm{s.t.}\quad
-& \E\left[\exp\left(\frac{L_t^{(2)}-C_{\mathrm{safe}}}{\rho\nu}\right)\right]\leq 1,\quad t=1,\ldots,T,\\
-& W_{t+1}=\max\{0,W_t+\lambda_t m-c_t\},\\
-& c_{\min}\leq c_t\leq c_{\max},\quad t=1,\ldots,T.
+& \E\left[\exp\left(\frac{L_t^{(2)}(\delta_t^{(2)})-C_{\mathrm{safe}}}{\rho\nu}\right)\right]\leq 1,\quad t=1,\ldots,T,\\
+& \delta_t^{(2)}\in\mathcal A_t^{(2)},\quad t=1,\ldots,T.
 \end{aligned}
 \label{eq:model2}
 \end{equation}
-与Model 1相比，Model 2将服务时长方差纳入风险约束。即使平均服务时长相同，服务时长波动越大，广义压力右尾越厚，模型所需的安全裕度也越高。
-
-\subsection{Model 3：多诊室可行分流与协同压力指标扩展}
-
-大型门诊通常由多个诊室共同服务。设诊室集合为$I=\{1,\ldots,n\}$，时段$t$分配给诊室$i$的患者比例为$p_{it}$。现实中患者只能被分配到具有相应科室、号源和医生资质的诊室，故令$e_{it}\in\{0,1\}$表示诊室$i$在时段$t$是否可接收该类需求，并要求
-\begin{equation}
-\sum_{i\in I}p_{it}=1,\qquad 0\leq p_{it}\leq e_{it}.
-\end{equation}
-为保证分流问题可行，需要对每个时段满足$\sum_{i\in I}e_{it}\geq1$。若按患者类别或科室分别建模，则可进一步把$p_{it}$和$e_{it}$扩展为$p_{kit}$和$e_{kit}$，其中$k$表示患者类别或科室需求。
-在均值--方差口径下，诊室$i$的到达满足
-\begin{equation}
-\E(\tilde A_{it})=\lambda_t p_{it},\qquad
-\Var(\tilde A_{it})=\omega_{it}.
-\end{equation}
-其中$\omega_{it}$刻画诊室局部到达方差。若$p_{it}$表示总到达后按比例随机分流，且总到达满足$\Var(\tilde A_t)=\kappa_t\lambda_t$，则有
-\begin{equation}
-\omega_{it}=\lambda_t p_{it}(1-p_{it})+\kappa_t\lambda_t p_{it}^2.
-\end{equation}
-若$p_{it}$表示由预约来源或患者类别预先确定的独立局部流，则可用$\omega_{it}=\kappa_{it}\lambda_t p_{it}$作为近似。本文在理论模型中保留$\omega_{it}$以避免把分流机制和局部过度离散混为一谈。若诊室$i$的服务需求均值和方差分别为$m_i$和$v_i$，则随机服务需求为
-\begin{equation}
-\tilde D_{it}=\sum_{k=1}^{\tilde A_{it}}S_{ik}.
-\end{equation}
-诊室$i$的广义压力为
-\begin{equation}
-L_{it}^{(3)}=W_{it}+\tilde D_{it}-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2.
-\label{eq:model3-pressure}
-\end{equation}
-多诊室优化模型为
+模型\eqref{eq:model2}中的风险评价层只针对风险水平$\rho$求解；不同门诊调度决策通过压力随机变量$L_t^{(2)}(\delta_t^{(2)})$改变对应的风险水平。在此基础上，Model 2的调度优化问题为
 \begin{equation}
 \begin{aligned}
-\min_{\bm{c},\bm{p},\rho}\quad & \rho\\
+\bm\delta^{(2)\star}
+=\arg\min_{\bm\delta^{(2)}}\quad
+&\rho^{(2)}(\bm\delta^{(2)})
++\alpha\sum_{t=1}^T z_t
++\beta\sum_{t=1}^T\sum_{h\in\mathcal H}h\,u_{t,h}\\
 \mathrm{s.t.}\quad
-& \E\left[\exp\left(\frac{L_{it}^{(3)}-C_{\mathrm{safe},i}}{\rho\nu}\right)\right]\leq 1,\quad i\in I,\ t=1,\ldots,T,\\
-& \sum_{i\in I}p_{it}=1,\quad 0\leq p_{it}\leq e_{it},\quad i\in I,\ t=1,\ldots,T,\\
-& W_{i,t+1}=\max\{0,W_{it}+\lambda_t p_{it}m_i-c_{it}\},\\
-& c_{\min,i}\leq c_{it}\leq c_{\max,i},\quad i\in I,\ t=1,\ldots,T.
+&\delta_t^{(2)}\in\mathcal A_t^{(2)},\quad t=1,\ldots,T .
+\end{aligned}
+\label{eq:model2-scheduling}
+\end{equation}
+其中$\alpha$表示待安排请求惩罚，$\beta$表示较远预约窗口的等待惩罚。给定调度决策后，预测队列状态按
+\begin{equation}
+W_{t+1}^{(2)}(\delta_t^{(2)})
+=\max\{0,W_t+\Lambda_t(\bm u)m-c_t\}
+\end{equation}
+滚动更新。
+
+\subsection{Model 3：多诊室可行分流与后续预约数量协同模型}
+
+大型门诊通常由多个诊室共同服务。设诊室集合为$I=\{1,\ldots,n\}$，时段$t$分配给诊室$i$的现场或未指定诊室需求比例为$p_{it}$。现实中患者只能被分配到具有相应科室、号源和医生资质的诊室，故令$e_{it}\in\{0,1\}$表示诊室$i$在时段$t$是否可接收该类需求。定义多诊室调度决策向量
+\begin{equation}
+\delta_t^{(3)}=(\bm c_t,\bm p_t,\bm u_t,z_t),
+\end{equation}
+其中$\bm c_t=(c_{it})_{i\in I}$、$\bm p_t=(p_{it})_{i\in I}$，$\bm u_t=(u_{i,t,h})_{i\in I,h\in\mathcal H}$。其可行调度集合$\mathcal A_t^{(3)}$由分流、预约容量、请求守恒和服务能力边界共同给出：
+\begin{equation}
+\begin{aligned}
+\mathcal A_t^{(3)}=\bigg\{(\bm c_t,\bm p_t,\bm u_t,z_t):\ 
+&\sum_{i\in I}p_{it}=1,\quad 0\leq p_{it}\leq e_{it},\quad i\in I,\\
+&0\leq u_{i,t,h}\leq e_{i,t+h}G_{i,t,h},\quad i\in I,\ h\in\mathcal H,\\
+&\sum_{i\in I}\sum_{h\in\mathcal H}u_{i,t,h}+z_t=R_t,\quad z_t\geq0,\\
+&c_{\min,i}\leq c_{it}\leq c_{\max,i},\quad i\in I\bigg\}.
+\end{aligned}
+\label{eq:multi-scheduling-feasible-set}
+\end{equation}
+令$q_{i,h}$表示安排到诊室$i$且提前$h$个时段预约的患者在目标时段实际到达的概率。诊室$i$在时段$t$的到达均值和方差可写为
+\begin{equation}
+\Lambda_{it}(\bm p,\bm u)=p_{it}\lambda_t^0+
+\sum_{\substack{h\in\mathcal H\\ t-h\geq1}}q_{i,h}u_{i,t-h,h},
+\label{eq:multi-arrival-mean}
+\end{equation}
+\begin{equation}
+\Omega_{it}(\bm p,\bm u)
+=\lambda_t^0p_{it}(1-p_{it})+\kappa_t^0\lambda_t^0p_{it}^2
++\sum_{\substack{h\in\mathcal H\\ t-h\geq1}}q_{i,h}(1-q_{i,h})u_{i,t-h,h}.
+\label{eq:multi-arrival-var}
+\end{equation}
+其中前两项对应基础流入按比例分流后的方差，最后一项对应后续预约到达不确定性。令诊室$i$的服务需求均值和方差分别为$m_i$和$v_i$，则
+\begin{equation}
+\tilde D_{it}=\sum_{k=1}^{\tilde A_{it}}S_{ik},\qquad
+\E(\tilde D_{it})=\Lambda_{it}m_i,\quad
+\Var(\tilde D_{it})=\Lambda_{it}v_i+\Omega_{it}m_i^2.
+\end{equation}
+诊室$i$的系统压力为
+\begin{equation}
+L_{it}^{(3)}(\delta_t^{(3)})
+=W_{it}+\tilde D_{it}(\bm p,\bm u)-c_{it}
++\gamma_i[c_{it}-c_{i0}]_+^2.
+\label{eq:model3-pressure}
+\end{equation}
+式\eqref{eq:model3-pressure}把分流比例、预约开放数量和诊室服务能力同时纳入诊室压力。给定一组可行多诊室调度决策$\bm\delta^{(3)}=\{\delta_t^{(3)}\}_{t=1}^T$后，多诊室压力风险模型为
+\begin{equation}
+\begin{aligned}
+\rho^{(3)}(\bm\delta^{(3)})
+=\min_{\rho>0}\quad
+& \rho\\
+\mathrm{s.t.}\quad
+& \E\left[\exp\left(\frac{L_{it}^{(3)}(\delta_t^{(3)})-C_{\mathrm{safe},i}}{\rho\nu}\right)\right]\leq 1,\quad i\in I,\ t=1,\ldots,T,\\
+& \delta_t^{(3)}\in\mathcal A_t^{(3)},\quad t=1,\ldots,T.
 \end{aligned}
 \label{eq:model3}
 \end{equation}
-该模型同时调节分流比例和诊室服务能力。若某诊室队列压力较高或赶工惩罚较大，模型会在可行分流集合内降低其分流比例或要求其他合格诊室承担更多需求；若某诊室仍有安全裕度，则可承担更多患者。该表达没有覆盖患者已经进入特定医生队列后的重新叫号成本、患者偏好和临床优先级，因此在没有现场分流记录时不应被解释为已部署的实时分诊规则。
-
-需要说明的是，Model 1--Model 3的作用是给出统一的压力定义、风险约束和服务能力边界。本文不展开完整跨时段优化问题的全局求解算法，也不声称后续经验部分求解了上述完整模型；第五章只使用其确定性局部风险约束生成医生-时段层面的目标服务工作量。
+模型\eqref{eq:model3}中的风险评价层同样只针对风险水平$\rho$求解；分流比例、诊室服务能力和后续预约数量作为调度决策进入压力随机变量。在此基础上，Model 3的多诊室调度优化问题为
+\begin{equation}
+\begin{aligned}
+\bm\delta^{(3)\star}
+=\arg\min_{\bm\delta^{(3)}}\quad
+&\rho^{(3)}(\bm\delta^{(3)})
++\alpha\sum_{t=1}^T z_t
++\beta\sum_{t=1}^T\sum_{i\in I}\sum_{h\in\mathcal H}h\,u_{i,t,h}\\
+\mathrm{s.t.}\quad
+&\delta_t^{(3)}\in\mathcal A_t^{(3)},\quad t=1,\ldots,T .
+\end{aligned}
+\label{eq:model3-scheduling}
+\end{equation}
+给定调度决策后，诊室层预测队列状态按
+\begin{equation}
+W_{i,t+1}^{(3)}(\delta_t^{(3)})
+=\max\{0,W_{it}+\Lambda_{it}(\bm p,\bm u)m_i-c_{it}\}
+\end{equation}
+滚动更新。
 
 \section{模型转化与策略实现}
 
 \subsection{随机和服务需求的矩与正态近似}
 
-第4章模型的随机性主要来自随机到达人数与随机服务需求形成的随机和。令$\E(\tilde A_t)=\lambda_t$、$\Var(\tilde A_t)=\kappa_t\lambda_t$，$\tilde D_t=\sum_{k=1}^{\tilde A_t}S_k$，且$S_k$独立同分布、$\E(S_k)=m$、$\Var(S_k)=v<\infty$。由随机和的矩公式可得
+第4章模型的随机性主要来自随机到达人数与随机服务需求形成的随机和。令$\E(\tilde A_t)=\Lambda_t$、$\Var(\tilde A_t)=\Omega_t$，$\tilde D_t=\sum_{k=1}^{\tilde A_t}S_k$，且$S_k$独立同分布、$\E(S_k)=m$、$\Var(S_k)=v<\infty$。由随机和的矩公式可得
 \begin{equation}
-\E(\tilde D_t)=\lambda_t m,\qquad
-\Var(\tilde D_t)=\lambda_t(v+\kappa_t m^2).
+\E(\tilde D_t)=\Lambda_t m,\qquad
+\Var(\tilde D_t)=\Lambda_t v+\Omega_t m^2.
 \end{equation}
-当$\lambda_t$较大、单个患者服务需求不存在极端重尾主导、到达过程可由均值和方差稳定刻画，且到达随机变量本身满足适当的渐近正态性或可由负二项等计数分布近似时，随机和中心极限定理给出如下近似\citep{Ross2014}：
+当$\Lambda_t$较大、单个患者服务需求尾部适度、到达过程可由均值和方差稳定刻画，且到达随机变量本身满足适当的渐近正态性或可由负二项等计数分布近似时，随机和中心极限定理给出如下近似\citep{Ross2014}：
 \begin{equation}
-\frac{\tilde D_t-\lambda_t m}{\sqrt{\lambda_t(v+\kappa_t m^2)}}
+\frac{\tilde D_t-\Lambda_t m}{\sqrt{\Lambda_t v+\Omega_t m^2}}
 \Rightarrow N(0,1).
 \label{eq:compound-clt}
 \end{equation}
-该结果说明，在上述条件下可用
+本文假设到达过程满足正态近似所需的条件，因此可用
 \begin{equation}
-\tilde D_t\approx N\left(\lambda_t m,\lambda_t(v+\kappa_t m^2)\right)
+\tilde D_t\approx N\left(\Lambda_t m,\Lambda_t v+\Omega_t m^2\right)
 \end{equation}
-近似总服务需求。该近似把随机服务需求压缩为均值、方差和到达离散系数三个量，为后续确定性转化提供基础。若某些时段到达量很小、到达过程具有强相关聚集，或服务需求呈明显重尾，则应使用经验分布、负二项到达或离散事件仿真检验近似误差。本文后续实证结果因此仅解释为模型原型的样本内标定。
+近似总服务需求。对Model 1，$\Lambda_t=\lambda_t$、$\Omega_t=\kappa_t\lambda_t$；对Model 2和Model 3，$\Lambda$和$\Omega$由后续预约数量、预约到达概率和分流决策共同决定。
 
 \subsection{指数型风险约束的确定性转化}
 
@@ -302,7 +556,7 @@ L_{it}^{(3)}=W_{it}+\tilde D_{it}-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2.
 \E\left[\exp\left(\frac{X-C}{\rho\nu}\right)\right]
 =\exp\left(\frac{\mu_X-C}{\rho\nu}+\frac{\sigma_X^2}{2\rho^2\nu^2}\right).
 \end{equation}
-令该值不超过1，得到
+令该值至多为1，得到
 \begin{equation}
 \rho \geq \frac{\sigma_X^2}{2\nu(C-\mu_X)},\qquad C>\mu_X.
 \label{eq:normal-rsi}
@@ -312,14 +566,14 @@ L_{it}^{(3)}=W_{it}+\tilde D_{it}-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2.
 \sigma_X^2+2\rho\nu\mu_X\leq 2\rho\nu C.
 \label{eq:rsi-deterministic}
 \end{equation}
-若$C\leq\mu_X$，则该时段的平均压力已经超过安全阈值，单纯依靠方差修正无法满足约束，需要提高服务能力上限、改变分流或重新设定安全阈值。因此，后续经验标定会同时报告触及服务用时下界的状态比例，而不把这些状态解释为已经被模型完全消除的风险。
+当$C\leq\mu_X$时，风险约束要求提高安全阈值或增加服务能力。因此，本文在实证求解中采用满足$C>\mu_X$的安全阈值口径。
 
-对Model 2，广义压力的均值和方差为
+对Model 1，系统压力的均值和方差为
 \begin{equation}
-\E[L_t^{(2)}]=W_t+\lambda_t m-c_t+\gamma[c_t-c_0]_+^2,
+\E[L_t^{(1)}]=W_t+\lambda_t m-c_t+\gamma[c_t-c_0]_+^2,
 \end{equation}
 \begin{equation}
-\Var(L_t^{(2)})=\lambda_t(v+\kappa_t m^2).
+\Var(L_t^{(1)})=\lambda_t(v+\kappa_t m^2).
 \end{equation}
 将其代入式\eqref{eq:rsi-deterministic}，得到单诊室随机服务模型的确定性风险约束：
 \begin{equation}
@@ -327,222 +581,336 @@ L_{it}^{(3)}=W_{it}+\tilde D_{it}-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2.
  +2\rho\nu\left\{W_t+\lambda_t m-c_t+\gamma[c_t-c_0]_+^2\right\}
 \leq 2\rho\nu C_{\mathrm{safe}},
 \quad t=1,\ldots,T.
+\label{eq:model1-deterministic-rsi}
+\end{equation}
+
+对Model 2，给定单诊室调度决策$\delta_t^{(2)}=(c_t,\bm u_t,z_t)$后，后续预约数量改变$\Lambda_t(\bm u)$和$\Omega_t(\bm u)$。系统压力的均值和方差为
+\begin{equation}
+\E[L_t^{(2)}(\delta_t^{(2)})]
+=W_t+\Lambda_t(\bm u)m-c_t+\gamma[c_t-c_0]_+^2,
+\end{equation}
+\begin{equation}
+\Var(L_t^{(2)}(\delta_t^{(2)}))
+=\Lambda_t(\bm u)v+\Omega_t(\bm u)m^2.
+\end{equation}
+对应的确定性风险约束为
+\begin{equation}
+\begin{aligned}
+&\Lambda_t(\bm u)v+\Omega_t(\bm u)m^2
++2\rho\nu\left\{W_t+\Lambda_t(\bm u)m-c_t+\gamma[c_t-c_0]_+^2\right\}\\
+&\qquad\leq 2\rho\nu C_{\mathrm{safe}},
+\quad t=1,\ldots,T.
+\end{aligned}
 \label{eq:model2-deterministic-rsi}
 \end{equation}
-对Model 3，诊室$i$的均值和方差为
+在式\eqref{eq:model2-deterministic-rsi}中，$c_t$和$\bm u_t$由给定调度决策$\delta_t^{(2)}$提供，风险评价模型的待求变量为$\rho$。
+
+对Model 3，给定多诊室调度决策$\delta_t^{(3)}=(\bm c_t,\bm p_t,\bm u_t,z_t)$后，诊室$i$的均值和方差为
 \begin{equation}
-\E[L_{it}^{(3)}]=W_{it}+\lambda_t p_{it}m_i-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2,
+\E[L_{it}^{(3)}(\delta_t^{(3)})]
+=W_{it}+\Lambda_{it}(\bm p,\bm u)m_i-c_{it}+\gamma_i[c_{it}-c_{i0}]_+^2,
 \end{equation}
 \begin{equation}
-\Var(L_{it}^{(3)})=\lambda_t p_{it}v_i+\omega_{it}m_i^2.
+\Var(L_{it}^{(3)}(\delta_t^{(3)}))
+=\Lambda_{it}(\bm p,\bm u)v_i+\Omega_{it}(\bm p,\bm u)m_i^2.
 \end{equation}
 对应的多诊室确定性风险约束为
 \begin{equation}
 \begin{aligned}
-&\lambda_t p_{it}v_i+\omega_{it}m_i^2
- +2\rho\nu\left\{W_{it}+\lambda_t p_{it}m_i-c_{it}
+&\Lambda_{it}(\bm p,\bm u)v_i+\Omega_{it}(\bm p,\bm u)m_i^2
+ +2\rho\nu\left\{W_{it}+\Lambda_{it}(\bm p,\bm u)m_i-c_{it}
  +\gamma_i[c_{it}-c_{i0}]_+^2\right\}\\
 &\qquad\leq 2\rho\nu C_{\mathrm{safe},i},
 \quad i\in I,\ t=1,\ldots,T.
 \end{aligned}
 \label{eq:model3-deterministic-rsi}
 \end{equation}
-式\eqref{eq:model2-deterministic-rsi}和式\eqref{eq:model3-deterministic-rsi}显示，风险约束由三部分构成：服务需求方差、平均剩余工作量和赶工风险代理。
+在式\eqref{eq:model3-deterministic-rsi}中，$\bm c_t$、$\bm p_t$和$\bm u_t$由给定调度决策$\delta_t^{(3)}$提供，风险评价模型的待求变量为$\rho$。式\eqref{eq:model1-deterministic-rsi}--\eqref{eq:model3-deterministic-rsi}显示，风险约束由三部分构成：服务需求方差、平均剩余工作量和赶工风险。加入后续预约数量后，预约开放决策会通过$\Lambda$和$\Omega$同时影响平均压力和尾部风险。
 
-\subsection{从服务能力决策到服务用时反馈}
+\subsection{服务时长与预约数量反馈决策函数}
 
-第4章模型以单位时段释放的服务工作量$c_{it}$为决策变量，便于统一刻画候诊积压、随机服务需求和赶工风险代理。接下来据此进一步推导平均每位患者的服务节奏提示。
-
-设$\Delta$为单个决策时段长度，$N_{it}$为诊室$i$在时段$t$可用的等效出诊单元数，$m_i$为该诊室在舒适节奏下的平均标准服务需求，$s_{it}$为该时段建议执行的平均单人服务用时。这里的$c_{it}$不是实际钟表时间，而是折算后的标准工作量释放量：若医生用低于舒适均值的时间完成一个平均病例，模型认为同一时段释放了更多标准工作量，但同时通过$h(c_{it})$消耗安全裕度。在时段内服务节奏近似稳定时，诊室$i$可服务的患者数约为$N_{it}\Delta/s_{it}$，对应的标准化服务工作量为
+第4章模型中的$W_t$表示时段$t$开始时的排队时长或待消化工作量，单位为分钟。Model 2和Model 3把调度决策先写入压力随机变量，再通过风险评价模型求取给定策略对应的$\rho$。为形成可执行的门诊策略，需要构造能够从状态直接输出服务能力和后续预约数量的反馈决策函数。服务能力$c_{d\tau}^{\star}$可进一步转化为该状态下的平均单人服务时长：
 \begin{equation}
-c_{it}(s_{it})=\frac{N_{it}\Delta m_i}{s_{it}}.
-\label{eq:capacity-duration-map}
+s_{d\tau}^\star=\frac{\Delta\hat m}{c_{d\tau}^{\star}}.
+\label{eq:service-time-mapping}
 \end{equation}
-当$s_{it}=m_i$时，式\eqref{eq:capacity-duration-map}给出$c_{it}=N_{it}\Delta$，即舒适节奏下可释放的标准工作量；当$s_{it}<m_i$时，同一时段内可释放的标准工作量上升，但赶工惩罚$h(c_{it})$也随之增加。该转换仅用于运营节奏建议，不能要求医生对所有患者机械缩短问诊时间；复杂病例、复诊解释和临床沟通仍应优先服从医疗判断。
-反过来，若模型求得目标服务工作量$c_{it}^{*}$，则转换得到的平均服务节奏提示为
+本节按照Model 1、Model 2和Model 3各自可观测的状态变量，直接给出可估计的反馈决策函数。记
 \begin{equation}
-s_{it}^{*}=\frac{N_{it}\Delta m_i}{c_{it}^{*}},
-\label{eq:duration-from-capacity}
+[x]_{[\underline s,\bar s]}=\min\{\bar s,\max\{\underline s,x\}\},\qquad [x]_+=\max\{x,0\},
 \end{equation}
-并需满足$s_{\min}\leq s_{it}^{*}\leq s_{\max}$。其中$s_{\min}$应由临床安全边界、管理规则或审慎的数据分位数共同确定。若实证只能使用数据分位数，则$s_{\min}$只能解释为原型标定边界，而非已由临床质量结果验证的最短安全问诊时间。因此，队列反馈策略并非脱离优化模型的独立经验式，而是对式\eqref{eq:duration-from-capacity}所对应模型派生服务节奏提示的参数化近似。为避免误用，本文把$s_{it}^{*}$解释为“服务节奏压力提示”或“容量支援触发信号”，而不是医生必须执行的个体患者问诊时长。若模型频繁触及$s_{\min}$，合理管理含义是增开诊室、分流、延后非紧急需求或调低预约负载，而不是继续压缩临床沟通。
+其中$\underline s$和$\bar s$分别为平均单人服务时长的下界和上界。
 
-设$Q_{it}$为时段开始时诊室$i$名下的待诊人数，$q_{it}=Q_{it}/N_{it}$表示平均每个出诊单元面对的局部队列长度。给定任一反馈函数$f(q_{it};\theta)$，其诱导的服务能力决策为
+对Model 1，模型以当前排队工作量和服务能力决策为核心，其反馈函数输出服务时长：
 \begin{equation}
-c_{it}(\theta)=\frac{N_{it}\Delta m_i}{f(q_{it};\theta)}.
-\label{eq:feedback-capacity}
+\hat s_{d\tau}^{(1)}
+=F_{\tau}^{(1)}(W_{d\tau})
+=\left[a_{0\tau}^{(1)}-a_{1\tau}^{(1)}W_{d\tau}\right]_{[\underline s,\bar s]},
+\qquad a_{1\tau}^{(1)}\geq0 .
+\label{eq:model1-feedback-function}
 \end{equation}
-将式\eqref{eq:feedback-capacity}代入广义系统压力，可得参数化策略下的压力表达：
+该式表示，当排队工作量上升时，Model 1通过压缩平均单人服务时长释放服务能力。
+
+对Model 2，后续预约数量进入压力传播过程。令$B_{d\tau}^{\mathrm{near}}$表示近期后续窗口已预约数量，$G_{d\tau}^{\mathrm{near}}$表示近期剩余可开放号源，$R_{d\tau}$表示预约请求代理。Model 2的服务时长和预约开放数量函数分别设为
 \begin{equation}
-L_{it}(\theta)=W_{it}+\tilde D_{it}
--\frac{N_{it}\Delta m_i}{f(q_{it};\theta)}
-+\gamma_i\left[\frac{N_{it}\Delta m_i}{f(q_{it};\theta)}-c_{i0}\right]_+^2.
-\label{eq:feedback-pressure}
+\hat s_{d\tau}^{(2)}
+=F_{\tau}^{(2)}(W_{d\tau},B_{d\tau}^{\mathrm{near}},G_{d\tau}^{\mathrm{near}})
+=\left[
+a_{0\tau}^{(2)}-a_{1\tau}^{(2)}W_{d\tau}
+-a_{2\tau}^{(2)}B_{d\tau}^{\mathrm{near}}
++a_{3\tau}^{(2)}G_{d\tau}^{\mathrm{near}}
+\right]_{[\underline s,\bar s]},
+\label{eq:model2-service-feedback-function}
 \end{equation}
-式\eqref{eq:feedback-pressure}说明，反馈函数通过改变平均服务用时影响服务能力释放，并进一步进入广义压力和风险约束。
-
-本文首先定义线性型反馈函数：
 \begin{equation}
-s_{it}^{L}(q_{it})=\min\{s_{\max},\max[s_{\min},a_L-b_Lq_{it}]\},\qquad b_L\geq0.
-\label{eq:feedback-linear}
+\begin{aligned}
+\hat u_{d\tau}^{(2)}
+&=G_{\tau}^{(2)}(W_{d\tau},B_{d\tau}^{\mathrm{near}},
+G_{d\tau}^{\mathrm{near}},R_{d\tau})\\
+&=\min\left\{
+G_{d\tau}^{\mathrm{near}},
+\left[
+b_{0\tau}^{(2)}-b_{1\tau}^{(2)}W_{d\tau}
+-b_{2\tau}^{(2)}B_{d\tau}^{\mathrm{near}}
++b_{3\tau}^{(2)}G_{d\tau}^{\mathrm{near}}
++b_{4\tau}^{(2)}R_{d\tau}
+\right]_+
+\right\}.
+\end{aligned}
+\label{eq:model2-booking-feedback-function}
 \end{equation}
-其次定义指数型反馈函数：
+其中$a_{1\tau}^{(2)},a_{2\tau}^{(2)},a_{3\tau}^{(2)}\geq0$，$b_{1\tau}^{(2)},b_{2\tau}^{(2)},b_{3\tau}^{(2)},b_{4\tau}^{(2)}\geq0$。该设定使当前排队和近期预约负荷压低服务时长和开放数量，而剩余号源与预约请求提高开放数量。
+
+对Model 3，决策状态还需要包含同一日期和时段内其他诊室的压力与可开放容量。令
+\[
+W_{d\tau}^{\mathrm{sys}}=\sum_{i\in I_{d\tau}}W_{i,d,\tau},\quad
+B_{d\tau}^{\mathrm{sys}}=\sum_{i\in I_{d\tau}}B_{i,d,\tau}^{\mathrm{near}},\quad
+G_{d\tau}^{\mathrm{sys}}=\sum_{i\in I_{d\tau}}G_{i,d,\tau}^{\mathrm{near}},\quad
+R_{d\tau}^{\mathrm{sys}}=\sum_{i\in I_{d\tau}}R_{i,d,\tau}.
+\]
+则诊室$i$的Model 3反馈函数为
 \begin{equation}
-s_{it}^{E}(q_{it})=\min\{s_{\max},\max[s_{\min},a_E\exp(-b_Eq_{it})]\},\qquad b_E\geq0.
-\label{eq:feedback-exp}
+\begin{aligned}
+\hat s_{i,d,\tau}^{(3)}
+=F_{\tau}^{(3)}(&W_{i,d,\tau},B_{i,d,\tau}^{\mathrm{near}},G_{i,d,\tau}^{\mathrm{near}},
+W_{d\tau}^{\mathrm{sys}},B_{d\tau}^{\mathrm{sys}},G_{d\tau}^{\mathrm{sys}})\\
+=\big[&
+a_{0\tau}^{(3)}-a_{1\tau}^{(3)}W_{i,d,\tau}
+-a_{2\tau}^{(3)}B_{i,d,\tau}^{\mathrm{near}}
++a_{3\tau}^{(3)}G_{i,d,\tau}^{\mathrm{near}}\\
+&-a_{4\tau}^{(3)}W_{d\tau}^{\mathrm{sys}}
+-a_{5\tau}^{(3)}B_{d\tau}^{\mathrm{sys}}
++a_{6\tau}^{(3)}G_{d\tau}^{\mathrm{sys}}
+\big]_{[\underline s,\bar s]},
+\end{aligned}
+\label{eq:model3-service-feedback-function}
 \end{equation}
-进一步定义幂函数型反馈函数：
 \begin{equation}
-s_{it}^{P}(q_{it})=\min\{s_{\max},\max[s_{\min},a_P(1+q_{it})^{-b_P}]\},\qquad b_P\geq0.
-\label{eq:feedback-power}
+\begin{aligned}
+\hat u_{i,d,\tau}^{(3)}
+=G_{\tau}^{(3)}(&W_{i,d,\tau},B_{i,d,\tau}^{\mathrm{near}},G_{i,d,\tau}^{\mathrm{near}},R_{i,d,\tau},
+W_{d\tau}^{\mathrm{sys}},B_{d\tau}^{\mathrm{sys}},G_{d\tau}^{\mathrm{sys}},R_{d\tau}^{\mathrm{sys}})\\
+=\min\{&
+G_{i,d,\tau}^{\mathrm{near}},
+\big[
+b_{0\tau}^{(3)}-b_{1\tau}^{(3)}W_{i,d,\tau}
+-b_{2\tau}^{(3)}B_{i,d,\tau}^{\mathrm{near}}
++b_{3\tau}^{(3)}G_{i,d,\tau}^{\mathrm{near}}
++b_{4\tau}^{(3)}R_{i,d,\tau}\\
+&-b_{5\tau}^{(3)}W_{d\tau}^{\mathrm{sys}}
+-b_{6\tau}^{(3)}B_{d\tau}^{\mathrm{sys}}
++b_{7\tau}^{(3)}G_{d\tau}^{\mathrm{sys}}
++b_{8\tau}^{(3)}R_{d\tau}^{\mathrm{sys}}
+\big]_+
+\}.
+\end{aligned}
+\label{eq:model3-booking-feedback-function}
 \end{equation}
-其中$s_{it}^{L}(q_{it})$、$s_{it}^{E}(q_{it})$和$s_{it}^{P}(q_{it})$为时段$t$诊室$i$建议的平均单人服务用时，$a_L$、$a_E$和$a_P$表示低队列压力下的基础服务时长，$b_L$、$b_E$和$b_P$表示队列压力对平均服务用时的压缩强度，$s_{\min}$和$s_{\max}$分别表示临床上可接受的服务用时下界和上界。
+其中所有斜率系数均非负。Model 3的输出是$\{\hat s_{i,d,\tau}^{(3)},\hat u_{i,d,\tau}^{(3)}\}_{i\in I_{d\tau}}$构成的多诊室策略向量；系统层变量用于反映可行分流和跨诊室号源协调带来的压力分担。
+
+在后续实证分析中，本文分别构造以下三类样本：
+\begin{equation}
+\begin{aligned}
+\mathcal D^{(1)}&=\{(W,s^{(1)\star})\},\\
+\mathcal D^{(2)}&=\{(W,B^{\mathrm{near}},G^{\mathrm{near}},s^{(2)\star},u^{(2)\star})\},\\
+\mathcal D^{(3)}&=\{(W,B^{\mathrm{near}},G^{\mathrm{near}},R,
+W^{\mathrm{sys}},B^{\mathrm{sys}},G^{\mathrm{sys}},R^{\mathrm{sys}},
+s^{(3)\star},u^{(3)\star})\}.
+\end{aligned}
+\end{equation}
+基于每个医生-日期-时段形成的区间容量和预约数量，第六章将进一步构造第5.2节所需变量，生成三类模型策略输出并比较拟合表现。
 
 
 
-\section{数据处理、参数标定与实证分析}
+\section{数据处理与实证分析}
 
-\subsection{数据来源与清洗口径}
+\subsection{数据来源与模型变量构造}
 
-本文使用\texttt{data.ods}中的医院门诊业务数据，包含两个样本窗口：2023年2月1日至2023年2月14日，以及2023年8月1日至2023年8月14日。每个窗口包括就诊记录、预约时段和医生信息三类表。就诊记录包含挂号时间、叫号时间、开始就诊时间、后续检查缴费取药时间、科室名称、医生ID和患者分类；预约表包含医生开诊日期、预约区间容量和预约数；医生表包含医生样本信息。挂号时间可以稳定记录需求进入医院信息系统的时点，但不等同于患者到院、签到或进入候诊区的时点；因此，后续半小时“到达”曲线和预测误差均应理解为挂号流入代理。原始数据表中还存在门诊号、卡号、诊断、主诉和现病史等敏感字段，本文复现代码不使用这些字段，也不在表格、图片或结果文件中输出患者级明细。正式应用或对外发表前，仍需由医院数据治理和伦理管理部门确认数据授权、脱敏范围和结果披露边界。两个窗口均为短期样本，能够用于展示季节性高低负荷差异和模型标定流程，但不足以支持长期季节规律或干预效果的因果判断。
+本文使用医院门诊运营数据中的两个时间窗口进行实证分析，分别为2023年2月1日至2023年2月14日和2023年8月1日至2023年8月14日。原始数据包括就诊记录、预约记录和医生信息三类表。就诊记录包含挂号时间、预约起始时间、预约结束时间、签到时间、叫号时间、开始就诊时间、结束就诊时间、科室名称和医生ID等字段；预约记录包含医生ID、开诊日期、时段起止时间、区间人次和预约数；医生信息包含医生ID、性别、年龄、工作年限和医生分类。其中，预约记录中的区间人次对应$K_{t,h}$的观测口径，预约数对应$B_{t,h}$的观测口径，二者之差用于构造剩余可开放号源$G_{t,h}$。
 
-清洗时，本文将开始就诊后最早出现的“就诊检查时间、首次付费时间、最后付费时间、检验时间、检查时间、发药时间、结束就诊时间”作为医生释放患者的代理结束时点，并剔除有效问诊时长超过60分钟的异常记录。该口径的优点是可以在缺少精确离室时间的情况下构造可复现的服务时长指标；局限是该指标可能混入检查、缴费或系统记录延迟，也可能产生极短服务时长。因此，本文将其称为“有效问诊时长代理”，并在解释时避免把它等同于严格的医生面对面诊疗时间。由于后续医生-日期-半小时状态需要服务时长代理，缺少有效结束时点或被判定为异常长服务的记录不会进入状态层面模型样本；这可能低估复杂病例和异常拥堵状态的风险。等待时间以挂号至开始就诊和叫号至开始就诊两类指标同时描述：前者可能包含提前挂号、线上挂号或提前到院时间，因此主要反映患者从挂号到诊疗开始的总历时；后者更接近现场叫号后的短等待，但不完整覆盖患者到院前等待。模型标定主要使用时段开始队列、预测挂号流入代理和服务时长代理，不把挂号等待直接解释为现场排队时间。
+本文以30分钟作为基本决策时段，并将医生、日期和时段组成状态单元$(i,d,\tau)$。开始就诊时间和结束就诊时间之差定义为服务时长，服务时长标定样本保留$(0,120]$分钟之间的有效观测；挂号至开始就诊等待时长保留$[0,480]$分钟之间的观测；叫号至开始就诊等待时长保留$[0,180]$分钟之间的观测。上述清洗规则使服务需求矩、等待状态和数据质量指标具有统一的时间口径。
+
+第5.2节已经给出Model 1、Model 2和Model 3的确定性风险约束。第6.1节的任务是把原始数据转化为这些约束所需的状态变量和参数，包括排队工作量、基础流入矩、服务需求矩、预约容量、已预约数量、剩余可开放号源、预约请求代理、系统层汇总状态和服务能力边界。
+
+在构造队列状态时，令$Q_{i,d,\tau}$表示医生$i$在第$d$个观测日、时段$\tau$开始时处于候诊队列中的患者人数。根据第5章的模型口径，排队时长或待消化工作量定义为
+\begin{equation}
+W_{i,d,\tau}=Q_{i,d,\tau}\hat m,
+\label{eq:empirical-workload}
+\end{equation}
+其中$\hat m$为样本窗口内有效服务时长均值。该处理将现场可观察的候诊人数转化为模型中的排队工作量变量。
+
+进一步地，根据医生、日期和预约时段构造预约簿状态。令$K_{i,d,\tau}^{\mathrm{obs}}$和$B_{i,d,\tau}^{\mathrm{obs}}$分别表示医生$i$在日期$d$、时段$\tau$的观测预约容量和有效预约数量，其中有效预约数量取预约数与区间人次的较小值。剩余可开放号源为
+\begin{equation}
+G_{i,d,\tau}^{\mathrm{obs}}
+=\left[K_{i,d,\tau}^{\mathrm{obs}}-B_{i,d,\tau}^{\mathrm{obs}}\right]_+.
+\end{equation}
+令$H_0$表示近期后续窗口长度，本文取$H_0=4$，即向后观察2小时内的4个半小时时段。近期已预约数量和近期剩余可开放号源可写为
+\begin{equation}
+B_{i,d,\tau}^{\mathrm{near}}=\sum_{h=1}^{H_0}B_{i,d,\tau+h}^{\mathrm{obs}},\qquad
+G_{i,d,\tau}^{\mathrm{near}}=\sum_{h=1}^{H_0}G_{i,d,\tau+h}^{\mathrm{obs}}.
+\label{eq:empirical-near-book}
+\end{equation}
+预约请求代理由同医生、同日内邻近时段的可观测预约接纳量构造。令$\bar B_{i,\tau}^{\mathrm{near}}$表示医生$i$在样本窗口内时段$\tau$的近期预约均值，则
+\begin{equation}
+R_{i,d,\tau}^{\mathrm{proxy}}
+=\max\left\{
+B_{i,d,\tau}^{\mathrm{near}},
+\bar B_{i,\tau}^{\mathrm{near}}
+\right\}.
+\label{eq:request-proxy}
+\end{equation}
+该变量为Model 2和Model 3中的$R_t$提供数据口径，使预约开放决策同时受到可开放容量和可观测预约需求的约束。
+
+Model 3需要同一日期和时段内的系统层状态。令$I_{d\tau}$表示日期$d$、时段$\tau$可观测的医生集合，系统层汇总变量定义为
+\begin{equation}
+\begin{aligned}
+W_{d\tau}^{\mathrm{sys}}&=\sum_{i\in I_{d\tau}}W_{i,d,\tau},&
+B_{d\tau}^{\mathrm{sys}}&=\sum_{i\in I_{d\tau}}B_{i,d,\tau}^{\mathrm{near}},\\
+G_{d\tau}^{\mathrm{sys}}&=\sum_{i\in I_{d\tau}}G_{i,d,\tau}^{\mathrm{near}},&
+R_{d\tau}^{\mathrm{sys}}&=\sum_{i\in I_{d\tau}}R_{i,d,\tau}^{\mathrm{proxy}}.
+\end{aligned}
+\label{eq:empirical-system-state}
+\end{equation}
+这些变量对应第5.3节Model 3反馈函数中的多诊室状态输入。
+
+参数标定方面，本文用样本窗口内有效服务时长估计$\hat m$和$\hat v$，用医生-时段挂号流入计数估计离散系数
+\begin{equation}
+\hat\kappa=\frac{\widehat{\Var}(A_{i,d,\tau})}{\widehat{\E}(A_{i,d,\tau})}.
+\end{equation}
+预约到达概率取$q_h=q=0.85$，服务能力舒适基准取$c_0=\Delta$。令$\underline s$为有效服务时长第10百分位数与2分钟之间的较大值，则服务能力上界取
+\begin{equation}
+c_{\max}=\frac{\Delta\hat m}{\underline s}.
+\end{equation}
+赶工惩罚系数取$\gamma=[2(c_{\max}-c_0)]^{-1}$，方差折算参数取$\eta=\max\{2\hat m,1\}$。压力安全阈值$C_{\mathrm{safe}}$由舒适服务能力下的基准压力第90百分位数给出：
+\begin{equation}
+C_{\mathrm{safe}}
+=P_{90}\left(
+W_{i,d,\tau}+A_{i,d,\tau}\hat m-c_0
++\frac{A_{i,d,\tau}\hat v+\hat\kappa A_{i,d,\tau}\hat m^2}{\eta}
+\right).
+\label{eq:empirical-safe-threshold}
+\end{equation}
+至此，第5.2节风险约束所需的全部实证变量均由数据得到。
 
 \input{tables/data_quality.tex}
 
-表\ref{tab:data-quality}显示，两个窗口中可纳入服务时长代理的记录比例分别为88.1\%和92.8\%，说明服务时长统计并非覆盖所有就诊记录。叫号至开始就诊等待的可计算比例更低，分别为39.1\%和52.4\%，因此该指标只能描述有叫号时间戳的子样本，不宜外推为全部患者的现场等待。开始就诊和代理结束时间缺失还意味着状态层面模型样本更接近“时间戳较完整的门诊过程”，可能低估异常长服务、复杂病例或系统记录不完整时段的压力。基于这一诊断，本文后续所有“服务时长”“等待”和“高压状态”结果均作为运营时间戳代理结果报告，而不解释为临床面对面时长或外部质量结局。
+表\ref{tab:data-quality}显示，2月窗口共有58295条就诊记录，8月窗口共有95548条就诊记录。两期样本均覆盖数百名医生和30个以上科室。开始就诊时间和挂号时间的可用比例能够支持挂号至就诊等待时长和医生-时段队列状态构造；预约记录包含区间人次和预约数，能够支持预约容量、已预约数量和剩余可开放号源的状态构造；叫号时间字段作为辅助数据质量信息使用。
+
+\subsection{到达、等待与服务时长特征}
 
 \input{tables/descriptive_statistics.tex}
 
-表\ref{tab:descriptive-statistics}显示，8月样本就诊记录数和日均挂号量高于2月样本，但两期平均服务时长代理几乎相同，均约为4.6分钟。挂号至开始就诊平均历时从2月的67.70分钟上升到8月的94.10分钟，叫号至开始就诊平均等待也从3.94分钟上升到6.53分钟。前者反映挂号到就诊开始的总体时间暴露，后者更接近现场叫号后的短等待；两者同时上升，提示高负荷月份的拥堵更可能与需求侧集中到达、预约负载和诊室间不均衡有关，而不能简单归因于医生平均问诊速度变化。由于本文没有进行因果分解，后续只将该结果作为模型关注到达波动和负载不均衡的经验动机。
-
-\subsection{到达过程与服务时间分布}
-
-图\ref{fig:arrival-profile}展示了两期样本的平均半小时挂号流入代理曲线。2月样本最高流入时段出现在09:30附近，8月样本高峰明显前移到07:30。该差异说明两个样本窗口的挂号节奏不同，并提示开诊初期集中挂号可能使系统在一天开始时迅速累积队列，使后续时段即使服务能力稳定也难以完全恢复。由于样本窗口较短，本文不把这一现象外推为所有高需求季节的一般规律。
+表\ref{tab:descriptive-statistics}报告了两期样本的基本运行特征。8月窗口日均挂号人次为6824.9，高于2月窗口的4163.9。医生-时段流入均值分别为2.47和2.76，方差/均值分别为2.62和3.03，说明半小时流入在医生局部状态上存在明显过度离散。两期样本的服务时长均值接近，分别为15.33分钟和15.68分钟，但中位数仅为4.05分钟和4.53分钟，表明服务时长分布右偏。挂号至开始就诊等待时长在8月更高，其中P90达到230.79分钟，高于2月窗口的174.80分钟。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.86\textwidth]{arrival_profile.png}
-  \caption{两期样本的平均半小时挂号流入代理曲线}
+  \includegraphics[width=0.92\textwidth]{arrival_profile.png}
+  \caption{两期样本半小时挂号流入均值}
   \label{fig:arrival-profile}
 \end{figure}
 
-图\ref{fig:service-distribution}展示了有效问诊时长代理的经验分布。两期样本都呈现明显右偏：大量患者服务时长较短，但仍存在一部分记录对应较长服务过程。这一事实支持Model 2引入随机服务需求。如果只使用平均服务时间，模型可能低估长服务患者在高峰时段对队列尾部风险的放大作用；但由于结束时点为代理变量，该结论仍需在更精确的诊间行为数据中复核。
+图\ref{fig:arrival-profile}显示，两期样本均存在明显的日内到达高峰。挂号流入主要集中在上午开诊前后，8月窗口在早高峰的平均挂号量明显高于2月窗口；中午前后出现第二个较小峰值，下午和晚间流入逐步下降，说明门诊压力主要来自短时段集中到达。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.82\textwidth]{service_distribution.png}
-  \caption{有效问诊时长经验分布（图中展示30分钟以内记录）}
-  \label{fig:service-distribution}
+  \includegraphics[width=0.92\textwidth]{service_wait_boxplot.png}
+  \caption{服务时长与挂号至就诊等待时长分布}
+  \label{fig:service-wait-boxplot}
 \end{figure}
 
-\input{tables/service_cutoff_sensitivity.tex}
+图\ref{fig:service-wait-boxplot}进一步比较了服务时长和等待时长分布。服务时长在两期样本中具有相近的中位数和四分位区间，但等待时长在8月窗口整体上移。这说明等待压力还与季节状态有关。
 
-表\ref{tab:service-cutoff-sensitivity}进一步检验了服务时长代理的截尾口径。若截尾上限从60分钟放宽到120分钟，两期样本服务时长均值分别从4.61和4.62分钟上升到5.06和5.00分钟，但中位数几乎不变；若收紧到30分钟，均值分别下降到4.23和4.33分钟。该结果说明服务时长代理的中心位置较稳定，但均值和右尾仍受少量长记录影响。本文保留60分钟作为主口径，是为了在覆盖率和异常记录控制之间折中；所有依赖服务方差和右尾的压力结果都应结合该敏感性解释。
+\subsection{策略输出构造与反馈决策函数拟合}
 
-\subsection{模型参数标定}
+根据第5.2节的确定性转化，本文把每个医生-日期-时段状态$(i,d,\tau)$代入第四章对应模型，逐状态构造策略输出。Model 1生成服务时长目标$s_{i,d,\tau}^{(1)\star}$；Model 2由式\eqref{eq:model2-scheduling}生成服务时长目标$s_{i,d,\tau}^{(2)\star}$和近期后续预约开放目标$u_{i,d,\tau}^{(2)\star}$；Model 3由式\eqref{eq:model3-scheduling}生成诊室层面的$s_{i,d,\tau}^{(3)\star}$和$u_{i,d,\tau}^{(3)\star}$。因此，第六章的作用是说明第四章模型在数据样本中的实例化方式，并沿用同一组模型符号与约束。
 
-表\ref{tab:parameter-calibration}给出了主要参数的经验标定结果。固定服务时长参数$s_{\mathrm{base}}$可取样本平均服务时长代理；随机服务需求不再被压缩为某个特定分布，而是直接使用样本均值、标准差和分位数刻画其一阶、二阶和尾部特征。流入过程使用两类离散系数刻画$\kappa$的经验量级：全院半小时挂号流入离散系数用于描述总体峰值聚集；模型原型在医生-日期-半小时状态上使用医生-时段挂号流入离散系数，并向月度半小时离散系数收缩以降低14天小样本噪声。
+对Model 1，令$\lambda_{i,d,\tau}=A_{i,d,\tau}$、$\Omega_{i,d,\tau}=\hat\kappa A_{i,d,\tau}$，并将$W_{i,d,\tau}$、$\lambda_{i,d,\tau}$、$\Omega_{i,d,\tau}$、$\hat m$、$\hat v$、$c_0$、$c_{\max}$、$\gamma$和$C_{\mathrm{safe}}$代入式\eqref{eq:model1-deterministic-rsi}，求得$c_{i,d,\tau}^{(1)\star}$，再用式\eqref{eq:service-time-mapping}得到$s_{i,d,\tau}^{(1)\star}$。
 
-为避免在候选信号评估中使用未来信息，本文将每个14天样本窗口划分为前7天训练窗口和后7天测试窗口。训练窗口用于估计平均服务时长代理、服务时长方差、流入离散系数收缩基准、服务用时上下界和经验压力阈值；测试窗口主口径只使用当前日期之前的历史同医生同半小时均值预测当前时段挂号流入代理，若同医生历史不足则退回到此前日期的同半小时时段全院医生状态均值。作为补充，本文还构造预约数校准预测：先在训练窗口估计预约数与挂号流入代理的平均比例，再将测试期同医生同日预约数映射为半小时流入预测。该补充口径只能检查预约表信息是否增加短期预测价值，不能替代完整的签到、迟到、取消和爽约模型。风险阈值$C_{\mathrm{safe}}$使用训练窗口医生局部队列与实际挂号流入代理形成的风险负载95\%分位数作为经验参考，因此它对应单医生或单诊室压力阈值，而不是全院聚合队列阈值，也不是外部给定的临床安全标准。两个样本窗口分别使用各自的$C_{\mathrm{safe}}$，所以跨窗口比较时应关注挂号流入、等待和模型派生标签识别模式，而不能把阈值数值本身解释为8月系统更安全或更危险。若医院在实际部署中希望进一步提高精度，应使用更长时间窗、分科室经验分布、负二项到达、预约签到预测或离散事件仿真检验近似误差。
-
-\input{tables/parameter_calibration.tex}
-
-从表\ref{tab:parameter-calibration}可以看到，半小时挂号流入离散系数均值在两期样本中分别为3.78和4.27，明显高于泊松分布“方差等于均值”的基准；进入模型原型的局部$\kappa$均值也高于1。这意味着可观测挂号流入代理存在过度离散和峰值聚集，正文模型因而使用$\kappa_t$修正服务需求方差。早高峰挂号占比接近一半，说明门诊风险并非均匀分布在全天，而是高度集中在上午前段。高频医生平均服务时长代理变异系数约为0.55，说明医生或其服务病例组合之间存在明显差异；由于本文没有完全控制科室、病种和患者类型，该差异只能作为多诊室异质性建模的经验依据，不能简单解释为医生个人能力差异。
-
-\subsection{模型原型的经验标定检验}
-
-在完成参数标定后，本文检验模型原型在医生局部时段层面的内部一致性。具体做法是构造“医生-日期-半小时”状态单元，以时段开始待诊人数、历史可得的预测挂号流入代理、医生-时段局部流入离散系数、服务时长代理均值与方差计算风险调整负载，并将其代入式\eqref{eq:model2-deterministic-rsi}的经验实施形式。实际挂号流入代理只用于在测试窗口事后生成同一约束下的模型派生高压标签，不进入候选信号生成时点的服务节奏提示计算。由于$\rho$与$\nu$在确定性约束中以乘积形式出现，经验实施需要选择一个风险尺度使方差修正项与队列工作量处于同一量纲。本文主回放使用训练窗口风险负载95\%分位数作为固定风险尺度；在阈值敏感性检验中，仅改变$C_{\mathrm{safe}}$的90\%、95\%和97.5\%分位口径，而保持方差修正的风险尺度不变。该设定是经验尺度归一化，不等价于求解理论模型中的最优风险水平$\rho$，也不应被解释为医院已经确定了风险偏好参数。按照预测模型报告和风险偏倚评估规范，真正部署前仍需独立样本、滚动时间窗验证、概率校准、外部结果评估和误差案例分析\citep{CollinsMoonsDhimanEtAl2024,MoonsDamenKaulEtAl2025,VaseyNagendranCampbellEtAl2022}。
-
-对每个状态，本文不求解完整跨时段动态优化问题，而是求解满足局部风险约束且偏离舒适服务能力最小的目标服务工作量。经验标定中取$c_0=\Delta=30$分钟；服务用时下界取$s_{\min}=\max\{2.0,\hat p_{10}\}$，其中$\hat p_{10}$为医生半小时平均服务时长代理的10\%分位数；服务能力上界为$c_{\max}=\Delta m/s_{\min}$；赶工惩罚系数取
+对Model 2，近期后续预约开放数量进入到达均值和方差。对给定开放数量$u$，本文构造
 \begin{equation}
-\gamma=\frac{1}{2(c_{\max}-c_0)},\qquad c_{\max}>c_0.
+\Lambda_{i,d,\tau}^{(2)}(u)
+=A_{i,d,\tau}+\frac{q}{H_0}
+\left(B_{i,d,\tau}^{\mathrm{near}}+u\right),
 \end{equation}
-其中$c_{\max}>c_0$等价于$s_{\min}<m$；若数据边界导致$s_{\min}\geq m$，则应重新设定临床下界或不允许加速。该口径使过度加速在接近上界时产生明显惩罚，但它仍是运营原型设定，不是由临床质量结局估计得到的结构参数。目标服务工作量再由式\eqref{eq:duration-from-capacity}转化为模型派生服务节奏提示$s^*$。
+\begin{equation}
+\Omega_{i,d,\tau}^{(2)}(u)
+=\hat\kappa A_{i,d,\tau}
++\frac{q(1-q)}{H_0}
+\left(B_{i,d,\tau}^{\mathrm{near}}+u\right).
+\end{equation}
+将上述$\Lambda_{i,d,\tau}^{(2)}(u)$、$\Omega_{i,d,\tau}^{(2)}(u)$与$G_{i,d,\tau}^{\mathrm{near}}$、$R_{i,d,\tau}^{\mathrm{proxy}}$代入式\eqref{eq:single-booking-constraints}、式\eqref{eq:model2-deterministic-rsi}和式\eqref{eq:model2-scheduling}，即可求得$(u_{i,d,\tau}^{(2)\star},c_{i,d,\tau}^{(2)\star})$；平均单人服务时长由$c_{i,d,\tau}^{(2)\star}$映射得到。
 
-\input{tables/model_application.tex}
+对Model 3，本文先把医生自身状态与同日同半小时系统平均状态合成为多诊室有效状态。令$n_{d\tau}=|I_{d\tau}|$，$\xi=0.70$，则
+\begin{equation}
+W_{i,d,\tau}^{\mathrm{eff}}
+=\xi W_{i,d,\tau}+(1-\xi)\frac{W_{d\tau}^{\mathrm{sys}}}{n_{d\tau}},
+\end{equation}
+其余变量$A^{\mathrm{eff}}$、$B^{\mathrm{eff}}$按同一方式由医生自身状态和系统平均状态加权得到。对给定开放数量$u$，构造
+\begin{equation}
+\Lambda_{i,d,\tau}^{(3)}(u)
+=A_{i,d,\tau}^{\mathrm{eff}}+\frac{q}{H_0}
+\left(B_{i,d,\tau}^{\mathrm{eff}}+u\right),
+\end{equation}
+\begin{equation}
+\Omega_{i,d,\tau}^{(3)}(u)
+=\hat\kappa A_{i,d,\tau}^{\mathrm{eff}}
++\frac{q(1-q)}{H_0}
+\left(B_{i,d,\tau}^{\mathrm{eff}}+u\right).
+\end{equation}
+再将$W_{i,d,\tau}^{\mathrm{eff}}$、$\Lambda^{(3)}(u)$和$\Omega^{(3)}(u)$代入式\eqref{eq:multi-scheduling-feasible-set}、式\eqref{eq:model3-deterministic-rsi}和式\eqref{eq:model3-scheduling}，求得$(u_{i,d,\tau}^{(3)\star},c_{i,d,\tau}^{(3)\star})$，并映射得到$s_{i,d,\tau}^{(3)\star}$。
 
-表\ref{tab:model-application}显示，在全窗口内部标定口径下，两期样本中绝大多数状态在舒适节奏下即可满足局部风险约束，说明模型原型不会机械地要求医生持续加速；其作用主要体现在识别少量尾部压力状态并给出支援、分流、预约平滑或服务节奏边界提醒。2月样本中，需要节奏调整但未触及服务用时下界的状态占0.95\%，触及下界的状态占0.83\%；8月样本对应比例分别为0.93\%和1.45\%。这些比例表明两个窗口中均存在尾部压力状态，但由于$C_{\mathrm{safe}}$按窗口分别标定，不能仅凭该表断言某一月份的模型风险水平更高。触及下界的状态尤其应被解释为需要管理支援或容量调整，而不是要求医生继续压缩问诊时间。该表属于内部状态诊断，不用于证明测试期候选信号性能。
+得到三类模型的策略样本后，本文使用第5.3节给出的模型专属反馈函数进行拟合。Model 1拟合$F_\tau^{(1)}(W)$；Model 2拟合$F_\tau^{(2)}(W,B^{\mathrm{near}},G^{\mathrm{near}})$和$G_\tau^{(2)}(W,B^{\mathrm{near}},G^{\mathrm{near}},R)$；Model 3拟合$F_\tau^{(3)}$和$G_\tau^{(3)}$，其输入进一步包含系统层状态。所有函数按半小时时段分别估计，并保留第5.3节给出的方向约束。
 
-\input{tables/predictive_backtest.tex}
+\input{tables/model_decision_fit.tex}
 
-表\ref{tab:predictive-backtest}进一步报告了模型派生高压标签的时间前推回放。本文将“使用实际挂号流入代理重新代入同一局部风险约束后无法在舒适节奏下满足约束”的状态称为模型派生高压标签，而不称为真实高压或临床高压。每个样本窗口以前7天为训练期、后7天为测试期；测试期预测只使用当前日期之前的信息。2月测试期共有9405个状态，其中派生高压221个，候选信号148个，真阳性136个、假阳性12个、假阴性85个；8月测试期共有14294个状态，其中派生高压441个，候选信号342个，真阳性322个、假阳性20个、假阴性119个。两期样本的精确率分别为91.9\%（按测试日期聚类bootstrap 95\%区间：90.2\%--93.9\%）和94.2\%（90.7\%--96.2\%），召回率分别为61.5\%（53.9\%--68.6\%）和73.0\%（66.9\%--77.0\%）。这说明被模型标记的状态多数也会在实际挂号流入代理下触发同一风险约束，但简单历史均值仍漏掉了相当数量的派生高压状态。由于派生高压标签占比较低，本文不把准确率作为主要证据，也不把该回放解释为真实临床风险预测。该结果只能说明原型在既定标签定义下较保守，真实部署前需要更长历史窗口、预约到院信息、分科室预测模型和外部运营或质量结果验证。
-
-\input{tables/arrival_forecast_diagnostics.tex}
-
-表\ref{tab:arrival-forecast-diagnostics}显示，主口径历史均值预测在两个测试窗口均低估实际半小时挂号流入代理，2月和8月偏差分别为-0.49和-0.42人/状态，MAE分别为1.69和1.79人/状态。预约数校准预测把偏差缩小到-0.14和-0.07人/状态，但MAE和RMSE反而上升，说明预约表包含有用的平均需求信息，却还没有转化为更稳定的状态级流入预测。这与预约驱动服务文献中关于show-up profile、迟到、取消和爽约结构的结论一致：预约数需要结合相对预约时点的到院分布和实时签到数据，不能直接等同于现场到达。
-
-\input{tables/baseline_comparison.tex}
-
-表\ref{tab:baseline-comparison}将历史均值局部风险规则与若干简单基准比较。待诊人数P95阈值和未修正负载P95阈值在两期样本中召回率均超过90\%，但精确率明显低于局部风险规则，意味着它们会产生更多误报并增加不必要支援或打扰。预约数P95阈值的精确率和召回率均较低，表明单看预约满载程度不足以识别实际半小时挂号流入代理压力。预约校准局部风险规则的精确率接近主规则，但召回率低于主规则；在本样本中，简单预约校准没有超过历史同医生同半小时均值。这些基准没有经过同等强度的滚动调参与成本敏感优化，因此只能作为透明参照，不能作为主规则优越性的充分证明。模型目前适合作为保守的压力看板候选指标，而不是已完成预测优化的在线压力预测系统。
-
-\input{tables/operational_proxy_validation.tex}
-
-为避免把模型派生标签误当作外部真值，本文进一步使用测试期等待时间戳构造弱外部运营代理校验。表\ref{tab:operational-proxy-validation}并不重新定义高压标签，而是检查模型候选信号状态是否对应更高的观察等待暴露。结果显示，在挂号至开始就诊等待这一总历时代理上，2月候选信号状态均值为113.80分钟，高于未标记状态的68.77分钟；8月候选信号状态均值为126.12分钟，高于未标记状态的91.16分钟。若以训练窗口90\%分位数作为高尾阈值，候选信号状态落入挂号等待高尾的比例分别为未标记状态的2.03倍和1.63倍。这说明候选信号与较长总等待暴露存在方向一致的关联。另一方面，叫号至开始就诊等待只覆盖有叫号时间戳的子样本，且可能受到叫号提前量、护士叫号策略、患者是否已在现场等因素影响；该指标在2月仅显示较弱正向关联，在8月则出现反向结果。因此，本文只能将运营代理校验解释为对“总等待拥堵”的部分支持，不能解释为临床质量验证或完整现场等待验证。
-
-\input{tables/threshold_sensitivity.tex}
-
-表\ref{tab:threshold-sensitivity}显示，在固定风险尺度下，经验压力阈值选择仍会显著改变派生高压标签比例和召回率。以2月样本为例，训练窗口90\%分位阈值下测试期派生高压占5.44\%，召回率为60.94\%；提高到97.5\%分位后，派生高压占比降至1.13\%，召回率降至47.17\%。8月样本也表现出类似趋势：阈值从90\%提高到97.5\%后，派生高压占比由5.76\%降至1.60\%，召回率由77.16\%降至64.63\%。该结果说明$C_{\mathrm{safe}}$不是可以由数据自动“证明正确”的常数，而是一个需要结合管理目标、支援资源、患者等待风险和漏报成本共同设定的策略参数。本文选择95\%分位仅作为中间口径，不能被解释为医院已经采用或应当采用的安全标准。
-
-\subsection{模型派生服务节奏提示的反馈策略拟合}
-
-在获得模型派生服务节奏提示$s^*$后，本文再比较式\eqref{eq:feedback-linear}、式\eqref{eq:feedback-exp}和式\eqref{eq:feedback-power}三种参数化反馈策略。此时因变量不再是观测到的实际平均服务用时，而是由模型原型和式\eqref{eq:duration-from-capacity}给出的服务节奏提示；解释变量为该半小时开始时医生名下的待诊人数。由于本节以医生为局部状态单元，可近似取$N_{it}=1$，故$q_{it}=Q_{it}$。线性型策略直接用最小二乘估计；指数型策略先对$s^*$取对数后估计；幂函数型策略则对$s^*$和$1+q_t$分别取对数后估计。为保证结果可比，本文将三类策略的预测值均还原到分钟尺度，并在原始分钟尺度上比较$R^2$和RMSE；AIC仅作为同一残差尺度下的描述性参考，不作为严格似然模型选择依据。估计结果见表\ref{tab:feedback-estimates}。
-
-\input{tables/feedback_estimates.tex}
-
-表\ref{tab:feedback-estimates}显示，三类策略均给出负向队列响应：待诊人数越多，模型派生的平均单人服务节奏提示越短。线性型策略在2月样本中的估计为$s_t^*=4.700-0.021q_t$，在8月样本中的估计为$s_t^*=4.753-0.021q_t$；指数型策略在两期样本中的衰减系数约为0.006--0.007；幂函数型策略在两期样本中的弹性系数分别为0.022和0.031。若按原始分钟尺度比较，线性型策略在两期样本中均具有更高的$R^2$、更低的RMSE和更低的描述性AIC，指数型策略次之，幂函数型策略相对较弱。需要注意的是，线性型$R^2$分别为0.232和0.295，说明单一队列长度只能解释模型派生提示的一部分变化；三类策略拟合的是模型生成的服务节奏提示，而不是直接拟合实际问诊行为，更不是在线干预效果。其意义在于把复杂模型输出压缩为便于看板展示的压力提示规则；若提示值接近下界，系统应优先触发支援和分流，而不是要求医生继续加速。图\ref{fig:feedback-policy}展示了三类反馈策略对模型派生服务节奏提示的拟合曲线。
+表\ref{tab:model-decision-fit}报告三类模型反馈决策函数的拟合表现。Model 1服务时长函数以排队工作量$W$为输入，2月和8月$R^2$分别为0.404和0.384。Model 2纳入近期已预约数量和剩余号源后，服务时长函数$R^2$为0.458和0.423，预约开放函数$R^2$为0.288和0.331。Model 3进一步纳入系统层压力和号源状态后，服务时长函数RMSE为2.334和2.473，预约开放函数$R^2$为0.340和0.367。上述结果说明，预约簿状态和系统层状态能够为服务速度与预约开放联合策略提供稳定解释。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{feedback_policy.png}
-  \caption{线性型、指数型与幂函数型反馈策略对模型派生服务节奏提示的拟合曲线}
-  \label{fig:feedback-policy}
+  \includegraphics[width=0.94\textwidth]{model_function_comparison.png}
+  \caption{三类模型反馈决策函数拟合表现比较}
+  \label{fig:model-function-comparison}
 \end{figure}
 
-\section{管理启示与实施建议}
+图\ref{fig:model-function-comparison}将表\ref{tab:model-decision-fit}中的拟合误差和解释力可视化。上排对应平均单人服务时长输出，服务时长RMSE集中在2.334至3.026分钟之间，$R^2$集中在0.384至0.458之间；下排对应后续预约开放数量输出，RMSE集中在1.150至1.414人之间，$R^2$集中在0.288至0.367之间。从两期样本看，8月窗口的样本规模和等待压力更高，服务时长函数和预约开放函数的指标保持相近量级。Model 2在服务时长解释力上体现出预约簿状态的作用，Model 3在后续开放数量解释力上体现出系统层状态的补充作用。
 
-\subsection{从平均效率管理转向尾部风险管理}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{feedback_fit.png}
+  \caption{服务时长趋势与后续开放数量分布对照}
+  \label{fig:feedback-fit}
+\end{figure}
 
-实证结果显示，两期样本平均服务时长代理几乎相同，但等待时间和风险负载差异明显。这提示门诊拥堵不能只从平均诊疗速度解释，还需要关注高峰挂号流入、预约负载和诊室异质性共同形成的尾部风险。医院若只跟踪日均挂号量、平均等待和平均利用率，容易低估早高峰拥堵。系统综述也提示，门诊与社区服务中的等待改善通常依赖服务层面的流程、转诊入口、开放预约或替代服务模式等综合干预，而不是单个微观速度指标\citep{MandersonTaylorLewisEtAl2025}。因此，建议在后续仿真或试点中考察半小时挂号流入离散系数、风险负载95\%分位数、派生高压标签占比、等待高尾暴露和触及服务用时下界的状态数等指标。上述指标应作为压力监测和容量支援候选工具，而非单独作为压缩医生问诊时间的考核依据。
+图\ref{fig:feedback-fit}从策略样本本身展示模型求解结果与反馈函数输出。左列以排队工作量$W$为横轴，每个点为按$W$排序分组后的组内均值；实线表示Model 1、Model 2和Model 3求得的平均单人服务时长，虚线表示对应反馈函数输出。两期样本中，随着$W$上升，模型给出的平均单人服务时长整体下降，说明高排队工作量状态下策略样本倾向于释放更多当期服务能力。右列按照后续开放数量区间汇总样本占比，横轴为开放数量区间，纵轴为落入该区间的样本比例；实心柱表示Model 2和Model 3的模型求解结果，斜线柱表示对应反馈函数输出。采用区间汇总可以同时呈现模型连续解和反馈函数连续输出的分布位置。右列数据显示，后续开放数量主要集中在0和0--1人两个区间，反馈函数输出呈现连续化和平滑化特征，并保留了开放数量集中于小规模调整的样本结构。
 
-\subsection{将医生赶工成本纳入调度边界}
+\subsection{本章小结}
 
-本文模型强调，服务能力提升并非免费。医生在高峰期适度调整节奏可能降低队列，但如果长期处于高强度赶工状态，可能损害医患沟通和诊疗质量。由于服务节奏提示会通过$c_{it}=N_{it}\Delta m_i/s_{it}$转化为服务工作量，医院在实施动态服务节奏提示时，应把$s_{\min}$设置为不可突破的安全边界，并将$c_{\max}$作为短时应急上限，而不是常态工作标准。本文实证中的$s_{\min}$来自审慎的数据边界，并非临床质量标准；真实部署前应由科室专家、医疗质量部门和伦理管理共同确定。对于持续高负荷科室，应优先通过预约容量平滑、增开诊室、弹性支援和可行跨诊室分流解决，而不是依赖医生长期加速。
+本章基于两个14天门诊运营数据窗口完成了数据清洗、变量构造、描述统计、策略输出构造和反馈决策函数拟合。数据处理部分将就诊记录和预约记录转化为第5.2节风险约束所需的排队工作量、预约簿状态、请求代理、系统层状态和参数估计；策略构造部分把这些变量逐状态代入Model 1、Model 2和Model 3的确定性风险约束，得到服务时长目标和后续预约开放目标；函数拟合部分再用第5.3节的模型专属反馈函数拟合上述策略输出。实证结果表明，预约簿状态增强了服务时长决策函数的解释力，系统层状态增强了多诊室预约开放函数的刻画能力，从而形成同一状态下“如何调整服务速度”和“如何开放后续窗口”的联合策略样本。
 
-\subsection{用服务用时反馈支持实时但克制的调度}
 
-队列反馈策略的价值在于简单、透明和可解释。医院信息系统可以实时读取候诊人数和预约到院信息，用历史同医生同半小时数据预测短时段到达，使用模型原型计算压力等级或容量支援候选信号，再按线性型反馈策略给出近似的服务工作量压力提示，并依据式\eqref{eq:feedback-capacity}与风险阈值、赶工边界进行校验。当待诊人数较低时，系统不提示加速；当队列超过阈值时，系统应优先触发支援、分流、预约平滑、补充窗口或延后非紧急需求等管理动作，服务节奏压缩只应作为短时辅助选项，并且必须服从医生对个体患者复杂程度的临床判断。该机制不要求医生理解复杂优化模型，只需将模型结果嵌入调度看板或分诊系统。指数型和幂函数型可作为敏感性分析工具，用于检查服务用时是否呈现明显的非线性衰减特征。
-
-\section{结论与展望}
-
-\subsection{研究结论}
-
-本文围绕门诊压力指标原型与服务节奏边界问题，构建了基于资源满意度思想的模型框架，并使用门诊运营时间戳数据进行了描述性分析、数据质量诊断、参数标定、时间前推回放、挂号流入预测误差诊断、基准规则比较、阈值敏感性检验、运营等待代理校验和样本内策略近似。主要结论如下：
-
-\begin{enumerate}
-  \item 门诊拥堵应使用尾部敏感指标刻画。可观测半小时挂号流入代理存在明显过度离散，平均值不能充分反映早高峰风险，因此模型中需要纳入流入离散系数$\kappa_t$。
-  \item 服务时长随机性是门诊风险的重要来源。两期样本平均服务时长代理较稳定，但服务分布右偏，长服务患者可能放大高峰期排队压力。
-  \item 医生和诊室异质性较为明显。高频医生平均服务时长代理变异系数约为0.55，为多诊室异构参数设定提供了经验依据，但该异质性可能同时反映科室、病例组合和记录口径差异。
-  \item 服务能力决策可以转化为服务节奏提示。通过$c_{it}=N_{it}\Delta m_i/s_{it}$，模型中的服务工作量决策能够映射为医生和管理者可理解的平均单人服务节奏提示，但该提示应服从临床判断和安全边界。
-  \item 模型原型可用于生成尾部压力代理标签。在经验阈值下，两期样本中多数状态在舒适节奏下满足局部风险约束，少量状态需要服务节奏压力提示、支援或触及服务用时下界。触及下界不意味着继续加速，而意味着需要容量或分流干预。
-  \item 时间前推回放显示，该模型对派生高压标签具有较高精确率但召回率仍有限。2月和8月测试期精确率分别为91.9\%（95\%区间90.2\%--93.9\%）和94.2\%（90.7\%--96.2\%），召回率分别为61.5\%（53.9\%--68.6\%）和73.0\%（66.9\%--77.0\%），假阴性分别为85和119个状态。由于派生高压标签占比较低，本文不把准确率作为有效性证据。该结果说明短窗口历史均值可识别一部分模型定义的尾部压力状态，但仍需更充分的到院或挂号流入预测模型和外部结果验证。
-  \item 基准比较和挂号流入预测误差诊断揭示了主规则的优势和不足。待诊人数P95阈值和未修正负载P95阈值召回率较高但误报更多；预约数P95阈值识别能力较弱；预约校准预测减小平均偏差但提高MAE和RMSE，说明预约信息需要经过show-up profile、迟到和爽约模型转化后才能用于稳定预测。
-  \item 运营等待代理校验提供了有限但有用的外部参照。候选信号状态在两个测试窗口均对应更高的挂号至开始就诊等待均值和更高的挂号等待高尾占比，说明候选信号与总等待拥堵方向一致；但叫号至开始就诊等待的结果不稳定，不能据此断言模型已经验证真实现场等待或临床质量。
-  \item 线性型、指数型和幂函数型队列反馈策略均能近似模型派生服务节奏提示随局部队列压力升高而下降的趋势，其中线性型在两期样本内具有相对更好的原始尺度拟合表现。但其解释力有限，且拟合对象是模型输出而非实际问诊行为。
-\end{enumerate}
-
-\subsection{不足与未来研究}
-
-本文仍存在若干不足。第一，两个样本窗口均为14天，能够支持模型标定示例和前7天训练、后7天测试的时间前推回放，但不足以识别长期季节规律、星期效应、节假日或公共卫生事件冲击。第二，服务结束时点来自代理字段，有效问诊时长可能混入检查、缴费或系统记录延迟，且服务时长代理可纳入比例并非100\%；本文已增加30、60和120分钟截尾口径敏感性，但未来仍应使用更精确的诊间进入和离开时间。第三，挂号时间不是严格到院或签到时间，叫号至开始就诊等待又只覆盖有叫号时间戳的子样本，因此本文的流入、队列和等待结果均属于运营代理校验，不能代表全部患者现场等待。第四，本文虽引入流入离散系数修正，并增加历史均值、预约校准和简单阈值基准比较，但局部$\kappa$仍来自短窗口收缩估计，确定性约束也仍依赖正态近似；鉴于医生半小时预测流入均值约为2人，正态近似尤其需要用负二项到达、预约签到预测、经验服务分布或离散事件仿真进行稳健性验证。第五，二次凸赶工惩罚是运营代理，尚未由患者安全、复诊、投诉、满意度或医生疲劳等质量结果标定；服务用时下界来自数据分位数和保守管理解释，不是临床最短安全时长。第六，经验部分用训练窗口95\%风险负载固定$\rho\nu$风险尺度，并在敏感性检验中改变$C_{\mathrm{safe}}$阈值；这不等价于估计理论风险偏好参数，阈值仍会显著影响标签占比和召回率。第七，回放中的“高压”仍主要是模型派生标签，不是外部临床结局；服务节奏反馈策略也由同一样本估计，尚未进行严格样本外预测、滚动优化、概率校准或真实在线干预验证。第八，原始业务数据含有敏感字段，本文复现过程仅使用运营时间戳和编码化医生信息，正式部署仍需完善伦理审批、数据脱敏和访问控制。未来研究可结合医院信息系统开展滚动仿真或小范围试点，同时比较固定服务节奏、预约容量平滑、弹性支援和队列反馈等策略对等待时间、医生负荷、患者体验和质量结果的综合影响。
-
-\section*{代码与复现说明}
-\addcontentsline{toc}{section}{代码与复现说明}
-
-本文数据清洗、参数标定、数据质量诊断、时间前推回放、挂号流入预测误差诊断、基准规则比较、运营代理校验、阈值敏感性检验、表格生成和绘图代码位于项目目录\path{src/posts/Business Paper/Graduate/}。代码中的\texttt{arrival}变量名沿用排队模型术语，在实证解释中对应挂号流入代理而非严格现场到院。
-
-运行\path{analyze_data.py}可由\path{data.ods}生成\path{analysis_results.json}和\path{analysis_results.md}；运行\path{make_figures.py}可生成本文使用的\path{figures/*.png}和\path{tables/*.tex}。所有论文图片均由matplotlib生成，论文主文件通过\verb|\input{tables/...}|和\verb|\includegraphics{figures/...}|引用输出结果。
-
-\newpage
-\bibliographystyle{plainnat}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{参考文献}
+\bibliographystyle{gbt7714-numerical}
 \bibliography{references}
 
 \end{document}

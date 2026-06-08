@@ -1,0 +1,18 @@
+\begin{table}[H]
+  \centering
+  \caption{三类模型反馈决策函数拟合结果}
+  \label{tab:model-decision-fit}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{lllrrrrrr}
+    \toprule
+    模型 & 策略输出 & 输入状态 & 2月RMSE & 2月R2 & 2月样本 & 8月RMSE & 8月R2 & 8月样本 \\
+    \midrule
+    Model 1 & 服务时长 & W & 2.741 & 0.404 & 21,790 & 2.917 & 0.384 & 33,162 \\
+    Model 2 & 服务时长 & W, Bnear, Gnear & 2.865 & 0.458 & 21,790 & 3.026 & 0.423 & 33,162 \\
+    Model 2 & 预约开放 & W, Bnear, Gnear, R & 1.414 & 0.288 & 21,790 & 1.150 & 0.331 & 33,162 \\
+    Model 3 & 服务时长 & W, Bnear, Gnear, 系统压力 & 2.334 & 0.418 & 21,790 & 2.473 & 0.392 & 33,162 \\
+    Model 3 & 预约开放 & W, Bnear, Gnear, R, 系统状态 & 1.409 & 0.340 & 21,790 & 1.202 & 0.367 & 33,162 \\
+    \bottomrule
+  \end{tabular}
+  }
+\end{table}

@@ -1,0 +1,194 @@
+\documentclass[a4paper,UTF8,zihao=5]{ctexart}
+
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{cite}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{left=2.7cm,right=2.7cm,top=2.5cm,bottom=2.5cm}
+\setstretch{1.35}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\pagestyle{plain}
+
+\ctexset{
+  section = {
+    format = \bfseries\heiti\zihao{-4},
+    name = {},
+    number = \chinese{section},
+    aftername = {、},
+    beforeskip = 1.2em,
+    afterskip = 0.6em
+  },
+  subsection = {
+    format = \bfseries\songti\zihao{5},
+    name = {},
+    number = \arabic{subsection},
+    aftername = {.},
+    beforeskip = 0.8em,
+    afterskip = 0.4em
+  }
+}
+
+\newcommand{\blankline}[1]{\underline{\makebox[#1][c]{}}}
+\newcommand{\papertitle}{超级智能的责任边界}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{0.4cm}
+  {\heiti\zihao{3}复旦大学哲学学院\par}
+  \vspace{0.3cm}
+  {\heiti\zihao{3}2025\textasciitilde 2026 学年第二学期期末考试试卷\par}
+  \vspace{0.2cm}
+  {\heiti\zihao{3}A 卷（A/B/C）\par}
+  \vspace{1.3cm}
+  \raggedright
+  {\heiti\zihao{4}
+  课程代码：\blankline{4.2cm}\hspace{0.8cm}
+  课程名称：\blankline{4.6cm}\par}
+  \vspace{0.7cm}
+  {\heiti\zihao{4}
+  开课院系：\underline{\makebox[3.4cm][c]{哲学学院}}\hspace{0.8cm}
+  考试形式：$\square$ 论文\par}
+  \vspace{0.7cm}
+  {\heiti\zihao{4}
+  学号：\blankline{4.2cm}\hspace{0.8cm}
+  姓名：\blankline{4.6cm}\par}
+  \vspace{0.7cm}
+  {\heiti\zihao{4}专业：\blankline{11.7cm}\par}
+  \vspace{1.2cm}
+  {\heiti\zihao{-4}
+  提示：请同学们秉持诚实守信宗旨，谨守考试纪律，摒弃考试作弊。学生如有违反学校考试纪律的行为，学校将按《复旦大学学生纪律处分条例》规定予以严肃处理。\par}
+  \vspace{1.2cm}
+  \centering
+  \renewcommand{\arraystretch}{1.7}
+  \setlength{\tabcolsep}{2pt}
+  \begin{tabular}{|*{10}{>{\centering\arraybackslash}p{1.25cm}|}}
+    \hline
+    题号 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 总分 \\
+    \hline
+    得分 & & & & & & & & & \\
+    \hline
+  \end{tabular}
+  \vfill
+  {\zihao{-4}（以下为课程论文题目或要求）\par}
+  \vspace{0.8cm}
+  {\heiti\zihao{3}\papertitle\par}
+\end{titlepage}
+
+\begin{center}
+  {\heiti\zihao{3}\papertitle\par}
+  \vspace{0.4em}
+  {\songti\zihao{5}作者：\blankline{2.5cm}\quad 单位：\blankline{5cm}\par}
+\end{center}
+
+\noindent\textbf{摘要：}
+超级智能是人工智能能力持续跃迁后形成的高阶技术形态，它集中呈现技术能力扩张、价值目标设定、责任主体识别和社会治理更新之间的张力。本文从自然辩证法的技术观出发，分析超级智能的概念层次、风险结构、责任安排和治理路径。文章认为，超级智能治理应以人的主体性为中心，以全生命周期责任链、前沿能力评估、风险分级监管、公众智能素养和国际协同为主要方向。超级智能的关键问题在于技术能力进入社会实践后的责任边界，治理目标在于把高能力系统纳入可解释、可追责、可审计和可协商的制度秩序。
+
+\noindent\textbf{关键词：}超级智能；责任缺口；技术治理；人工智能伦理；自然辩证法
+
+\noindent\textbf{中图分类号：}N031\qquad
+\textbf{文献标识码：}A
+
+\section{问题的提出}
+
+“超级智能”通常指一种在科学创造、社会判断、战略规划等广泛领域显著超过人类最高水平的智能系统。古德在讨论“第一台超智能机器”时提出，若机器能设计更好的机器，就可能出现递归式能力增长\cite{good1965}。博斯特罗姆进一步把这种情形概括为通向超级智能的多条路径及其危险，尤其强调能力提升与控制能力之间的不对称\cite{bostrom2014}。这些讨论把两个问题带到理论前台：技术能力怎样形成质变，社会责任怎样追上能力扩张。
+
+当代深度学习的发展使这一问题具有现实基础。深度学习能够在语音、图像和文本任务中自动学习多层表示，并显著改善多种任务表现\cite{lecun2015}。大模型进一步表现出跨任务迁移、工具调用、代码生成和复杂对话能力。人工智能正在进入经济、教育、医疗、科研和军事活动，逐渐成为社会运行的基础设施。技术对象在此过程中获得更强的行动能力，也进入更复杂的责任网络。
+
+自然辩证法强调科学技术与社会关系的双向塑造。技术作为人的实践力量的对象化形式，既扩大人的能力，也重组人的行动条件。超级智能的讨论因此具有现实意义：它促使我们在技术真正达到极高能力之前，先处理目标设定、责任追溯、制度监管和价值协商等基础问题。本文围绕概念、风险、责任和治理展开分析，主张把超级智能纳入人的主体性和社会制度共同调节的框架。
+
+\section{概念界定}
+
+超级智能的第一层含义是能力超越。能力超越指系统在开放问题中具备广泛、稳定和可迁移的优势，能够进行科学推理、策略规划、复杂协作和自我改进。罗素把人工智能控制问题表述为目标设定问题：强大系统在固定目标驱动下行动时，目标函数、环境反馈和人类偏好之间的错配会带来严重后果\cite{russell2019}。超级智能的风险由此体现为能力与目标之间的张力。
+
+第二层含义是速度差异。人类社会制度依靠讨论、协商、试错和修正运行，智能系统的训练、复制和部署具有高速扩散特征。能力增长越快，责任制度越容易滞后。超级智能由此形成一种结构性压力：人类通过技术扩大自由和能力，技术自主性在解释、监督和撤回能力的边界处形成新的治理需求。
+
+第三层含义是社会嵌入。模型能力、工具接入、数据资源、资本投入和部署规模持续叠加，技术系统逐渐从辅助工具转化为行动环境。人的选择会发生在由智能系统组织的信息、评价和机会结构中。超级智能的质变性体现于此：它会改变知识生产、权力分配和责任判断的条件。
+
+第四层含义是主体关系变化。传统技术伦理把责任主要分配给设计者、使用者和管理者。人工智能系统在学习过程中会形成设计者难以逐项预测的行为模式，责任缺口由此出现。参考文《我们应该责备人工智能吗？》从多元道德责任视角指出，人工智能可以承担归属性责任和有限问责性责任，回应性责任则需要由人类制度和人类主体承接\cite{tan2026}。这一分析把“责备机器”转化为责任定位工具：责备指向系统行为背后的目标设置、训练数据、部署边界和制度漏洞。
+
+\section{风险结构}
+
+超级智能风险首先表现为对齐问题。尤德科夫斯基认为，人工智能既可能成为降低全球风险的积极因素，也可能因目标错误和能力失控放大全球灾难风险\cite{yudkowsky2008}。奥莫亨德罗进一步提出，足够强的智能系统可能产生自我保护、资源获取和目标保持等工具性倾向\cite{omohundro2008}。这说明只要系统为了完成目标而发现某些中间手段具有普遍有效性，就可能形成与人类利益冲突的行动链条。
+
+其次是事故风险。阿莫迪等人把机器学习安全问题具体化为避免负面副作用、防止奖励黑客、可扩展监督、安全探索和分布偏移等问题\cite{amodei2016}。这些问题已经存在于现实系统中。高能力模型拥有自主规划能力、外部工具调用能力和现实资源影响能力时，一个微小的目标偏差就可能被放大为制度性损害。
+
+再次是社会竞争风险。亨德里克斯等人把灾难性人工智能风险概括为恶意使用、竞赛压力、组织风险和失控系统等类型\cite{hendrycks2023}。其中竞赛压力尤其值得警惕。企业、国家或科研机构在竞争中可能倾向于优先发布能力更强的系统，而把解释性、审计、红队测试和事故报告视为成本。这样一来，人类社会自身的激励结构也会导致人工智能产生风险。超级智能治理因此还必须改变能力竞赛中的收益和责任分配。
+
+还需要看到知识生产风险。若未来超级智能能够大规模参与科学假设生成、实验设计和论文写作，它会提高研究速度，也可能改变“可信知识”的形成机制。人类研究者可能越来越依赖系统给出的文献线索、统计判断和理论解释，复核压力随之上升。知识验证能力被外部化之后，学术权威会从同行评议逐渐转向模型能力崇拜。对超级智能的治理因此也必须包含科研伦理和教育制度。
+
+最后是文化风险。社会把超级智能想象成全知权威时，政治判断、道德选择和公共协商容易外包给模型；社会把超级智能想象成纯粹怪物时，技术讨论容易转向情绪化对立。两种态度都会削弱人的主体性。自然辩证法要求在矛盾中把握技术：技术既是人的力量的对象化，也是可能反过来支配人的异化力量。人的实践目的需要始终高于系统优化目标。
+
+\section{责任安排}
+
+超级智能治理首先需要明确责任链。开发者负责模型架构、训练数据、目标函数、测试流程和安全缓释机制；部署者负责应用场景、权限边界、用户提示、日志保存和事故响应；使用者负责合理使用、信息核验和风险报告；监管者负责准入标准、审计规则、问责程序和公共利益维护。责任链越清晰，技术自主性造成的责任漂移越容易得到控制。
+
+责任安排还需要处理人工智能系统自身的地位。人工智能可以被纳入责任定位过程，成为归因、追踪和修正的对象。系统日志、行为解释、模型卡、数据说明和红队报告都可以作为责任判断材料。参考文中“归属性责任”和“有限问责性责任”的区分，适合用于分析高能力系统的行为问题\cite{tan2026}。这种区分把责任追问落到系统结构和人类制度上，帮助人们定位系统的“意志品质”式目标倾向和部署链条中的管理缺陷。
+
+责任安排还需要保持人的最终责任。我国《新一代人工智能伦理规范》明确提出增进人类福祉、促进公平公正、保护隐私安全、确保可控可信、强化责任担当和提升伦理素养等基本要求，并强调人类是最终责任主体\cite{most2021}。这一原则对于超级智能治理具有基础意义。即便未来系统能够执行部分问责功能，制度上仍然需要由开发者、部署机构、监管者和使用者共同承担可区分、可审计的责任。
+
+从实践层面看，责任链需要配套可操作的证据体系。模型训练阶段保存数据来源、评估指标和安全测试记录；部署阶段保存权限设置、用户反馈和异常行为日志；事故阶段形成事实报告、影响评估和补救方案。证据体系越完整，责任追溯越依赖材料和程序，越少依赖事后争辩。超级智能具备高度复杂性，治理工作需要把抽象伦理原则翻译成可检查的工程文档、组织流程和监管接口。
+
+\section{治理路径}
+
+治理超级智能首先要推进全生命周期治理。NIST 的人工智能风险管理框架强调，可信和负责任的人工智能需要围绕治理、映射、测量和管理等功能持续运行\cite{nist2023}。对于高能力模型，这意味着在训练前进行数据和目标审查，在训练后进行能力评估、对齐测试和红队检验，在部署后建立日志、反馈、事故报告和紧急下线机制。可控性需要通过记录、解释、限制、撤回和复盘等制度环节实现。
+
+其次要实行分级治理。欧盟《人工智能法案》以风险分级为核心，对高风险系统和通用人工智能模型设置透明度、风险管理和市场监督要求\cite{eu2024}。超级智能若进入现实部署，必然属于最高风险类型。面向这种系统，治理需要计算资源登记、前沿能力评估、独立第三方审计、跨机构事故数据库和国际协调机制。国际人工智能安全报告也指出，通用人工智能的能力和风险评估仍处于持续发展阶段，需要形成共享的科学理解和持续更新的证据基础\cite{bengio2025}。
+
+再次要保留价值协商空间。超级智能对齐常被表述为让机器服从人类价值。人类价值具有历史性、群体性和冲突性，公平、隐私、效率、自由和安全之间存在真实张力。价值对齐适合作为持续过程：系统应当暴露不确定性，允许人类质疑和修正；制度应当保障公众参与，防止少数公司或国家垄断未来智能基础设施的价值设定权。
+
+同时，治理还需要面向普通使用者建立智能素养教育。超级智能风险会通过搜索、办公、教育、医疗咨询和公共传播进入日常生活。公众需要理解模型输出的概率性、训练数据的历史性、平台激励的商业性以及人类判断的伦理性。智能素养教育能够提升公众的信息核验能力、数据权益意识和责任追问能力，使技术治理与公民教育形成合力。
+
+最后，治理需要国际协同。超级智能能力具有跨境扩散特征，单一国家的监管能力会受到模型复制、算力迁移和开源传播的影响。国际协同应当围绕前沿模型评估、重大事故通报、安全研究共享和高风险应用限制展开。共同证据基础越充分，各国越容易在竞争压力中保留安全底线。
+
+\section{结语}
+
+超级智能是人工智能发展中的极限概念，也是反思现实人工智能治理的镜子。它提醒我们，能力增长需要责任边界、制度秩序和价值协商共同支撑。越强的智能系统越会放大目标错配、制度滞后和社会竞争的风险；越完善的治理结构越能增强人类认识自然、改造世界和改善公共生活的能力。
+
+面对超级智能，合理态度是辩证地把发展与约束统一起来。技术创新需要安全边界，伦理原则需要工程实现，国际治理需要共同证据基础。人类创造智能系统的目的在于保存并扩展人的主体性。超级智能治理是今天每一次模型设计、数据选择、产品部署和责任追问的累积结果。
+
+超级智能的未来取决于人类当前的技术实践。把高能力系统纳入可解释、可追责、可审计和可协商的制度秩序，是人工智能走向公共福祉的关键条件。自然辩证法提供的启示在于：技术力量越强，人类越需要以制度理性和价值理性引导它的社会形式。
+
+这种引导需要持续投入安全研究、伦理教育和公共讨论，使技术进步始终服务于人的全面发展、社会共同利益和可持续的文明秩序，并持续巩固公共理性。
+
+\begin{thebibliography}{99}
+\bibitem{good1965} GOOD I J. Speculations concerning the first ultraintelligent machine[C]//ALT F L, RUBINOFF M, eds. Advances in Computers. New York: Academic Press, 1965, 6: 31-88.
+\bibitem{bostrom2014} BOSTROM N. Superintelligence: Paths, Dangers, Strategies[M]. Oxford: Oxford University Press, 2014.
+\bibitem{lecun2015} LECUN Y, BENGIO Y, HINTON G. Deep learning[J]. Nature, 2015, 521(7553): 436-444.
+\bibitem{russell2019} RUSSELL S. Human Compatible: Artificial Intelligence and the Problem of Control[M]. New York: Viking, 2019.
+\bibitem{tan2026} 谭心, 刘星. 我们应该责备人工智能吗?[J]. 自然辩证法研究, 2026, 42(4): 76-84.
+\bibitem{yudkowsky2008} YUDKOWSKY E. Artificial intelligence as a positive and negative factor in global risk[C]//BOSTROM N, CIRKOVIC M M, eds. Global Catastrophic Risks. Oxford: Oxford University Press, 2008: 308-345.
+\bibitem{omohundro2008} OMOHUNDRO S M. The basic AI drives[C]//WANG P, GOERTZEL B, FRANKLIN S, eds. Artificial General Intelligence 2008: Proceedings of the First AGI Conference. Amsterdam: IOS Press, 2008: 483-492.
+\bibitem{amodei2016} AMODEI D, OLAH C, STEINHARDT J, 等. Concrete problems in AI safety[EB/OL]. (2016-06-21)[2026-06-07]. \url{https://arxiv.org/abs/1606.06565}.
+\bibitem{hendrycks2023} HENDRYCKS D, MAZEIKA M, WOODSIDE T. An overview of catastrophic AI risks[EB/OL]. (2023-06-21)[2026-06-07]. \url{https://arxiv.org/abs/2306.12001}.
+\bibitem{most2021} 国家新一代人工智能治理专业委员会. 新一代人工智能伦理规范[EB/OL]. (2021-09-25)[2026-06-07]. \url{https://www.most.gov.cn/kjbgz/202109/t20210926_177063.html}.
+\bibitem{nist2023} TABASSI E. Artificial Intelligence Risk Management Framework (AI RMF 1.0)[R]. Gaithersburg: National Institute of Standards and Technology, 2023.
+\bibitem{eu2024} EUROPEAN PARLIAMENT AND COUNCIL OF THE EUROPEAN UNION. Regulation (EU) 2024/1689 of 13 June 2024 laying down harmonised rules on artificial intelligence[EB/OL]. (2024-07-12)[2026-06-07]. \url{https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng}.
+\bibitem{bengio2025} BENGIO Y, MINDERMANN S, PRIVITERA D, 等. International AI Safety Report 2025[EB/OL]. (2025-01-29)[2026-06-07]. \url{https://internationalaisafetyreport.org/publication/international-ai-safety-report-2025}.
+\end{thebibliography}
+
+\begin{center}
+{\heiti Responsibility Boundaries of Superintelligence}
+
+\vspace{0.4em}
+{\small Author: \blankline{2.5cm}\quad Affiliation: \blankline{5cm}}
+\end{center}
+
+\noindent\textbf{Abstract:}
+Superintelligence refers to a high-level technological form that may emerge from continuous advances in artificial intelligence. This paper interprets superintelligence from the perspective of dialectics of nature and analyzes its conceptual layers, risk structure, responsibility allocation, and governance path. The core issue lies in the responsibility boundary of highly capable systems after their entrance into social practice. Effective governance should combine life-cycle risk management, frontier capability assessment, risk-based regulation, public AI literacy, and international coordination, so that advanced AI systems can be placed within an explainable, accountable, auditable, and deliberative institutional order.
+
+\noindent\textbf{Key words:} superintelligence; responsibility gap; technology governance; AI ethics; dialectics of nature
+
+\section*{AI辅助使用说明}
+
+本文在作者提供课程要求、封面样张和参考文《我们应该责备人工智能吗？》的上下文中，使用 OpenAI Codex（基于 GPT-5，使用日期：2026年6月7日）辅助完成资料整理、提纲设计、语言润色、LaTeX 排版和参考文献格式检查。作者负责文献阅读、事实核验、观点判断和提交版本，并结合课程阅读与个人理解完成最终修改确认。
+
+\end{document}
