@@ -97,6 +97,18 @@ type ParsedKifMove = {
   notation: string;
 };
 
+type MoveLegality = {
+  legal: boolean;
+  reason?: string;
+  canPromote?: boolean;
+  mustPromote?: boolean;
+};
+
+type PendingPromotion = {
+  from: number;
+  to: number;
+};
+
 const ROOT_ID = "root";
 const PIECE_ORDER: PieceKind[] = ["K", "R", "B", "G", "S", "N", "L", "P"];
 const HAND_ORDER: HandKind[] = ["R", "B", "G", "S", "N", "L", "P"];
@@ -268,6 +280,197 @@ const getNumericSquare = (index: number): string => {
   const row = Math.floor(index / 9);
   const column = index % 9;
   return `${9 - column}${row + 1}`;
+};
+
+const getSquarePoint = (index: number) => ({
+  row: Math.floor(index / 9),
+  col: index % 9,
+});
+
+const getForward = (owner: Player) => (owner === "sente" ? -1 : 1);
+
+const isInsidePromotionZone = (owner: Player, index: number): boolean => {
+  const { row } = getSquarePoint(index);
+  return owner === "sente" ? row <= 2 : row >= 6;
+};
+
+const isPromotionAvailable = (piece: ShogiPiece, from: number, to: number): boolean =>
+  !piece.promoted &&
+  PROMOTABLE.includes(piece.kind) &&
+  (isInsidePromotionZone(piece.owner, from) || isInsidePromotionZone(piece.owner, to));
+
+const isPromotionForced = (piece: ShogiPiece, to: number): boolean => {
+  if (piece.promoted) return false;
+  const { row } = getSquarePoint(to);
+  if (piece.kind === "P" || piece.kind === "L") {
+    return piece.owner === "sente" ? row === 0 : row === 8;
+  }
+  if (piece.kind === "N") {
+    return piece.owner === "sente" ? row <= 1 : row >= 7;
+  }
+  return false;
+};
+
+const hasClearPath = (board: Board, from: number, to: number, stepRow: number, stepCol: number): boolean => {
+  const fromPoint = getSquarePoint(from);
+  const toPoint = getSquarePoint(to);
+  let row = fromPoint.row + stepRow;
+  let col = fromPoint.col + stepCol;
+
+  while (row !== toPoint.row || col !== toPoint.col) {
+    if (board[row * 9 + col]) return false;
+    row += stepRow;
+    col += stepCol;
+  }
+
+  return true;
+};
+
+const isGoldLikeStep = (owner: Player, rowDelta: number, colDelta: number): boolean => {
+  const forward = getForward(owner);
+  return (
+    (rowDelta === forward && Math.abs(colDelta) <= 1) ||
+    (rowDelta === 0 && Math.abs(colDelta) === 1) ||
+    (rowDelta === -forward && colDelta === 0)
+  );
+};
+
+const isSilverStep = (owner: Player, rowDelta: number, colDelta: number): boolean => {
+  const forward = getForward(owner);
+  return (
+    (rowDelta === forward && Math.abs(colDelta) <= 1) ||
+    (rowDelta === -forward && Math.abs(colDelta) === 1)
+  );
+};
+
+const isLegalPieceMove = (board: Board, piece: ShogiPiece, from: number, to: number): boolean => {
+  const fromPoint = getSquarePoint(from);
+  const toPoint = getSquarePoint(to);
+  const rowDelta = toPoint.row - fromPoint.row;
+  const colDelta = toPoint.col - fromPoint.col;
+  const absRow = Math.abs(rowDelta);
+  const absCol = Math.abs(colDelta);
+  const forward = getForward(piece.owner);
+
+  if (rowDelta === 0 && colDelta === 0) return false;
+
+  if (piece.promoted && ["S", "N", "L", "P"].includes(piece.kind)) {
+    return isGoldLikeStep(piece.owner, rowDelta, colDelta);
+  }
+
+  switch (piece.kind) {
+    case "K":
+      return Math.max(absRow, absCol) === 1;
+    case "G":
+      return isGoldLikeStep(piece.owner, rowDelta, colDelta);
+    case "S":
+      return isSilverStep(piece.owner, rowDelta, colDelta);
+    case "N":
+      return rowDelta === forward * 2 && absCol === 1;
+    case "L":
+      return colDelta === 0 && rowDelta * forward > 0 && hasClearPath(board, from, to, forward, 0);
+    case "P":
+      return colDelta === 0 && rowDelta === forward;
+    case "R":
+      if (rowDelta === 0 && colDelta !== 0) {
+        return hasClearPath(board, from, to, 0, Math.sign(colDelta));
+      }
+      if (colDelta === 0 && rowDelta !== 0) {
+        return hasClearPath(board, from, to, Math.sign(rowDelta), 0);
+      }
+      return piece.promoted && absRow === 1 && absCol === 1;
+    case "B":
+      if (absRow === absCol) {
+        return hasClearPath(board, from, to, Math.sign(rowDelta), Math.sign(colDelta));
+      }
+      return piece.promoted && ((absRow === 1 && colDelta === 0) || (rowDelta === 0 && absCol === 1));
+    default:
+      return false;
+  }
+};
+
+const hasUnpromotedPawnOnFile = (board: Board, owner: Player, to: number): boolean => {
+  const { col } = getSquarePoint(to);
+  return board.some(
+    (piece, index) =>
+      index % 9 === col &&
+      piece?.owner === owner &&
+      piece.kind === "P" &&
+      !piece.promoted,
+  );
+};
+
+const isKingInCheck = (board: Board, owner: Player): boolean => {
+  const kingIndex = board.findIndex((piece) => piece?.owner === owner && piece.kind === "K");
+  if (kingIndex < 0) return false;
+
+  return board.some(
+    (piece, index) =>
+      Boolean(piece) &&
+      piece?.owner !== owner &&
+      isLegalPieceMove(board, piece, index, kingIndex),
+  );
+};
+
+const wouldLeaveKingInCheckAfterMove = (board: Board, owner: Player, from: number, to: number): boolean => {
+  const nextBoard = cloneBoard(board);
+  const moving = nextBoard[from];
+  if (!moving) return false;
+
+  nextBoard[from] = null;
+  nextBoard[to] = moving;
+  return isKingInCheck(nextBoard, owner);
+};
+
+const wouldLeaveKingInCheckAfterDrop = (board: Board, owner: Player, kind: HandKind, to: number): boolean => {
+  const nextBoard = cloneBoard(board);
+  nextBoard[to] = {
+    id: "validation-drop",
+    kind,
+    owner,
+    promoted: false,
+  };
+  return isKingInCheck(nextBoard, owner);
+};
+
+const validateMove = (board: Board, nextPlayer: Player, from: number, to: number): MoveLegality => {
+  const moving = board[from];
+  const target = board[to];
+
+  if (!moving) return { legal: false, reason: "没有可移动的棋子。" };
+  if (moving.owner !== nextPlayer) return { legal: false, reason: `现在轮到${PLAYER_META[nextPlayer].label}。` };
+  if (target?.owner === moving.owner) return { legal: false, reason: "不能吃自己的棋子。" };
+  if (target?.kind === "K") return { legal: false, reason: "不能直接吃王。" };
+  if (!isLegalPieceMove(board, moving, from, to)) return { legal: false, reason: "该棋子的走法不能到达目标格。" };
+  if (wouldLeaveKingInCheckAfterMove(board, moving.owner, from, to)) {
+    return { legal: false, reason: "这手会让己方王处于被攻击状态。" };
+  }
+
+  const canPromote = isPromotionAvailable(moving, from, to);
+  const mustPromote = isPromotionForced(moving, to);
+  return { legal: true, canPromote, mustPromote };
+};
+
+const validateDrop = (board: Board, hands: Hands, nextPlayer: Player, owner: Player, kind: HandKind, to: number): MoveLegality => {
+  if (owner !== nextPlayer) return { legal: false, reason: `现在轮到${PLAYER_META[nextPlayer].label}。` };
+  if (board[to]) return { legal: false, reason: "目标格已有棋子。" };
+  if (hands[owner][kind] <= 0) return { legal: false, reason: "没有这枚持驹。" };
+
+  const { row } = getSquarePoint(to);
+  if ((kind === "P" || kind === "L") && (owner === "sente" ? row === 0 : row === 8)) {
+    return { legal: false, reason: "步兵和香车不能打在最后一段。" };
+  }
+  if (kind === "N" && (owner === "sente" ? row <= 1 : row >= 7)) {
+    return { legal: false, reason: "桂马不能打在无法前进的段。" };
+  }
+  if (kind === "P" && hasUnpromotedPawnOnFile(board, owner, to)) {
+    return { legal: false, reason: "同一筋不能有两枚未升变的步。" };
+  }
+  if (wouldLeaveKingInCheckAfterDrop(board, owner, kind, to)) {
+    return { legal: false, reason: "这手不能解除己方王被攻击。" };
+  }
+
+  return { legal: true };
 };
 
 const buildNotation = (move: Omit<MoveRecord, "notation">): string => {
@@ -520,10 +723,12 @@ const ShogiKifu: React.FC = () => {
   const [mode, setMode] = useState<ToolMode>("record");
   const [setupOwner, setSetupOwner] = useState<Player>("sente");
   const [setupPromoted, setSetupPromoted] = useState(false);
-  const [promoteNext, setPromoteNext] = useState(false);
+  const [pendingPromotion, setPendingPromotion] = useState<PendingPromotion | null>(null);
   const [selection, setSelection] = useState<Selection>(null);
   const [branchArmed, setBranchArmed] = useState(false);
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+  const [notice, setNotice] = useState("");
+  const [activeStoredPath, setActiveStoredPath] = useState("");
   const serialRef = useRef(0);
 
   const currentNode = nodes[currentId] ?? nodes[ROOT_ID];
@@ -596,24 +801,26 @@ const ShogiKifu: React.FC = () => {
     }));
     setCurrentId(childId);
     setSelection(null);
-    setPromoteNext(false);
+    setPendingPromotion(null);
     setBranchArmed(false);
   };
 
-  const recordMove = (from: number, to: number) => {
+  const pushNotice = (message: string) => {
+    setNotice(message);
+    window.setTimeout(() => {
+      setNotice((current) => (current === message ? "" : current));
+    }, 1800);
+  };
+
+  const recordMove = (from: number, to: number, promote = false) => {
     const moving = board[from];
     const target = board[to];
 
     if (!moving) return;
 
-    if (target?.owner === moving.owner) {
-      setSelection({ source: "board", index: to });
-      return;
-    }
-
     const nextBoard = cloneBoard(board);
     const nextHands = cloneHands(hands);
-    const promotedAfter = moving.promoted || (promoteNext && PROMOTABLE.includes(moving.kind));
+    const promotedAfter = moving.promoted || promote;
 
     nextBoard[from] = null;
     nextBoard[to] = {
@@ -647,7 +854,11 @@ const ShogiKifu: React.FC = () => {
   };
 
   const recordDrop = (owner: Player, kind: HandKind, to: number) => {
-    if (board[to] || hands[owner][kind] <= 0) return;
+    const legality = validateDrop(board, hands, nextPlayer, owner, kind, to);
+    if (!legality.legal) {
+      pushNotice(legality.reason ?? "不能在这里打入。");
+      return;
+    }
 
     const nextBoard = cloneBoard(board);
     const nextHands = cloneHands(hands);
@@ -677,6 +888,7 @@ const ShogiKifu: React.FC = () => {
         const nextBoard = cloneBoard(board);
         nextBoard[index] = createRuntimePiece(selection.kind, selection.owner, selection.promoted);
         updateCurrentSnapshot(nextBoard, hands);
+        setPendingPromotion(null);
         return;
       }
 
@@ -697,10 +909,12 @@ const ShogiKifu: React.FC = () => {
         nextBoard[index] = moving;
         updateCurrentSnapshot(nextBoard, hands);
         setSelection({ source: "board", index });
+        setPendingPromotion(null);
         return;
       }
 
       setSelection(piece ? { source: "board", index } : null);
+      setPendingPromotion(null);
       return;
     }
 
@@ -712,14 +926,48 @@ const ShogiKifu: React.FC = () => {
     if (selection?.source === "board") {
       if (selection.index === index) {
         setSelection(null);
+        setPendingPromotion(null);
         return;
       }
 
-      recordMove(selection.index, index);
+      const moving = board[selection.index];
+      if (piece?.owner === moving?.owner) {
+        if (piece.owner === nextPlayer) {
+          setSelection({ source: "board", index });
+          setPendingPromotion(null);
+          return;
+        }
+        pushNotice(`现在轮到${PLAYER_META[nextPlayer].label}。`);
+        return;
+      }
+
+      const legality = validateMove(board, nextPlayer, selection.index, index);
+      if (!legality.legal) {
+        pushNotice(legality.reason ?? "这手不合法。");
+        return;
+      }
+
+      if (legality.mustPromote) {
+        recordMove(selection.index, index, true);
+        return;
+      }
+
+      if (legality.canPromote) {
+        setPendingPromotion({ from: selection.index, to: index });
+        return;
+      }
+
+      recordMove(selection.index, index, false);
+      return;
+    }
+
+    if (piece && piece.owner !== nextPlayer) {
+      pushNotice(`现在轮到${PLAYER_META[nextPlayer].label}。`);
       return;
     }
 
     setSelection(piece ? { source: "board", index } : null);
+    setPendingPromotion(null);
   };
 
   const selectPalettePiece = (kind: PieceKind) => {
@@ -735,7 +983,12 @@ const ShogiKifu: React.FC = () => {
   const selectHandPiece = (owner: Player, kind: HandKind) => {
     if (mode === "setup") return;
     if (hands[owner][kind] <= 0) return;
+    if (owner !== nextPlayer) {
+      pushNotice(`现在轮到${PLAYER_META[nextPlayer].label}。`);
+      return;
+    }
     setSelection({ source: "hand", owner, kind });
+    setPendingPromotion(null);
   };
 
   const changeHandCount = (owner: Player, kind: HandKind, delta: number) => {
@@ -774,13 +1027,16 @@ const ShogiKifu: React.FC = () => {
     setNodes({ [ROOT_ID]: createRootNode() });
     setCurrentId(ROOT_ID);
     setSelection(null);
-    setPromoteNext(false);
+    setPendingPromotion(null);
     setBranchArmed(false);
+    setActiveStoredPath("");
+    setNotice("");
   };
 
   const clearPosition = () => {
     updateCurrentSnapshot(createEmptyBoard(), createEmptyHands());
     setSelection(null);
+    setPendingPromotion(null);
   };
 
   const deleteCurrentNode = () => {
@@ -801,6 +1057,7 @@ const ShogiKifu: React.FC = () => {
     });
     setCurrentId(parentId);
     setSelection(null);
+    setPendingPromotion(null);
   };
 
   const armSiblingBranch = () => {
@@ -808,6 +1065,7 @@ const ShogiKifu: React.FC = () => {
       setCurrentId(currentNode.parentId);
     }
     setSelection(null);
+    setPendingPromotion(null);
     setBranchArmed(true);
   };
 
@@ -819,6 +1077,21 @@ const ShogiKifu: React.FC = () => {
         comment: value,
       },
     }));
+  };
+
+  const loadStoredKifu = (file: StoredKifuFile) => {
+    try {
+      const imported = file.extension === "json" ? readJsonProject(file.content) : readKifProject(file.content);
+      setNodes(imported.nodes);
+      setCurrentId(imported.currentId);
+      setSelection(null);
+      setPendingPromotion(null);
+      setBranchArmed(false);
+      setActiveStoredPath(file.path);
+      pushNotice(`已载入 ${file.title}`);
+    } catch (error) {
+      pushNotice(error instanceof Error ? error.message : "棋谱读取失败。");
+    }
   };
 
   const buildKif = () => {
@@ -902,18 +1175,19 @@ const ShogiKifu: React.FC = () => {
     });
   };
 
-  const renderTree = (nodeId: string, depth = 0): React.ReactNode => {
+  const renderTree = (nodeId: string, indentStep = 0): React.ReactNode => {
     const node = nodes[nodeId];
     if (!node) return null;
 
     return (
-      <div key={nodeId} className="shogi-tree-branch" style={{ "--depth": depth } as React.CSSProperties}>
+      <div key={nodeId} className="shogi-tree-branch" style={{ "--depth": indentStep } as React.CSSProperties}>
         <button
           type="button"
           className={`shogi-tree-node ${currentId === nodeId ? "is-active" : ""}`}
           onClick={() => {
             setCurrentId(nodeId);
             setSelection(null);
+            setPendingPromotion(null);
             setBranchArmed(false);
           }}
         >
@@ -923,7 +1197,7 @@ const ShogiKifu: React.FC = () => {
         </button>
         {node.children.length > 0 && (
           <div className="shogi-tree-children">
-            {node.children.map((childId) => renderTree(childId, depth + 1))}
+            {node.children.map((childId, childIndex) => renderTree(childId, childIndex === 0 ? 0 : 1))}
           </div>
         )}
       </div>
@@ -933,6 +1207,7 @@ const ShogiKifu: React.FC = () => {
   const kifPreview = buildKif();
 
   const selectedBoardPiece = selection?.source === "board" ? board[selection.index] : null;
+  const pendingPromotionPiece = pendingPromotion ? board[pendingPromotion.from] : null;
 
   return (
     <section className="shogi-page relative min-h-screen overflow-hidden px-4 pb-20 pt-36 text-slate-100 md:px-8 md:pt-40">
@@ -969,6 +1244,7 @@ const ShogiKifu: React.FC = () => {
                   onClick={() => {
                     setMode("record");
                     setSelection(null);
+                    setPendingPromotion(null);
                   }}
                   title="记录走子"
                   aria-label="记录走子"
@@ -981,21 +1257,12 @@ const ShogiKifu: React.FC = () => {
                   onClick={() => {
                     setMode("setup");
                     setSelection(null);
+                    setPendingPromotion(null);
                   }}
                   title="摆放棋子"
                   aria-label="摆放棋子"
                 >
                   <PenLine size={16} />
-                </button>
-                <button
-                  type="button"
-                  className={`shogi-icon-button ${promoteNext ? "is-active" : ""}`}
-                  onClick={() => setPromoteNext((value) => !value)}
-                  title="下一手升变"
-                  aria-label="下一手升变"
-                  disabled={mode !== "record"}
-                >
-                  <Save size={16} />
                 </button>
               </div>
             </div>
@@ -1036,6 +1303,28 @@ const ShogiKifu: React.FC = () => {
                   })}
                 </div>
               </div>
+            </div>
+
+            <div className="shogi-rule-bar" aria-live="polite">
+              {pendingPromotion && pendingPromotionPiece ? (
+                <>
+                  <span>
+                    {PLAYER_META[pendingPromotionPiece.owner].mark}
+                    {getSquareLabel(pendingPromotion.to)}
+                    {PIECE_LABELS[pendingPromotionPiece.kind]} 是否升变
+                  </span>
+                  <div className="shogi-promotion-actions">
+                    <button type="button" onClick={() => recordMove(pendingPromotion.from, pendingPromotion.to, true)}>
+                      成
+                    </button>
+                    <button type="button" onClick={() => recordMove(pendingPromotion.from, pendingPromotion.to, false)}>
+                      不成
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <span>{notice || `${PLAYER_META[nextPlayer].mark} ${PLAYER_META[nextPlayer].label} 行棋`}</span>
+              )}
             </div>
 
             <div className="shogi-hands">
@@ -1104,7 +1393,11 @@ const ShogiKifu: React.FC = () => {
                 <button
                   type="button"
                   className="shogi-icon-button"
-                  onClick={() => currentNode.parentId && setCurrentId(currentNode.parentId)}
+                  onClick={() => {
+                    if (currentNode.parentId) setCurrentId(currentNode.parentId);
+                    setSelection(null);
+                    setPendingPromotion(null);
+                  }}
                   title="回到上一手"
                   aria-label="回到上一手"
                   disabled={!currentNode.parentId}
@@ -1114,7 +1407,11 @@ const ShogiKifu: React.FC = () => {
                 <button
                   type="button"
                   className="shogi-icon-button"
-                  onClick={() => currentNode.children[0] && setCurrentId(currentNode.children[0])}
+                  onClick={() => {
+                    if (currentNode.children[0]) setCurrentId(currentNode.children[0]);
+                    setSelection(null);
+                    setPendingPromotion(null);
+                  }}
                   title="进入主线下一手"
                   aria-label="进入主线下一手"
                   disabled={!currentNode.children[0]}
@@ -1285,6 +1582,34 @@ const ShogiKifu: React.FC = () => {
               </div>
             </section>
 
+            <section className="shogi-panel" aria-label="stored kifu library">
+              <div className="shogi-panel-head">
+                <div>
+                  <p>KIFU LIBRARY</p>
+                  <h2>棋谱库</h2>
+                </div>
+                <FolderOpen size={18} className="text-cyan-300" />
+              </div>
+
+              <div className="shogi-library-list">
+                {STORED_KIFU_FILES.length === 0 ? (
+                  <span className="shogi-empty-state">NO STORED KIFU</span>
+                ) : (
+                  STORED_KIFU_FILES.map((file) => (
+                    <button
+                      type="button"
+                      key={file.path}
+                      className={activeStoredPath === file.path ? "is-active" : ""}
+                      onClick={() => loadStoredKifu(file)}
+                    >
+                      <span>{file.extension.toUpperCase()}</span>
+                      <strong>{file.title}</strong>
+                    </button>
+                  ))
+                )}
+              </div>
+            </section>
+
             <section className="shogi-panel" aria-label="export kifu">
               <div className="shogi-panel-head">
                 <div>
@@ -1329,7 +1654,11 @@ const ShogiKifu: React.FC = () => {
                       type="button"
                       key={node.id}
                       className={node.id === currentId ? "is-active" : ""}
-                      onClick={() => setCurrentId(node.id)}
+                      onClick={() => {
+                        setCurrentId(node.id);
+                        setSelection(null);
+                        setPendingPromotion(null);
+                      }}
                     >
                       <span>{node.moveNumber}</span>
                       <strong>{node.move?.notation}</strong>
@@ -1515,14 +1844,18 @@ const ShogiKifu: React.FC = () => {
         }
 
         .shogi-board-shell {
+          container-type: inline-size;
+          --board-size: min(680px, calc(100cqw - 1.35rem), calc(100vw - 4.5rem));
           display: grid;
           gap: 0.35rem;
+          justify-content: center;
         }
 
         .shogi-file-labels {
           display: grid;
           grid-template-columns: repeat(9, 1fr);
-          margin-left: 1.35rem;
+          width: var(--board-size);
+          margin-left: calc(1rem + 0.35rem);
           color: rgba(251, 191, 36, 0.78);
           font-size: 0.72rem;
           font-weight: 800;
@@ -1531,7 +1864,7 @@ const ShogiKifu: React.FC = () => {
 
         .shogi-board-row {
           display: grid;
-          grid-template-columns: 1rem minmax(0, 1fr);
+          grid-template-columns: 1rem var(--board-size);
           gap: 0.35rem;
           align-items: stretch;
         }
@@ -1539,6 +1872,7 @@ const ShogiKifu: React.FC = () => {
         .shogi-rank-labels {
           display: grid;
           grid-template-rows: repeat(9, 1fr);
+          height: var(--board-size);
           color: rgba(251, 191, 36, 0.78);
           font-size: 0.72rem;
           font-weight: 800;
@@ -1553,10 +1887,10 @@ const ShogiKifu: React.FC = () => {
 
         .shogi-board {
           display: grid;
-          grid-template-columns: repeat(9, minmax(0, 1fr));
-          aspect-ratio: 1 / 1;
-          width: 100%;
-          max-width: 680px;
+          grid-template-columns: repeat(9, calc(var(--board-size) / 9));
+          grid-template-rows: repeat(9, calc(var(--board-size) / 9));
+          width: var(--board-size);
+          height: var(--board-size);
           margin: 0 auto;
           border: 3px solid #2a1608;
           background:
@@ -1575,6 +1909,8 @@ const ShogiKifu: React.FC = () => {
           background: transparent;
           min-width: 0;
           min-height: 0;
+          width: calc(var(--board-size) / 9);
+          height: calc(var(--board-size) / 9);
           transition: background 140ms ease, box-shadow 140ms ease;
         }
 
@@ -1620,11 +1956,48 @@ const ShogiKifu: React.FC = () => {
           display: block;
           writing-mode: vertical-rl;
           font-family: "FZSTK", "A-OTF-HASETOPPOSTD-DEBOLD", serif;
-          font-size: 1.35rem;
+          font-size: clamp(0.82rem, calc(var(--board-size) / 26), 1.45rem);
           font-weight: 900;
           letter-spacing: 0;
           line-height: 1;
           text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .shogi-rule-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.7rem;
+          min-height: 2.45rem;
+          margin-top: 0.75rem;
+          border: 1px solid rgba(103, 232, 249, 0.16);
+          background: rgba(2, 6, 12, 0.55);
+          color: #bae6fd;
+          padding: 0.45rem 0.55rem;
+          border-radius: 4px;
+          font-size: 0.72rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+        }
+
+        .shogi-promotion-actions {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(3.4rem, 1fr));
+          gap: 0.35rem;
+        }
+
+        .shogi-promotion-actions button {
+          border: 1px solid rgba(251, 191, 36, 0.24);
+          background: rgba(120, 53, 15, 0.58);
+          color: #fef3c7;
+          min-height: 1.8rem;
+          border-radius: 4px;
+          transition: border-color 160ms ease, background 160ms ease;
+        }
+
+        .shogi-promotion-actions button:hover {
+          border-color: rgba(251, 191, 36, 0.72);
+          background: rgba(180, 83, 9, 0.7);
         }
 
         .shogi-hands {
@@ -1749,7 +2122,7 @@ const ShogiKifu: React.FC = () => {
         }
 
         .shogi-tree-branch {
-          margin-left: calc(var(--depth) * 0.85rem);
+          padding-left: calc(var(--depth) * 0.85rem);
         }
 
         .shogi-tree-node {
@@ -1876,6 +2249,53 @@ const ShogiKifu: React.FC = () => {
         .shogi-action-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
+        }
+
+        .shogi-library-list {
+          display: grid;
+          gap: 0.35rem;
+          max-height: 190px;
+          overflow: auto;
+        }
+
+        .shogi-library-list button {
+          display: grid;
+          grid-template-columns: 3.2rem minmax(0, 1fr);
+          gap: 0.5rem;
+          align-items: center;
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(2, 6, 12, 0.48);
+          color: #cbd5e1;
+          padding: 0.5rem 0.55rem;
+          text-align: left;
+          border-radius: 4px;
+          transition: border-color 160ms ease, background 160ms ease;
+        }
+
+        .shogi-library-list button:hover,
+        .shogi-library-list button.is-active {
+          border-color: rgba(34, 211, 238, 0.52);
+          background: rgba(8, 47, 73, 0.44);
+        }
+
+        .shogi-library-list span {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 1.35rem;
+          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: rgba(120, 53, 15, 0.28);
+          color: #fef3c7;
+          font-size: 0.62rem;
+          font-weight: 900;
+          border-radius: 4px;
+        }
+
+        .shogi-library-list strong {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 0.76rem;
         }
 
         .shogi-export-actions {

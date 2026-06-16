@@ -187,11 +187,11 @@ const CustomCursor = () => {
         targetR = 8; 
       }
 
-      outlineState.x = lerp(outlineState.x, targetX, 0.15);
-      outlineState.y = lerp(outlineState.y, targetY, 0.15);
-      outlineState.width = lerp(outlineState.width, targetW, 0.15);
-      outlineState.height = lerp(outlineState.height, targetH, 0.15);
-      outlineState.radius = lerp(outlineState.radius, targetR, 0.15);
+      outlineState.x = lerp(outlineState.x, targetX, 0.32);
+      outlineState.y = lerp(outlineState.y, targetY, 0.32);
+      outlineState.width = lerp(outlineState.width, targetW, 0.28);
+      outlineState.height = lerp(outlineState.height, targetH, 0.28);
+      outlineState.radius = lerp(outlineState.radius, targetR, 0.28);
 
       if (outline) {
         outline.style.transform = `translate3d(${outlineState.x}px, ${outlineState.y}px, 0) translate(-50%, -50%)`;
@@ -207,8 +207,8 @@ const CustomCursor = () => {
       trail[0].y = mouse.y;
       
       for (let i = 1; i < trail.length; i++) {
-        trail[i].x += (trail[i - 1].x - trail[i].x) * 0.45;
-        trail[i].y += (trail[i - 1].y - trail[i].y) * 0.45;
+        trail[i].x += (trail[i - 1].x - trail[i].x) * 0.68;
+        trail[i].y += (trail[i - 1].y - trail[i].y) * 0.68;
       }
 
       if (!isHidden && !hoverTarget) {
@@ -239,7 +239,7 @@ const CustomCursor = () => {
         ctx.stroke();
       }
 
-      const recentlyActive = now - lastInteractionAt < 180;
+      const recentlyActive = now - lastInteractionAt < 110;
       const isSettling =
         Math.abs(outlineState.x - targetX) > 0.35 ||
         Math.abs(outlineState.y - targetY) > 0.35 ||
@@ -283,7 +283,7 @@ const CustomCursor = () => {
         }
 
         .cyber-cursor-outline {
-          transition: border-color 0.3s ease, background-color 0.3s ease;
+          transition: border-color 90ms ease, background-color 90ms ease;
           /* 【极致优化点 4：剥离 mix-blend-screen 注入独立合成层】
              原代码中的 mix-blend-screen 会导致合成器强行读取整个页面的背景像素并进行正片叠底运算。
              改为使用 will-change 开启独立硬件加速层，不再拖累背景滚动！ */
@@ -305,7 +305,7 @@ const CustomCursor = () => {
           border-color: #ef4444;
           border-style: solid;
           opacity: 1;
-          animation: bracket-pulse 1.5s infinite alternate;
+          animation: bracket-pulse 0.8s infinite alternate;
         }
 
         .cyber-cursor-outline.is-locked::before {

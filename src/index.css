@@ -49,7 +49,7 @@ body {
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference; /* 保持反色效果，在深色背景很明显 */
-  transition: width 0.1s, height 0.1s, background-color 0.1s, border-radius 0.1s;
+  transition: width 60ms, height 60ms, background-color 60ms, border-radius 60ms;
 }
 
 /* 隐藏滚动条但允许滚动 */
