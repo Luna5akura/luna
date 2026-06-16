@@ -13,6 +13,7 @@ const loadWit = () => import("@/pages/Wit");
 const loadLifecode = () => import("@/pages/Lifecode");
 const loadSpark = () => import("@/pages/Spark");
 const loadRandomFont = () => import("./pages/RandomFont");
+const loadShogiKifu = () => import("@/pages/ShogiKifu");
 const loadPostDetails = () => import("@/pages/PostDetails");
 
 const Warp = lazy(loadWarp);
@@ -21,6 +22,7 @@ const Wit = lazy(loadWit);
 const Lifecode = lazy(loadLifecode);
 const Spark = lazy(loadSpark);
 const RandomFont = lazy(loadRandomFont);
+const ShogiKifu = lazy(loadShogiKifu);
 const PostDetails = lazy(loadPostDetails);
 
 const DynamicCursor = () => {
@@ -47,6 +49,7 @@ function App() {
         loadLifecode(),
         loadSpark(),
         loadRandomFont(),
+        loadShogiKifu(),
       ]);
     };
 
@@ -76,6 +79,7 @@ function App() {
               <Route path="/lifecode" element={<Lifecode />} />
               <Route path="/spark" element={<Spark />} /> 
               <Route path="/random-font" element={<RandomFont />} />
+              <Route path="/shogi" element={<ShogiKifu />} />
               
               <Route path="/posts/*" element={<PostDetails />} /> 
             </Routes>

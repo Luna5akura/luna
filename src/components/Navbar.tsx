@@ -10,7 +10,7 @@ import {
 } from 'framer-motion';
 
 const SCRAMBLE_CHARS = "01xX_!@#$<>?{}[]%^&*▓▒░";
-const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow'] as const;
+const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow', 'Shogi'] as const;
 const CLOCK_UPDATE_INTERVAL_MS = 250;
 const RADAR_FRAME_INTERVAL = 1000 / 24;
 
