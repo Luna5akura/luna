@@ -1,0 +1,205 @@
+.shogi-side-stack {
+          display: grid;
+          gap: 1rem;
+        }
+
+        .shogi-segmented {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.35rem;
+          margin-bottom: 0.6rem;
+        }
+
+        .shogi-segmented button,
+        .shogi-action-grid button,
+        .shogi-export-actions button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          min-height: 2.2rem;
+          border: 1px solid rgba(103, 232, 249, 0.16);
+          background: rgba(8, 16, 28, 0.74);
+          color: #cbd5e1;
+          font-size: 0.74rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          border-radius: 4px;
+          transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+        }
+
+        .shogi-segmented button:hover,
+        .shogi-segmented button.is-active,
+        .shogi-action-grid button:hover,
+        .shogi-export-actions button:hover {
+          border-color: rgba(34, 211, 238, 0.58);
+          background: rgba(8, 47, 73, 0.58);
+          color: #ecfeff;
+        }
+
+        .shogi-palette {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 0.45rem;
+          margin: 0.8rem 0;
+        }
+
+        .shogi-palette-piece {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          aspect-ratio: 1 / 1;
+          border: 1px solid rgba(251, 191, 36, 0.18);
+          background:
+            linear-gradient(160deg, rgba(255, 251, 235, 0.95), rgba(245, 158, 11, 0.78)),
+            #f5c36b;
+          color: #251407;
+          clip-path: polygon(50% 1%, 92% 22%, 84% 100%, 16% 100%, 8% 22%);
+          transition: filter 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+        }
+
+        .shogi-palette-piece:hover,
+        .shogi-palette-piece.is-selected {
+          filter: brightness(1.08);
+          transform: translateY(-2px);
+          box-shadow: 0 0 18px rgba(251, 191, 36, 0.26);
+        }
+
+        .shogi-palette-piece span {
+          writing-mode: vertical-rl;
+          font-family: "FZSTK", "A-OTF-HASETOPPOSTD-DEBOLD", serif;
+          font-size: 1.2rem;
+          font-weight: 900;
+          letter-spacing: 0;
+        }
+
+        .shogi-action-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .shogi-library-list {
+          display: grid;
+          gap: 0.35rem;
+          max-height: 190px;
+          overflow: auto;
+        }
+
+        .shogi-library-list button {
+          display: grid;
+          grid-template-columns: 3.2rem minmax(0, 1fr);
+          gap: 0.5rem;
+          align-items: center;
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(2, 6, 12, 0.48);
+          color: #cbd5e1;
+          padding: 0.5rem 0.55rem;
+          text-align: left;
+          border-radius: 4px;
+          transition: border-color 160ms ease, background 160ms ease;
+        }
+
+        .shogi-library-list button:hover,
+        .shogi-library-list button.is-active {
+          border-color: rgba(34, 211, 238, 0.52);
+          background: rgba(8, 47, 73, 0.44);
+        }
+
+        .shogi-library-list span {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 1.35rem;
+          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: rgba(120, 53, 15, 0.28);
+          color: #fef3c7;
+          font-size: 0.62rem;
+          font-weight: 900;
+          border-radius: 4px;
+        }
+
+        .shogi-library-list strong {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 0.76rem;
+        }
+
+        .shogi-export-actions {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          margin-bottom: 0.8rem;
+        }
+
+        .shogi-kif-preview {
+          max-height: 220px;
+          overflow: auto;
+          white-space: pre-wrap;
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(0, 0, 0, 0.32);
+          color: #bae6fd;
+          font-size: 0.7rem;
+          line-height: 1.55;
+          padding: 0.8rem;
+          border-radius: 4px;
+        }
+
+        .shogi-node-count {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem;
+          height: 2rem;
+          border: 1px solid rgba(34, 211, 238, 0.22);
+          background: rgba(8, 47, 73, 0.4);
+          color: #67e8f9;
+          font-weight: 900;
+          border-radius: 4px;
+        }
+
+        .shogi-line-list {
+          display: grid;
+          gap: 0.35rem;
+          max-height: 220px;
+          overflow: auto;
+        }
+
+        .shogi-line-list button {
+          display: grid;
+          grid-template-columns: 2rem minmax(0, 1fr);
+          gap: 0.5rem;
+          align-items: center;
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(2, 6, 12, 0.48);
+          color: #cbd5e1;
+          padding: 0.45rem 0.52rem;
+          text-align: left;
+          border-radius: 4px;
+        }
+
+        .shogi-line-list button.is-active,
+        .shogi-line-list button:hover {
+          border-color: rgba(251, 191, 36, 0.52);
+          background: rgba(120, 53, 15, 0.34);
+        }
+
+        .shogi-line-list span,
+        .shogi-empty-state {
+          color: #67e8f9;
+          font-size: 0.66rem;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+        }
+
+        .shogi-line-list strong {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .shogi-empty-state {
+          border: 1px dashed rgba(148, 163, 184, 0.18);
+          padding: 0.8rem;
+          text-align: center;
+          border-radius: 4px;
+        }

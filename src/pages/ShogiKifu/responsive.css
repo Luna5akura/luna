@@ -1,0 +1,66 @@
+@media (max-width: 1280px) {
+          .shogi-workspace {
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.6fr);
+          }
+
+          .shogi-side-stack {
+            grid-column: 1 / -1;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+
+          .shogi-board-panel {
+            position: static;
+          }
+        }
+
+        @media (max-width: 900px) {
+          .shogi-header {
+            align-items: stretch;
+            flex-direction: column;
+          }
+
+          .shogi-status-strip {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .shogi-workspace,
+          .shogi-side-stack {
+            grid-template-columns: 1fr;
+          }
+
+          .shogi-tree-panel {
+            min-height: 0;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .shogi-page {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+          }
+
+          .shogi-panel {
+            padding: 0.75rem;
+          }
+
+          .shogi-piece span {
+            font-size: 0.82rem;
+          }
+
+          .shogi-hand-tray {
+            grid-template-columns: 1fr;
+          }
+
+          .shogi-hand-pieces {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+
+          .shogi-palette {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+
+          .shogi-file-labels,
+          .shogi-rank-labels {
+            font-size: 0.62rem;
+          }
+        }

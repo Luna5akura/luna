@@ -1,0 +1,229 @@
+.shogi-tree-panel {
+          min-height: 720px;
+        }
+
+        .shogi-current-move {
+          display: grid;
+          grid-template-columns: auto minmax(0, 1fr) auto;
+          gap: 0.6rem;
+          align-items: center;
+          border: 1px solid rgba(34, 211, 238, 0.2);
+          background: rgba(8, 47, 73, 0.26);
+          color: #e0f2fe;
+          padding: 0.72rem;
+          border-radius: 4px;
+          margin-bottom: 0.75rem;
+        }
+
+        .shogi-current-move span,
+        .shogi-route-list span,
+        .shogi-choice-list span,
+        .shogi-next-list span {
+          color: #67e8f9;
+          font-size: 0.72rem;
+          font-weight: 900;
+          letter-spacing: 0.1em;
+        }
+
+        .shogi-current-move strong,
+        .shogi-route-list strong,
+        .shogi-choice-list strong,
+        .shogi-next-list strong {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .shogi-current-move em,
+        .shogi-route-list em,
+        .shogi-choice-list em {
+          color: #fbbf24;
+          font-size: 0.62rem;
+          font-style: normal;
+          font-weight: 900;
+          letter-spacing: 0.14em;
+        }
+
+        .shogi-route-section,
+        .shogi-choice-grid,
+        .shogi-next-choices {
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(0, 0, 0, 0.18);
+          padding: 0.55rem;
+          border-radius: 4px;
+          margin-bottom: 0.75rem;
+        }
+
+        .shogi-route-title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.7rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .shogi-route-title span {
+          color: rgba(34, 211, 238, 0.72);
+          font-size: 0.64rem;
+          font-weight: 900;
+          letter-spacing: 0.22em;
+        }
+
+        .shogi-route-title strong {
+          color: #fbbf24;
+          font-size: 0.62rem;
+          font-weight: 900;
+          letter-spacing: 0.14em;
+        }
+
+        .shogi-route-list {
+          display: grid;
+          gap: 0.32rem;
+          max-height: 250px;
+          overflow: auto;
+          padding-left: 0.7rem;
+          border-left: 2px solid rgba(34, 211, 238, 0.28);
+        }
+
+        .shogi-route-list button,
+        .shogi-choice-list button,
+        .shogi-next-list button {
+          display: grid;
+          align-items: center;
+          width: 100%;
+          border: 1px solid rgba(148, 163, 184, 0.12);
+          background: rgba(2, 6, 12, 0.6);
+          color: #cbd5e1;
+          text-align: left;
+          border-radius: 4px;
+          transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+        }
+
+        .shogi-route-list button {
+          grid-template-columns: 2.1rem minmax(0, 1fr) auto;
+          gap: 0.45rem;
+          padding: 0.48rem 0.52rem;
+          position: relative;
+        }
+
+        .shogi-route-list button::before {
+          content: "";
+          position: absolute;
+          left: -0.83rem;
+          top: 50%;
+          width: 0.45rem;
+          height: 0.45rem;
+          border: 1px solid rgba(34, 211, 238, 0.56);
+          background: #02060c;
+          transform: translateY(-50%) rotate(45deg);
+        }
+
+        .shogi-route-list button:hover,
+        .shogi-route-list button.is-active,
+        .shogi-choice-list button:hover,
+        .shogi-choice-list button.is-active,
+        .shogi-next-list button:hover {
+          border-color: rgba(34, 211, 238, 0.52);
+          background: rgba(8, 47, 73, 0.54);
+        }
+
+        .shogi-route-list button.is-active::before {
+          background: #22d3ee;
+          box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+        }
+
+        .shogi-branch-breadcrumbs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.35rem;
+          margin-bottom: 0.75rem;
+          min-height: 2rem;
+          align-items: center;
+        }
+
+        .shogi-branch-breadcrumbs > span,
+        .shogi-choice-empty {
+          color: #67e8f9;
+          font-size: 0.66rem;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+        }
+
+        .shogi-branch-breadcrumbs button {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          border: 1px solid rgba(251, 191, 36, 0.2);
+          background: rgba(120, 53, 15, 0.24);
+          color: #fef3c7;
+          padding: 0.36rem 0.45rem;
+          border-radius: 4px;
+        }
+
+        .shogi-branch-breadcrumbs button strong {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.2rem;
+          height: 1.2rem;
+          background: rgba(251, 191, 36, 0.14);
+          border-radius: 4px;
+        }
+
+        .shogi-choice-list,
+        .shogi-next-list {
+          display: grid;
+          gap: 0.42rem;
+        }
+
+        .shogi-choice-list button {
+          grid-template-columns: 3.7rem minmax(0, 1fr) auto;
+          gap: 0.5rem;
+          padding: 0.58rem 0.6rem;
+        }
+
+        .shogi-choice-list button.is-active {
+          border-color: rgba(251, 191, 36, 0.58);
+          background: rgba(120, 53, 15, 0.34);
+        }
+
+        .shogi-next-list button {
+          grid-template-columns: 2rem minmax(0, 1fr);
+          gap: 0.5rem;
+          padding: 0.5rem 0.58rem;
+        }
+
+        .shogi-next-list button span {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.35rem;
+          height: 1.35rem;
+          border: 1px solid rgba(34, 211, 238, 0.28);
+          background: rgba(8, 47, 73, 0.42);
+          border-radius: 4px;
+        }
+
+        .shogi-comment-box {
+          display: grid;
+          gap: 0.45rem;
+          margin-top: 0.8rem;
+        }
+
+        .shogi-comment-box span {
+          color: rgba(34, 211, 238, 0.72);
+          font-size: 0.64rem;
+          font-weight: 900;
+          letter-spacing: 0.22em;
+        }
+
+        .shogi-comment-box textarea {
+          min-height: 150px;
+          resize: vertical;
+          border: 1px solid rgba(103, 232, 249, 0.16);
+          background: rgba(2, 6, 12, 0.74);
+          color: #e2e8f0;
+          font-size: 0.86rem;
+          line-height: 1.55;
+          border-radius: 4px;
+        }
