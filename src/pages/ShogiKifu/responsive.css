@@ -35,32 +35,272 @@
 
         @media (max-width: 640px) {
           .shogi-page {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
+            overflow: visible;
+            background:
+              radial-gradient(circle at 18% 3%, rgba(34, 211, 238, 0.13), transparent 18rem),
+              radial-gradient(circle at 92% 10%, rgba(244, 114, 182, 0.08), transparent 16rem),
+              linear-gradient(180deg, #02050a 0%, #04070d 52%, #080706 100%);
+          }
+
+          .shogi-page > .relative {
+            gap: 0.65rem;
+          }
+
+          .shogi-scanline {
+            opacity: 0.1;
+          }
+
+          .shogi-grid-glow {
+            background-size: 38px 38px;
+            opacity: 0.65;
+          }
+
+          .shogi-header {
+            gap: 0.75rem;
+            padding: 0.8rem;
+          }
+
+          .shogi-kicker,
+          .shogi-panel-head p {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+          }
+
+          .shogi-header h1 {
+            font-size: 1.35rem;
+            line-height: 1.15;
+          }
+
+          .shogi-status-strip {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.42rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.08em;
+          }
+
+          .shogi-status-strip span {
+            overflow: hidden;
+            padding: 0.5rem 0.45rem;
+            text-align: center;
+            text-overflow: ellipsis;
           }
 
           .shogi-panel {
-            padding: 0.75rem;
+            padding: 0.65rem;
+            border-radius: 5px;
+          }
+
+          .shogi-panel-head {
+            align-items: start;
+            gap: 0.65rem;
+            margin-bottom: 0.65rem;
+          }
+
+          .shogi-panel-head h2 {
+            font-size: 0.95rem;
+          }
+
+          .shogi-tool-row {
+            gap: 0.35rem;
+          }
+
+          .shogi-icon-button {
+            width: 2.6rem;
+            height: 2.6rem;
+          }
+
+          .shogi-mini-button {
+            width: 1.9rem;
+            height: 1.9rem;
+          }
+
+          .shogi-board-shell {
+            --board-size: min(calc(100cqw - 1.3rem), calc(100vw - 3.2rem));
+            gap: 0.25rem;
+          }
+
+          .shogi-board {
+            border-width: 2px;
+          }
+
+          .shogi-board-row {
+            grid-template-columns: 0.75rem var(--board-size);
+            gap: 0.22rem;
+          }
+
+          .shogi-file-labels {
+            margin-left: calc(0.75rem + 0.22rem);
+          }
+
+          .shogi-square {
+            touch-action: manipulation;
           }
 
           .shogi-piece span {
-            font-size: 0.82rem;
+            font-size: clamp(0.72rem, calc(var(--board-size) / 28), 1rem);
+          }
+
+          .shogi-rule-bar {
+            align-items: stretch;
+            flex-direction: column;
+            min-height: 2.7rem;
+            padding: 0.55rem;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+          }
+
+          .shogi-promotion-actions {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .shogi-promotion-actions button {
+            min-height: 2.45rem;
           }
 
           .shogi-hand-tray {
             grid-template-columns: 1fr;
+            gap: 0.55rem;
+            padding: 0.5rem;
+          }
+
+          .shogi-hand-owner {
+            display: flex;
+            justify-content: space-between;
+            min-width: 0;
           }
 
           .shogi-hand-pieces {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.45rem;
+          }
+
+          .shogi-hand-unit {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 0.25rem;
+          }
+
+          .shogi-hand-piece {
+            min-height: 2.6rem;
+            min-width: 0;
+            justify-items: center;
+          }
+
+          .shogi-hand-piece:only-child {
+            grid-column: 1 / -1;
+          }
+
+          .shogi-current-move {
+            grid-template-columns: auto minmax(0, 1fr);
+            padding: 0.62rem;
+          }
+
+          .shogi-current-move em {
+            grid-column: 1 / -1;
+          }
+
+          .shogi-route-title {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.25rem;
+          }
+
+          .shogi-route-list {
+            max-height: 13.5rem;
+            padding-left: 0.55rem;
+          }
+
+          .shogi-route-list button,
+          .shogi-choice-list button,
+          .shogi-next-list button,
+          .shogi-line-list button,
+          .shogi-library-list button {
+            min-height: 2.55rem;
+            touch-action: manipulation;
+          }
+
+          .shogi-route-list button {
+            grid-template-columns: 2rem minmax(0, 1fr);
+          }
+
+          .shogi-route-list button em,
+          .shogi-choice-list button em {
+            grid-column: 2;
+          }
+
+          .shogi-choice-list button {
+            grid-template-columns: 3.1rem minmax(0, 1fr);
+          }
+
+          .shogi-next-list button {
+            padding: 0.55rem;
           }
 
           .shogi-palette {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.4rem;
+          }
+
+          .shogi-palette-piece {
+            min-height: 3.7rem;
+          }
+
+          .shogi-segmented,
+          .shogi-action-grid,
+          .shogi-export-actions {
+            gap: 0.42rem;
+          }
+
+          .shogi-segmented button,
+          .shogi-action-grid button,
+          .shogi-export-actions button {
+            min-height: 2.6rem;
+            padding-inline: 0.35rem;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            touch-action: manipulation;
+          }
+
+          .shogi-export-actions {
+            grid-template-columns: 1fr;
+          }
+
+          .shogi-library-list,
+          .shogi-line-list,
+          .shogi-kif-preview {
+            max-height: 15rem;
+          }
+
+          .shogi-comment-box textarea {
+            min-height: 8rem;
+            font-size: 1rem;
           }
 
           .shogi-file-labels,
           .shogi-rank-labels {
-            font-size: 0.62rem;
+            font-size: 0.54rem;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .shogi-panel {
+            padding: 0.55rem;
+          }
+
+          .shogi-board-shell {
+            --board-size: min(calc(100cqw - 1.05rem), calc(100vw - 2.65rem));
+          }
+
+          .shogi-hand-pieces {
+            gap: 0.32rem;
+          }
+
+          .shogi-hand-piece span {
+            font-size: 0.72rem;
+          }
+
+          .shogi-mini-button {
+            width: 1.65rem;
+            height: 1.65rem;
           }
         }

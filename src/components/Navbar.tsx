@@ -413,12 +413,140 @@ const QuantumDock = React.memo(({ navItems }: { navItems: readonly string[] }) =
   );
 });
 
+const useMobileScrollVisibility = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const hideTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+
+    const clearHideTimer = () => {
+      if (hideTimerRef.current !== null) {
+        window.clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+    };
+
+    const syncMobile = () => {
+      setIsMobile(mediaQuery.matches);
+      if (!mediaQuery.matches) {
+        clearHideTimer();
+        setIsVisible(false);
+      }
+    };
+
+    const scheduleHide = () => {
+      clearHideTimer();
+      hideTimerRef.current = window.setTimeout(() => {
+        setIsVisible(false);
+      }, 850);
+    };
+
+    const revealForScroll = () => {
+      if (!mediaQuery.matches) return;
+      setIsVisible(true);
+      scheduleHide();
+    };
+
+    syncMobile();
+    mediaQuery.addEventListener('change', syncMobile);
+    window.addEventListener('scroll', revealForScroll, { passive: true });
+    window.addEventListener('touchmove', revealForScroll, { passive: true });
+
+    return () => {
+      clearHideTimer();
+      mediaQuery.removeEventListener('change', syncMobile);
+      window.removeEventListener('scroll', revealForScroll);
+      window.removeEventListener('touchmove', revealForScroll);
+    };
+  }, []);
+
+  return { isMobile, isVisible, setIsVisible };
+};
+
+const MobileNavDock = React.memo(({
+  navItems,
+  isVisible,
+  onInteract,
+}: {
+  navItems: readonly string[];
+  isVisible: boolean;
+  onInteract: () => void;
+}) => {
+  const location = useLocation();
+
+  return (
+    <motion.nav
+      aria-label="Mobile navigation"
+      initial={false}
+      animate={{
+        y: isVisible ? 0 : 26,
+        opacity: isVisible ? 1 : 0,
+        filter: isVisible ? 'blur(0px)' : 'blur(4px)',
+      }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      onPointerDown={onInteract}
+      onFocusCapture={onInteract}
+      className={cn(
+        "fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 md:hidden",
+        isVisible ? "pointer-events-auto" : "pointer-events-none"
+      )}
+    >
+      <div className="border border-cyan-400/24 bg-[linear-gradient(180deg,rgba(3,9,18,0.94),rgba(2,6,12,0.82))] p-1.5 shadow-[0_18px_44px_rgba(0,0,0,0.62),0_0_24px_rgba(34,211,238,0.10)] backdrop-blur-xl">
+        <div className="mb-1.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-cyan-400/10 px-2 pb-1.5">
+          <NavLink to="/" className="min-w-0 outline-none" aria-label="Home">
+            <span className="block truncate font-mono text-[0.66rem] font-black uppercase tracking-[0.08em] text-slate-100">
+              LUNA_PROTOCOL
+            </span>
+          </NavLink>
+          <span className="h-1.5 w-1.5 bg-cyan-400 shadow-[0_0_8px_#22d3ee]" aria-hidden="true" />
+        </div>
+
+        <div className="grid grid-cols-5 gap-1">
+          {navItems.map((item) => {
+            const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
+            const isActive = location.pathname === path || (item === 'World' && location.pathname === '/');
+
+            return (
+              <NavLink
+                key={item}
+                to={path}
+                aria-label={item}
+                className={cn(
+                  "relative flex min-h-11 items-center justify-center border px-1 font-mono text-[0.64rem] font-black uppercase tracking-[0.04em] outline-none transition-colors",
+                  isActive
+                    ? "border-cyan-300/55 bg-cyan-950/70 text-cyan-100 shadow-[inset_0_0_18px_rgba(34,211,238,0.14)]"
+                    : "border-white/8 bg-slate-950/42 text-slate-400"
+                )}
+              >
+                {item}
+                {isActive && (
+                  <motion.span
+                    layoutId="mobile-nav-lock"
+                    className="pointer-events-none absolute inset-x-2 bottom-1 h-px bg-cyan-300 shadow-[0_0_8px_#22d3ee]"
+                  />
+                )}
+              </NavLink>
+            );
+          })}
+        </div>
+      </div>
+    </motion.nav>
+  );
+});
+
 const Navbar: React.FC = () => {
   const location = useLocation();
   
   const scrambledPath = location.pathname === '/' ? '/ROOT' : location.pathname.toUpperCase();
   const { battery, net } = useHardwareStatus();
   const timeStr = useQuantumClock();
+  const {
+    isMobile: isMobileNav,
+    isVisible: isMobileNavVisible,
+    setIsVisible: setMobileNavVisible,
+  } = useMobileScrollVisibility();
 
   return (
     <>
@@ -440,7 +568,7 @@ const Navbar: React.FC = () => {
         <div className="absolute left-0 top-0 h-1.5 w-1.5 bg-cyan-400 shadow-[0_0_12px_#22d3ee] animate-pulse" />
       </div>
 
-      <div className="fixed left-8 top-8 z-50 pointer-events-auto">
+      <div className="fixed left-8 top-8 z-50 hidden pointer-events-auto md:block">
         <NavLink to="/" className="group flex flex-col items-start border border-white/10 bg-[linear-gradient(180deg,rgba(4,8,16,0.84),rgba(4,8,16,0.58))] px-5 py-4 backdrop-blur-xl cursor-crosshair outline-none shadow-[0_14px_40px_rgba(0,0,0,0.4)]">
           <span className="mb-2 text-[9px] font-mono uppercase tracking-[0.34em] text-cyan-700">Personal Protocol</span>
           <div className="relative overflow-hidden">
@@ -488,6 +616,13 @@ const Navbar: React.FC = () => {
       </div>
 
       <QuantumDock navItems={NAV_ITEMS} />
+      {isMobileNav && (
+        <MobileNavDock
+          navItems={NAV_ITEMS}
+          isVisible={isMobileNavVisible}
+          onInteract={() => setMobileNavVisible(true)}
+        />
+      )}
 
       <div className="fixed bottom-8 left-8 z-40 hidden flex-col items-start gap-2 md:block pointer-events-none">
          <div className="cyber-barcode h-6 w-32 rotate-180 opacity-25 mix-blend-screen" style={{ writingMode: 'vertical-rl' }} />

@@ -13,7 +13,7 @@ const ShogiKifu: React.FC = () => {
   useShogiKeyboardShortcuts(shogi);
 
   return (
-    <section className="shogi-page relative min-h-screen overflow-hidden px-4 pb-20 pt-36 text-slate-100 md:px-8 md:pt-40">
+    <section className="shogi-page relative min-h-dvh overflow-hidden px-2 pb-24 pt-5 text-slate-100 sm:px-4 md:px-8 md:pb-20 md:pt-40">
       <div className="shogi-scanline" aria-hidden="true" />
       <div className="shogi-grid-glow" aria-hidden="true" />
 
