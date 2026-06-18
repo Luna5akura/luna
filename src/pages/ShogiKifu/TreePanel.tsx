@@ -1,15 +1,13 @@
-import { GitBranch, StepBack, StepForward, Trash2 } from "lucide-react";
+import { StepBack, StepForward, Trash2 } from "lucide-react";
 import type { KifuNode } from "./types";
 
 type TreePanelProps = {
   nodes: Record<string, KifuNode>;
   currentId: string;
   currentNode: KifuNode;
-  branchArmed: boolean;
   onSelectNode: (nodeId: string) => void;
   onStepBack: () => void;
   onStepForward: () => void;
-  onArmBranch: () => void;
   onDeleteCurrent: () => void;
   onCommentChange: (value: string) => void;
 };
@@ -23,11 +21,9 @@ export const TreePanel = ({
   nodes,
   currentId,
   currentNode,
-  branchArmed,
   onSelectNode,
   onStepBack,
   onStepForward,
-  onArmBranch,
   onDeleteCurrent,
   onCommentChange,
 }: TreePanelProps) => {
@@ -70,9 +66,6 @@ export const TreePanel = ({
           </button>
           <button type="button" className="shogi-icon-button" onClick={onStepForward} title="进入主线下一手 (→)" aria-label="进入主线下一手，快捷键右方向键" disabled={!currentNode.children[0]}>
             <StepForward size={16} />
-          </button>
-          <button type="button" className={`shogi-icon-button ${branchArmed ? "is-active" : ""}`} onClick={onArmBranch} title="开分支 (B)" aria-label="开分支，快捷键 B">
-            <GitBranch size={16} />
           </button>
           <button type="button" className="shogi-icon-button danger" onClick={onDeleteCurrent} title="删除当前节点 (Delete)" aria-label="删除当前节点，快捷键 Delete" disabled={currentId === "root"}>
             <Trash2 size={16} />

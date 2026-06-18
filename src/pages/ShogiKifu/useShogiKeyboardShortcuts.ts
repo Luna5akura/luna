@@ -10,7 +10,6 @@ type ShortcutParams = {
   nodes: Record<string, KifuNode>;
   pendingPromotion: PendingPromotion | null;
   selectedBoardPiece: ShogiPiece | null;
-  armSiblingBranch: () => void;
   cancelTransient: () => void;
   deleteCurrentNode: () => void;
   recordPendingPromotion: (promote: boolean) => void;
@@ -36,7 +35,6 @@ export const useShogiKeyboardShortcuts = ({
   nodes,
   pendingPromotion,
   selectedBoardPiece,
-  armSiblingBranch,
   cancelTransient,
   deleteCurrentNode,
   recordPendingPromotion,
@@ -128,10 +126,6 @@ export const useShogiKeyboardShortcuts = ({
           event.preventDefault();
           setModeAndClear("setup");
           break;
-        case "b":
-          event.preventDefault();
-          armSiblingBranch();
-          break;
         case "escape":
           event.preventDefault();
           cancelTransient();
@@ -153,7 +147,6 @@ export const useShogiKeyboardShortcuts = ({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
-    armSiblingBranch,
     cancelTransient,
     currentId,
     currentNode,

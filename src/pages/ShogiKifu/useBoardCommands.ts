@@ -30,7 +30,6 @@ type BoardCommandParams = {
   setupOwner: Player;
   setupPromoted: boolean;
   pushNotice: (message: string) => void;
-  setBranchArmed: Dispatch<SetStateAction<boolean>>;
   setCurrentId: Dispatch<SetStateAction<string>>;
   setMode: Dispatch<SetStateAction<ToolMode>>;
   setNodes: Dispatch<SetStateAction<Record<string, KifuNode>>>;
@@ -63,7 +62,6 @@ export const useBoardCommands = ({
   setupOwner,
   setupPromoted,
   pushNotice,
-  setBranchArmed,
   setCurrentId,
   setMode,
   setNodes,
@@ -97,7 +95,6 @@ export const useBoardCommands = ({
     if (matchingChildId) {
       setCurrentId(matchingChildId);
       clearTransient();
-      setBranchArmed(false);
       return;
     }
 
@@ -121,7 +118,6 @@ export const useBoardCommands = ({
     }));
     setCurrentId(childId);
     clearTransient();
-    setBranchArmed(false);
   };
 
   const recordMove = (from: number, to: number, promote = false) => {

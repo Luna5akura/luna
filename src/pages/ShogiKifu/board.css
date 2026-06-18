@@ -1,4 +1,8 @@
-.shogi-board-shell {
+.shogi-board-stage {
+          display: grid;
+        }
+
+        .shogi-board-shell {
           container-type: inline-size;
           --board-size: min(680px, calc(100cqw - 1.35rem), calc(100vw - 4.5rem));
           display: grid;

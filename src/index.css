@@ -33,8 +33,6 @@ body {
 }
 
 * {
-  cursor: none !important;
-  /* 保留选择功能但隐藏选择时光标 */
   box-sizing: border-box;
 }
 /* 默认光标样式 */

@@ -13,7 +13,6 @@ export const useShogiKifuController = () => {
   const [setupPromoted, setSetupPromoted] = useState(false);
   const [pendingPromotion, setPendingPromotion] = useState<PendingPromotion | null>(null);
   const [selection, setSelection] = useState<Selection>(null);
-  const [branchArmed, setBranchArmed] = useState(false);
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
   const [notice, setNotice] = useState("");
   const [activeStoredPath, setActiveStoredPath] = useState("");
@@ -57,7 +56,6 @@ export const useShogiKifuController = () => {
     setupOwner,
     setupPromoted,
     pushNotice,
-    setBranchArmed,
     setCurrentId,
     setMode,
     setNodes,
@@ -71,7 +69,6 @@ export const useShogiKifuController = () => {
     setNodes({ [ROOT_ID]: createRootNode() });
     setCurrentId(ROOT_ID);
     boardCommands.clearTransient();
-    setBranchArmed(false);
     setActiveStoredPath("");
     setNotice("");
   };
@@ -90,12 +87,6 @@ export const useShogiKifuController = () => {
     boardCommands.clearTransient();
   };
 
-  const armSiblingBranch = () => {
-    if (currentNode.parentId) setCurrentId(currentNode.parentId);
-    boardCommands.clearTransient();
-    setBranchArmed(true);
-  };
-
   const updateComment = (value: string) => {
     setNodes((previous) => ({ ...previous, [currentId]: { ...previous[currentId], comment: value } }));
   };
@@ -106,7 +97,6 @@ export const useShogiKifuController = () => {
       setNodes(imported.nodes);
       setCurrentId(imported.currentId);
       boardCommands.clearTransient();
-      setBranchArmed(false);
       setActiveStoredPath(file.path);
       pushNotice(`已载入 ${file.title}`);
     } catch (error) {
@@ -133,13 +123,11 @@ export const useShogiKifuController = () => {
   const selectNode = (nodeId: string) => {
     setCurrentId(nodeId);
     boardCommands.clearTransient();
-    setBranchArmed(false);
   };
 
   return {
     activeStoredPath,
     board,
-    branchArmed,
     copyKif,
     copyState,
     currentId,
@@ -164,7 +152,6 @@ export const useShogiKifuController = () => {
     setupPromoted,
     stepBack: () => currentNode.parentId && selectNode(currentNode.parentId),
     stepForward: () => currentNode.children[0] && selectNode(currentNode.children[0]),
-    armSiblingBranch,
     updateComment,
     ...boardCommands,
   };

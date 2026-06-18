@@ -35,7 +35,9 @@
 
         @media (max-width: 640px) {
           .shogi-page {
+            min-height: 100svh;
             overflow: visible;
+            padding: 0.45rem 0.45rem 1rem !important;
             background:
               radial-gradient(circle at 18% 3%, rgba(34, 211, 238, 0.13), transparent 18rem),
               radial-gradient(circle at 92% 10%, rgba(244, 114, 182, 0.08), transparent 16rem),
@@ -43,7 +45,7 @@
           }
 
           .shogi-page > .relative {
-            gap: 0.65rem;
+            gap: 0.5rem;
           }
 
           .shogi-scanline {
@@ -56,8 +58,7 @@
           }
 
           .shogi-header {
-            gap: 0.75rem;
-            padding: 0.8rem;
+            display: none;
           }
 
           .shogi-kicker,
@@ -86,18 +87,18 @@
           }
 
           .shogi-panel {
-            padding: 0.65rem;
+            padding: 0.55rem;
             border-radius: 5px;
           }
 
           .shogi-panel-head {
-            align-items: start;
-            gap: 0.65rem;
-            margin-bottom: 0.65rem;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.45rem;
           }
 
           .shogi-panel-head h2 {
-            font-size: 0.95rem;
+            font-size: 0.88rem;
           }
 
           .shogi-tool-row {
@@ -105,18 +106,96 @@
           }
 
           .shogi-icon-button {
-            width: 2.6rem;
-            height: 2.6rem;
+            width: 2.35rem;
+            height: 2.35rem;
           }
 
           .shogi-mini-button {
-            width: 1.9rem;
-            height: 1.9rem;
+            width: 1.55rem;
+            height: 1.8rem;
+          }
+
+          .shogi-workspace {
+            gap: 0.55rem;
+          }
+
+          .shogi-board-panel {
+            order: 1;
+            position: static;
+            max-height: none;
+            overflow: visible;
+          }
+
+          .shogi-mobile-kifu-bar {
+            order: 2;
+            display: grid;
+            gap: 0.45rem;
+            padding: 0.45rem;
+          }
+
+          .shogi-mobile-kifu-top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.5rem;
+            align-items: center;
+          }
+
+          .shogi-side-stack {
+            order: 3;
+          }
+
+          .shogi-tree-panel {
+            order: 4;
+          }
+
+          .shogi-side-stack > .shogi-panel[aria-label="stored kifu library"] {
+            order: 1;
+          }
+
+          .shogi-side-stack > .shogi-panel[aria-label="active line"] {
+            order: 2;
+          }
+
+          .shogi-side-stack > .shogi-panel[aria-label="setup controls"] {
+            order: 3;
+          }
+
+          .shogi-side-stack > .shogi-panel[aria-label="export kifu"] {
+            order: 4;
+          }
+
+          .shogi-board-panel .shogi-panel-head > div {
+            display: none;
+          }
+
+          .shogi-board-panel .shogi-panel-head {
+            justify-content: flex-end;
+            margin-bottom: 0.35rem;
+          }
+
+          .shogi-board-stage,
+          .shogi-board-shell {
+            --board-size: min(
+              calc(100vw - 7.05rem),
+              clamp(13.75rem, 70vw, 18rem)
+            );
+          }
+
+          .shogi-board-stage {
+            display: grid;
+            grid-template-columns: minmax(2.35rem, 0.25fr) var(--board-size) minmax(2.35rem, 0.25fr);
+            grid-template-areas:
+              "gote board sente"
+              "rule rule rule";
+            gap: 0.28rem;
+            align-items: stretch;
+            justify-content: center;
           }
 
           .shogi-board-shell {
-            --board-size: min(calc(100cqw - 1.3rem), calc(100vw - 3.2rem));
-            gap: 0.25rem;
+            grid-area: board;
+            align-self: start;
+            gap: 0;
           }
 
           .shogi-board {
@@ -124,12 +203,12 @@
           }
 
           .shogi-board-row {
-            grid-template-columns: 0.75rem var(--board-size);
-            gap: 0.22rem;
+            grid-template-columns: var(--board-size);
+            gap: 0;
           }
 
           .shogi-file-labels {
-            margin-left: calc(0.75rem + 0.22rem);
+            margin-left: 0;
           }
 
           .shogi-square {
@@ -141,12 +220,14 @@
           }
 
           .shogi-rule-bar {
-            align-items: stretch;
-            flex-direction: column;
-            min-height: 2.7rem;
-            padding: 0.55rem;
-            font-size: 0.68rem;
-            letter-spacing: 0.04em;
+            align-items: center;
+            flex-direction: row;
+            grid-area: rule;
+            min-height: 2.1rem;
+            margin-top: 0.08rem;
+            padding: 0.36rem 0.45rem;
+            font-size: 0.64rem;
+            letter-spacing: 0.03em;
           }
 
           .shogi-promotion-actions {
@@ -154,60 +235,262 @@
           }
 
           .shogi-promotion-actions button {
-            min-height: 2.45rem;
+            min-height: 1.85rem;
+          }
+
+          .shogi-hands {
+            display: contents;
+            margin-top: 0;
+          }
+
+          .shogi-hand-tray:first-child {
+            grid-area: gote;
+          }
+
+          .shogi-hand-tray:last-child {
+            grid-area: sente;
           }
 
           .shogi-hand-tray {
+            align-self: stretch;
             grid-template-columns: 1fr;
-            gap: 0.55rem;
-            padding: 0.5rem;
+            grid-template-rows: auto 1fr;
+            gap: 0.18rem;
+            min-width: 0;
+            padding: 0.22rem;
           }
 
           .shogi-hand-owner {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             min-width: 0;
+            font-size: 0.58rem;
+            letter-spacing: 0;
+            text-align: center;
+          }
+
+          .shogi-hand-owner span {
+            margin-right: 0;
+          }
+
+          .shogi-hand-owner strong {
+            display: none;
           }
 
           .shogi-hand-pieces {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.45rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            align-content: start;
+            gap: 0.12rem;
+            overflow: visible;
+            padding-bottom: 0;
           }
 
           .shogi-hand-unit {
             display: grid;
-            grid-template-columns: auto minmax(0, 1fr) auto;
-            gap: 0.25rem;
+            grid-template-columns: 1fr;
+            gap: 0.12rem;
+            min-width: 0;
+          }
+
+          .shogi-hand-unit .shogi-mini-button {
+            width: 100%;
+            height: 1.05rem;
+            min-height: 0;
+            padding: 0;
           }
 
           .shogi-hand-piece {
-            min-height: 2.6rem;
+            min-height: 1.18rem;
             min-width: 0;
+            width: 100%;
+            padding: 0.08rem 0.08rem;
             justify-items: center;
           }
 
           .shogi-hand-piece:only-child {
-            grid-column: 1 / -1;
+            grid-column: auto;
+          }
+
+          .shogi-hand-piece span {
+            font-size: 0.58rem;
+          }
+
+          .shogi-hand-piece b {
+            font-size: 0.48rem;
+          }
+
+          .shogi-mobile-kifu-current {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 0.35rem;
+            align-items: center;
+            min-width: 0;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            background: rgba(8, 47, 73, 0.26);
+            color: #e0f2fe;
+            padding: 0.48rem 0.5rem;
+            border-radius: 4px;
+          }
+
+          .shogi-mobile-kifu-current span {
+            color: #67e8f9;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+          }
+
+          .shogi-mobile-kifu-current strong {
+            overflow: hidden;
+            font-size: 0.9rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .shogi-mobile-kifu-current em {
+            color: #fbbf24;
+            font-size: 0.58rem;
+            font-style: normal;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+          }
+
+          .shogi-mobile-kifu-bar .shogi-tool-row {
+            display: grid;
+            grid-template-columns: repeat(3, 2.1rem);
+            gap: 0.3rem;
+          }
+
+          .shogi-mobile-kifu-bar .shogi-icon-button {
+            width: 2.1rem;
+            height: 2.1rem;
+          }
+
+          .shogi-mobile-variation-zone {
+            display: grid;
+            gap: 0.35rem;
+          }
+
+          .shogi-mobile-variation-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0.28rem;
+            align-items: stretch;
+          }
+
+          .shogi-mobile-variation-row > span {
+            color: rgba(34, 211, 238, 0.72);
+            font-size: 0.6rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+          }
+
+          .shogi-mobile-variation-row > div {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(5.9rem, 1fr));
+            gap: 0.32rem;
+            min-width: 0;
+            overflow: visible;
+            padding-bottom: 0;
+          }
+
+          .shogi-mobile-variation-row button {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 0.35rem;
+            align-items: center;
+            min-width: 0;
+            width: 100%;
+            min-height: 2.15rem;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            background: rgba(2, 6, 12, 0.58);
+            color: #cbd5e1;
+            padding: 0.42rem 0.5rem;
+            text-align: left;
+            border-radius: 4px;
+            touch-action: manipulation;
+          }
+
+          .shogi-mobile-variation-row button:hover,
+          .shogi-mobile-variation-row button.is-active {
+            border-color: rgba(251, 191, 36, 0.58);
+            background: rgba(120, 53, 15, 0.34);
+          }
+
+          .shogi-mobile-variation-row button b {
+            color: #67e8f9;
+            font-size: 0.64rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+          }
+
+          .shogi-mobile-variation-row button strong {
+            overflow: hidden;
+            font-size: 0.76rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .shogi-tree-panel {
+            position: static;
+            max-height: none;
+            min-height: 0;
+            overflow: visible;
+            padding: 0.55rem;
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          }
+
+          .shogi-tree-panel .shogi-panel-head {
+            position: static;
+            margin: 0 0 0.45rem;
+            padding: 0;
+            background: transparent;
+            border-bottom: 0;
+          }
+
+          .shogi-tree-panel .shogi-panel-head p {
+            display: none;
           }
 
           .shogi-current-move {
             grid-template-columns: auto minmax(0, 1fr);
-            padding: 0.62rem;
+            gap: 0.42rem;
+            margin-bottom: 0.45rem;
+            padding: 0.45rem;
           }
 
           .shogi-current-move em {
             grid-column: 1 / -1;
+            display: none;
           }
 
           .shogi-route-title {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 0.25rem;
+            align-items: center;
+            flex-direction: row;
+            gap: 0.35rem;
+            margin-bottom: 0.35rem;
+          }
+
+          .shogi-route-section,
+          .shogi-choice-grid,
+          .shogi-next-choices {
+            margin-bottom: 0.45rem;
+            padding: 0.38rem;
           }
 
           .shogi-route-list {
-            max-height: 13.5rem;
-            padding-left: 0.55rem;
+            display: flex;
+            gap: 0.3rem;
+            max-height: none;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-left: 0;
+            border-left: 0;
+          }
+
+          .shogi-route-list button::before {
+            display: none;
           }
 
           .shogi-route-list button,
@@ -215,25 +498,52 @@
           .shogi-next-list button,
           .shogi-line-list button,
           .shogi-library-list button {
-            min-height: 2.55rem;
+            min-height: 2.1rem;
             touch-action: manipulation;
           }
 
           .shogi-route-list button {
-            grid-template-columns: 2rem minmax(0, 1fr);
+            flex: 0 0 min(10.5rem, 72vw);
+            grid-template-columns: 1.65rem minmax(0, 1fr);
+            padding: 0.42rem 0.48rem;
           }
 
           .shogi-route-list button em,
           .shogi-choice-list button em {
-            grid-column: 2;
+            display: none;
           }
 
           .shogi-choice-list button {
-            grid-template-columns: 3.1rem minmax(0, 1fr);
+            grid-template-columns: 2.7rem minmax(0, 1fr);
+            padding: 0.45rem 0.5rem;
           }
 
           .shogi-next-list button {
-            padding: 0.55rem;
+            padding: 0.42rem 0.5rem;
+          }
+
+          .shogi-choice-list,
+          .shogi-next-list {
+            max-height: 5rem;
+            overflow: auto;
+          }
+
+          .shogi-branch-breadcrumbs {
+            margin-bottom: 0.45rem;
+            min-height: 0;
+          }
+
+          .shogi-branch-breadcrumbs > span {
+            display: none;
+          }
+
+          .shogi-comment-box {
+            margin-top: 0.45rem;
+          }
+
+          .shogi-comment-box textarea {
+            min-height: 4.5rem;
+            font-size: 0.95rem;
           }
 
           .shogi-palette {
@@ -271,36 +581,51 @@
             max-height: 15rem;
           }
 
-          .shogi-comment-box textarea {
-            min-height: 8rem;
-            font-size: 1rem;
-          }
-
           .shogi-file-labels,
           .shogi-rank-labels {
-            font-size: 0.54rem;
+            display: none;
           }
         }
 
         @media (max-width: 390px) {
           .shogi-panel {
-            padding: 0.55rem;
+            padding: 0.5rem;
           }
 
+          .shogi-board-stage,
           .shogi-board-shell {
-            --board-size: min(calc(100cqw - 1.05rem), calc(100vw - 2.65rem));
+            --board-size: min(
+              calc(100vw - 6.55rem),
+              clamp(12.75rem, 68vw, 17rem)
+            );
+          }
+
+          .shogi-mobile-kifu-bar {
+            grid-template-columns: 1fr;
+          }
+
+          .shogi-mobile-kifu-top {
+            grid-template-columns: 1fr;
+          }
+
+          .shogi-mobile-kifu-bar .shogi-tool-row {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+
+          .shogi-mobile-kifu-bar .shogi-icon-button {
+            width: 100%;
           }
 
           .shogi-hand-pieces {
-            gap: 0.32rem;
+            gap: 0.1rem;
           }
 
           .shogi-hand-piece span {
-            font-size: 0.72rem;
+            font-size: 0.54rem;
           }
 
           .shogi-mini-button {
-            width: 1.65rem;
-            height: 1.65rem;
+            width: 1.38rem;
+            height: 1.68rem;
           }
         }

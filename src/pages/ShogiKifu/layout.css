@@ -1,8 +1,21 @@
-.shogi-page {
+        .shogi-page {
           background:
             radial-gradient(circle at 18% 8%, rgba(34, 211, 238, 0.16), transparent 28rem),
             radial-gradient(circle at 88% 20%, rgba(244, 114, 182, 0.09), transparent 24rem),
             linear-gradient(180deg, #02050a 0%, #04070d 48%, #080706 100%);
+          cursor: auto;
+        }
+
+        .shogi-page button:not(:disabled) {
+          cursor: pointer;
+        }
+
+        .shogi-page button:disabled {
+          cursor: not-allowed;
+        }
+
+        .shogi-page textarea {
+          cursor: text;
         }
 
         .shogi-scanline {
@@ -105,6 +118,10 @@
         .shogi-board-panel {
           position: sticky;
           top: 7rem;
+        }
+
+        .shogi-mobile-kifu-bar {
+          display: none;
         }
 
         .shogi-panel-head {

@@ -1,6 +1,7 @@
 import React from "react";
 import { BoardPanel } from "./ShogiKifu/BoardPanel";
 import { Header } from "./ShogiKifu/Header";
+import { MobileKifuBar } from "./ShogiKifu/MobileKifuBar";
 import { SideStack } from "./ShogiKifu/SideStack";
 import { TreePanel } from "./ShogiKifu/TreePanel";
 import { STORED_KIFU_FILES } from "./ShogiKifu/storedKifu";
@@ -22,7 +23,6 @@ const ShogiKifu: React.FC = () => {
           nextPlayer={shogi.nextPlayer}
           moveNumber={shogi.currentNode.moveNumber}
           nodeCount={Object.keys(shogi.nodes).length}
-          branchArmed={shogi.branchArmed}
         />
 
         <div className="shogi-workspace">
@@ -44,15 +44,23 @@ const ShogiKifu: React.FC = () => {
             onPromotionChoice={shogi.recordPendingPromotion}
           />
 
+          <MobileKifuBar
+            currentId={shogi.currentId}
+            currentNode={shogi.currentNode}
+            nodes={shogi.nodes}
+            onSelectNode={shogi.selectNode}
+            onStepBack={shogi.stepBack}
+            onStepForward={shogi.stepForward}
+            onDeleteCurrent={shogi.deleteCurrentNode}
+          />
+
           <TreePanel
             nodes={shogi.nodes}
             currentId={shogi.currentId}
             currentNode={shogi.currentNode}
-            branchArmed={shogi.branchArmed}
             onSelectNode={shogi.selectNode}
             onStepBack={shogi.stepBack}
             onStepForward={shogi.stepForward}
-            onArmBranch={shogi.armSiblingBranch}
             onDeleteCurrent={shogi.deleteCurrentNode}
             onCommentChange={shogi.updateComment}
           />

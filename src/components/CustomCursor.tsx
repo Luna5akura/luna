@@ -31,6 +31,7 @@ const CustomCursor = () => {
     // ==========================================
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
     if (!ctx) return;
+    document.documentElement.classList.add('custom-cursor-active');
 
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -264,6 +265,7 @@ const CustomCursor = () => {
     start();
 
     return () => {
+      document.documentElement.classList.remove('custom-cursor-active');
       stop();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
@@ -279,7 +281,8 @@ const CustomCursor = () => {
     <>
       <style>{`
         @media (pointer: fine) {
-          body, a, button, input, textarea, select { cursor: none !important; }
+          .custom-cursor-active,
+          .custom-cursor-active * { cursor: none !important; }
         }
 
         .cyber-cursor-outline {

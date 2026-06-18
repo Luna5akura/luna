@@ -27,7 +27,7 @@ const PostDetails = lazy(loadPostDetails);
 
 const DynamicCursor = () => {
   const location = useLocation();
-  if (location.pathname === "/skill") return null;
+  if (location.pathname === "/skill" || location.pathname === "/shogi") return null;
   return <CustomCursor />;
 };
 
