@@ -8,7 +8,8 @@ import {
   useTransform,
   useAnimationFrame,
   useMotionValue,
-  useMotionTemplate
+  useMotionTemplate,
+  type MotionValue,
 } from 'framer-motion';
 
 // 安全模运算（保持不变）
@@ -25,7 +26,7 @@ const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>, isActiv
 
     let frameCount = 0;
     let lastTime = performance.now();
-    let startTime = performance.now();
+    const startTime = performance.now();
     let rAF: number;
 
     const updateMetrics = () => {
@@ -35,17 +36,19 @@ const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>, isActiv
         fps.set(Math.round((frameCount * 1000) / (now - lastTime)));
         frameCount = 0;
         lastTime = now;
-        const perf = performance as any;
+        if (uptimeRef.current) {
+          uptimeRef.current.textContent = ((now - startTime) / 1000).toFixed(3) + "s";
+        }
+        const perf = performance as Performance & {
+          memory?: {
+            usedJSHeapSize?: number;
+          };
+        };
         if (perf.memory?.usedJSHeapSize) {
           const mb = perf.memory.usedJSHeapSize / (1024 * 1024);
           const hexMem = Math.floor(mb * 10000).toString(16).toUpperCase();
           memory.set(`0x${hexMem.padStart(6, '0')}`);
-        } else {
-          memory.set(`0x${Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0')}`);
         }
-      }
-      if (uptimeRef.current) {
-        uptimeRef.current.textContent = ((now - startTime) / 1000).toFixed(3) + "s";
       }
       rAF = requestAnimationFrame(updateMetrics);
     };
@@ -54,13 +57,13 @@ const useHardwareMetrics = (uptimeRef: React.RefObject<HTMLSpanElement>, isActiv
     return () => cancelAnimationFrame(rAF);
   }, [fps, isActive, memory, uptimeRef]);
 
-  const cores = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 'UNKNOWN' : 8;
+  const cores = navigator.hardwareConcurrency ?? 0;
   return { fps, memory, cores };
 };
 
 interface KineticMarqueeProps {
   baseVelocity: number;
-  scrollVelocity: any;
+  scrollVelocity: MotionValue<number>;
   isActive: boolean;
 }
 

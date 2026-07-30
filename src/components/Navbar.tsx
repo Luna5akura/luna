@@ -14,18 +14,6 @@ const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow', 'Shogi'] as const;
 const CLOCK_UPDATE_INTERVAL_MS = 250;
 const RADAR_FRAME_INTERVAL = 1000 / 24;
 
-type BatteryManagerLike = {
-  level: number;
-  charging: boolean;
-  addEventListener: (type: 'levelchange' | 'chargingchange', listener: () => void) => void;
-  removeEventListener: (type: 'levelchange' | 'chargingchange', listener: () => void) => void;
-};
-
-type NetworkInformationLike = EventTarget & {
-  effectiveType?: string;
-  downlink?: number;
-};
-
 // ==========================================
 // 【极致优化点 1：零重绘解密引擎】
 // ==========================================
@@ -89,76 +77,6 @@ const useQuantumClock = () => {
     return () => window.clearInterval(intervalId);
   }, [timeStr]);
   return timeStr;
-};
-
-// ==========================================
-// 【基础物理硬件遥测 API】
-// ==========================================
-const useHardwareStatus = () => {
-  const [battery, setBattery] = useState("PWR:100%[AC]");
-  const [net, setNet] = useState("NET:UPLINK_ESTABLISHED");
-
-  useEffect(() => {
-    let isMounted = true;
-    let batteryManager: BatteryManagerLike | null = null;
-    let handleBatteryUpdate: (() => void) | null = null;
-    let connection: NetworkInformationLike | null = null;
-    let handleConnectionUpdate: (() => void) | null = null;
-
-    try {
-      const nav = navigator as Navigator & {
-        getBattery?: () => Promise<BatteryManagerLike>;
-        connection?: NetworkInformationLike;
-        mozConnection?: NetworkInformationLike;
-        webkitConnection?: NetworkInformationLike;
-      };
-
-      if ('getBattery' in nav) {
-        void nav.getBattery?.().then((bat) => {
-          if (!isMounted) return;
-
-          batteryManager = bat;
-          handleBatteryUpdate = () => {
-            setBattery(`PWR:${Math.floor(bat.level * 100)}%[${bat.charging ? 'AC' : 'DC'}]`);
-          };
-
-          handleBatteryUpdate();
-          bat.addEventListener('levelchange', handleBatteryUpdate);
-          bat.addEventListener('chargingchange', handleBatteryUpdate);
-        });
-      }
-
-      connection = nav.connection || nav.mozConnection || nav.webkitConnection || null;
-      if (connection) {
-        handleConnectionUpdate = () => {
-          const effectiveType = connection?.effectiveType?.toUpperCase() ?? 'UPLINK_ESTABLISHED';
-          const downlink = connection?.downlink;
-          const throughput = typeof downlink === 'number' ? `${downlink}MBPS` : 'UNKNOWN';
-          setNet(`NET:${effectiveType}_${throughput}`);
-        };
-
-        handleConnectionUpdate();
-        connection.addEventListener('change', handleConnectionUpdate);
-      }
-    } catch {
-      // 优雅降级
-    }
-
-    return () => {
-      isMounted = false;
-
-      if (batteryManager && handleBatteryUpdate) {
-        batteryManager.removeEventListener('levelchange', handleBatteryUpdate);
-        batteryManager.removeEventListener('chargingchange', handleBatteryUpdate);
-      }
-
-      if (connection && handleConnectionUpdate) {
-        connection.removeEventListener('change', handleConnectionUpdate);
-      }
-    };
-  }, []);
-
-  return { battery, net };
 };
 
 // ==========================================
@@ -540,7 +458,6 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   
   const scrambledPath = location.pathname === '/' ? '/ROOT' : location.pathname.toUpperCase();
-  const { battery, net } = useHardwareStatus();
   const timeStr = useQuantumClock();
   const {
     isMobile: isMobileNav,
@@ -590,7 +507,7 @@ const Navbar: React.FC = () => {
 
           <div className="flex flex-col items-end gap-1 font-mono text-[10px] uppercase tracking-[0.24em] text-gray-400">
             <div className="flex items-center gap-2 text-cyan-600/80">
-              <span>{net}</span>
+              <span>NET:UPLINK_ESTABLISHED</span>
               <span className="w-1.5 h-1.5 rounded-sm bg-cyan-500 animate-pulse shadow-[0_0_5px_#06b6d4]" />
             </div>
             
@@ -600,7 +517,7 @@ const Navbar: React.FC = () => {
                  <span className="w-full h-full bg-cyan-500 opacity-80" />
                  <span className="w-full h-full bg-cyan-500 opacity-80" />
               </span>
-              {battery}
+              PWR:CORE_ONLINE
             </div>
             
             <motion.div className="text-white font-bold drop-shadow-[0_0_4px_#22d3ee] mt-0.5 text-[11px] will-change-contents tabular-nums tracking-[0.1em]">

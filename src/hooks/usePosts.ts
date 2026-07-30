@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Post } from '@/types';
 import { posts as generatedPosts } from '@/data/posts.generated';
 
@@ -8,7 +8,10 @@ const markdownFiles = import.meta.glob('../posts/**/*.md', {
 });
 
 const contentCache: Record<string, string> = {};
+let cachedContentCount = 0;
 let allContentsPromise: Promise<Record<string, string>> | null = null;
+const hasCachedContent = (key: string) => Object.prototype.hasOwnProperty.call(contentCache, key);
+const allGeneratedContentCached = () => cachedContentCount === generatedPosts.length;
 
 const pathToKey = (path: string) => path.replace('../posts/', '').replace(/\.md$/, '');
 
@@ -21,25 +24,9 @@ const stripFrontmatter = (raw: string) => {
   return raw.slice(match[0].length);
 };
 
-const yieldToMainThread = async () => {
-  if (typeof window === 'undefined') {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    return;
-  }
-
-  await new Promise<void>((resolve) => {
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(() => resolve(), { timeout: 120 });
-      return;
-    }
-
-    window.setTimeout(() => resolve(), 0);
-  });
-};
-
 const loadContentFromPath = async (path: string): Promise<string> => {
   const key = pathToKey(path);
-  if (contentCache[key]) return contentCache[key];
+  if (hasCachedContent(key)) return contentCache[key];
 
   const loader = markdownFiles[path];
   if (!loader) {
@@ -49,33 +36,20 @@ const loadContentFromPath = async (path: string): Promise<string> => {
   const raw = (await loader()) as string;
   const content = stripFrontmatter(raw);
   contentCache[key] = content;
+  cachedContentCount++;
   return content;
 };
 
-const loadAllContentsInternal = async ({ eager = false }: { eager?: boolean } = {}) => {
+const loadAllContentsInternal = async () => {
   if (allContentsPromise) return allContentsPromise;
 
   allContentsPromise = (async () => {
-    const entries: Array<readonly [string, string]> = [];
-    const paths = Object.keys(markdownFiles);
-    const batchSize = eager ? 16 : 4;
-
-    for (let index = 0; index < paths.length; index += batchSize) {
-      const batch = paths.slice(index, index + batchSize);
-      const loadedBatch = await Promise.all(
-        batch.map(async (path) => {
-          const content = await loadContentFromPath(path);
-          return [pathToKey(path), content] as const;
-        })
-      );
-
-      entries.push(...loadedBatch);
-
-      if (!eager && index + batchSize < paths.length) {
-        await yieldToMainThread();
-      }
-    }
-
+    const entries = await Promise.all(
+      Object.keys(markdownFiles).map(async (path) => {
+        const content = await loadContentFromPath(path);
+        return [pathToKey(path), content] as const;
+      })
+    );
     return Object.fromEntries(entries);
   })().catch((error) => {
     allContentsPromise = null;
@@ -85,60 +59,38 @@ const loadAllContentsInternal = async ({ eager = false }: { eager?: boolean } = 
   return allContentsPromise;
 };
 
-export const usePosts = ({ preloadContents = false }: { preloadContents?: boolean } = {}) => {
+export const usePosts = () => {
   const [contents, setContents] = useState<Record<string, string>>(contentCache);
   const [contentsStatus, setContentsStatus] = useState<'idle' | 'loading' | 'ready'>(
-    Object.keys(contentCache).length > 0 ? 'ready' : 'idle'
+    allGeneratedContentCached() ? 'ready' : 'idle'
   );
 
   const loadContent = useCallback(async (contentKey: string) => {
-    if (contentCache[contentKey]) {
-      setContents((prev) => (prev[contentKey] ? prev : { ...prev, [contentKey]: contentCache[contentKey] }));
+    if (hasCachedContent(contentKey)) {
+      setContents((prev) =>
+        prev[contentKey] === contentCache[contentKey]
+          ? prev
+          : { ...prev, [contentKey]: contentCache[contentKey] }
+      );
       return contentCache[contentKey];
     }
 
     setContentsStatus((prev) => (prev === 'ready' ? prev : 'loading'));
     const content = await loadContentFromPath(`../posts/${contentKey}.md`);
     setContents((prev) => ({ ...prev, [contentKey]: content }));
-    setContentsStatus(Object.keys(contentCache).length === generatedPosts.length ? 'ready' : 'idle');
+    setContentsStatus(allGeneratedContentCached() ? 'ready' : 'idle');
     return content;
   }, []);
 
-  const loadAllContents = useCallback(async ({ eager = false }: { eager?: boolean } = {}) => {
-    if (contentsStatus === 'ready') return contentCache;
+  const loadAllContents = useCallback(async () => {
+    if (allGeneratedContentCached()) return contentCache;
 
     setContentsStatus('loading');
-    const loaded = await loadAllContentsInternal({ eager });
+    const loaded = await loadAllContentsInternal();
     setContents(loaded);
     setContentsStatus('ready');
     return loaded;
-  }, [contentsStatus]);
-
-  useEffect(() => {
-    if (preloadContents) {
-      let cancelled = false;
-
-      const startPreload = () => {
-        if (!cancelled) {
-          void loadAllContents();
-        }
-      };
-
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        const idleId = window.requestIdleCallback(startPreload, { timeout: 1800 });
-        return () => {
-          cancelled = true;
-          window.cancelIdleCallback?.(idleId);
-        };
-      }
-
-      const timeoutId = window.setTimeout(startPreload, 1200);
-      return () => {
-        cancelled = true;
-        window.clearTimeout(timeoutId);
-      };
-    }
-  }, [loadAllContents, preloadContents]);
+  }, []);
 
   return {
     posts: generatedPosts as Post[],

@@ -103,6 +103,9 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
 
   // 内部链接处理（保持原有极致优化）
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const handleInternalLinks = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest('a');
       if (!target) return;
@@ -127,8 +130,8 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
         }
       }
     };
-    document.addEventListener('click', handleInternalLinks, { capture: true });
-    return () => document.removeEventListener('click', handleInternalLinks, { capture: true });
+    container.addEventListener('click', handleInternalLinks);
+    return () => container.removeEventListener('click', handleInternalLinks);
   }, [location, navigate]);
 
   // URL 参数滚动
@@ -136,10 +139,8 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
     const params = new URLSearchParams(location.search);
     const scrollToId = params.get('scrollTo');
     if (scrollToId) {
-      setTimeout(() => {
-        const element = document.getElementById(scrollToId);
-        if (element) smoothScrollTo(element.getBoundingClientRect().top + window.scrollY - 100, 1000);
-      }, 300);
+      const element = document.getElementById(scrollToId);
+      if (element) smoothScrollTo(element.getBoundingClientRect().top + window.scrollY - 100, 1000);
     }
   }, [location.search]);
 

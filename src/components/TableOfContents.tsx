@@ -1,8 +1,10 @@
 // src/components/TableOfContents.tsx
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Network, ChevronRight, ScanLine } from "lucide-react";
-import { motion, useSpring, useMotionValue } from "framer-motion";
+import { motion, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+const HEADING_SELECTOR = ".markdown-sys-container h1, .markdown-sys-container h2, .markdown-sys-container h3, .markdown-sys-container h4, .markdown-sys-container h5, .markdown-sys-container h6";
 
 // ==========================================
 // 【数据结构定义】
@@ -38,16 +40,17 @@ const CyberDecryptNode = ({ text, className }: { text: string, className?: strin
 
     let frameId: number;
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    const textChars = Array.from(text);
+    const len = textChars.length;
 
     const handleDecrypt = () => {
       cancelAnimationFrame(frameId);
       let iterations = 0;
-      const len = text.length;
 
       const animate = () => {
         let display = "";
         for (let i = 0; i < len; i++) {
-          if (i < iterations) display += text[i];
+          if (i < iterations) display += textChars[i];
           else display += chars[Math.floor(Math.random() * chars.length)];
         }
         // 直接穿透 V8 引擎写入 DOM，彻底绕过 React 生命周期
@@ -97,40 +100,34 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
   const cursorOpacity = useSpring(0, { stiffness: 300, damping: 30 });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // 缩小查询范围，防止污染其他组件
-      const headers = Array.from(document.querySelectorAll(".markdown-sys-container h1, .markdown-sys-container h2, .markdown-sys-container h3, .markdown-sys-container h4, .markdown-sys-container h5, .markdown-sys-container h6"));
-      
-      const nodes: TocNode[] =[];
-      const stack: TocNode[] =[];
-      let globalIndex = 0;
+    const headers = Array.from(document.querySelectorAll(HEADING_SELECTOR));
 
-      headers.forEach((header) => {
-        if (!header.id) {
-            header.id = `sys-node-${Math.random().toString(36).substr(2, 9)}`;
-        }
-        
-        const level = parseInt(header.tagName[1]);
-        const hexId = `0x${globalIndex.toString(16).toUpperCase().padStart(2, '0')}`;
-        const node: TocNode = { id: header.id, text: header.textContent || "UNKNOWN_NODE", level, hexId, children:[] };
-        globalIndex++;
+    const nodes: TocNode[] = [];
+    const stack: TocNode[] = [];
+    let globalIndex = 0;
 
-        while (stack.length > 0 && stack[stack.length - 1].level >= level) {
-          stack.pop();
-        }
+    headers.forEach((header) => {
+      if (!header.id) return;
 
-        if (stack.length === 0) {
-          nodes.push(node);
-        } else {
-          stack[stack.length - 1].children.push(node);
-        }
-        stack.push(node);
-      });
+      const level = parseInt(header.tagName[1]);
+      const hexId = `0x${globalIndex.toString(16).toUpperCase().padStart(2, '0')}`;
+      const node: TocNode = { id: header.id, text: header.textContent || "UNKNOWN_NODE", level, hexId, children: [] };
+      globalIndex++;
 
-      setToc(nodes);
-    }, 300); // 预留渲染缓冲
-    return () => clearTimeout(timer);
-  },[content]);
+      while (stack.length > 0 && stack[stack.length - 1].level >= level) {
+        stack.pop();
+      }
+
+      if (stack.length === 0) {
+        nodes.push(node);
+      } else {
+        stack[stack.length - 1].children.push(node);
+      }
+      stack.push(node);
+    });
+
+    setToc(nodes);
+  }, [content]);
 
   // ==========================================
   // 【极致优化点 3：O(1) 纯 DOM 状态广播引擎】
@@ -155,7 +152,6 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
 
     // O(N) 原生类名切换，将样式映射完全丢给 CSS 引擎
     Object.entries(itemRefs.current).forEach(([key, el]) => {
-      if (!el) return;
       if (key === id) {
         el.classList.add('toc-item-active');
         // 触发物理爆破动画
@@ -231,7 +227,13 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
     
     return (
       <li 
-        ref={el => { if (el) itemRefs.current[node.id] = el; }}
+        ref={el => {
+          if (el) {
+            itemRefs.current[node.id] = el;
+          } else {
+            delete itemRefs.current[node.id];
+          }
+        }}
         className="relative py-1.5"
       >
         <div

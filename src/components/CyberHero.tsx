@@ -18,21 +18,28 @@ const CHAR_SET = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', 'X', 'Z', '◉'];
 const useCyberGlitch = (text: string, delay: number = 0) => {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+    const textChars = Array.from(text);
     const timeout = setTimeout(() => {
       let iterations = 0;
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         if (!ref.current) return;
-        ref.current.innerText = text
-          .split('')
-          .map((letter, index) => (index < iterations ? text[index] : chars[Math.floor(Math.random() * chars.length)]))
+        ref.current.innerText = textChars
+          .map((letter, index) => (index < iterations ? letter : chars[Math.floor(Math.random() * chars.length)]))
           .join('');
-        if (iterations >= text.length) clearInterval(interval);
+        if (iterations >= textChars.length && interval) {
+          clearInterval(interval);
+          interval = null;
+        }
         iterations += 1 / 3;
       }, 28);
     }, delay);
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
     return () => {
       clearTimeout(timeout);
+      if (interval) {
+        clearInterval(interval);
+      }
     };
   }, [text, delay]);
   return ref;

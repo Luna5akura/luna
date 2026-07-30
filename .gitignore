@@ -7,23 +7,70 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Package manager lockfiles
+package-lock.json
+
+# Local agents / generated environments
+.agents/
+.codex
+.codex-*
+.venv/
+venv/
+env/
+
+# Python cache / tool cache
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Build output / TypeScript cache
+node_modules
+dist
+dist-ssr
+*.tsbuildinfo
+.tmp/
+*.local
+
+# Backups
+*.bak
+
+# Course attachments and binary source material
 *.pdf
+*.PDF
+*.ppt
+*.pptx
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ods
+*.mp4
+*.avi
+*.mov
+src/posts/**/*.html
+src/posts/**/*.css
+src/posts/**/*.txt
+
+# LaTeX build output
 *.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
 *.fdb_latexmk
 *.fls
+*.lof
+*.lot
 *.nav
 *.out
+*.run.xml
 *.snm
 *.synctex.gz
 *.toc
 *.xdv
 missfont.log
-
-
-node_modules
-dist
-dist-ssr
-*.local
 
 # Editor directories and files
 .vscode/*
@@ -35,4 +82,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-*.ods
+**/.git/

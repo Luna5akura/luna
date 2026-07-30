@@ -6,16 +6,6 @@ import { Post } from '@/types';
 import { cn } from "@/lib/utils";
 import { motion } from 'framer-motion';
 
-// ==========================================
-// 【全局音频上下文环境声明】
-// ==========================================
-declare global {
-  interface Window {
-    __audioCtx?: AudioContext;
-    webkitAudioContext?: typeof AudioContext;
-  }
-}
-
 interface SearchModalProps {
   searchTerm: string;
   onSearchTermChange: (term: string) => void;
@@ -31,42 +21,6 @@ interface SearchResult {
   excerpt: string;
   score: number;
 }
-
-const getAudioCtx = () => {
-  if (typeof window === 'undefined') return null;
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!window.__audioCtx) window.__audioCtx = new AudioContext();
-  return window.__audioCtx;
-};
-
-const playCyberSound = (type: 'boot' | 'keystroke') => {
-  const ctx = getAudioCtx();
-  if (!ctx || ctx.state === 'suspended') return;
-  
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  
-  if (type === 'keystroke') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.03);
-    gain.gain.setValueAtTime(0.015, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.03);
-  } else if (type === 'boot') {
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(1200, ctx.currentTime);
-    osc.frequency.setValueAtTime(800, ctx.currentTime + 0.05);
-    gain.gain.setValueAtTime(0.05, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
-  }
-};
 
 const SearchModal: React.FC<SearchModalProps> = ({
   searchTerm,
@@ -88,7 +42,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
   useEffect(() => {
     inputRef.current?.focus();
     document.body.style.overflow = 'hidden';
-    try { playCyberSound('boot'); } catch (e) {}
     return () => { document.body.style.overflow = 'unset'; };
   },[]);
 
@@ -131,14 +84,14 @@ const SearchModal: React.FC<SearchModalProps> = ({
       let excerpt = '';
 
       const titleIndex = titleLower.indexOf(term);
+      const contentIndex = contentLower.indexOf(term);
       if (titleIndex !== -1) {
          score += 1000 - titleIndex; 
          type = 'title';
          // 无需重新 toLowerCase 寻找下标，直接复用已有的查找结果
-         excerpt = post.excerpt || getHighlightSnippet(rawContent, termLen, contentLower.indexOf(term));
+         excerpt = post.excerpt || getHighlightSnippet(rawContent, termLen, contentIndex);
       }
 
-      const contentIndex = contentLower.indexOf(term);
       if (contentIndex !== -1) {
          score += 100 - (contentIndex * 0.01);
          if (type !== 'title') {
@@ -171,7 +124,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    try { playCyberSound('keystroke'); } catch (e) {} 
     onSearchTermChange(e.target.value);
   };
 
@@ -197,7 +149,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
       }
       if (e.key === 'Enter' && focusedIndex !== -1) {
         e.preventDefault();
-        try { playCyberSound('boot'); } catch (e) {}
         navigate(`/posts/${searchResults[focusedIndex].post.contentKey}`);
         handleClose();
       }
@@ -214,6 +165,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
      const escaped = deferredTerm.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
      return new RegExp(`(${escaped})`, 'gi');
   }, [deferredTerm]);
+  const normalizedHighlightTerm = useMemo(() => deferredTerm.trim().toLowerCase(), [deferredTerm]);
 
   const HighlightedText = ({ text }: { text: string }) => {
     if (!highlightRegex || !text) return <>{text}</>;
@@ -223,7 +175,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     return (
       <>
         {parts.map((part, i) => 
-          part.toLowerCase() === deferredTerm.trim().toLowerCase() ? (
+          part.toLowerCase() === normalizedHighlightTerm ? (
             <span key={i} className="text-cyan-400 font-bold bg-cyan-950/60 px-0.5 rounded shadow-[0_0_8px_rgba(34,211,238,0.4)]">
               {part}
             </span>

@@ -10,6 +10,8 @@ const portals =[
   { title: "Sapium", url: "https://www.sapium.site", desc: "Thinking Space" },
 ];
 
+type Portal = (typeof portals)[number];
+
 // ==========================================
 // 【顶级炫技点 1：原生 3D 透视跃迁引擎 (Software Warp Drive)】
 // 纯数学计算 Z 轴深度衰减与 FOV 透视投影，实现超光速星流特效。
@@ -153,7 +155,7 @@ const NetworkResolver = ({ url, isHovered }: { url: string, isHovered: boolean }
 // ==========================================
 // 【单一跃迁节点组件 (Warp Node)】
 // ==========================================
-const WarpNode = ({ portal, index }: { portal: any, index: number }) => {
+const WarpNode = ({ portal, index }: { portal: Portal, index: number }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // 节点的三维进场排版逻辑

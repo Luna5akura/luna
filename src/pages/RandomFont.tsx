@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 const RandomFont: React.FC = () => {
@@ -26,9 +26,9 @@ const RandomFont: React.FC = () => {
   };
 
   // 随机选取字体（从全局池中随机）
-  const getRandomFont = () => {
+  const getRandomFont = useCallback(() => {
     return allFonts[Math.floor(Math.random() * allFonts.length)];
-  };
+  }, [allFonts]);
 
   // 演示文本
   const [inputText, setInputText] = useState(
@@ -40,7 +40,7 @@ const RandomFont: React.FC = () => {
   // 初始加载时随机一次字体（与输入文本无关）
   useEffect(() => {
     setCurrentFont(getRandomFont());
-  }, []); // 仅在组件挂载时执行一次
+  }, [getRandomFont]); // 仅在组件挂载时执行一次
 
   // 输入文本变化时，仅更新语言显示框（字体不随输入变化）
   useEffect(() => {

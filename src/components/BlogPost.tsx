@@ -7,13 +7,18 @@ import {
   useMotionValue, 
   useSpring, 
   useMotionTemplate, 
-  useTransform
+  useTransform,
+  type MotionValue,
 } from 'framer-motion';
 import { useTransitionNavigate } from '@/hooks/useTransitionNavigate';
 
-const useHardwareAttitude = (rotateX: any, rotateY: any) => {
+type DeviceOrientationEventWithPermission = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<PermissionState>;
+};
+
+const useHardwareAttitude = (rotateX: MotionValue<number>, rotateY: MotionValue<number>) => {
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.DeviceOrientationEvent) return;
+    if (!window.DeviceOrientationEvent) return;
 
     const LPF_ALPHA = 0.15; 
     let smoothedBeta = 0;
@@ -32,12 +37,16 @@ const useHardwareAttitude = (rotateX: any, rotateY: any) => {
       rotateY.set(smoothedGamma / 1.5);
     };
 
-    const requestAccess = async () => {
-      if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-        try {
-          const permission = await (DeviceOrientationEvent as any).requestPermission();
-          if (permission === 'granted') window.addEventListener('deviceorientation', handleOrientation);
-        } catch (error) { console.warn("Gyro scope permission rejected."); }
+    const requestAccess = () => {
+      const orientationEvent = DeviceOrientationEvent as DeviceOrientationEventWithPermission;
+
+      if (typeof orientationEvent.requestPermission === 'function') {
+        void orientationEvent.requestPermission().then(
+          (permission) => {
+            if (permission === 'granted') window.addEventListener('deviceorientation', handleOrientation);
+          },
+          () => undefined
+        );
       } else {
         window.addEventListener('deviceorientation', handleOrientation);
       }
@@ -63,9 +72,12 @@ const ZeroRenderDecryptor = ({ text, isHovered }: { text: string, isHovered: boo
     const el = nodeRef.current;
     if (!el) return;
 
+    const textChars = Array.from(text);
+    const len = textChars.length;
+
     if (!isHovered) {
       // 静态掩码：不启动动画，仅计算一次
-      const hexMask = Array.from(text).map(c => c === ' ' ? ' ' : Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
+      const hexMask = textChars.map(c => c === ' ' ? ' ' : Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
       el.textContent = hexMask;
       return;
     }
@@ -73,13 +85,12 @@ const ZeroRenderDecryptor = ({ text, isHovered }: { text: string, isHovered: boo
     let frameId: number;
     let iteration = 0;
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    const len = text.length;
     
     const animate = () => {
       let currentText = "";
       for (let i = 0; i < len; i++) {
-        if (i < iteration) currentText += text[i];
-        else if (text[i] === " ") currentText += " ";
+        if (i < iteration) currentText += textChars[i];
+        else if (textChars[i] === " ") currentText += " ";
         else currentText += chars[Math.floor(Math.random() * chars.length)];
       }
 

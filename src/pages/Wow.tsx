@@ -178,10 +178,12 @@ const GlitchText = ({ text, isActive }: { text: string, isActive: boolean }) => 
   const [display, setDisplay] = useState(text);
   useEffect(() => {
     if (!isActive) return;
-    let iter = 0; const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    let iter = 0;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    const textChars = Array.from(text);
     const interval = setInterval(() => {
-      setDisplay(text.split("").map((c, i) => (i < iter ? text[i] : chars[Math.floor(Math.random() * chars.length)])).join(""));
-      if (iter >= text.length) clearInterval(interval);
+      setDisplay(textChars.map((char, i) => (i < iter ? char : chars[Math.floor(Math.random() * chars.length)])).join(""));
+      if (iter >= textChars.length) clearInterval(interval);
       iter += 1 / 2;
     }, 30);
     return () => clearInterval(interval);
@@ -195,10 +197,24 @@ const MorphingRadar = ({ targetStats, color }: { targetStats: number[], color: s
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true }); if (!ctx) return;
+    let width = 0;
+    let height = 0;
     let rAF: number; let time = 0; const sides = 6;
+    const resize = () => {
+      const nextWidth = canvas.offsetWidth;
+      const nextHeight = canvas.offsetHeight;
+      if (nextWidth === width && nextHeight === height) return;
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    resize();
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(canvas);
+
     const render = () => {
       time += 0.05;
-      const width = canvas.width = canvas.offsetWidth; const height = canvas.height = canvas.offsetHeight;
       const cx = width / 2; const cy = height / 2; const radius = Math.min(width, height) * 0.35;
       ctx.clearRect(0, 0, width, height);
       ctx.lineWidth = 1;
@@ -230,7 +246,10 @@ const MorphingRadar = ({ targetStats, color }: { targetStats: number[], color: s
       ctx.fillStyle = `${color}33`; ctx.fill(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
       rAF = requestAnimationFrame(render);
     };
-    render(); return () => cancelAnimationFrame(rAF);
+    render(); return () => {
+      resizeObserver.disconnect();
+      cancelAnimationFrame(rAF);
+    };
   }, [targetStats, color]);
   return <canvas ref={canvasRef} className="w-full h-full transform-gpu" style={{ minHeight: '300px' }} />;
 };
@@ -497,7 +516,7 @@ const KineticBanner = () => {
   const baseX = useMotionValue(0); const directionFactor = useRef<number>(1);
 
   useAnimationFrame((t, delta) => {
-    let safeDelta = delta > 50 ? 16 : delta; 
+    const safeDelta = delta > 50 ? 16 : delta;
     let moveBy = directionFactor.current * -2 * (safeDelta / 1000);
     const vf = velocityFactor.get();
     if (vf < 0) directionFactor.current = -1; else if (vf > 0) directionFactor.current = 1;

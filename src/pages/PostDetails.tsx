@@ -15,6 +15,10 @@ import { Post } from '@/types';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Terminal, CornerUpLeft, Activity, Cpu, Database } from 'lucide-react';
 
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void) => void;
+};
+
 // ==========================================
 // 【顶级炫技点 1：零重绘十六进制阅读进度遥测】
 // 突破 60FPS，不触发 React 渲染，纯硬件级数字变动
@@ -101,8 +105,11 @@ const PostDetails: React.FC = () => {
   const { '*' : slug } = useParams<{ '*': string }>();
   const navigate = useNavigate();
   const { posts, loadContent } = usePosts();
-  
-  const [post, setPost] = useState<Post | undefined>(undefined);
+
+  const post = useMemo<Post | undefined>(
+    () => (slug ? posts.find((p) => p.contentKey === slug) : undefined),
+    [posts, slug]
+  );
   const [markdownContent, setMarkdownContent] = useState<string | undefined>(undefined);
   const [isTocOpen, setIsTocOpen] = useState(false);
   const[isMobile, setIsMobile] = useState(false);
@@ -116,47 +123,34 @@ const PostDetails: React.FC = () => {
   },[]);
 
   useEffect(() => {
-    let isMounted = true;
+    let cancelled = false;
 
-    const loadPost = async () => {
-      if (!slug || posts.length === 0) {
-        if (isMounted) setIsLoading(false);
-        return;
-      }
+    if (!post) {
+      setMarkdownContent(undefined);
+      setIsLoading(false);
+      return;
+    }
 
-      const foundPost = posts.find((p) => p.contentKey === slug);
-      if (!foundPost) {
-        if (isMounted) {
-          setPost(undefined);
-          setMarkdownContent(undefined);
-          setIsLoading(false);
+    setMarkdownContent(undefined);
+    setIsLoading(true);
+
+    void loadContent(post.contentKey)
+      .then(
+        (content) => {
+          if (!cancelled) setMarkdownContent(content);
+        },
+        () => {
+          if (!cancelled) setMarkdownContent(undefined);
         }
-        return;
-      }
-
-      if (isMounted) {
-        setPost(foundPost);
-        setIsLoading(true);
-      }
-
-      try {
-        const content = await loadContent(foundPost.contentKey);
-        if (isMounted) {
-          setMarkdownContent(content);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void loadPost();
+      )
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
 
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
-  }, [posts, slug, loadContent]);
+  }, [post, loadContent]);
 
   // 计算硬核元数据
   const metaData = useMemo(() => {
@@ -180,8 +174,9 @@ const PostDetails: React.FC = () => {
   // 跨页返回拦截器 (View Transitions 护航)
   const handleReturn = (e: React.MouseEvent) => {
     e.preventDefault();
-    if ((document as any).startViewTransition) {
-      (document as any).startViewTransition(() => navigate('/'));
+    const transitionDocument = document as ViewTransitionDocument;
+    if (transitionDocument.startViewTransition) {
+      transitionDocument.startViewTransition(() => navigate('/'));
     } else {
       navigate('/');
     }

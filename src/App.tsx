@@ -1,5 +1,5 @@
 // src/App.tsx
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -40,30 +40,6 @@ const RouteLoadingFallback = () => (
 );
 
 function App() {
-  useEffect(() => {
-    const warmUpRoutes = () => {
-      void Promise.allSettled([
-        loadWarp(),
-        loadWow(),
-        loadWit(),
-        loadLifecode(),
-        loadSpark(),
-        loadRandomFont(),
-        loadShogiKifu(),
-      ]);
-    };
-
-    if (typeof window === "undefined") return;
-
-    if ("requestIdleCallback" in window) {
-      const idleId = window.requestIdleCallback(warmUpRoutes, { timeout: 1500 });
-      return () => window.cancelIdleCallback?.(idleId);
-    }
-
-    const timeoutId = window.setTimeout(warmUpRoutes, 300);
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
   return (
     <FontToggleProvider>
       <div className="flex flex-col w-full min-h-screen overflow-x-clip bg-[#02050A]">

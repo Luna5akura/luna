@@ -8,36 +8,38 @@ export const useScrambleText = (text: string, duration: number = 50, delay: numb
 
   useEffect(() => {
     let iteration = 0;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let interval: any = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
+    const textChars = Array.from(text);
 
     const startScramble = () => {
-        interval = setInterval(() => {
-          setDisplayText(
-            text
-              .split("")
-              .map((letter, index) => {
-                if (index < iteration) {
-                  return text[index];
-                }
-                return chars[Math.floor(Math.random() * chars.length)];
-              })
-              .join("")
-          );
-    
-          if (iteration >= text.length) { 
-            clearInterval(interval);
-          }
-          
-          iteration += 1; // 控制解码速度
-        }, duration);
+      interval = setInterval(() => {
+        setDisplayText(
+          textChars
+            .map((letter, index) => {
+              if (index < iteration) {
+                return letter;
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join("")
+        );
+
+        if (iteration >= textChars.length && interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+
+        iteration += 1; // 控制解码速度
+      }, duration);
     };
 
     const timeout = setTimeout(startScramble, delay);
 
     return () => {
+      if (interval) {
         clearInterval(interval);
-        clearTimeout(timeout);
+      }
+      clearTimeout(timeout);
     };
   }, [text, duration, delay]);
 

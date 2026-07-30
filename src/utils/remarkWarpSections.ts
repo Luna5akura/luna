@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/utils/remarkWrapSections.ts
-import { Plugin } from 'unified';
-import { Node, Parent } from 'unist';
-// import { visit } from 'unist-util-visit';
+import type { Plugin } from 'unified';
+import type { Node, Parent } from 'unist';
 
 interface HeadingNode extends Node {
   type: 'heading';
@@ -13,7 +11,7 @@ interface HeadingNode extends Node {
 interface ElementNode extends Node {
   type: 'element';
   tagName: string;
-  properties: { [key: string]: any };
+  properties: Record<string, unknown>;
   children: Node[];
 }
 

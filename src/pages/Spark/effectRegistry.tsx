@@ -703,6 +703,20 @@ const refScanPanelsTemplate = ({ scene, palette }: TemplateRenderProps) => (
 );
 
 export const TEMPLATE_REGISTRY: SparkTemplateDef[] = [
+  { id: "split-screen", name: "Split Screen", tag: "Core", description: "左右切屏构图，适合主标题和副标题分区展示", render: splitScreenTemplate },
+  { id: "vertical-columns", name: "Vertical Columns", tag: "Core", description: "竖排字符列，适合短句和日系标题节奏", render: verticalColumnsTemplate },
+  { id: "echo-stack", name: "Echo Stack", tag: "Core", description: "文字残影堆叠，强调重复和回声感", render: echoStackTemplate },
+  { id: "subtitle-burst", name: "Subtitle Burst", tag: "Core", description: "中心字幕爆发卡片，适合歌词或强调句", render: subtitleBurstTemplate },
+  { id: "warning-tape", name: "Warning Tape", tag: "Core", description: "警示胶带式横幅，适合强告警和冲击画面", render: warningTapeTemplate },
+  { id: "terminal-monolith", name: "Terminal Monolith", tag: "Core", description: "终端窗口主视觉，适合命令行和系统提示感", render: terminalMonolithTemplate },
+  { id: "magazine-cut", name: "Magazine Cut", tag: "Core", description: "杂志剪贴式非对称排版，适合编辑感短镜头", render: magazineCutTemplate },
+  { id: "orbit-ring", name: "Orbit Ring", tag: "Core", description: "环形轨道焦点，适合循环、时间和旋转意象", render: orbitRingTemplate },
+  { id: "barcode-signal", name: "Barcode Signal", tag: "Core", description: "条码信号画面，适合扫描和识别主题", render: barcodeSignalTemplate },
+  { id: "karaoke-rail", name: "Karaoke Rail", tag: "Core", description: "歌词轨道式进度条，适合节拍同步展示", render: karaokeRailTemplate },
+  { id: "grid-window", name: "Grid Window", tag: "Core", description: "九宫格窗口构图，适合模块化信息展示", render: gridWindowTemplate },
+  { id: "halo-monument", name: "Halo Monument", tag: "Core", description: "纪念碑式中心光环，适合庄重聚焦画面", render: haloMonumentTemplate },
+  { id: "duo-poster", name: "Duo Poster", tag: "Core", description: "双色海报分区，适合双主题和对照表达", render: duoPosterTemplate },
+  { id: "scan-archive", name: "Scan Archive", tag: "Core", description: "扫描档案式面板，适合资料归档和索引场景", render: scanArchiveTemplate },
   { id: "ref-red-noir", name: "Red Noir", tag: "Ref", description: "黑红压迫式海报切面，参考 WORLD FAILED 一类构图", render: refRedNoirTemplate },
   { id: "ref-acid-poster", name: "Acid Poster", tag: "Ref", description: "高亮酸性底色配错位文字，参考 Angel 的轻脏质感", render: refAcidPosterTemplate },
   { id: "ref-diamond-hud", name: "Diamond HUD", tag: "Ref", description: "极简菱形 HUD 焦点，参考黑白几何短镜头", render: refDiamondHudTemplate },

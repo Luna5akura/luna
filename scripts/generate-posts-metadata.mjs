@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 const postsDir = path.join(projectRoot, 'src', 'posts');
 const outputFile = path.join(projectRoot, 'src', 'data', 'posts.generated.ts');
+const ignoredDirectoryNames = new Set(['.git', '.agents', '.codex', '__pycache__']);
 
 const toTitleCase = (str) =>
   str
@@ -33,11 +34,14 @@ const buildExcerpt = (content) => {
 };
 
 const walkMarkdownFiles = async (dir) => {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
+  const entries = (await fs.readdir(dir, { withFileTypes: true })).sort((a, b) =>
+    a.name.localeCompare(b.name, 'en')
+  );
   const files = await Promise.all(
     entries.map(async (entry) => {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
+        if (ignoredDirectoryNames.has(entry.name)) return [];
         return walkMarkdownFiles(fullPath);
       }
 
@@ -46,6 +50,11 @@ const walkMarkdownFiles = async (dir) => {
   );
 
   return files.flat();
+};
+
+const toSortableTime = (date) => {
+  const time = Date.parse(date);
+  return Number.isNaN(time) ? 0 : time;
 };
 
 const main = async () => {
@@ -71,7 +80,10 @@ const main = async () => {
     })
   );
 
-  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  posts.sort((a, b) => {
+    const dateDelta = toSortableTime(b.date) - toSortableTime(a.date);
+    return dateDelta || a.contentKey.localeCompare(b.contentKey, 'en');
+  });
 
   const withIds = posts.map((post, index) => ({
     id: index + 1,

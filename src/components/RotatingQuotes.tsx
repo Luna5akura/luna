@@ -1,5 +1,5 @@
 // src/components/RotatingQuotes.tsx
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QUOTES =[
@@ -11,6 +11,15 @@ const QUOTES =[
 ];
 
 const CYBER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}!~?";
+
+const syncTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Tokyo',
+  hour12: false,
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  fractionalSecondDigits: 3
+});
 
 // ==========================================
 // 【极致优化点 1：剔除 HTML Parser (DOM 节点池化)】
@@ -100,20 +109,10 @@ const CryptographicText = ({ text }: { text: string }) => {
 export const RotatingQuotes: React.FC = () => {
   const [index, setIndex] = useState(0);
 
-  const systemInfo = useMemo(() => {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Asia/Tokyo',
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      fractionalSecondDigits: 3
-    });
-    return {
-      loc: "AP-NORTHEAST-1 [TYO]",
-      time: formatter.format(new Date())
-    };
-  }, [index]); 
+  const systemInfo = {
+    loc: "AP-NORTHEAST-1 [TYO]",
+    time: syncTimeFormatter.format(new Date()),
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {

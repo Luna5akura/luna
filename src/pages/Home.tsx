@@ -286,10 +286,6 @@ const Home: React.FC = () => {
     void loadAllContents();
   }, [loadAllContents]);
 
-  useEffect(() => {
-    void loadAllContents({ eager: true });
-  }, [loadAllContents]);
-
   return (
     <motion.div 
       className="min-h-screen w-full relative bg-[#050505] text-white overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200 cursor-none"

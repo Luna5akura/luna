@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';import { motion, useMotionValue, useAnimationFrame, useSpring, useTransform } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, useAnimationFrame, useSpring } from 'framer-motion';
 import { Fingerprint, Activity, MapPin, BrainCircuit, TerminalSquare } from 'lucide-react';
 
 // ==========================================
@@ -15,8 +16,8 @@ const NeuralWireframe: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = canvas.width = 400;
-    let height = canvas.height = 400;
+    const width = canvas.width = 400;
+    const height = canvas.height = 400;
 
     // 数学之美：黄金分割率推导正二十面体顶点
     const phi = (1 + Math.sqrt(5)) / 2;
@@ -58,16 +59,16 @@ const NeuralWireframe: React.FC = () => {
       const projected = vertices.map(v => {
         // 【形变算法】利用正弦波让几何体产生“生命呼吸感”
         const breathe = 1 + Math.sin(time + v[0]*v[1]) * 0.15;
-        let x = v[0] * breathe;
-        let y = v[1] * breathe;
-        let z = v[2] * breathe;
+        const x = v[0] * breathe;
+        const y = v[1] * breathe;
+        const z = v[2] * breathe;
 
         // 绕 X 轴旋转矩阵
-        let y1 = y * cosX - z * sinX;
-        let z1 = y * sinX + z * cosX;
+        const y1 = y * cosX - z * sinX;
+        const z1 = y * sinX + z * cosX;
         // 绕 Y 轴旋转矩阵
-        let x2 = x * cosY + z1 * sinY;
-        let z2 = -x * sinY + z1 * cosY;
+        const x2 = x * cosY + z1 * sinY;
+        const z2 = -x * sinY + z1 * cosY;
 
         // 透视除法 (Perspective Divide)
         const fov = 300;
@@ -159,24 +160,26 @@ const BiometricData = () => {
 // ==========================================
 const ClassifiedText = ({ text }: { text: string }) => {
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const maskedText = text.replace(/[a-zA-Z0-9]/g, '█');
   
   // 使用 MotionValue 与 requestAnimationFrame 实现绝对性能的解密动画
-  const displayText = useMotionValue(text.replace(/[a-zA-Z0-9]/g, '█'));
+  const displayText = useMotionValue(maskedText);
 
   useEffect(() => {
     let frame: number;
     let iteration = 0;
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
+    const textChars = Array.from(text);
     
     const animate = () => {
-      displayText.set(text.split("").map((char, index) => {
+      displayText.set(textChars.map((char, index) => {
         if (char === ' ') return ' ';
         if (!isUnlocked) return '█';
         if (index < iteration) return char;
         return chars[Math.floor(Math.random() * chars.length)];
       }).join(""));
 
-      if (isUnlocked && iteration < text.length) {
+      if (isUnlocked && iteration < textChars.length) {
         iteration += 1;
         frame = requestAnimationFrame(animate);
       }
@@ -185,11 +188,11 @@ const ClassifiedText = ({ text }: { text: string }) => {
     if (isUnlocked) {
       frame = requestAnimationFrame(animate);
     } else {
-      displayText.set(text.replace(/[a-zA-Z0-9]/g, '█'));
+      displayText.set(maskedText);
     }
 
     return () => cancelAnimationFrame(frame);
-  },[isUnlocked, text, displayText]);
+  },[isUnlocked, text, maskedText, displayText]);
 
   return (
     <motion.span 

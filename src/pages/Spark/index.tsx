@@ -12,7 +12,8 @@ import {
   Wand2,
 } from "lucide-react";
 import { TEMPLATE_MAP, TEMPLATE_REGISTRY } from "./effectRegistry";
-import { BACKGROUND_MAP, BACKGROUND_REGISTRY, StageChrome } from "./scenes";
+import { BACKGROUND_MAP, BACKGROUND_REGISTRY } from "./scenes";
+import { StageChrome } from "./StageChrome";
 import {
   CUE_BANK,
   DEFAULT_SCRIPT,
