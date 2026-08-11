@@ -1,6 +1,6 @@
 import { Minus, MousePointer2, PenLine, Plus } from "lucide-react";
 import { FILES_FULL, HAND_ORDER, PIECE_LABELS, PLAYER_META, RANKS } from "./constants";
-import { getPieceDisplay, getSquareLabel } from "./model";
+import { getPieceAssetPath, getPieceDisplay, getSquareLabel } from "./model";
 import type { Board, HandKind, Hands, PendingPromotion, Player, Selection, ShogiPiece, ToolMode } from "./types";
 
 type BoardPanelProps = {
@@ -38,11 +38,11 @@ export const BoardPanel = ({
   onHandCountChange,
   onPromotionChoice,
 }: BoardPanelProps) => (
-  <section className="shogi-panel shogi-board-panel" aria-label="shogi board editor">
+  <section className={`shogi-panel shogi-board-panel ${mode === "setup" ? "is-setup-mode" : "is-record-mode"}`} aria-label="shogi board editor">
     <div className="shogi-panel-head">
       <div>
-        <p>BOARD MATRIX</p>
-        <h2>盤面</h2>
+        <p>POSITION</p>
+        <h2>棋盘</h2>
       </div>
       <div className="shogi-tool-row">
         <button
@@ -90,8 +90,14 @@ export const BoardPanel = ({
                   aria-label={`${getSquareLabel(index)} ${piece ? `${PLAYER_META[piece.owner].label}${getPieceDisplay(piece)}` : "空"}`}
                 >
                   {piece && (
-                    <span className={`shogi-piece ${piece.owner === "gote" ? "is-gote" : "is-sente"}`}>
-                      <span>{getPieceDisplay(piece)}</span>
+                    <span className={`shogi-piece ${piece.owner === "gote" ? "is-gote" : "is-sente"} ${piece.promoted ? "is-promoted" : ""}`}>
+                      <img
+                        className="shogi-piece-art"
+                        src={getPieceAssetPath(piece.kind, piece.owner, piece.promoted)}
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                      />
                     </span>
                   )}
                 </button>
@@ -101,7 +107,7 @@ export const BoardPanel = ({
         </div>
       </div>
 
-      <div className="shogi-rule-bar" aria-live="polite">
+      <div className={`shogi-rule-bar ${pendingPromotion ? "is-promotion" : `is-${nextPlayer}`}`} aria-live="polite">
         {pendingPromotion && pendingPromotionPiece ? (
           <>
             <span>
@@ -151,7 +157,13 @@ export const BoardPanel = ({
                       title="选择持驹打入"
                       aria-label={`${PLAYER_META[owner].label}${PIECE_LABELS[kind]} ${count}`}
                     >
-                      <span>{PIECE_LABELS[kind]}</span>
+                      <img
+                        className={`shogi-hand-piece-art ${owner === "gote" ? "is-gote" : ""}`}
+                        src={getPieceAssetPath(kind, owner)}
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                      />
                       <b>{count}</b>
                     </button>
                     {mode === "setup" && (

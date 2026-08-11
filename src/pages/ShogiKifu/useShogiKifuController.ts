@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { ROOT_ID } from "./constants";
-import { buildKif, downloadTextFile, formatTimestamp, getDescendantIds, readJsonProject, readKifProject } from "./kifu";
+import { buildKif, downloadTextFile, findMainlineEnd, formatTimestamp, getDescendantIds, readJsonProject, readKifProject } from "./kifu";
 import { createRootNode } from "./model";
 import { useBoardCommands } from "./useBoardCommands";
 import type { KifuNode, PendingPromotion, Player, Selection, StoredKifuFile, ToolMode } from "./types";
@@ -95,7 +95,8 @@ export const useShogiKifuController = () => {
     try {
       const imported = file.extension === "json" ? readJsonProject(file.content) : readKifProject(file.content);
       setNodes(imported.nodes);
-      setCurrentId(imported.currentId);
+      setCurrentId(ROOT_ID);
+      setMode("record");
       boardCommands.clearTransient();
       setActiveStoredPath(file.path);
       pushNotice(`已载入 ${file.title}`);
@@ -125,6 +126,9 @@ export const useShogiKifuController = () => {
     boardCommands.clearTransient();
   };
 
+  const goToStart = () => selectNode(ROOT_ID);
+  const goToEnd = () => selectNode(findMainlineEnd(nodes, currentId));
+
   return {
     activeStoredPath,
     board,
@@ -152,6 +156,8 @@ export const useShogiKifuController = () => {
     setupPromoted,
     stepBack: () => currentNode.parentId && selectNode(currentNode.parentId),
     stepForward: () => currentNode.children[0] && selectNode(currentNode.children[0]),
+    goToStart,
+    goToEnd,
     updateComment,
     ...boardCommands,
   };

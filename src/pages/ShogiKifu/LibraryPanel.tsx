@@ -11,15 +11,15 @@ export const LibraryPanel = ({ storedFiles, activeStoredPath, onStoredLoad }: Li
   <section className="shogi-panel" aria-label="stored kifu library">
     <div className="shogi-panel-head">
       <div>
-        <p>KIFU LIBRARY</p>
-        <h2>棋谱库</h2>
+        <p>PUZZLE LIBRARY</p>
+        <h2>诘将棋题库</h2>
       </div>
       <FolderOpen size={18} className="text-cyan-300" />
     </div>
 
     <div className="shogi-library-list">
       {storedFiles.length === 0 ? (
-        <span className="shogi-empty-state">NO STORED KIFU</span>
+        <span className="shogi-empty-state">当前没有已保存棋谱</span>
       ) : (
         storedFiles.map((file) => (
           <button
@@ -29,7 +29,14 @@ export const LibraryPanel = ({ storedFiles, activeStoredPath, onStoredLoad }: Li
             onClick={() => onStoredLoad(file)}
           >
             <span>{file.extension.toUpperCase()}</span>
-            <strong>{file.title}</strong>
+            <div>
+              <strong>{file.title}</strong>
+              <small>
+                {[file.category, file.moveCount ? `${file.moveCount} 手` : null, file.author].filter(Boolean).join(" · ")}
+              </small>
+              {file.description && <small className="shogi-library-source">{file.description}</small>}
+              {file.interest && <small className="shogi-library-interest">{file.interest}</small>}
+            </div>
           </button>
         ))
       )}

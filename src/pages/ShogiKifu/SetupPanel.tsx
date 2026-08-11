@@ -1,5 +1,6 @@
 import { Eraser, RotateCcw, Save } from "lucide-react";
 import { PIECE_LABELS, PIECE_ORDER, PLAYER_META, PROMOTABLE, PROMOTED_LABELS } from "./constants";
+import { getPieceAssetPath } from "./model";
 import type { PieceKind, Player, Selection, ShogiPiece } from "./types";
 
 type SetupPanelProps = {
@@ -34,8 +35,8 @@ export const SetupPanel = ({
   <section className="shogi-panel" aria-label="setup controls">
     <div className="shogi-panel-head">
       <div>
-        <p>PIECE BAY</p>
-        <h2>摆放</h2>
+        <p>POSITION SETUP</p>
+        <h2>摆局工具</h2>
       </div>
       <div className="shogi-tool-row">
         <button type="button" className="shogi-icon-button" onClick={onFlipSelectedOwner} title="反转所选阵营" aria-label="反转所选阵营" disabled={!selectedBoardPiece}>
@@ -76,7 +77,13 @@ export const SetupPanel = ({
 
         return (
           <button type="button" key={kind} className={`shogi-palette-piece ${isSelected ? "is-selected" : ""}`} onClick={() => onPaletteSelect(kind)} title={`${PLAYER_META[setupOwner].label}${display}`} aria-label={`${PLAYER_META[setupOwner].label}${display}`}>
-            <span className={setupOwner === "gote" ? "is-gote" : ""}>{display}</span>
+            <img
+              className={`shogi-palette-piece-art ${setupOwner === "gote" ? "is-gote" : ""}`}
+              src={getPieceAssetPath(kind, setupOwner, setupPromoted)}
+              alt=""
+              aria-hidden="true"
+              draggable={false}
+            />
           </button>
         );
       })}

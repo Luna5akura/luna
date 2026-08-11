@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-label="subtle wood grain texture">
+  <rect width="900" height="900" fill="#c99450"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M-30 82 C120 26 226 120 370 70 S650 38 930 102" stroke="#8b5729" stroke-opacity=".24" stroke-width="10"/>
+    <path d="M-40 123 C108 76 220 162 376 112 S676 78 940 146" stroke="#f0c779" stroke-opacity=".22" stroke-width="4"/>
+    <path d="M-20 194 C100 148 242 238 390 184 S666 158 920 214" stroke="#875226" stroke-opacity=".2" stroke-width="8"/>
+    <path d="M-30 256 C128 212 242 290 412 244 S684 222 936 274" stroke="#f1c981" stroke-opacity=".18" stroke-width="3"/>
+    <path d="M-40 330 C110 274 260 360 418 316 S694 296 940 348" stroke="#815024" stroke-opacity=".22" stroke-width="11"/>
+    <path d="M-20 390 C128 352 262 430 404 384 S674 362 930 410" stroke="#f0c273" stroke-opacity=".2" stroke-width="4"/>
+    <path d="M-30 476 C120 420 244 512 392 458 S660 438 934 492" stroke="#845024" stroke-opacity=".22" stroke-width="9"/>
+    <path d="M-20 548 C100 506 250 590 410 532 S680 508 938 568" stroke="#f1c87b" stroke-opacity=".2" stroke-width="4"/>
+    <path d="M-40 630 C116 574 254 676 420 616 S694 586 942 646" stroke="#7d4b21" stroke-opacity=".23" stroke-width="12"/>
+    <path d="M-24 702 C126 660 266 742 412 692 S680 666 932 724" stroke="#f2c982" stroke-opacity=".2" stroke-width="4"/>
+    <path d="M-40 792 C108 730 240 834 398 774 S672 744 940 806" stroke="#855024" stroke-opacity=".2" stroke-width="9"/>
+    <path d="M-28 860 C128 820 256 888 424 840 S690 814 936 868" stroke="#f0c374" stroke-opacity=".18" stroke-width="4"/>
+    <path d="M156 -20 C140 118 188 246 152 390 S180 690 134 930" stroke="#75451d" stroke-opacity=".1" stroke-width="9"/>
+    <path d="M562 -20 C540 112 594 244 552 394 S582 690 544 930" stroke="#70421c" stroke-opacity=".08" stroke-width="13"/>
+  </g>
+</svg>

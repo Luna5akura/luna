@@ -1,8 +1,99 @@
 import { KIF_PIECE_NAMES, RANKS, ROOT_ID } from "./constants";
 import { cloneBoard, cloneHands, createRootNode, makePiece } from "./model";
-import type { Board, Hands, ImportedProject, KifuNode, KifuProjectPayload, MoveRecord, ParsedKifMove } from "./types";
+import type { Board, Hands, HandKind, ImportedProject, KifuNode, KifuProjectPayload, MoveRecord, ParsedKifMove, PieceKind, Player } from "./types";
 
 const FILES_FULL = ["９", "８", "７", "６", "５", "４", "３", "２", "１"];
+
+const KANJI_NUMBERS: Record<string, number> = {
+  一: 1,
+  二: 2,
+  三: 3,
+  四: 4,
+  五: 5,
+  六: 6,
+  七: 7,
+  八: 8,
+  九: 9,
+  十: 10,
+};
+
+const parseJapaneseNumber = (value: string): number => {
+  if (/^\d+$/.test(value)) return Number(value);
+  if (value === "十") return 10;
+  if (value.startsWith("十")) return 10 + (KANJI_NUMBERS[value.slice(1)] ?? 0);
+  if (value.endsWith("十")) return (KANJI_NUMBERS[value.slice(0, -1)] ?? 0) * 10;
+  if (value.includes("十")) {
+    const [tens, ones] = value.split("十");
+    return (KANJI_NUMBERS[tens] ?? 0) * 10 + (KANJI_NUMBERS[ones] ?? 0);
+  }
+  return KANJI_NUMBERS[value] ?? 0;
+};
+
+const parseKifPiece = (token: string): { kind: PieceKind; promoted: boolean; owner: Player } | null => {
+  const normalized = token.trim().replace(/^Ｖ/, "v");
+  const owner: Player = normalized.startsWith("v") ? "gote" : "sente";
+  const pieceName = normalized.replace(/^v/, "");
+  const pieceInfo = KIF_PIECE_NAMES.find(([name]) => name === pieceName);
+  if (!pieceInfo) return null;
+  return {
+    kind: pieceInfo[1],
+    promoted: pieceInfo[2],
+    owner,
+  };
+};
+
+const parseKifBoard = (lines: string[]): Board | null => {
+  const boardRows = lines
+    .map((line) => line.trim())
+    .map((line) => line.match(/^\|(.+)\|[一二三四五六七八九]$/))
+    .filter((match): match is RegExpMatchArray => Boolean(match));
+
+  if (boardRows.length !== 9) return null;
+  const board: Board = Array.from({ length: 81 }, () => null);
+  const boardCellPattern = /[vＶ]?(?:成銀|成桂|成香|龍|竜|馬|と|玉|王|飛|角|金|銀|桂|香|歩|步|・)/g;
+
+  boardRows.forEach((match, row) => {
+    // Some KIF writers omit the separator between adjacent cells, so tokenize
+    // piece symbols after removing layout whitespace instead of splitting on spaces.
+    const cells = match[1].replace(/\s+/g, "").match(boardCellPattern) ?? [];
+    if (cells.length !== 9) return;
+    cells.forEach((cell, column) => {
+      if (cell === "・" || cell === ".") return;
+      const piece = parseKifPiece(cell);
+      if (piece) board[row * 9 + column] = makePiece(piece.kind, piece.owner, piece.promoted, `kif-${row}-${column}`);
+    });
+  });
+
+  return board;
+};
+
+const parseKifHands = (lines: string[]): Hands => {
+  const hands = {
+    sente: { R: 0, B: 0, G: 0, S: 0, N: 0, L: 0, P: 0 },
+    gote: { R: 0, B: 0, G: 0, S: 0, N: 0, L: 0, P: 0 },
+  } satisfies Hands;
+  const pieceMap: Array<[string, HandKind]> = [
+    ["飛", "R"],
+    ["角", "B"],
+    ["金", "G"],
+    ["銀", "S"],
+    ["桂", "N"],
+    ["香", "L"],
+    ["歩", "P"],
+  ];
+
+  lines.forEach((line) => {
+    const match = line.trim().match(/^(先手|後手)の持駒：(.+)$/);
+    if (!match || match[2] === "なし") return;
+    const owner: Player = match[1] === "先手" ? "sente" : "gote";
+    pieceMap.forEach(([label, kind]) => {
+      const pieceMatch = match[2].match(new RegExp(`${label}([一二三四五六七八九十\\d]+)`));
+      if (pieceMatch) hands[owner][kind] = parseJapaneseNumber(pieceMatch[1]);
+    });
+  });
+
+  return hands;
+};
 
 export const findMainlineEnd = (nodes: Record<string, KifuNode>, startId = ROOT_ID): string => {
   let nodeId = startId;
@@ -131,7 +222,8 @@ const isSameMoveRecord = (record: MoveRecord | undefined, move: ParsedKifMove): 
   Boolean(record.drop) === move.drop;
 
 export const readKifProject = (content: string): ImportedProject => {
-  const root = createRootNode();
+  const lines = content.split(/\r?\n/);
+  const root = createRootNode(parseKifBoard(lines) ?? undefined, parseKifHands(lines));
   const nodes: Record<string, KifuNode> = { [ROOT_ID]: root };
   let currentId = ROOT_ID;
   let pendingVariationMoveNumber: number | null = null;

@@ -12,8 +12,8 @@ export const ExportPanel = ({ copyState, kifPreview, onExportKif, onExportJson, 
   <section className="shogi-panel" aria-label="export kifu">
     <div className="shogi-panel-head">
       <div>
-        <p>EXPORT BUS</p>
-        <h2>导出</h2>
+        <p>SAVE / EXPORT</p>
+        <h2>保存与导出</h2>
       </div>
       <FileText size={18} className="text-cyan-300" />
     </div>
@@ -29,7 +29,7 @@ export const ExportPanel = ({ copyState, kifPreview, onExportKif, onExportJson, 
       </button>
       <button type="button" onClick={onCopyKif}>
         <ClipboardCopy size={16} />
-        {copyState === "copied" ? "COPIED" : "COPY"}
+        {copyState === "copied" ? "已复制" : "复制 KIF"}
       </button>
     </div>
 

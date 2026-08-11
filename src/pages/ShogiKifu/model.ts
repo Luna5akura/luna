@@ -59,11 +59,11 @@ export const createInitialBoard = (): Board => {
   return board;
 };
 
-export const createRootNode = (): KifuNode => ({
+export const createRootNode = (board = createInitialBoard(), hands = createEmptyHands()): KifuNode => ({
   id: ROOT_ID,
   children: [],
-  board: createInitialBoard(),
-  hands: createEmptyHands(),
+  board,
+  hands,
   comment: "",
   moveNumber: 0,
   createdAt: Date.now(),
@@ -71,6 +71,12 @@ export const createRootNode = (): KifuNode => ({
 
 export const getPieceDisplay = (piece: ShogiPiece): string =>
   piece.promoted ? PROMOTED_LABELS[piece.kind] ?? PIECE_LABELS[piece.kind] : PIECE_LABELS[piece.kind];
+
+export const getPieceAssetPath = (kind: PieceKind, owner: Player, promoted = false): string => {
+  const sideCode = owner === "gote" ? "W" : "B";
+  const promotionCode = promoted && PROMOTABLE.includes(kind) ? "1" : "0";
+  return `/shogi/pieces/portella/${sideCode}${kind}${promotionCode}.png`;
+};
 
 export const getKifPieceName = (kind: PieceKind, promoted: boolean): string =>
   promoted ? PROMOTED_KIF_NAMES[kind] ?? PIECE_KIF_NAMES[kind] : PIECE_KIF_NAMES[kind];

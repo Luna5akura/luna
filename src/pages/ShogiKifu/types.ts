@@ -52,6 +52,11 @@ export type StoredKifuFile = {
   title: string;
   extension: "kif" | "json";
   content: string;
+  category?: string;
+  author?: string;
+  moveCount?: number;
+  description?: string;
+  interest?: string;
 };
 
 export type ImportedProject = {

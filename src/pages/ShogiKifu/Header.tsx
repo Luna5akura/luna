@@ -10,16 +10,16 @@ type HeaderProps = {
 export const Header = ({ nextPlayer, moveNumber, nodeCount }: HeaderProps) => (
   <header className="shogi-header">
     <div>
-      <p className="shogi-kicker">TACTICAL KIFU EDITOR // SHOGI</p>
-      <h1>将棋打谱节点</h1>
+      <p className="shogi-kicker">SHOGI WORKSPACE / KIFU</p>
+      <h1>诘将棋棋谱室</h1>
     </div>
     <div className="shogi-status-strip" aria-label="current shogi status">
       <span className={PLAYER_META[nextPlayer].tone}>
         {PLAYER_META[nextPlayer].mark} {PLAYER_META[nextPlayer].label}
       </span>
-      <span>{moveNumber.toString().padStart(3, "0")} TURNS</span>
-      <span>{nodeCount.toString().padStart(3, "0")} NODES</span>
-      <span className="text-slate-500">MAINLINE</span>
+      <span>第 {moveNumber} 手</span>
+      <span>{nodeCount} 个节点</span>
+      <span className="text-slate-500">主线</span>
     </div>
   </header>
 );

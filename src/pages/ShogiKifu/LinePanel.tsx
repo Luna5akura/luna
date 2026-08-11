@@ -11,13 +11,13 @@ export const LinePanel = ({ moveLine, currentId, onSelectLineNode }: LinePanelPr
     <div className="shogi-panel-head">
       <div>
         <p>ACTIVE LINE</p>
-        <h2>主线</h2>
+        <h2>当前主线</h2>
       </div>
       <span className="shogi-node-count">{moveLine.length}</span>
     </div>
     <div className="shogi-line-list">
       {moveLine.length === 0 ? (
-        <span className="shogi-empty-state">NO MOVES</span>
+        <span className="shogi-empty-state">当前还没有走法</span>
       ) : (
         moveLine.map((node) => (
           <button

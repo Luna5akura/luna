@@ -32,6 +32,12 @@ type SideStackProps = {
 
 export const SideStack = (props: SideStackProps) => (
   <aside className="shogi-side-stack">
+    <LibraryPanel
+      storedFiles={props.storedFiles}
+      activeStoredPath={props.activeStoredPath}
+      onStoredLoad={props.onStoredLoad}
+    />
+    <LinePanel moveLine={props.moveLine} currentId={props.currentId} onSelectLineNode={props.onSelectLineNode} />
     <SetupPanel
       setupOwner={props.setupOwner}
       setupPromoted={props.setupPromoted}
@@ -46,11 +52,6 @@ export const SideStack = (props: SideStackProps) => (
       onToggleSelectedPromotion={props.onToggleSelectedPromotion}
       onRemoveSelectedPiece={props.onRemoveSelectedPiece}
     />
-    <LibraryPanel
-      storedFiles={props.storedFiles}
-      activeStoredPath={props.activeStoredPath}
-      onStoredLoad={props.onStoredLoad}
-    />
     <ExportPanel
       copyState={props.copyState}
       kifPreview={props.kifPreview}
@@ -58,6 +59,5 @@ export const SideStack = (props: SideStackProps) => (
       onExportJson={props.onExportJson}
       onCopyKif={props.onCopyKif}
     />
-    <LinePanel moveLine={props.moveLine} currentId={props.currentId} onSelectLineNode={props.onSelectLineNode} />
   </aside>
 );
