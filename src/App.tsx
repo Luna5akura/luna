@@ -27,7 +27,7 @@ const PostDetails = lazy(loadPostDetails);
 
 const DynamicCursor = () => {
   const location = useLocation();
-  if (location.pathname === "/skill" || location.pathname === "/shogi") return null;
+  if (location.pathname === "/skill" || location.pathname === "/shogi" || location.pathname === "/spark") return null;
   return <CustomCursor />;
 };
 
@@ -40,10 +40,13 @@ const RouteLoadingFallback = () => (
 );
 
 function App() {
+  const location = useLocation();
+  const hideSiteChrome = location.pathname === "/spark";
+
   return (
     <FontToggleProvider>
       <div className="flex flex-col w-full min-h-screen overflow-x-clip bg-[#02050A]">
-        <Navbar />
+        {!hideSiteChrome && <Navbar />}
         
         <main className="flex-grow flex flex-col relative w-full">
           <Suspense fallback={<RouteLoadingFallback />}>
@@ -62,7 +65,7 @@ function App() {
           </Suspense>
         </main>
         
-        <Footer />
+        {!hideSiteChrome && <Footer />}
       </div>
 
       <DynamicCursor />
