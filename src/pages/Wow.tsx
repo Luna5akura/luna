@@ -1,5 +1,5 @@
 // src/pages/Skill.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useVelocity, useSpring, useTransform, useMotionValue, useAnimationFrame } from 'framer-motion';
 import { Cpu, Database, Globe, Layers, Zap, Terminal as TerminalIcon, Code2, Network, Crosshair, Hexagon } from 'lucide-react';
 import { cn } from "@/lib/utils";
@@ -515,7 +515,7 @@ const KineticBanner = () => {
   const skewFactor = useTransform(smoothVelocity,[-1000, 1000],[10, -10]);
   const baseX = useMotionValue(0); const directionFactor = useRef<number>(1);
 
-  useAnimationFrame((t, delta) => {
+  useAnimationFrame((_time, delta) => {
     const safeDelta = delta > 50 ? 16 : delta;
     let moveBy = directionFactor.current * -2 * (safeDelta / 1000);
     const vf = velocityFactor.get();

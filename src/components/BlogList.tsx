@@ -183,11 +183,12 @@ interface ListItemProps {
   isHovered: boolean;
   hasHoveredPeer: boolean;
   disabled?: boolean;
+  allowRichMotion?: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }
 
-const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = false, onHoverStart, onHoverEnd }: ListItemProps) => {
+const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = false, allowRichMotion = true, onHoverStart, onHoverEnd }: ListItemProps) => {
   const hexIndex = `0x${(index + 1).toString(16).toUpperCase().padStart(2, '0')}`;
   const cardRef = useRef<HTMLDivElement>(null);
   const tiltX = useMotionValue(0);
@@ -216,7 +217,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
   }, []);
 
   const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (disabled || !cardRef.current || window.innerWidth < 1024) return;
+    if (!allowRichMotion || disabled || !cardRef.current || window.innerWidth < 1024) return;
     const rect = cardRef.current.getBoundingClientRect();
     const localX = e.clientX - rect.left;
     const localY = e.clientY - rect.top;
@@ -229,7 +230,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
     depthShiftY.set(normalizedY);
     cardRef.current.style.setProperty('--mouse-x', `${localX}px`);
     cardRef.current.style.setProperty('--mouse-y', `${localY}px`);
-  }, [depthShiftX, depthShiftY, disabled, tiltX, tiltY]);
+  }, [allowRichMotion, depthShiftX, depthShiftY, disabled, tiltX, tiltY]);
 
   const resetCardMouse = useCallback(() => {
     tiltX.set(0);
@@ -242,7 +243,10 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
     }
   }, [depthShiftX, depthShiftY, tiltX, tiltY]);
 
-  const cardState = isHovered
+  const effectiveHovered = allowRichMotion && isHovered;
+  const effectiveHasHoveredPeer = allowRichMotion && hasHoveredPeer;
+
+  const cardState = effectiveHovered
     ? {
         scale: 1.07,
         x: 22,
@@ -252,7 +256,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         filter: 'brightness(1.18) saturate(1.16)',
         boxShadow: '0 36px 62px rgba(2,12,27,0.58), 0 0 28px rgba(34,211,238,0.16)',
       }
-    : hasHoveredPeer
+    : effectiveHasHoveredPeer
       ? {
           scale: 0.965,
           x: -10,
@@ -283,10 +287,10 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
         resetCardMouse();
         onHoverEnd();
       }}
-      className={cn("group/card relative transform-gpu", isHovered ? "z-30" : hasHoveredPeer ? "z-10" : "z-20")}
+      className={cn("group/card relative transform-gpu", effectiveHovered ? "z-30" : effectiveHasHoveredPeer ? "z-10" : "z-20")}
       style={{
         transformStyle: 'preserve-3d',
-        transformPerspective: 1400,
+        perspective: 1400,
         contentVisibility: 'auto',
         containIntrinsicSize: '280px',
       }}
@@ -336,7 +340,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           }}
         />
 
-        {!disabled && (
+        {allowRichMotion && !disabled && (
           <div
             className="pointer-events-none absolute inset-[1px] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
             style={{
@@ -368,7 +372,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
           <motion.div
             className="relative z-10 mb-5 flex items-center gap-4 border-l-2 border-cyan-500/45 pl-4 text-[10px] font-mono uppercase tracking-[0.2em] text-cyan-900"
             style={{ x: metaShiftX, y: metaShiftY, transform: 'translateZ(64px)' }}
-            animate={{ scale: isHovered ? 1.045 : 1 }}
+            animate={{ scale: effectiveHovered ? 1.045 : 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
           >
             <span className="font-bold text-cyan-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.22)]">[{hexIndex}]</span>
@@ -379,7 +383,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
                 depthX={smoothDepthX}
                 depthY={smoothDepthY}
                 emphasis={0.48}
-                isActive={isHovered}
+                isActive={effectiveHovered}
               />
             </span>
           </motion.div>
@@ -396,7 +400,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
             <motion.div
               className="relative w-full md:max-w-[70%]"
               style={{ x: titleShiftX, y: titleShiftY, transform: 'translateZ(92px)' }}
-              animate={{ scale: isHovered ? 1.12 : 1 }}
+              animate={{ scale: effectiveHovered ? 1.12 : 1 }}
               transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
             >
               <div className="pointer-events-none absolute -left-3 top-1 bottom-1 w-px bg-gradient-to-b from-transparent via-cyan-400/40 to-transparent" />
@@ -406,14 +410,14 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
                   depthX={smoothDepthX}
                   depthY={smoothDepthY}
                   emphasis={1}
-                  isActive={isHovered}
+                  isActive={effectiveHovered}
                 />
               </h2>
             </motion.div>
             <motion.div
               className="relative flex shrink-0 flex-col items-start border-l border-cyan-500/20 pl-4 font-mono text-xs text-slate-600 md:items-end md:border-l-0 md:border-t md:border-cyan-500/20 md:pl-0 md:pt-4"
               style={{ x: dateShiftX, y: dateShiftY, transform: 'translateZ(106px)' }}
-              animate={{ scale: isHovered ? 1.055 : 1 }}
+              animate={{ scale: effectiveHovered ? 1.055 : 1 }}
               transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.7 }}
             >
               <span className="flex items-center gap-2 transition-colors group-hover/card:text-cyan-300">
@@ -423,7 +427,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
                   depthX={smoothDepthX}
                   depthY={smoothDepthY}
                   emphasis={0.4}
-                  isActive={isHovered}
+                  isActive={effectiveHovered}
                 />
               </span>
               <span className="font-mono tracking-widest text-slate-500">
@@ -432,7 +436,7 @@ const ListItem = memo(({ post, index, isHovered, hasHoveredPeer, disabled = fals
                   depthX={smoothDepthX}
                   depthY={smoothDepthY}
                   emphasis={0.36}
-                  isActive={isHovered}
+                  isActive={effectiveHovered}
                 />
               </span>
             </motion.div>
@@ -457,11 +461,12 @@ ListItem.displayName = 'ListItem';
 // ==========================================
 // 主组件（已加强滚动控制）
 // ==========================================
-const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: number; onPageChange: (p: number) => void }> = ({
+const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: number; onPageChange: (p: number) => void; allowRichMotion?: boolean }> = ({
   posts,
   currentPage,
   totalPages,
   onPageChange,
+  allowRichMotion = true,
 }) => {
   const [isInteractionLocked, setIsInteractionLocked] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -483,6 +488,8 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
   const contentOffsetY = useTransform(smoothPanelY, [-1, 1], [-20, 20]);
 
   useEffect(() => {
+    if (!allowRichMotion) return;
+
     let timeoutId = 0;
     let rafId = 0;
 
@@ -512,10 +519,10 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
       window.removeEventListener('scroll', handleScroll);
       window.clearTimeout(timeoutId);
     };
-  }, []);
+  }, [allowRichMotion]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.innerWidth < 1024 || isScrollActiveRef.current) return;
+    if (!allowRichMotion || window.innerWidth < 1024 || isScrollActiveRef.current) return;
 
     if (isInteractionLockedRef.current) {
       isInteractionLockedRef.current = false;
@@ -527,7 +534,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
     const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     panelX.set(normalizedX);
     panelY.set(normalizedY);
-  }, [panelX, panelY]);
+  }, [allowRichMotion, panelX, panelY]);
 
   const handleMouseLeave = useCallback(() => {
     panelX.set(0);
@@ -544,12 +551,12 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
     const delta = 1;
     const range: number[] = [];
     const rangeWithDots: (number | string)[] = [];
-    let l: number;
+    let l: number | undefined;
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) range.push(i);
     }
     for (const i of range) {
-      if (l) {
+      if (l !== undefined) {
         if (i - l === 2) rangeWithDots.push(l + 1);
         else if (i - l !== 1) rangeWithDots.push('...');
       }
@@ -567,24 +574,24 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
     >
       <motion.div
         className="relative isolate mb-16 min-h-[400px] transform-gpu overflow-visible px-2 py-2 md:px-3 md:py-3"
-        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        style={allowRichMotion ? { rotateX, rotateY, transformStyle: 'preserve-3d' } : { transformStyle: 'preserve-3d' }}
       >
         <motion.div
           className="pointer-events-none absolute inset-x-6 inset-y-7 border border-cyan-950/80 bg-[linear-gradient(180deg,rgba(4,9,17,0.94),rgba(2,6,12,0.76))] md:inset-x-8 md:inset-y-8"
-          style={{ x: boardOffsetX, y: boardOffsetY, transform: 'translateZ(-110px)' }}
+          style={allowRichMotion ? { x: boardOffsetX, y: boardOffsetY, transform: 'translateZ(-110px)' } : { transform: 'translateZ(-110px)' }}
         />
         <motion.div
           className="pointer-events-none absolute inset-x-12 top-10 h-28 bg-cyan-500/8 blur-3xl"
-          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-72px)' }}
+          style={allowRichMotion ? { x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-72px)' } : { transform: 'translateZ(-72px)' }}
         />
         <motion.div
           className="pointer-events-none absolute inset-x-12 top-12 h-px bg-gradient-to-r from-transparent via-cyan-200/18 to-transparent"
-          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-16px)' }}
+          style={allowRichMotion ? { x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-16px)' } : { transform: 'translateZ(-16px)' }}
         />
 
         <motion.div
           className="relative z-10 overflow-visible px-3 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6"
-          style={{ x: contentOffsetX, y: contentOffsetY, transformStyle: 'preserve-3d' }}
+          style={allowRichMotion ? { x: contentOffsetX, y: contentOffsetY, transformStyle: 'preserve-3d' } : { transformStyle: 'preserve-3d' }}
         >
           <div className="pointer-events-none absolute inset-x-3 inset-y-4 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(5,11,20,0.82),rgba(2,7,14,0.48))] backdrop-blur-[2px] sm:inset-x-4 sm:inset-y-5 md:inset-x-5 md:inset-y-6" style={{ transform: 'translateZ(-6px)' }} />
           <AnimatePresence mode="popLayout" initial={false}>
@@ -608,6 +615,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
                     isHovered={isHovered}
                     hasHoveredPeer={hoveredIndex !== null && hoveredIndex !== absoluteIndex}
                     disabled={isInteractionLocked}
+                    allowRichMotion={allowRichMotion}
                     onHoverStart={() => setHoveredIndex(absoluteIndex)}
                     onHoverEnd={() => setHoveredIndex((current) => (current === absoluteIndex ? null : current))}
                   />
@@ -626,16 +634,16 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-800/55 to-transparent" />
         <motion.div
           className="pointer-events-none absolute left-6 top-6 h-12 w-40 bg-cyan-500/8 blur-2xl"
-          style={{ x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-36px)' }}
+          style={allowRichMotion ? { x: decorOffsetX, y: decorOffsetY, transform: 'translateZ(-36px)' } : { transform: 'translateZ(-36px)' }}
         />
         <motion.div
           className="relative overflow-visible px-4 py-4 md:px-5"
-          style={{ x: contentOffsetX, y: contentOffsetY, transform: 'translateZ(12px)' }}
+          style={allowRichMotion ? { x: contentOffsetX, y: contentOffsetY, transform: 'translateZ(12px)' } : { transform: 'translateZ(12px)' }}
         >
           <div className="pointer-events-none absolute inset-0 border border-cyan-500/10 bg-[linear-gradient(180deg,rgba(4,9,17,0.76),rgba(2,6,12,0.44))] backdrop-blur-[2px]" style={{ transform: 'translateZ(-4px)' }} />
           <Pagination>
             <PaginationContent className="gap-2 font-mono text-sm">
-              <MagneticWrapper disabled={isInteractionLocked}>
+              <MagneticWrapper disabled={isInteractionLocked || !allowRichMotion}>
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => currentPage > 1 && triggerPageChange(currentPage - 1)}
@@ -650,7 +658,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
               <AnimatePresence mode="popLayout">
                 {visiblePages.map((page, idx) => (
                   <motion.div key={page === '...' ? `dots-${idx}` : page}>
-                    <MagneticWrapper disabled={isInteractionLocked}>
+                    <MagneticWrapper disabled={isInteractionLocked || !allowRichMotion}>
                       <PaginationItem>
                         {page === '...' ? (
                           <PaginationEllipsis className="text-cyan-900" />
@@ -674,7 +682,7 @@ const BlogList: React.FC<{ posts: Post[]; currentPage: number; totalPages: numbe
                 ))}
               </AnimatePresence>
 
-              <MagneticWrapper disabled={isInteractionLocked}>
+              <MagneticWrapper disabled={isInteractionLocked || !allowRichMotion}>
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => currentPage < totalPages && triggerPageChange(currentPage + 1)}

@@ -22,6 +22,48 @@ interface SearchResult {
   score: number;
 }
 
+interface SearchIndexEntry {
+  post: Post;
+  titleLower: string;
+  rawContent: string;
+  contentLower: string;
+}
+
+const MAX_SEARCH_RESULTS = 15;
+const normalizedContentCache = new Map<string, { rawContent: string; contentLower: string }>();
+
+const getNormalizedContent = (contentKey: string, rawContent: string) => {
+  const cached = normalizedContentCache.get(contentKey);
+  if (cached?.rawContent === rawContent) return cached;
+
+  const normalized = {
+    rawContent,
+    contentLower: rawContent.toLowerCase(),
+  };
+  normalizedContentCache.set(contentKey, normalized);
+  return normalized;
+};
+
+const insertTopResult = (results: SearchResult[], result: SearchResult) => {
+  const insertIndex = results.findIndex((current) => result.score > current.score);
+
+  if (insertIndex === -1) {
+    if (results.length < MAX_SEARCH_RESULTS) results.push(result);
+    return;
+  }
+
+  results.splice(insertIndex, 0, result);
+  if (results.length > MAX_SEARCH_RESULTS) results.length = MAX_SEARCH_RESULTS;
+};
+
+const getHighlightSnippet = (content: string, termLen: number, matchIndex: number): string => {
+  if (matchIndex === -1) return content.slice(0, 80) + "...";
+
+  const start = Math.max(0, matchIndex - 30);
+  const end = Math.min(content.length, matchIndex + termLen + 50);
+  return (start > 0 ? "..." : "") + content.slice(start, end) + (end < content.length ? "..." : "");
+};
+
 const SearchModal: React.FC<SearchModalProps> = ({
   searchTerm,
   onSearchTermChange,
@@ -52,24 +94,17 @@ const SearchModal: React.FC<SearchModalProps> = ({
   // 我们在模态框挂载时，一次性全量提取小写数据进入内存池，将高频搜索时的 CPU 开销削减至原先的 1/50。
   // ==========================================
   const searchIndex = useMemo(() => {
-    return posts.map(post => {
+    return posts.map<SearchIndexEntry>(post => {
       const content = contents[post.contentKey] || '';
+      const normalizedContent = getNormalizedContent(post.contentKey, content);
       return {
         post,
         titleLower: post.title.toLowerCase(),
-        contentLower: content.toLowerCase(),
-        rawContent: content
+        contentLower: normalizedContent.contentLower,
+        rawContent: normalizedContent.rawContent
       };
     });
   }, [posts, contents]);
-
-  const getHighlightSnippet = (content: string, termLen: number, matchIndex: number): string => {
-    if (matchIndex === -1) return content.slice(0, 80) + "...";
-    
-    const start = Math.max(0, matchIndex - 30);
-    const end = Math.min(content.length, matchIndex + termLen + 50);
-    return (start > 0 ? "..." : "") + content.slice(start, end) + (end < content.length ? "..." : "");
-  };
 
   const searchResults = useMemo(() => {
     const term = deferredTerm.trim().toLowerCase();
@@ -101,14 +136,14 @@ const SearchModal: React.FC<SearchModalProps> = ({
       }
 
       if (score > 0) {
-         results.push({ post, type, excerpt, score });
+         insertTopResult(results, { post, type, excerpt, score });
       }
     });
 
     // 【极致优化点 2：DOM 节点渲染截断 (DOM Node Truncation)】
     // 如果匹配词汇过于宽泛，查出 300 篇文章，直接挂载 300 个复杂高亮 DOM 会导致严重的 Layout Thrashing。
     // 在这里应用 Top-K 截断原则，只在内存中排序，物理上仅暴露并渲染前 15 条高价值权重的结果。
-    return results.sort((a, b) => b.score - a.score).slice(0, 15);
+    return results;
   }, [deferredTerm, searchIndex]);
 
   const isContentIndexReady = contentsStatus === 'ready';

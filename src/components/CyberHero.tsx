@@ -15,9 +15,18 @@ const FRONT_FONT = 'bold 11px "JetBrains Mono", monospace';
 const BACK_FONT = '9.5px "JetBrains Mono", monospace';
 const CHAR_SET = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', 'X', 'Z', '◉'];
 
-const useCyberGlitch = (text: string, delay: number = 0) => {
+interface MotionGateProps {
+  allowRichMotion?: boolean;
+}
+
+const useCyberGlitch = (text: string, delay: number = 0, enabled = true) => {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    if (!enabled) {
+      if (ref.current) ref.current.innerText = text;
+      return;
+    }
+
     let interval: ReturnType<typeof setInterval> | null = null;
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
     const textChars = Array.from(text);
@@ -41,13 +50,15 @@ const useCyberGlitch = (text: string, delay: number = 0) => {
         clearInterval(interval);
       }
     };
-  }, [text, delay]);
+  }, [enabled, text, delay]);
   return ref;
 };
 
-const DataSphere = memo(() => {
+const DataSphere = memo(({ allowRichMotion = true }: MotionGateProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
+    if (!allowRichMotion) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
@@ -87,7 +98,7 @@ const DataSphere = memo(() => {
     let isRunning = false;
     let lastFrameTime = 0;
     let scrollBoostUntil = 0;
-    let isInHeroZone = window.scrollY < window.innerHeight * 0.9;
+    let isInHeroZone = window.scrollY < window.innerHeight * 1.1;
 
     let targetVelocityX = 0.0009;
     let targetVelocityY = 0.0009;
@@ -114,8 +125,12 @@ const DataSphere = memo(() => {
 
     const onScroll = () => {
       scrollBoostUntil = performance.now() + 180;
-      isInHeroZone = window.scrollY < window.innerHeight * 0.9;
-      start();
+      isInHeroZone = window.scrollY < window.innerHeight * 1.1;
+      if (isInHeroZone) {
+        start();
+      } else {
+        stop();
+      }
     };
 
     const stop = () => {
@@ -133,6 +148,8 @@ const DataSphere = memo(() => {
     const onVisibilityChange = () => {
       if (document.hidden) {
         stop();
+      } else if (!isInHeroZone) {
+        stop();
       } else {
         lastFrameTime = 0;
         start();
@@ -140,6 +157,11 @@ const DataSphere = memo(() => {
     };
 
     const animate = (now: number) => {
+      if (!isInHeroZone) {
+        isRunning = false;
+        return;
+      }
+
       const isScrollActive = now < scrollBoostUntil;
       const minFrameInterval = isInHeroZone
         ? (isScrollActive ? 1000 / 22 : 1000 / 30)
@@ -290,7 +312,7 @@ const DataSphere = memo(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibilityChange);
 
-    start();
+    if (isInHeroZone) start();
 
     return () => {
       stop();
@@ -299,30 +321,35 @@ const DataSphere = memo(() => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, []);
+  }, [allowRichMotion]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10 opacity-75 blur-[0.6px]" />;
+  if (!allowRichMotion) return null;
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10 opacity-70 blur-[0.45px]" />;
 });
 DataSphere.displayName = 'DataSphere';
 
-const HexMemoryGrid = memo(() => {
+const HexMemoryGrid = memo(({ allowRichMotion = true }: MotionGateProps) => {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
   const smoothX = useSpring(mouseX, { damping: 35, stiffness: 160 });
   const smoothY = useSpring(mouseY, { damping: 35, stiffness: 160 });
 
   useEffect(() => {
+    if (!allowRichMotion) return;
+
     const updateMouse = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
     window.addEventListener('mousemove', updateMouse, { passive: true });
     return () => window.removeEventListener('mousemove', updateMouse);
-  }, [mouseX, mouseY]);
+  }, [allowRichMotion, mouseX, mouseY]);
 
   const maskImage = useMotionTemplate`radial-gradient(460px circle at ${smoothX}px ${smoothY}px, black 0%, transparent 100%)`;
 
   const hexString = useMemo(() => {
+    if (!allowRichMotion) return '';
+
     const count = 1580;
     let str = '';
     for (let i = 0; i < count; i += 4) {
@@ -333,10 +360,12 @@ const HexMemoryGrid = memo(() => {
         .replace(/(.{2})/g, '$1 ');
     }
     return str;
-  }, []);
+  }, [allowRichMotion]);
+
+  if (!allowRichMotion) return null;
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-9">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.09]">
       <motion.div
         className="absolute inset-0 flex items-start justify-center p-8"
         style={{ WebkitMaskImage: maskImage, maskImage }}
@@ -352,8 +381,8 @@ const HexMemoryGrid = memo(() => {
 });
 HexMemoryGrid.displayName = 'HexMemoryGrid';
 
-const CyberHeroComponent: React.FC = () => {
-  const metricRef = useCyberGlitch('[ QUANTUM CORE ONLINE ]', 1100);
+const CyberHeroComponent: React.FC<MotionGateProps> = ({ allowRichMotion = true }) => {
+  const metricRef = useCyberGlitch('[ QUANTUM CORE ONLINE ]', 1100, allowRichMotion);
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#02040a] font-mono">
@@ -362,23 +391,25 @@ const CyberHeroComponent: React.FC = () => {
       <div className="absolute inset-0 border border-cyan-400/5 pointer-events-none z-40" />
 
       {/* 坐标网格 */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:68px_68px] opacity-6" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:68px_68px] opacity-[0.08]" />
 
-      <HexMemoryGrid />
-      <DataSphere />
+      <HexMemoryGrid allowRichMotion={allowRichMotion} />
+      <DataSphere allowRichMotion={allowRichMotion} />
 
       {/* 高级扫描线（带微弱拖尾） */}
-      <motion.div
-        className="absolute top-0 left-0 w-full h-[3px] bg-[#0ea5e9] opacity-20 shadow-[0_0_22px_3px_rgba(14,165,233,0.18)] z-30"
-        animate={{ translateY: ['0vh', '100vh'] }}
-        transition={{ duration: 13, ease: "linear", repeat: Infinity }}
-      />
+      {allowRichMotion && (
+        <motion.div
+          className="absolute top-0 left-0 w-full h-[3px] bg-[#0ea5e9] opacity-20 shadow-[0_0_22px_3px_rgba(14,165,233,0.18)] z-30"
+          animate={{ translateY: ['0vh', '100vh'] }}
+          transition={{ duration: 13, ease: "linear", repeat: Infinity }}
+        />
+      )}
 
       {/* 超级暗角 + 全息暗边 */}
-      <div className="absolute inset-0 z-40 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(2,4,10,0.98)_100%)]" />
+      <div className="absolute inset-0 z-40 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_42%,rgba(2,4,10,0.96)_100%)]" />
 
       {/* 负向 CRT 扫描线 */}
-      <div className="absolute inset-0 z-40 pointer-events-none opacity-40 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,#000000_3px,#000000_6px)]" />
+      <div className="absolute inset-0 z-40 pointer-events-none opacity-25 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,#000000_3px,#000000_6px)]" />
 
       {/* 底部遮罩 */}
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[#02040a] via-[#02040a]/96 to-transparent z-50" />

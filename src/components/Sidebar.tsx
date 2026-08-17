@@ -233,12 +233,13 @@ interface SectorItemProps {
   hasHoveredPeer: boolean;
   index: number;
   globalVelocity: MotionValue<number>;
+  allowRichMotion?: boolean;
   onClick: (category: string) => void;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }
 
-const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index, onClick, globalVelocity, onHoverStart, onHoverEnd }: SectorItemProps) => {
+const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index, onClick, globalVelocity, allowRichMotion = true, onHoverStart, onHoverEnd }: SectorItemProps) => {
   const hexAddress = `0x${(index * 8).toString(16).toUpperCase().padStart(4, '0')}`;
   const itemRef = useRef<HTMLButtonElement>(null);
   const depthShiftX = useMotionValue(0);
@@ -251,16 +252,16 @@ const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index,
   const metaShiftY = useTransform(smoothDepthY, [-1, 1], [-8, 8]);
   const titleShiftX = useTransform(smoothDepthX, [-1, 1], [-16, 16]);
   const titleShiftY = useTransform(smoothDepthY, [-1, 1], [-12, 12]);
-  const isInteractive = isHovered || isActive;
+  const isInteractive = allowRichMotion && (isHovered || isActive);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!itemRef.current || window.innerWidth < 1024) return;
+    if (!allowRichMotion || !itemRef.current || window.innerWidth < 1024) return;
     const rect = itemRef.current.getBoundingClientRect();
     const normalizedX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     const normalizedY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     depthShiftX.set(normalizedX);
     depthShiftY.set(normalizedY);
-  }, [depthShiftX, depthShiftY]);
+  }, [allowRichMotion, depthShiftX, depthShiftY]);
 
   const resetMouseDepth = useCallback(() => {
     depthShiftX.set(0);
@@ -350,7 +351,7 @@ const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index,
         </motion.div>
       )}
 
-      <div className="relative z-10 flex flex-col items-start w-full" style={{ x: contentShiftX, y: contentShiftY, transform: 'translateZ(24px)' }}>
+      <motion.div className="relative z-10 flex flex-col items-start w-full" style={{ x: contentShiftX, y: contentShiftY, transform: 'translateZ(24px)' }}>
         <div className="flex items-center gap-2 mb-1" style={{ transform: 'translateZ(46px)' }}>
           <HardDrive className={cn("w-3 h-3 transition-colors hidden lg:block", isActive ? "text-cyan-400 animate-pulse drop-shadow-[0_0_5px_cyan]" : "text-slate-600")} />
           <motion.span
@@ -386,9 +387,9 @@ const SectorItem = memo(({ category, isActive, isHovered, hasHoveredPeer, index,
             />
           </span>
         </motion.div>
-      </div>
+      </motion.div>
 
-      <LiveOscilloscope isActive={isActive} globalVelocity={globalVelocity} />
+      <LiveOscilloscope isActive={allowRichMotion && isActive} globalVelocity={globalVelocity} />
     </motion.button>
   );
 });
@@ -401,9 +402,10 @@ interface SidebarProps {
   categories: string[];
   isExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
+  allowRichMotion?: boolean;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ categories, allowRichMotion = true }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -451,6 +453,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
 
   // 【高超技术 5：GPU 指针捕捉面 (CSS Variables Tracking)】
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!allowRichMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -460,7 +463,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
       panelX.set(((x / rect.width) - 0.5) * 2);
       panelY.set(((y / rect.height) - 0.5) * 2);
     }
-  }, [panelX, panelY]);
+  }, [allowRichMotion, panelX, panelY]);
 
   const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.currentTarget.style.setProperty("--mouse-x", `-1000px`);
@@ -620,6 +623,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
                       isActive={isActive}
                       isHovered={isHovered}
                       hasHoveredPeer={hasHoveredPeer}
+                      allowRichMotion={allowRichMotion}
                       onClick={handleCategoryClick}
                       globalVelocity={globalVelocity}
                       onHoverStart={() => setHoveredCategory(category)}

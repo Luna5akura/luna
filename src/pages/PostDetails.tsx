@@ -6,6 +6,7 @@ import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
+import type { PluggableList } from 'unified';
 import TableOfContents from '@/components/TableOfContents';
 import { MarkdownContent } from '@/components/MarkdownContent';
 import remarkWrapSections from '@/utils/remarkWarpSections';
@@ -15,6 +16,9 @@ import { Post } from '@/types';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Terminal, CornerUpLeft, Activity, Cpu, Database } from 'lucide-react';
 import { runViewTransition } from '@/lib/viewTransition';
+
+const markdownRemarkPlugins: PluggableList = [remarkGfm, remarkMath, remarkWrapSections];
+const markdownRehypePlugins: PluggableList = [rehypeKatex, rehypeSlug];
 
 // ==========================================
 // 【顶级炫技点 1：零重绘十六进制阅读进度遥测】
@@ -94,6 +98,18 @@ const LoadingArticle = () => (
     </div>
   </div>
 );
+
+const RenderedMarkdown = React.memo(({ content }: { content: string }) => (
+  <MarkdownContent content={content}>
+    <ReactMarkdown
+      remarkPlugins={markdownRemarkPlugins}
+      rehypePlugins={markdownRehypePlugins}
+    >
+      {content}
+    </ReactMarkdown>
+  </MarkdownContent>
+));
+RenderedMarkdown.displayName = 'RenderedMarkdown';
 
 // ==========================================
 // 主组件：机密档案终端阅读器
@@ -279,14 +295,7 @@ const PostDetails: React.FC = () => {
               prose-code:text-pink-400 prose-code:bg-pink-950/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
               marker:text-cyan-500
           ">
-              <MarkdownContent content={markdownContent}>
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkMath, remarkWrapSections]}
-                  rehypePlugins={[rehypeKatex, rehypeSlug]}
-                >
-                  {markdownContent}
-                </ReactMarkdown>
-              </MarkdownContent>
+              <RenderedMarkdown content={markdownContent} />
           </div>
         </motion.div>
       </div>

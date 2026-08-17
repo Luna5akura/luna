@@ -59,16 +59,17 @@ export const MarkdownContent = ({ content, children }: MarkdownContentProps) => 
     const preElements = container.querySelectorAll('pre:not([data-sys-injected])');
 
     preElements.forEach((pre, index) => {
-      pre.setAttribute('data-sys-injected', 'true');
-      pre.style.position = 'relative';
-      pre.style.paddingTop = '2.75rem';
-      pre.classList.add('sys-code-block');
+      const preElement = pre as HTMLElement;
+      preElement.setAttribute('data-sys-injected', 'true');
+      preElement.style.position = 'relative';
+      preElement.style.paddingTop = '2.75rem';
+      preElement.classList.add('sys-code-block');
 
       const headerNode = terminalHeaderTemplate.content.cloneNode(true) as DocumentFragment;
       const hexIndex = `0x${index.toString(16).toUpperCase().padStart(2, '0')}`;
       const processIdNode = headerNode.querySelector('.process-id');
       if (processIdNode) processIdNode.textContent = `PROCESS_${hexIndex}`;
-      pre.appendChild(headerNode);
+      preElement.appendChild(headerNode);
     });
 
     // 外部链接

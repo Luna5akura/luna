@@ -74,7 +74,7 @@ const KineticMarquee = memo(({ baseVelocity, scrollVelocity, isActive }: Kinetic
   const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`);
   const directionFactor = useRef<number>(1);
 
-  useAnimationFrame((t, delta) => {
+  useAnimationFrame((_time, delta) => {
     if (!isActive) return;
 
     const currentVelocityFactor = velocityFactor.get();

@@ -17,22 +17,37 @@ const syncTimeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: false,
   hour: '2-digit',
   minute: '2-digit',
-  second: '2-digit',
-  fractionalSecondDigits: 3
+  second: '2-digit'
 });
+
+const formatSyncTime = () => {
+  const now = new Date();
+  return `${syncTimeFormatter.format(now)}.${now.getMilliseconds().toString().padStart(3, '0')}`;
+};
 
 // ==========================================
 // 【极致优化点 1：剔除 HTML Parser (DOM 节点池化)】
 // 原代码在 requestAnimationFrame 中高频调用 innerHTML，强迫浏览器每秒执行 60 次昂贵的 C++ 级 HTML 词法解析与 DOM 树重建。
 // 现改为一次性挂载静态 DOM 结构，通过提取独立的 textContent 引用进行 O(1) 物理内存覆写！
 // ==========================================
-const CryptographicText = ({ text }: { text: string }) => {
+const CryptographicText = ({ text, animate = true }: { text: string; animate?: boolean }) => {
   const lockedRef = useRef<HTMLSpanElement>(null);
   const scrambledRef = useRef<HTMLSpanElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
   const ptrRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    if (!animate) {
+      if (lockedRef.current) lockedRef.current.textContent = text;
+      if (scrambledRef.current) scrambledRef.current.textContent = '';
+      if (ptrRef.current) {
+        ptrRef.current.textContent = "0xALLOC";
+        ptrRef.current.className = "text-cyan-500 font-bold";
+      }
+      cursorRef.current?.classList.add('animate-pulse');
+      return;
+    }
+
     let rAF: number;
     const startTime = performance.now();
     const duration = 2000; 
@@ -87,7 +102,7 @@ const CryptographicText = ({ text }: { text: string }) => {
 
     rAF = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rAF);
-  }, [text]);
+  }, [animate, text]);
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
@@ -106,15 +121,17 @@ const CryptographicText = ({ text }: { text: string }) => {
   );
 };
 
-export const RotatingQuotes: React.FC = () => {
+export const RotatingQuotes: React.FC<{ allowRichMotion?: boolean }> = ({ allowRichMotion = true }) => {
   const [index, setIndex] = useState(0);
 
   const systemInfo = {
     loc: "AP-NORTHEAST-1 [TYO]",
-    time: syncTimeFormatter.format(new Date()),
+    time: formatSyncTime(),
   };
 
   useEffect(() => {
+    if (!allowRichMotion) return;
+
     const interval = setInterval(() => {
       setIndex((prev) => {
         let next = Math.floor(Math.random() * QUOTES.length);
@@ -126,7 +143,7 @@ export const RotatingQuotes: React.FC = () => {
     }, 6000); 
 
     return () => clearInterval(interval);
-  },[]);
+  },[allowRichMotion]);
 
   return (
     <div className="relative w-full max-w-3xl mx-auto flex flex-col items-start perspective-[1000px] mt-8">
@@ -184,7 +201,7 @@ export const RotatingQuotes: React.FC = () => {
             }}
             className="w-full transform-gpu will-change-transform flex items-center"
           >
-            <CryptographicText text={QUOTES[index]} />
+            <CryptographicText text={QUOTES[index]} animate={allowRichMotion} />
           </motion.div>
         </AnimatePresence>
       </div>
