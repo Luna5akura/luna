@@ -1,33 +1,15 @@
 // src/App.tsx
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Home from "@/pages/Home";
 import { FontToggleProvider } from "@/context/FontToggleContext";
 import CustomCursor from "@/components/CustomCursor";
-
-const loadWarp = () => import("@/pages/Warp");
-const loadWow = () => import("@/pages/Wow");
-const loadWit = () => import("@/pages/Wit");
-const loadLifecode = () => import("@/pages/Lifecode");
-const loadSpark = () => import("@/pages/Spark");
-const loadRandomFont = () => import("./pages/RandomFont");
-const loadShogiKifu = () => import("@/pages/ShogiKifu");
-const loadPostDetails = () => import("@/pages/PostDetails");
-
-const Warp = lazy(loadWarp);
-const Wow = lazy(loadWow);
-const Wit = lazy(loadWit);
-const Lifecode = lazy(loadLifecode);
-const Spark = lazy(loadSpark);
-const RandomFont = lazy(loadRandomFont);
-const ShogiKifu = lazy(loadShogiKifu);
-const PostDetails = lazy(loadPostDetails);
+import { shouldHideCustomCursor, shouldHideSiteChrome, siteRoutes } from "@/routes/siteRoutes";
 
 const DynamicCursor = () => {
   const location = useLocation();
-  if (location.pathname === "/skill" || location.pathname === "/shogi" || location.pathname === "/spark") return null;
+  if (shouldHideCustomCursor(location.pathname)) return null;
   return <CustomCursor />;
 };
 
@@ -41,7 +23,7 @@ const RouteLoadingFallback = () => (
 
 function App() {
   const location = useLocation();
-  const hideSiteChrome = location.pathname === "/spark";
+  const hideSiteChrome = shouldHideSiteChrome(location.pathname);
 
   return (
     <FontToggleProvider>
@@ -51,16 +33,9 @@ function App() {
         <main className="flex-grow flex flex-col relative w-full">
           <Suspense fallback={<RouteLoadingFallback />}>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/warp" element={<Warp />} />
-              <Route path="/wow" element={<Wow />} />
-              <Route path="/wit" element={<Wit />} />
-              <Route path="/lifecode" element={<Lifecode />} />
-              <Route path="/spark" element={<Spark />} /> 
-              <Route path="/random-font" element={<RandomFont />} />
-              <Route path="/shogi" element={<ShogiKifu />} />
-              
-              <Route path="/posts/*" element={<PostDetails />} /> 
+              {siteRoutes.map(({ path, Component }) => (
+                <Route key={path} path={path} element={<Component />} />
+              ))}
             </Routes>
           </Suspense>
         </main>

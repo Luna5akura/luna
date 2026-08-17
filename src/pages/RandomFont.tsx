@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import './RandomFont.css';
 
 const RandomFont: React.FC = () => {
   // ==========================================
@@ -53,35 +54,6 @@ const RandomFont: React.FC = () => {
     setCurrentFont(getRandomFont());
   };
 
-  // @font-face 声明（保持不变）
-  const fontFaceCSS = `
-    @font-face { font-family: 'Kreeper'; src: url('/font/5KREEPER.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Calvera'; src: url('/font/CALVERA PERSONAL USE ONLY.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'FifthAgent'; src: url('/font/5THAGENT.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Chettavissto'; src: url('/font/CHETTAVISSTO.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Deberta'; src: url('/font/DEBERTAP.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Aabukeyan'; src: url('/font/AABUKEYAN-2.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'AgreePersonalThin'; src: url('/font/AGREEPERSONALUSE-THIN.OTF') format('opentype'); font-display: swap; }
-    @font-face { font-family: 'GoodTiming'; src: url('/font/GOOD TIMING BD.OTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'AvenueMadison'; src: url('/font/AVENUE DE MADISON.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'MaassSlicerItalic'; src: url('/font/MAASS SLICER ITALIC.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Bauhaus93'; src: url('/font/BAUHS93.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'OV'; src: url('/font/OV_.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'BlackAcute'; src: url('/font/BLACKACUTE.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'PixelFont12'; src: url('/font/pixelFont12.ttf') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'BlackFlag'; src: url('/font/BLACKFLAG.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'RealityHyper'; src: url('/font/REALITY HYPER REGULAR.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'BostonCaps'; src: url('/font/BOSTON CAPS.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'Jasmin'; src: url('/font/JASMIN-REGULAR.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'BaiTuoHeLiMa'; src: url('/font/拜托 这河狸嘛.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'FangZhengBeiWeiKaiShu'; src: url('/font/方正北魏楷书简体.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'FangZhengRuiSuTi'; src: url('/font/方正字汇-锐速体 简.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'FusionPixelZH'; src: url('/font/FUSION-PIXEL-10PX-PROPORTIONAL-ZH_HANS.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'FangZhengSongTiKai'; src: url('/font/FZSTK.TTF') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'DFSoGe7'; src: url('/font/DFSOGE7.TTC') format('truetype'); font-display: swap; }
-    @font-face { font-family: 'AOTFHaseTopPostD'; src: url('/font/A-OTF-HASETOPPOSTD-DEBOLD.OTF') format('opentype'); font-display: swap; }
-  `;
-
   return (
     <motion.div
       className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,rgba(3,11,15,1),rgba(2,6,10,1))] text-white cursor-none selection:bg-cyan-500/30"
@@ -89,8 +61,6 @@ const RandomFont: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <style>{fontFaceCSS}</style>
-
       <div className="pointer-events-none absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'linear-gradient(rgba(103,232,249,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(103,232,249,0.18) 1px, transparent 1px)', backgroundSize: '104px 104px' }} />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_0_30%),radial-gradient(circle_at_82%_12%,rgba(20,184,166,0.08),transparent_0_24%)]" />
 

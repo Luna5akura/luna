@@ -2,6 +2,7 @@
 import React, { useRef, useCallback, useState, useMemo, useEffect, useDeferredValue, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
+import { runViewTransition } from "@/lib/viewTransition";
 import { motion, useScroll, useTransform, AnimatePresence, useVelocity, MotionValue, useMotionValue, useSpring } from 'framer-motion';
 import { Cpu, HardDrive, Search, Filter } from 'lucide-react';
 
@@ -402,10 +403,6 @@ interface SidebarProps {
   onExpandedChange?: (expanded: boolean) => void;
 }
 
-type DocumentWithTransition = Document & {
-  startViewTransition?: (callback: () => void) => void;
-};
-
 const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -449,12 +446,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ categories }) => {
 
   const handleCategoryClick = useCallback((category: string) => {
     const to = category === 'All' ? '/' : `/?category=${category}`;
-    const doc = document as DocumentWithTransition;
-    if (doc.startViewTransition) {
-      doc.startViewTransition(() => navigate(to));
-    } else {
-      navigate(to);
-    }
+    runViewTransition(() => navigate(to));
   }, [navigate]);
 
   // 【高超技术 5：GPU 指针捕捉面 (CSS Variables Tracking)】

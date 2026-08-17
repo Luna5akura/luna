@@ -14,10 +14,7 @@ import { usePosts } from '@/hooks/usePosts';
 import { Post } from '@/types';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Terminal, CornerUpLeft, Activity, Cpu, Database } from 'lucide-react';
-
-type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => void;
-};
+import { runViewTransition } from '@/lib/viewTransition';
 
 // ==========================================
 // 【顶级炫技点 1：零重绘十六进制阅读进度遥测】
@@ -174,12 +171,7 @@ const PostDetails: React.FC = () => {
   // 跨页返回拦截器 (View Transitions 护航)
   const handleReturn = (e: React.MouseEvent) => {
     e.preventDefault();
-    const transitionDocument = document as ViewTransitionDocument;
-    if (transitionDocument.startViewTransition) {
-      transitionDocument.startViewTransition(() => navigate('/'));
-    } else {
-      navigate('/');
-    }
+    runViewTransition(() => navigate('/'));
   };
 
   return (

@@ -1,7 +1,6 @@
 // src/pages/Home.tsx
 import React, { useState, useEffect, useRef, useMemo, useCallback, useTransition } from 'react';
 import { useLocation } from 'react-router-dom';
-import { flushSync } from 'react-dom';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate, MotionValue } from 'framer-motion';
 import BlogList from '@/components/BlogList';
 import Sidebar from '@/components/Sidebar';
@@ -9,12 +8,10 @@ import SearchModal from '@/components/SearchModal';
 import { usePosts } from '@/hooks/usePosts';
 import { CyberHero } from '@/components/CyberHero';
 import { RotatingQuotes } from '@/components/RotatingQuotes';
+import { useGlobalShortcut } from '@/hooks/useGlobalShortcut';
+import { runViewTransition } from '@/lib/viewTransition';
 
 const ITEMS_PER_PAGE = 5;
-
-type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => void;
-};
 
 // ==========================================
 // 【极致优化点 1：零开销高频数据流引擎】
@@ -65,23 +62,6 @@ const useCyberParallax = () => {
   const rotateY = useSpring(useTransform(mouseX,[0, typeof window !== 'undefined' ? window.innerWidth : 1000],[-8, 8]), { stiffness: 200, damping: 30 });
 
   return { handleMouseMove, rotateX, rotateY, mouseX, mouseY };
-};
-
-const useGlobalShortcut = (key: string, callback: () => void) => {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const activeElement = document.activeElement;
-      const isInputFocused = activeElement instanceof HTMLInputElement || 
-                             activeElement instanceof HTMLTextAreaElement || 
-                             activeElement?.isContentEditable;
-      if (e.key === key && !isInputFocused) {
-        e.preventDefault();
-        callback();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  },[key, callback]);
 };
 
 // ==========================================
@@ -261,14 +241,7 @@ const Home: React.FC = () => {
   useGlobalShortcut('Escape', () => isSearchVisible && setIsSearchVisible(false));
 
   const handlePageChange = useCallback((newPage: number) => {
-    const transitionDocument = document as ViewTransitionDocument;
-    if (!transitionDocument.startViewTransition) {
-      startTransition(() => setCurrentPage(newPage));
-    } else {
-      transitionDocument.startViewTransition(() => {
-        flushSync(() => setCurrentPage(newPage));
-      });
-    }
+    runViewTransition(() => setCurrentPage(newPage), { flush: true });
   },[]);
 
   useEffect(() => {

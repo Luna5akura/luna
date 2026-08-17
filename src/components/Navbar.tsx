@@ -8,9 +8,9 @@ import {
   useTransform, 
   useSpring
 } from 'framer-motion';
+import { navRoutes, NavRoute } from '@/routes/siteRoutes';
 
 const SCRAMBLE_CHARS = "01xX_!@#$<>?{}[]%^&*▓▒░";
-const NAV_ITEMS = ['World', 'Warp', 'Wit', 'Wow', 'Shogi'] as const;
 const CLOCK_UPDATE_INTERVAL_MS = 250;
 const RADAR_FRAME_INTERVAL = 1000 / 24;
 
@@ -199,7 +199,7 @@ const TelemetryRadar = React.memo(() => {
 // ==========================================
 // 【极致优化点 3：消除布局抖动 (Anti-Layout Thrashing)】
 // ==========================================
-const MagneticDockItem = React.memo(({ item, isActive, path }: { item: string, isActive: boolean, path: string }) => {
+const MagneticDockItem = React.memo(({ route, isActive }: { route: NavRoute, isActive: boolean }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const rectRef = useRef<{left: number, top: number, width: number, height: number} | null>(null);
   const mouseX = useMotionValue(0);
@@ -226,7 +226,7 @@ const MagneticDockItem = React.memo(({ item, isActive, path }: { item: string, i
 
   return (
     <NavLink
-      to={path}
+      to={route.path}
       ref={ref}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
@@ -240,8 +240,8 @@ const MagneticDockItem = React.memo(({ item, isActive, path }: { item: string, i
           isActive ? "text-cyan-300" : "text-slate-500 group-hover:text-cyan-100"
         )}
       >
-        <span className="relative before:absolute before:inset-0 before:text-cyan-300 before:opacity-0 before:transition-opacity group-hover:before:opacity-70 group-hover:before:-translate-x-[1px] before:content-[attr(data-text)]" data-text={item}>
-          {item}
+        <span className="relative before:absolute before:inset-0 before:text-cyan-300 before:opacity-0 before:transition-opacity group-hover:before:opacity-70 group-hover:before:-translate-x-[1px] before:content-[attr(data-text)]" data-text={route.label}>
+          {route.label}
         </span>
 
         {isActive && (
@@ -279,7 +279,7 @@ const MagneticDockItem = React.memo(({ item, isActive, path }: { item: string, i
 // ==========================================
 // 【3D 战术底座 HUD】
 // ==========================================
-const QuantumDock = React.memo(({ navItems }: { navItems: readonly string[] }) => {
+const QuantumDock = React.memo(({ routes }: { routes: readonly NavRoute[] }) => {
   const location = useLocation();
   const dockRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<{left: number, top: number, width: number, height: number} | null>(null);
@@ -321,10 +321,9 @@ const QuantumDock = React.memo(({ navItems }: { navItems: readonly string[] }) =
         <div className="absolute -bottom-1 -left-1 h-3 w-3 border-b-2 border-l-2 border-cyan-500/30" />
         <div className="absolute -bottom-1 -right-1 h-3 w-3 border-b-2 border-r-2 border-cyan-500/30" />
 
-        {navItems.map((item) => {
-          const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
-          const isActive = location.pathname === path || (item === 'World' && location.pathname === '/');
-          return <MagneticDockItem key={item} item={item} isActive={isActive} path={path} />;
+        {routes.map((route) => {
+          const isActive = location.pathname === route.path;
+          return <MagneticDockItem key={route.path} route={route} isActive={isActive} />;
         })}
       </motion.nav>
     </div>
@@ -384,11 +383,11 @@ const useMobileScrollVisibility = () => {
 };
 
 const MobileNavDock = React.memo(({
-  navItems,
+  routes,
   isVisible,
   onInteract,
 }: {
-  navItems: readonly string[];
+  routes: readonly NavRoute[];
   isVisible: boolean;
   onInteract: () => void;
 }) => {
@@ -422,15 +421,14 @@ const MobileNavDock = React.memo(({
         </div>
 
         <div className="grid grid-cols-5 gap-1">
-          {navItems.map((item) => {
-            const path = item === 'World' ? '/' : `/${item.toLowerCase()}`;
-            const isActive = location.pathname === path || (item === 'World' && location.pathname === '/');
+          {routes.map((route) => {
+            const isActive = location.pathname === route.path;
 
             return (
               <NavLink
-                key={item}
-                to={path}
-                aria-label={item}
+                key={route.path}
+                to={route.path}
+                aria-label={route.label}
                 className={cn(
                   "relative flex min-h-11 items-center justify-center border px-1 font-mono text-[0.64rem] font-black uppercase tracking-[0.04em] outline-none transition-colors",
                   isActive
@@ -438,7 +436,7 @@ const MobileNavDock = React.memo(({
                     : "border-white/8 bg-slate-950/42 text-slate-400"
                 )}
               >
-                {item}
+                {route.label}
                 {isActive && (
                   <motion.span
                     layoutId="mobile-nav-lock"
@@ -532,10 +530,10 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <QuantumDock navItems={NAV_ITEMS} />
+      <QuantumDock routes={navRoutes} />
       {isMobileNav && (
         <MobileNavDock
-          navItems={NAV_ITEMS}
+          routes={navRoutes}
           isVisible={isMobileNavVisible}
           onInteract={() => setMobileNavVisible(true)}
         />
