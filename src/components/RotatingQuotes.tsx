@@ -53,7 +53,7 @@ const CryptographicText = ({ text, animate = true }: { text: string; animate?: b
     const duration = 2000; 
     const len = text.length;
 
-    const animate = (time: number) => {
+    const tick = (time: number) => {
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
@@ -96,11 +96,11 @@ const CryptographicText = ({ text, animate = true }: { text: string; animate?: b
       }
 
       if (progress < 1) {
-        rAF = requestAnimationFrame(animate);
+        rAF = requestAnimationFrame(tick);
       }
     };
 
-    rAF = requestAnimationFrame(animate);
+    rAF = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rAF);
   }, [animate, text]);
 
